@@ -1,0 +1,39 @@
+36x48q
+ 010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748q
+1                                      s7sss3                                                    q
+2                                      s7sss3  a1m1F1m1F1m1m1F1m1m1a2                            q
+3            T1T2                      s7sss3  m7iiiiiiiiiiiiiiiiiim3                            q
+4            T3T4                      s7sss3  F7iiiiiiiiiiiiiiiiiim3                            q
+5                                        s7s3  F7iiiiiiiiiiiiiiiiiim3                            q
+6                a1m1F1m1m1F1m1m1F1m1a2  s7s3  m7iiiiiiiiiiiiiiiiiim3                            q
+7                m7iiiiiiiiiiiiiiiiiim3  s7s3  a3m5F5m5m5P5m5m5F5m5a4                            q
+8      T1T2      F7iiiiiiiiiiiiiiiiiiP3  s7s3                                                    q
+9      T3T4      F7iiiiiiiiiiiiiiiiiiP3  s7sss1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1q
+0                m7iiiiiiiiiiiiiiiiiim3  s7ssssssssssssssssssssssssssssssssssssssssssssssssssssssq
+1                a3m5F5m5m5F5m5m5F5m5a4  s7ssssssssssssssssssssssssssssssssssssssssssssssssssssssq
+2                                        s7sssss5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5q
+3s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1s1sssss3                                                  q
+4sssssssssssssssssssssssssssssssssssssssssssss3  a1m1F1m1m1F1m1a2                                q
+5sssssssssssssssssssssssssssssssssssssssssssss3  m7iiiiiiiiiiiim3                                q
+6sssssssssssssssssssssssssssssssssssssssssssss3  P7iiiiiiiiiiiiF3                                q
+7sssssssssssssssssssssssssssssssssssssssssssss3  P7iiiiiiiiiiiiF3                                q
+8s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5s5  m7iiiiiiiiiiiiF3                                q
+9                                                a3m5F5m5m5F5m5a4                                q
+0                                                                                                q
+1oooooooooooooooooooooooooooooooooooooooooooooo                                                  q
+2oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo                      q
+3oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo                q
+4ooooooooooooooooooooooooooooooooooooooooooooooooooooT1T2ooT1T2oooooooooooooooooo                q
+5ooooooooooooooooooooooooooooooooooooooooooooooT1T2ooT3T4ooT3T4oooooooooooooooooo                q
+6ooooooooooooooooooooooooooooooooooooooooooooooT3T4ooooooT1T2oooooooooooooooooooo                q
+7ooooooooooooooooooooooooooooooooooooooooooooooooooooooooT3T4oooooooooooooooo                    q
+8   oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo                   q
+9        oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo                q
+0           ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo                q
+1                oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo                q
+2                     ooooooooooooooooooooooooooooooooooooooooooooooooooooooo                    q
+3                          oooooooooooooooooooooooooooooooooooooooooooooooooo                    q
+4      T1T2                ooooooooooooooooooooooooooooooooooooooooooooo                         q
+5      T3T4                ooooooooooooooooooooooooooooooooooooooooooooo                         q 
+6                                                                                                q
+qQ
