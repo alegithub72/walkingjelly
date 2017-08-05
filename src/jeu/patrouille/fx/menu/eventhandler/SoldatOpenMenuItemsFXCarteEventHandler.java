@@ -17,11 +17,11 @@ import jeu.patrouille.fx.board.FXPlanche;
  *
  * @author appleale
  */
-public class SoldatActionMenuOpenFXCarteEventHandler implements javafx.event.EventHandler<MouseEvent>{
+public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.EventHandler<MouseEvent>{
 
  
     FXPlanche pl;
-    public SoldatActionMenuOpenFXCarteEventHandler(FXPlanche pl) {
+    public SoldatOpenMenuItemsFXCarteEventHandler(FXPlanche pl) {
 
     this.pl=pl;
     }
@@ -37,7 +37,7 @@ public class SoldatActionMenuOpenFXCarteEventHandler implements javafx.event.Eve
            }
            if (event.getButton() == MouseButton.SECONDARY) {
                  pl.closeFXCarteMenuItems();
-                 pl.openFXCarteMenuItems();
+                 pl.openCurrentSoldatMenuItems();
            }  
        
 

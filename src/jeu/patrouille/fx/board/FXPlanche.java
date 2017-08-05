@@ -42,10 +42,10 @@ import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.WalkItem;
-import jeu.patrouille.fx.menu.eventhandler.ActionConfirmMarcheEventHandler;
-import jeu.patrouille.fx.menu.eventhandler.ActionRangeDisplayHandler;
+import jeu.patrouille.fx.menu.eventhandler.ItemMenuConfirmMarcheEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.ItemMenuRangeDisplayHandler;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
-import jeu.patrouille.fx.menu.eventhandler.SoldatActionMenuOpenFXCarteEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsFXCarteEventHandler;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.sprite.Sprite;
 
@@ -201,10 +201,7 @@ public class FXPlanche extends Application {
 
     }
 
-    public void openFXCarteMenuItems() {
-        this.fxCarte.openMenuItems();
 
-    }
 
     void buildBar() throws IOException {
         canvasBar = new Canvas(FXCarte.PIXEL_SCROLL_AREA_W + FXCarte.DROIT_BAR_W, FXCarte.BAR_H);
@@ -347,7 +344,15 @@ public class FXPlanche extends Application {
         sendMessageToPlayer(s.getSoldat().getNomDeFamilie() + " " + s.getSoldat().getNom());
 
     }
+    public void openCurrentSoldatMenuItems() {
+        FXSoldat s=getFXCarteActionHelper().getFXSoldatSelectionee();
+        defaceMenuItems();
+        initFXCarteHelperInstance(s);
+        imprimerProfile();
+        buildFXCarteMenuItems();
+        sendMessageToPlayer(s.getSoldat().getNomDeFamilie() + " " + s.getSoldat().getNom());
 
+    }
     public void clickOnButtonItems(MenuItem item) {
 
         item.setFrame(1);
@@ -355,9 +360,9 @@ public class FXPlanche extends Application {
 
         if (act.getType() == BaseAction.MARCHE) {
             addHelperInstance(act);
-            setFXCarteOnMouseClicked(new ActionConfirmMarcheEventHandler((WalkItem) item, this));
+            setFXCarteOnMouseClicked(new ItemMenuConfirmMarcheEventHandler((WalkItem) item, this));
             setFXCarteCursor(Cursor.HAND);
-            setFXCarteOnMouseMoved(new ActionRangeDisplayHandler(this));
+            setFXCarteOnMouseMoved(new ItemMenuRangeDisplayHandler(this));
             sendMessageToPlayer("Scegli posizione");
             closeFXCarteMenuItems();
 
@@ -457,7 +462,7 @@ public class FXPlanche extends Application {
         setFXCarteHelperArrivalCarteCoord(i1, j1);
         deactiveFXCarteRangePointer();
 
-        setFXCarteOnMouseClicked(new SoldatActionMenuOpenFXCarteEventHandler(this));
+        setFXCarteOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
         setFXCarteCursor(Cursor.DEFAULT);
         if (!getFXCarteActionHelper().isCommanNotvalid()) {
 
@@ -483,7 +488,7 @@ public class FXPlanche extends Application {
     public void annulleCommand() {
         getFXCarteActionHelper().setCommanNotvalid(true);
         setFXCarteOnMouseMoved(null);
-        setFXCarteOnMouseClicked(new SoldatActionMenuOpenFXCarteEventHandler(this));
+        setFXCarteOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
         setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));
         setFXCarteCursor(Cursor.DEFAULT);
         sendMessageToPlayer("Commando Annullato");

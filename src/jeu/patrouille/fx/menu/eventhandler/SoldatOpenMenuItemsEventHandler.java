@@ -18,11 +18,11 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  *
  * @author appleale
  */
-public class SoldatActionMenuOpenEventHandler  implements javafx.event.EventHandler<MouseEvent>{
+public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandler<MouseEvent>{
 
     FXSoldat s;
     FXPlanche pl;
-    public SoldatActionMenuOpenEventHandler(FXSoldat s,FXPlanche pl) {
+    public SoldatOpenMenuItemsEventHandler(FXSoldat s,FXPlanche pl) {
      
     this.s=s;
     this.pl=pl;

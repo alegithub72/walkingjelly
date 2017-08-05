@@ -17,10 +17,10 @@ import jeu.patrouille.fx.menu.WalkItem;
  *
  * @author appleale
  */
-public class ActionConfirmMarcheEventHandler  implements EventHandler<MouseEvent>{
+public class ItemMenuConfirmMarcheEventHandler  implements EventHandler<MouseEvent>{
     FXPlanche fxpl;
 WalkItem item;
-    public ActionConfirmMarcheEventHandler(WalkItem walk,FXPlanche fxpl) {
+    public ItemMenuConfirmMarcheEventHandler(WalkItem walk,FXPlanche fxpl) {
         this.fxpl=fxpl;
         this.item=walk;
     }

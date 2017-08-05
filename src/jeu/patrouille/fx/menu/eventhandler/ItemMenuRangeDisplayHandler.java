@@ -12,10 +12,10 @@ import jeu.patrouille.fx.board.FXPlanche;
  *
  * @author appleale
  */
-public class ActionRangeDisplayHandler implements EventHandler<MouseEvent>{
+public class ItemMenuRangeDisplayHandler implements EventHandler<MouseEvent>{
     FXPlanche fxpl;
     boolean outOfScroll=false;
-    public ActionRangeDisplayHandler(FXPlanche fxpl){
+    public ItemMenuRangeDisplayHandler(FXPlanche fxpl){
         this.fxpl=fxpl;
     }
     @Override
