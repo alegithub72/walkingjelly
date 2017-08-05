@@ -32,7 +32,7 @@ import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.OpFeuItem;
 import jeu.patrouille.fx.menu.RunItem;
 import jeu.patrouille.fx.menu.WalkItem;
-import jeu.patrouille.fx.menu.eventhandler.ActionMenuSelectionEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatClickOnActionItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatActionMenuOpenEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatActionMenuOpenFXCarteEventHandler;
@@ -673,7 +673,7 @@ public  class FXCarte extends Parent {
             m.setY(menuItemy);
             rootGroup.getChildren().add(m);
             if(s.getSoldat().getActionPoint()>=BaseAction.ACTIONPOINTVALOR[BaseAction.MARCHE]) 
-                m.setOnMouseClicked(new ActionMenuSelectionEventHandler(actionMenu[0], actionMenu, fxpl)); 
+                m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(actionMenu[0], actionMenu, fxpl)); 
             else m.setEffect(new GaussianBlur());
             
        
@@ -688,7 +688,7 @@ public  class FXCarte extends Parent {
             m.setX(menuItemx);
             m.setY(menuItemy);   
             rootGroup.getChildren().add(m);   
-            m.setOnMouseClicked(new ActionMenuSelectionEventHandler(m, actionMenu, fxpl));
+            m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
             actionMenu[1] = m;            
     
     }
@@ -703,7 +703,7 @@ public  class FXCarte extends Parent {
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             rootGroup.getChildren().add(m);
             //rootGroup.getChildren().add(l);
-            m.setOnMouseClicked(new ActionMenuSelectionEventHandler(m, actionMenu, fxpl));
+            m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
             actionMenu[2] = m;    
         
     }
@@ -717,7 +717,7 @@ public  class FXCarte extends Parent {
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
             m.setX(menuItemx);
             m.setY(menuItemy);
-            m.setOnMouseClicked(new ActionMenuSelectionEventHandler(m, actionMenu, fxpl));
+            m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             rootGroup.getChildren().add(m);
             //rootGroup.getChildren().add(l);
@@ -763,7 +763,7 @@ public  class FXCarte extends Parent {
         }    
     }    
     
-private void buildDisableMenu(FXSoldat s){
+protected void buildDisableMenu(FXSoldat s){
 
             MenuItem m = new DisableMenuItems(s);
             double r1 = (2 * Math.PI) / 8;
@@ -792,12 +792,12 @@ private void buildDisableMenu(FXSoldat s){
             }
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
-            m.setOnMouseClicked(new ActionMenuSelectionEventHandler(m, actionMenu, fxpl));
+            m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
             actionMenu[0] = m;
             m.setX(menuItemx);
             m.setY(menuItemy);
             rootGroup.getChildren().add(m);
-            m.setOnMouseClicked(new ActionMenuSelectionEventHandler(m, actionMenu, fxpl));
+            m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
            
 
 }    

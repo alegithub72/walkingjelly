@@ -19,12 +19,12 @@ import jeu.patrouille.fx.menu.WalkItem;
  *
  * @author appleale
  */
-public class ActionMenuSelectionEventHandler   implements EventHandler<MouseEvent>{
+public class SoldatClickOnActionItemsEventHandler   implements EventHandler<MouseEvent>{
     
     MenuItem item;
     MenuItem mainMenu[];
     FXPlanche fxpl;
-    public ActionMenuSelectionEventHandler(MenuItem item,MenuItem[] mainMenu,
+    public SoldatClickOnActionItemsEventHandler(MenuItem item,MenuItem[] mainMenu,
             FXPlanche fxpl) {
     
     this.item=item;
