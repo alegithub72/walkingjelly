@@ -196,7 +196,12 @@ public class Soldat extends Piece {
                 + "" +((armeUtilise!=null)? armeUtilise.toString():"") + "";
                 
     }
-
+    
+    public String toStringSimple() {
+        return ""
+                + "" + nom +" "+ nomDeFamilie +"\n";
+                
+    }
 
 
     public boolean isPossileDesplacer(){

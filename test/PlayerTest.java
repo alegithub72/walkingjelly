@@ -23,11 +23,11 @@ import static org.junit.Assert.*;
  */
 public class PlayerTest {
 
-    GeneriqueJoeurs gj;
+    KeyboardJoeur gj;
     String pt;
 
     public PlayerTest() {
-        gj = new KeyboardJoeur(null);
+        gj = new KeyboardJoeur(GeneriqueJoeurs.JOEUR_HOST,null);
         pt = gj.getPtSt();
     }
 
@@ -50,109 +50,127 @@ public class PlayerTest {
     @Test
     public void testPatternCommand() {
         gj.setInCommand(new ByteArrayInputStream("m12,13;56,67".getBytes()));
-        assertEquals("m12,13;56,67", gj.getCommand().toString());
+        gj.getCommand();
+        assertEquals("m12,13;56,67", gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand1() {
         gj.setInCommand(new ByteArrayInputStream("m1,13;2,3".getBytes()));
-        assertEquals("m1,13;2,3", gj.getCommand().toString());
+        gj.getCommand();
+        assertEquals("m1,13;2,3",gj.getTextCommand() );
     }
 
     @Test
     public void testPatternCommand2() {
         gj.setInCommand(new ByteArrayInputStream("m12,3;12,3".getBytes()));
-        assertEquals("m12,3;12,3", gj.getCommand().toString());
+                gj.getCommand();
+        assertEquals("m12,3;12,3", gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand3() {
         gj.setInCommand(new ByteArrayInputStream("m12,3;12,3".getBytes()));
-        assertEquals("m12,3;12,3", gj.getCommand().toString());
+                gj.getCommand();
+        assertEquals("m12,3;12,3", gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand4() {
         gj.setInCommand(new ByteArrayInputStream("m120,130;120,130".getBytes()));
-        assertEquals("m120,130;120,130", gj.getCommand().toString());
+                gj.getCommand();
+        assertEquals("m120,130;120,130", gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand5() {
         gj.setInCommand(new ByteArrayInputStream("m1,1;120,130".getBytes()));
-        assertEquals("m1,1;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("m1,1;120,130", gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand6() {
         gj.setInCommand(new ByteArrayInputStream("m12,13;120,130".getBytes()));
-        assertEquals("m12,13;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("m12,13;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand7() {
         gj.setInCommand(new ByteArrayInputStream("m125,13;120,130".getBytes()));
-        assertEquals("m125,13;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("m125,13;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand8() {
         gj.setInCommand(new ByteArrayInputStream("m0,0;120,130".getBytes()));
-        assertEquals("m0,0;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("m0,0;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand9() {
         gj.setInCommand(new ByteArrayInputStream("f12,13;120,130".getBytes()));
-        assertEquals("f12,13;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f12,13;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand10() {
         gj.setInCommand(new ByteArrayInputStream("f1,13;120,130".getBytes()));
-        assertEquals("f1,13;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f1,13;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand11() {
         gj.setInCommand(new ByteArrayInputStream("f12,3;120,130".getBytes()));
-        assertEquals("f12,3;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f12,3;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand12() {
         gj.setInCommand(new ByteArrayInputStream("f120,130;120,130".getBytes()));
-        assertEquals("f120,130;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f120,130;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand13() {
         gj.setInCommand(new ByteArrayInputStream("f1,1;120,130".getBytes()));
-        assertEquals("f1,1;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f1,1;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand14() {
         gj.setInCommand(new ByteArrayInputStream("f1,1;120,130".getBytes()));
-        assertEquals("f1,1;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f1,1;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand15() {
         gj.setInCommand(new ByteArrayInputStream("f12,13;120,130".getBytes()));
-        assertEquals("f12,13;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f12,13;120,130",  gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand16() {
         gj.setInCommand(new ByteArrayInputStream("f125,13;120,130".getBytes()));
-        assertEquals("f125,13;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f125,13;120,130", gj.getTextCommand());
     }
 
     @Test
     public void testPatternCommand18() {
         gj.setInCommand(new ByteArrayInputStream("f0,0;120,130".getBytes()));
-        assertEquals("f0,0;120,130", gj.getCommand().toString());
+                        gj.getCommand();
+        assertEquals("f0,0;120,130",  gj.getTextCommand());
 
     }
 
@@ -173,7 +191,8 @@ public class PlayerTest {
     @Test
     public void testGetCoord() {
         gj.setInCommand(new ByteArrayInputStream("m123,789;345,7".getBytes()));
-        assertEquals(BaseAction.MARCHE, gj.getCommand().getType());
+                        gj.getCommand();
+        assertEquals("m123,789;345,7",  gj.getTextCommand());
 
     }
     // TODO add test methods here.

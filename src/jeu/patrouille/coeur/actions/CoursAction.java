@@ -12,9 +12,9 @@ import jeu.patrouille.coeur.pieces.Piece;
  *
  * @author appleale
  */
-public class CoursAction extends Action {
+public class CoursAction extends BaseAction {
     public CoursAction( int i0, int j0, int i1, int j1, Piece protagoniste){
-    super(Action.COURS, i0, j0, i1, j1, protagoniste, null);
+    super(BaseAction.COURS, i0, j0, i1, j1, protagoniste, null);
     }
 
     @Override

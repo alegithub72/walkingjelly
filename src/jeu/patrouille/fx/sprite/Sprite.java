@@ -9,8 +9,10 @@ import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.board.FXPlanche;
@@ -40,14 +42,14 @@ public class Sprite extends Parent {
     FrameAnimationTimer frameAnimTimer[];
     int k;
     Animation[] ptList;
-    FXPlanche fbx;
+    FXPlanche fxpl;
 
-    public Sprite(int w, int h,int wboardBox,int hBoardBox,String img,FXPlanche b) {
+    public Sprite(int w, int h,int wboardBox,int hBoardBox,String img,FXPlanche fxpl) {
         this.w = w;
         this.h = h;
         this.wSquare=wboardBox;
         this.hSquare=hBoardBox;
-        this.fbx=b;
+        this.fxpl=fxpl;
          
         if(img!=null) setFrameImages(new Image(img));
 
@@ -65,12 +67,11 @@ public class Sprite extends Parent {
         getChildren().add(imgView);        
        
         
-        
     }
   
     
-    public void setFXPlanche(FXPlanche b){
-        this.fbx=b;
+    public void setFXPlanche(FXPlanche fxpl){
+        this.fxpl=fxpl;
     }
     
     
@@ -187,5 +188,16 @@ public class Sprite extends Parent {
     public void  removeThis(){
         //fbx.remove(this);
     }
+    
+//TODO permette la costruzioni di varie immagini....    
+public Image composedImage(String f) {
+    ImageView test = new ImageView(new Image("menuItem.png"));
+    SnapshotParameters params = new SnapshotParameters();
+    params.setFill(Color.TRANSPARENT);
+    Image rotatedImage = test.snapshot(params, null);
+
+    return rotatedImage;
+
+}    
     
 }

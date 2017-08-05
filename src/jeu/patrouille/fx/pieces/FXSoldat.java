@@ -5,13 +5,9 @@
  */
 package jeu.patrouille.fx.pieces;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.sprite.Sprite;
 
 /**
@@ -43,6 +39,10 @@ public class FXSoldat extends Sprite{
         defaultFrame();
 
         
+    }
+
+    public void setS(Soldat s) {
+        this.s = s;
     }
     
     public void setDeafultFrme(int n){
@@ -84,6 +84,11 @@ public class FXSoldat extends Sprite{
     if(getChildren().contains(selectionneImg)) getChildren().remove(selectionneImg);
 
     //setFrame(3);
+    }
+
+    @Override
+    public String toString() {
+        return "s=" + s.toStringSimple() ;
     }
     
     

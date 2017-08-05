@@ -423,7 +423,8 @@ public void decoderTaille(String line){
         s.setJ(j);
         terrain[i][j].setPiece(s);
     }
-        public   boolean  validerLeRoute(BaseAction act){
+    
+    public   boolean  validerLeRoute(BaseAction act){
         
         return true;
         }    

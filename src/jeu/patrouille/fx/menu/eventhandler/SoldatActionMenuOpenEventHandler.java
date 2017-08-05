@@ -18,11 +18,12 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  *
  * @author appleale
  */
-public class SoldatActionMenuOpenEventHandler implements javafx.event.EventHandler<MouseEvent>{
+public class SoldatActionMenuOpenEventHandler  implements javafx.event.EventHandler<MouseEvent>{
 
     FXSoldat s;
     FXPlanche pl;
     public SoldatActionMenuOpenEventHandler(FXSoldat s,FXPlanche pl) {
+     
     this.s=s;
     this.pl=pl;
     }
@@ -30,16 +31,13 @@ public class SoldatActionMenuOpenEventHandler implements javafx.event.EventHandl
     @Override
     public void handle(MouseEvent event) {
         
-        pl.defaceMenuItems();
+        
         if(event.getButton()==MouseButton.PRIMARY) {
-            pl.getFXCarte().setSelectionee(s);
-            pl.imprimerProfile();
-            pl.buildMenuItem(s);
-            pl.sendMessageToPlayer(s.getSoldat().getNomDeFamilie()+" "+s.getSoldat().getNom());
+            pl.openSoldatMenuItems(s);
           
         }
         else if(event.getButton()==MouseButton.SECONDARY){
-            pl.closeMenuItems();
+            pl.closeFXCarteMenuItems();
         }
         
         

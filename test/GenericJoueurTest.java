@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.joeurs.KeyboardJoeur;
 
@@ -21,7 +20,7 @@ import jeu.patrouille.coeur.joeurs.KeyboardJoeur;
 public class GenericJoueurTest {
     GeneriqueJoeurs mj;
     public GenericJoueurTest() {
-        mj=new KeyboardJoeur(null);
+        mj=new KeyboardJoeur(GeneriqueJoeurs.JOEUR_US  ,null);
     }
     
     @BeforeClass

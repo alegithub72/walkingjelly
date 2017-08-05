@@ -5,7 +5,8 @@
  */
 package jeu.patrouille.coeur;
 
-import jeu.patrouille.coeur.actions.Action;
+import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.fx.board.FXPlanche;
 
@@ -15,7 +16,7 @@ import jeu.patrouille.fx.board.FXPlanche;
  */
 public class BasicRond {
     Piece[] equipeRondeUS;
-    Piece[] equipeRondHost=new Piece[MoteurDeJoeur.EQUIPE_SIZE_HOSTILE];
+    Piece[] equipeRondHost=new Piece[GeneriqueJoeurs.EQUIPE_SIZE_HOSTILE];
     
     public BasicRond(Piece us[],Piece[] host,Carte c,FXPlanche p){
         equipeRondHost=new Piece[host.length];
@@ -36,11 +37,11 @@ public class BasicRond {
     
     
     }
-    Action getLowestActionUS(int point){
+    BaseAction getLowestActionUS(int point){
     return null;
     
     }
-    Action getLowestActionHost(int point){
+    BaseAction getLowestActionHost(int point){
     return null;
     }
     

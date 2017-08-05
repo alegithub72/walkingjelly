@@ -10,7 +10,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import jeu.patrouille.fx.board.FXPlanche;
-import jeu.patrouille.fx.pieces.FXSoldat;
 
 
 
@@ -29,18 +28,18 @@ public class SoldatActionMenuOpenFXCarteEventHandler implements javafx.event.Eve
 
     @Override
     public void handle(MouseEvent event) {
-        FXSoldat s=pl.getFXCarte().getFXSoldatSelectionee();   
-       if(s!=null){
-           pl.closeMenuItems();
+     
+
+          
            if (event.getButton() == MouseButton.PRIMARY) {
+                pl.closeFXCarteMenuItems();
 
            }
            if (event.getButton() == MouseButton.SECONDARY) {
-                           
-                pl.getFXCarte().setSelectionee(s);
-                pl.buildMenuItem(s);               
+                 pl.closeFXCarteMenuItems();
+                 pl.openFXCarteMenuItems();
            }  
-       }
+       
 
         
         

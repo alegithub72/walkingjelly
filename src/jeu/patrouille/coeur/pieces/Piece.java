@@ -78,7 +78,7 @@ public abstract class Piece  {
    
     
     public void  addAction(BaseAction act){
-
+        
         actionsPool.add(act);
         tempDesponible=tempDesponible-act.valorActionPointDesActions();
     }    

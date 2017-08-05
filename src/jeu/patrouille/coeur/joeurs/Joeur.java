@@ -5,13 +5,29 @@
  */
 package jeu.patrouille.coeur.joeurs;
 
+import jeu.patrouille.coeur.Carte;
+import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.pieces.Piece;
+
 
 
 /**
  *
  * @author appleale
  */
-public class Joeur {
+public abstract class Joeur extends GeneriqueJoeurs{
 
+    public Joeur(int jeur,Carte c) {
+        super(jeur,c);
+    }
+    String textCommand;
 
+    public String getTextCommand() {
+        return textCommand;
+    }
+    
+    
+
+    
+    
 }

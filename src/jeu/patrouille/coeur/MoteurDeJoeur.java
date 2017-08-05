@@ -7,13 +7,7 @@ package jeu.patrouille.coeur;
 
 import java.io.IOException;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.armes.AK74;
-import jeu.patrouille.coeur.armes.ArmeGenerique;
-import jeu.patrouille.coeur.armes.BenelliM3;
-import jeu.patrouille.coeur.joeurs.AIJoeur;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.joeurs.KeyboardJoeur;
-import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 
@@ -24,23 +18,34 @@ import jeu.patrouille.coeur.pieces.Soldat;
 public class MoteurDeJoeur {
     
     
-    public static final int EQUIPE_SIZE_US=4;
-    public static final int EQUIPE_SIZE_HOSTILE=4;
+
+    public static final int JEUR_HOSTILE=10;
+        public static final int JEUR_US=20;
     Carte c;
     GeneriqueJoeurs jUS, jHOST;
-    Piece[] patrouille = new Soldat[EQUIPE_SIZE_US];
-    Piece[] hostile = new AISoldat[EQUIPE_SIZE_HOSTILE];
+    Piece[] patrouille ;
+    Piece[] hostile ;
     int turn;
-    public MoteurDeJoeur() throws IOException{
+    int activeJeur;
+    public MoteurDeJoeur(GeneriqueJoeurs jUS,GeneriqueJoeurs jHOST,Carte carte) throws IOException{
+        this.c=carte;
+        this.jUS=jUS;
+        this.jHOST=jHOST;
+        patrouille=jUS.getEquip();
+        hostile=jHOST.getEquip();
         initGame();
     }
 
+    public GeneriqueJoeurs getActiveJeur() {
+        if(activeJeur==JEUR_US) return jUS;
+        else return jHOST;
+ 
+    }
+
     void initGame() throws IOException {
-        c = new Carte("src/mapDesert.txt");
-        costruirePatrouille();
-        costruireHostile();
-        jUS = new KeyboardJoeur(patrouille);
-        jHOST = new AIJoeur(hostile);
+
+
+
         displacementEquipeHost();
         displacementEquipeUS();
     }
@@ -58,78 +63,7 @@ public class MoteurDeJoeur {
         }
             
     }
-    public void costruirePatrouille() {
-        Soldat s = new Soldat("Sgt.", "Smith", 7, 8, 6, 5, 6,
-                5, 5, 8, 9,Piece.Direction.N);
-            ArmeGenerique a[] = {new BenelliM3()};
-            s.setArmeEquip(a);
-            s.setClassement(Soldat.CLASS_SGT);
-            s.setArraN(0);
-        patrouille[0] = s;
-        
-        s = new Soldat("Rifleman", "Williams", 7, 8, 6, 5, 6,
-                5, 5, 8, 8,Piece.Direction.N);
-            ArmeGenerique a1[] = {new BenelliM3()};
-            s.setArmeEquip(a1);
-            s.setClassement(Soldat.CLASS_SOLDAT);
-            s.setArraN(1);
-        patrouille[1] = s;
-        
-        s = new Soldat("Rifleman", "Miller", 7, 8, 6, 5, 6,
-                5, 5, 8, 8,Piece.Direction.N);
-            ArmeGenerique a2[] = {new BenelliM3()};
-            s.setArmeEquip(a2);
-            s.setClassement(Soldat.CLASS_SOLDAT);
-            s.setArraN(2);
-        patrouille[2] = s;
-        
-        s = new Soldat("Rifleman", "Anderson", 7, 8, 6, 5, 5, 
-                5, 5, 8, 8,Piece.Direction.N);
-            ArmeGenerique a3[] = {new BenelliM3()};
-            s.setArmeEquip(a3);
-            s.setClassement(Soldat.CLASS_SOLDAT);
-            s.setArraN(3);
-        patrouille[3] = s;
 
-    }
-
-    public void costruireHostile() {
-        AISoldat s = new AISoldat("Leader", "Tribu ", 5, 5, 5, 4,
-                4, 5, 0, 7, 8,Piece.Direction.S);
-            ArmeGenerique a[] = {new AK74()};
-            s.setArmeEquip(a);
-            s.setClassement(Soldat.CLASS_SGT);
-            s.setLeaderComportement(0, 0, 0, 0);
-            s.setArraN(0);
-        hostile[0] = s;
-        
-        s = new AISoldat("Militia", "Taleban A", 5, 5, 5, 4,
-                4, 7, 0, 7, 6,Piece.Direction.S);
-            ArmeGenerique a1[] = {new AK74()};
-            s.setArmeEquip(a1);
-            s.setClassement(Soldat.CLASS_SOLDAT);
-            s.setAggresiveComportement(0, 0, 0, 0);
-            s.setArraN(1);
-        hostile[1] = s;
-        
-        s = new AISoldat("Militia", "Taleban B", 5, 5, 5, 4,
-                4, 5, 0, 7, 6,Piece.Direction.S);
-            ArmeGenerique a2[] = {new AK74()};
-            s.setArmeEquip(a2);
-            s.setClassement(Soldat.CLASS_SOLDAT);
-            s.setAggresiveComportement(0, 0, 0, 0);
-            s.setArraN(2);
-        hostile[2] = s;
-        
-        s = new AISoldat("Militia", "Taleban C", 5, 5, 5, 4,
-                4, 5, 0, 7, 6,Piece.Direction.S);
-            ArmeGenerique a3[] = {new AK74()};
-            s.setArmeEquip(a3);
-            s.setClassement(Soldat.CLASS_SOLDAT);
-            s.setAggresiveComportement(0, 0, 0, 0);
-            s.setArraN(3);
-        hostile[3] = s;
-    }
 
     public void startTurn() {
         Soldat leaderUS = jUS.findSquadLeader();
@@ -137,18 +71,21 @@ public class MoteurDeJoeur {
         int tnUS = jUS.dice(10) - leaderUS.getCC();
         int tnHoSt = jHOST.dice(10) - leaderHOST.getCC();
         if (tnUS < tnHoSt) {
-            commandDeliveryUSTurn();//START US TEAM
+            activeJeur=JEUR_US;
+
         } else {
-            commandDeliveryHOSTurn();//Start HOSTxILE TEAM
+            activeJeur=JEUR_HOSTILE;
+
         }
+        commandDeliveryJaeurActiveTurn();
 
     }
-
-    public void commandDeliveryUSTurn() {
+    
+    public void commandDeliveryJaeurActiveTurn() {
         BaseAction ac = null;
         do {
-            ac = jUS.getCommand();
-            Piece p = ac.getProtagoniste();
+            getActiveJeur().getCommand();
+            Piece p = jUS.getPieceSelectionee();
             Soldat ps = null;
             if (p.getPieceType() == Piece.ActeurType.SOLDAT) {
                 ps = (Soldat) p;
@@ -158,19 +95,7 @@ public class MoteurDeJoeur {
         } while (ac == null);
     }
 
-    public void commandDeliveryHOSTurn() {
-        BaseAction ac = null;
-        do {
-            ac = jHOST.getCommand();
-            Piece p = ac.getProtagoniste();
-            Soldat ps = null;
-            if (p.getPieceType() == Piece.ActeurType.SOLDAT) {
-                ps = (Soldat) p;
-            }
-            p.addAction(ac);
-        } while (ac == null);        
 
-    }
     public Carte getCarte(){
     return c;
     }
@@ -201,4 +126,10 @@ public class MoteurDeJoeur {
 
     
     }    
+
+    public void setActiveJeur(int activeJeur) {
+        this.activeJeur = activeJeur;
+    }
+    
+    
 }
