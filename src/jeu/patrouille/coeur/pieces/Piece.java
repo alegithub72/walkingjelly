@@ -10,6 +10,7 @@ package jeu.patrouille.coeur.pieces;
 import java.util.ArrayList;
 import java.util.List;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 
 
 /**
@@ -18,13 +19,53 @@ import jeu.patrouille.coeur.actions.BaseAction;
  */
 public abstract class Piece  {
     public  static final int NOACTION=-1;
-    public enum ActeurType{SOLDAT,JEEP,HELICOPTER,ARMOR } ;
-    public enum Direction{S,N,E,W,NW,NE,SE,SW};
     ActeurType type;
     int tempDesponible;
-    List<BaseAction> actionsPool;     
-
+    List<BaseAction> actionsPool;   
+    boolean spreaded;
+    GeneriqueJoeurs boss;
     int i,j;
+    int arrayN;
+    public Piece(ActeurType type,GeneriqueJoeurs boss){
+        this.type=type;
+        this.i=-1;
+        this.j=-1;
+        this.tempDesponible=10;
+        actionsPool=new ArrayList();
+        this.boss=boss;
+    }
+
+    private void transformActionPool() {
+        List<BaseAction> newActionPool=new ArrayList<>();
+        spreaded=true;
+        for(BaseAction b:actionsPool){
+            int type=b.getType();
+            if(type==BaseAction.MARCHE){
+                newActionPool.addAll(b.spreadAction());
+            }
+        }
+        actionsPool=newActionPool;
+    }
+    public List<BaseAction> getBaseActionSum(int td){
+        if(!spreaded) transformActionPool();
+        int sum=0;
+        List<BaseAction> list =new ArrayList<>();
+        for (BaseAction b : actionsPool) {
+             sum=sum+b.getTempActivite();
+             if(sum<=td) {
+                 Soldat s=(Soldat)b.getProtagoniste();
+                 int rollDice=boss.dice(10);
+                 b.setOrdreInitiative( rollDice -s.getCC());
+                 if(!b.isUsed()) list.add(b);
+                 b.setUsed(true);
+                 
+             }
+                 
+        }
+        return list;
+    }
+    
+    
     public int getActionPoint() {
         return tempDesponible;
     }
@@ -36,13 +77,6 @@ public abstract class Piece  {
     }
     public void decActionPoint(int menus) {
         this.tempDesponible = tempDesponible-menus;
-    }
-    public Piece(ActeurType type){
-        this.type=type;
-        this.i=-1;
-        this.j=-1;
-        this.tempDesponible=10;
-        actionsPool=new ArrayList();        
     }
 
     public ActeurType getPieceType() {
@@ -64,7 +98,6 @@ public abstract class Piece  {
     public int getJ(){
     return j;
     }
-    int arrayN;
     
     
     public void setArraN(int n){
@@ -78,9 +111,9 @@ public abstract class Piece  {
    
     
     public void  addAction(BaseAction act){
-        
+        act.calculeActionPointDesActions();
         actionsPool.add(act);
-        tempDesponible=tempDesponible-act.valorActionPointDesActions();
+        tempDesponible=tempDesponible-act.getTempActivite();
     }    
      
     public BaseAction nextAction(int i){
@@ -97,5 +130,7 @@ public abstract class Piece  {
         if(actionsPool!=null) return actionsPool.size();
         else return 0;
     }   
-     
+    public enum ActeurType{SOLDAT,JEEP,HELICOPTER,ARMOR }
+    public enum Direction{S,N,E,W,NW,NE,SE,SW}
+    public abstract String toStringSimple() ;
 }

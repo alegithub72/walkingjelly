@@ -5,11 +5,14 @@
  */
 package jeu.patrouille.coeur.actions;
 
+import java.util.Comparator;
+import java.util.List;
+
 /**
  *
  * @author appleale
  */
-public abstract class AbstractAction {
+public abstract class AbstractAction implements Comparable<BaseAction>{
     
 
 public static final int BANDAGE = 14;
@@ -24,7 +27,17 @@ public static final int[] ACTIONPOINTVALOR = {1, 3, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5
     int i0;
     int i1;
     int j1;
+    int tempActivite;
 
+    public int getTempActivite() {
+        return tempActivite;
+    }
+
+    public void setTempActivite(int tempActivite) {
+        this.tempActivite = tempActivite;
+    }
+    
+    
     public AbstractAction() {
     }
 
@@ -63,5 +76,5 @@ public static final int[] ACTIONPOINTVALOR = {1, 3, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5
     public void setJ1(int j1) {
         this.j1 = j1;
     }
-
+    public abstract List<BaseAction> spreadAction();
 }

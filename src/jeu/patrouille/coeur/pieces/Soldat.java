@@ -7,8 +7,11 @@ package jeu.patrouille.coeur.pieces;
 
 
 
+import java.util.ArrayList;
+import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.armes.ArmeGenerique;
+import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 
 /**
  *
@@ -73,8 +76,8 @@ public class Soldat extends Piece {
     int sante,
     int blindage,
     int moral,
-    int commandControler,Direction d){
-        super(ActeurType.SOLDAT);
+    int commandControler,Direction d,GeneriqueJoeurs boss){
+        super(ActeurType.SOLDAT,boss);
         face=d;
         this.nom=nom;
         this.nomDeFamilie=nomDeFamilie;
@@ -152,7 +155,10 @@ public class Soldat extends Piece {
         return face;
     }
     
-
+    public void addMarcheAction(BaseAction b){
+        Carte.getLigne(b.getI0(), b.getJ0(), b.getI1(), b.getJ1());
+        
+    }
     @Override
     public Piece[] losView() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -170,7 +176,7 @@ public class Soldat extends Piece {
                 this.connaissanceArme, this.combatRapproche,
                 this.force, this.courage, this.sante,
                 this.blindage, this.moral,
-                this.commandControler, this.face);
+                this.commandControler, this.face,boss);
         s.setActionPoint(this.tempDesponible);
         s.setI(this.getI());
         s.setJ(this.getJ());
@@ -197,11 +203,7 @@ public class Soldat extends Piece {
                 
     }
     
-    public String toStringSimple() {
-        return ""
-                + "" + nom +" "+ nomDeFamilie +"\n";
-                
-    }
+
 
 
     public boolean isPossileDesplacer(){
@@ -211,8 +213,15 @@ public class Soldat extends Piece {
     public int getActionPoint(){
         return tempDesponible;
     }
-
+    @Override
+    public String toStringSimple() {
+        return ""
+                + "" + nom +" "+ nomDeFamilie +"\n";
+                
+    }
    
-    
+    public void resetAction(){
+    this.actionsPool=new ArrayList<>();
+    }
    
 }

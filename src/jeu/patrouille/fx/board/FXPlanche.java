@@ -42,6 +42,7 @@ import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.WalkItem;
+import jeu.patrouille.fx.menu.eventhandler.EndTurnEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.ItemMenuConfirmMarcheEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.ItemMenuRangeDisplayHandler;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
@@ -74,6 +75,13 @@ public class FXPlanche extends Application {
     Font font;
     Font fontTitle;
 
+    public void playFXCarteTurn() {
+        fxCarte.playTurn();
+    }
+
+    
+    
+    
     public void addFxActionPoolSelectionee(Sprite sp) {
         fxActionsPoolSelectionee.add(sp);
     }
@@ -229,6 +237,7 @@ public class FXPlanche extends Application {
         Sprite endButton = new Sprite(120, 50, 120, 50, "endturn.png", this);
         endButton.setX(880);
         endButton.setY(0);
+        endButton.setOnMouseClicked(new EndTurnEventHandler(this));
         rootBarGroup.getChildren().add(endButton);
         //BorderWidths bw = new BorderWidths(3);
         //CornerRadii cr = new CornerRadii(2);

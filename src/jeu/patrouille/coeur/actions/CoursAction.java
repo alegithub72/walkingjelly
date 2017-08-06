@@ -18,11 +18,11 @@ public class CoursAction extends BaseAction {
     }
 
     @Override
-    public int valorActionPointDesActions() {
-        int base = super.valorActionPointDesActions(); 
+    public void calculeActionPointDesActions() {
+        int base= BaseAction.ACTIONPOINTVALOR[type];
         double n= Carte.tileDistance(i0, j0, i1, j1)/5;
         int sum = (int)(base *n);
-        return sum;
+        tempActivite= sum;
     }
     
     

@@ -58,6 +58,7 @@ public class FXMouseJeurHelper {
     }
     public void addSoldataSelectioneeAction(){
         Soldat s=seletctionee.getSoldat();
+       
         s.addAction(act);
     
     }

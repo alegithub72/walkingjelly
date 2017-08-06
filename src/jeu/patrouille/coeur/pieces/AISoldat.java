@@ -7,6 +7,7 @@ package jeu.patrouille.coeur.pieces;
 
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.fx.sprite.Sprite;
 /**
  *
@@ -24,7 +25,7 @@ public class AISoldat extends Soldat {
     int sante,
     int blindage,
     int moral,
-    int commandControler,Direction d){
+    int commandControler,Direction d,GeneriqueJoeurs boss){
         //super(ActeurType.SOLDAT);
         super( nom, nomDeFamilie,
      competenceArme,
@@ -35,7 +36,7 @@ public class AISoldat extends Soldat {
      sante,
      blindage,
      moral,
-     commandControler,d);
+     commandControler,d,boss);
 
     }   
     

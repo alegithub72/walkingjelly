@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.coeur.pieces;
 
+import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.fx.sprite.Sprite;
 
 /**
@@ -13,8 +14,8 @@ import jeu.patrouille.fx.sprite.Sprite;
  */
 public class Vehicule extends Piece  {
    
-    public Vehicule() {
-        super(ActeurType.JEEP);
+    public Vehicule(GeneriqueJoeurs boss) {
+        super(ActeurType.JEEP,boss);
     }
 
     @Override
@@ -27,6 +28,11 @@ public class Vehicule extends Piece  {
 
     @Override
     public Piece clonerPiece() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toStringSimple() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
    

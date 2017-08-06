@@ -84,6 +84,12 @@ public  class FXCarte extends Parent {
     ImageCursor arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
     ImageCursor arrowCRDown=new ImageCursor(new Image("cursorScrollDOWN.png"));
     public Cursor current;
+
+    public void playTurn() {
+        mj.playTurn();
+    }
+    
+    
     public FXCarte(FXPlanche fxpl) throws IOException{
         
         arrow = new Sprite(100, 100, 100, 100, "arrowPng.png", null);

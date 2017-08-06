@@ -5,6 +5,9 @@
  */
 package jeu.patrouille.coeur.actions;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import jeu.patrouille.coeur.pieces.Piece;
 
 /**
@@ -12,11 +15,42 @@ import jeu.patrouille.coeur.pieces.Piece;
  * @author appleale
  */
 public  class BaseAction extends AbstractAction {
-    public static final BaseAction QUIT=new BaseAction(-1, -1, -1, -1,-1, null, null);
-    
+    public static  BaseAction QUIT=new BaseAction(-1, -1, -1, -1,-1, null, null);
+    public static  Comparator baseActionCompratorImpl=new BaseActionCompratorImpl();
     Piece protagoniste;
     Piece[] antagonistes;
+    boolean used;
+    int ordreInitiative;
 
+    public void setOrdreInitiative(int ordreInitiative) {
+        this.ordreInitiative = ordreInitiative;
+    }
+@Override
+public int compareTo(BaseAction b) {
+
+		//ascending order
+		if(this.tempActivite<b.getTempActivite()) 
+                    return -1;
+                if(this.tempActivite>b.getTempActivite())return 1;
+                if(this.tempActivite==b.getTempActivite()) return 0;
+                return 0;
+		//descending order
+		//return compareQuantity - this.quantity;
+	}
+
+
+
+
+
+    public int getOrdreInitiative() {
+        return ordreInitiative;
+    }
+    
+    
+//    @Override
+//    public int compareTo(BaseAction o) {
+//      return (this.getTempActivite()-o.getTempActivite());
+//    }
 
     public Piece getProtagoniste() {
         return protagoniste;
@@ -30,12 +64,30 @@ public  class BaseAction extends AbstractAction {
         this.i1 = i1;
         this.protagoniste = protagoniste;
         this.antagonistes = antagonistes;
+        used=false;             
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+    
+    
+
+    @Override
+    public List<BaseAction> spreadAction() {
+        List<BaseAction> list=new ArrayList<>();
+        list.add(this);
+        return list;
     }
 
 
     
-    public int valorActionPointDesActions(){
-        return BaseAction.ACTIONPOINTVALOR[type];
+    public void calculeActionPointDesActions(){
+        tempActivite= BaseAction.ACTIONPOINTVALOR[type];
     
     }
     
@@ -44,8 +96,9 @@ public  class BaseAction extends AbstractAction {
         char c=' ';
         if(type==BaseAction.FEU) c='f';
         else if(type==BaseAction.MARCHE) c='m';
-        return ""+c+" "+i0+","+j0+";"+i1+","+j1;
+        return protagoniste.toStringSimple()+":"+c+" "+i0+","+j0+";"+i1+","+j1+"->TD->"+tempActivite+"->ordreInitiative="+this.ordreInitiative;
     }
+
 
 
      

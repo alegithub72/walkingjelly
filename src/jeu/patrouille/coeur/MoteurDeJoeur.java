@@ -6,7 +6,12 @@
 package jeu.patrouille.coeur;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.BaseActionCompratorImpl;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -107,8 +112,44 @@ public class MoteurDeJoeur {
     public Piece[] getPatrouille() {
         return patrouille;
     }
-    public void playTurn(){
-    turn++;
+    public void playTurn(){        
+        turn++;
+
+        for(int td=1;td<=10;td++){
+        List<BaseAction> listAllUS=new ArrayList<>();
+        List<BaseAction> listAllHost=new ArrayList<>();            
+            for(int k=0;k<patrouille.length;k++){
+                listAllUS.addAll(patrouille[k].getBaseActionSum(td));
+            }
+            
+            for(int k=0;k<hostile.length;k++){
+                listAllHost.addAll(hostile[k].getBaseActionSum(td));
+            }            
+            System.out.println("-----------STEP  "+td+"---------------------");
+            playStep(td,listAllUS,listAllHost );            
+        }
+
+    }
+ 
+    public  void playStep(int td,List<BaseAction> listUS,List<BaseAction> listHost){
+         listUS.addAll(listHost);
+        BaseAction[] arrayOrderd=new BaseAction[listUS.size()];
+        for(BaseAction b:listUS){
+        System.out.println(b);
+        }
+        System.out.println("------------------------SORTED--------------------------");
+        
+        Arrays.sort(listUS.toArray( arrayOrderd), BaseAction.baseActionCompratorImpl);
+ 
+        for (BaseAction b : arrayOrderd) {
+            Soldat s=(Soldat)b.getProtagoniste();
+            s.resetAction();
+            c.makeAction((Soldat)b.getProtagoniste(), b);
+        }
+
+        
+        
+    
     }
     public void endTurn(){
         
@@ -119,6 +160,8 @@ public class MoteurDeJoeur {
         }else playTurn();
     }
     public int conditionVictoire(){
+    if(hostile.length==0)  return GeneriqueJoeurs.JOEUR_US;
+    else if(patrouille.length==0) return GeneriqueJoeurs.JOEUR_HOST;
     return -1;
     }
     

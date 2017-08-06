@@ -414,9 +414,13 @@ public void decoderTaille(String line){
         System.out.println(c.getMapTxt());
 
     }
-
+    /**
+     * @todo un sacco de lavoro
+     * @param s
+     * @param a 
+     */
     public void makeAction(Soldat s, BaseAction a) {
-
+        System.out.println(a);
     }
     public void desplacementSoldat(Piece s,int i,int j){
         s.setI(i);
