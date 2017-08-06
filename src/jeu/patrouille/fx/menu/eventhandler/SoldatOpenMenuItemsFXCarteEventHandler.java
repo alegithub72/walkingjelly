@@ -36,7 +36,7 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
 
            }
            if (event.getButton() == MouseButton.SECONDARY) {
-                 pl.closeFXCarteMenuItems();
+
                  pl.openCurrentSoldatMenuItems();
            }  
        

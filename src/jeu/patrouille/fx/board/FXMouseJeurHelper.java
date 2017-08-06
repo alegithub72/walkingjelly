@@ -5,7 +5,7 @@
  */
 package jeu.patrouille.fx.board;
 
-import javafx.scene.Node;
+
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -43,6 +43,10 @@ public class FXMouseJeurHelper {
         return seletctionee.getSoldat();
     }
 
+    public void setFXSeletctionee(FXSoldat seletctionee) {
+        this.seletctionee = seletctionee;
+    }
+    
     public void setSeletctionee(Soldat s) {
         
         this.seletctionee.setS(s);
@@ -60,7 +64,7 @@ public class FXMouseJeurHelper {
 
     @Override
     public String toString() {
-        return  seletctionee + "act=" + act ;
+        return   "act=" + act.toString() ;
     }
     
     public boolean rangeMarcheSoldat(double range){

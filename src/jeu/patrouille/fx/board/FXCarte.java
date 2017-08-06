@@ -143,9 +143,13 @@ public  class FXCarte extends Parent {
     
     
     protected void addHelperInstance(BaseAction act){
-        if(helper!=null) helper.setAct(act);
+        if(helper!=null) {
+            helper.setAct(act);
+
+        }
         else {
             helper= new FXMouseJeurHelper(act, carte);
+           
     }
     }
    protected void initHelperInstance(FXSoldat s){
@@ -589,15 +593,15 @@ public  class FXCarte extends Parent {
            
             //rootGroup.getChildren().add(l);
 
-
+            buildSoldatAction();
 
 
         }else {
-
+            defaceMenuItems();
             buildDisableMenu(s);
             fxpl.sendMessageToPlayer("Il ne peut pas agir");
         }
-        buildSoldatAction();
+    
     }
 
     protected void openMenuItems(){
@@ -623,9 +627,6 @@ public  class FXCarte extends Parent {
                 actionMenu[k].setVisible(false);
             }
         }
-        if(!helper.getFXSoldatSelectionee().getSoldat().isPossileDesplacer()){
-            buildMenuItems();
-        }
 
     }    
     
@@ -633,13 +634,13 @@ public  class FXCarte extends Parent {
     
 
   protected void defaceMenuItems(){
-      deselectionneSoldats();
-      newHelperInstance((FXSoldat)null);
+      //deselectionneSoldats();
+      //newHelperInstance((FXSoldat)null);
       removeMenuItems();
   
   }
 
-  private void deselectionneSoldats() {
+  protected void deselectionneSoldats() {
       if(helper!=null){
       FXSoldat s = helper.getFXSoldatSelectionee();
 

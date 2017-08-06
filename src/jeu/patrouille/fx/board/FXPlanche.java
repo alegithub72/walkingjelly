@@ -191,7 +191,8 @@ public class FXPlanche extends Application {
         fxCarte.setFXHelperArrivalCarteCoord(i1, j1);
     }
 
-    public void closeFXCarteMenuItems() {
+    synchronized public void closeFXCarteMenuItems() {
+        
         this.fxCarte.devisualizeMenuItems();
 
     }
@@ -234,7 +235,7 @@ public class FXPlanche extends Application {
 
         //Border b = new Border(new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID, cr, bw));
     }
-
+ 
     void buildTop() {
         topPan = new Canvas(FXCarte.PIXEL_SCROLL_AREA_W, FXCarte.TOP_H);
         //borderPan.setTop(topPan);      
@@ -249,7 +250,7 @@ public class FXPlanche extends Application {
         rootDroitBarGroup = new Group();
         droitCanvasBar = new Canvas(FXCarte.DROIT_BAR_W, FXCarte.PIXEL_SCROLL_AREA_H);
         GraphicsContext gc = droitCanvasBar.getGraphicsContext2D();
-        Image img = new Image("backCamo2.png");
+        Image img = new Image("backCamo5.png");
         //gc.setFill(Color.rgb(64, 128, 0, 1));
         gc.setFill(Color.TRANSPARENT);
 
@@ -336,30 +337,35 @@ public class FXPlanche extends Application {
         }
     }
 
-    public void openSoldatMenuItems(FXSoldat s) {
+    synchronized public void openSoldatMenuItems(FXSoldat s) {
         defaceMenuItems();
+        fxCarte.deselectionneSoldats();        
         initFXCarteHelperInstance(s);
         imprimerProfile();
         buildFXCarteMenuItems();
         sendMessageToPlayer(s.getSoldat().getNomDeFamilie() + " " + s.getSoldat().getNom());
 
     }
-    public void openCurrentSoldatMenuItems() {
+    synchronized public void openCurrentSoldatMenuItems() {
         FXSoldat s=getFXCarteActionHelper().getFXSoldatSelectionee();
-        defaceMenuItems();
-        initFXCarteHelperInstance(s);
+        System.out.println("-------->"+s);
+        setFXCarteHelperConmmanNoTValid(true);
         imprimerProfile();
+        initFXCarteHelperInstance(s);
+      
+        closeFXCarteMenuItems();
         buildFXCarteMenuItems();
         sendMessageToPlayer(s.getSoldat().getNomDeFamilie() + " " + s.getSoldat().getNom());
 
     }
-    public void clickOnButtonItems(MenuItem item) {
+    synchronized public void clickOnButtonItems(MenuItem item) {
 
         item.setFrame(1);
         BaseAction act = item.buildMenuItemAction();
 
         if (act.getType() == BaseAction.MARCHE) {
             addHelperInstance(act);
+            setFXCarteOnMouseClicked(null);
             setFXCarteOnMouseClicked(new ItemMenuConfirmMarcheEventHandler((WalkItem) item, this));
             setFXCarteCursor(Cursor.HAND);
             setFXCarteOnMouseMoved(new ItemMenuRangeDisplayHandler(this));
@@ -413,14 +419,15 @@ public class FXPlanche extends Application {
 
             System.out.println("raggio---->" + r);
         } else {
-            deactiveFXCarteRangePointer();
+  
             setFXCarteHelperConmmanNoTValid(true);
             ImageCursor imgcr = new ImageCursor(new Image("forbiddenCursor.png"));
             setFXCarteCursor(imgcr);
-
+            deactiveFXCarteRangePointer();
+            
             System.out.println("fuori raggio---->" + r);
         }
-
+        
     }
 
     private int relativeI(int reali) {
@@ -449,7 +456,7 @@ public class FXPlanche extends Application {
 
     }
 
-    public void confirmMarcheActionCommand(MenuItem item, double mousex, double mousey) {
+   synchronized public void confirmMarcheActionCommand(MenuItem item, double mousex, double mousey) {
         item.setFrame(0);
         double x = mousex;
         double y = mousey;
@@ -471,26 +478,27 @@ public class FXPlanche extends Application {
             imprimerProfile();
             visualizeActionBarActual();
             closeFXCarteMenuItems();
-            setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));
+            //buildFXCarteMenuItems();
             //fxcarte.buildMenuItem((FXSoldat)item.getFXSoldat());
             sendMessageToPlayer(getFXCarteActionHelper().toString());
             resetFXCarteHelperAction();
 
         } else {
-            setFXCarteOnMouseMoved(null);
-            setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));
+       
+
             setFXCarteCursor(Cursor.DEFAULT);
             sendMessageToPlayer("Commando non valido");
         }
-
+            setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));
     }
 
-    public void annulleCommand() {
+    synchronized public void annulleCommand() {
         getFXCarteActionHelper().setCommanNotvalid(true);
         setFXCarteOnMouseMoved(null);
         setFXCarteOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
         setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));
         setFXCarteCursor(Cursor.DEFAULT);
+        deactiveFXCarteRangePointer();
         sendMessageToPlayer("Commando Annullato");
 
     }
