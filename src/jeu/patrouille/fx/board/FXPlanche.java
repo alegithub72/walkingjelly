@@ -13,7 +13,6 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -31,8 +30,6 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -564,6 +561,8 @@ public class FXPlanche extends Application {
             //fxcarte.buildMenuItem((FXSoldat)item.getFXSoldat());
             sendMessageToPlayer(getFXCarteActionHelper().toString());
             //resetFXCarteHelperAction();
+            BaseAction act=  item.buildMenuItemAction();
+            addHelperInstance(act);
 
         } else {
        

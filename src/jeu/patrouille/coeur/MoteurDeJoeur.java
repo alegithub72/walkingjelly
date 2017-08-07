@@ -31,6 +31,7 @@ public class MoteurDeJoeur {
     Piece[] hostile ;
     int turn;
     int activeJeur;
+    int iniativeWinner;
     public MoteurDeJoeur(GeneriqueJoeurs jUS,GeneriqueJoeurs jHOST,Carte carte) throws IOException{
         this.c=carte;
         this.jUS=jUS;
@@ -71,20 +72,28 @@ public class MoteurDeJoeur {
             
     }
 
-
-    public void startTurn() {
+    public void startGame(){
         Soldat leaderUS = jUS.findSquadLeader();
         Soldat leaderHOST = jHOST.findSquadLeader();
         int tnUS = jUS.dice(10) - leaderUS.getCC();
         int tnHoSt = jHOST.dice(10) - leaderHOST.getCC();
         if (tnUS < tnHoSt) {
             activeJeur=JEUR_US;
+            iniativeWinner=JEUR_US;
 
         } else {
             activeJeur=JEUR_HOSTILE;
-
+            iniativeWinner=JEUR_HOSTILE;
         }
-        commandDeliveryJaeurActiveTurn();
+    
+    }
+    public void changeJeur() {
+
+
+        if(activeJeur==JEUR_US) activeJeur=JEUR_HOSTILE;
+        else activeJeur=JEUR_US;
+
+       
 
     }
     
@@ -137,9 +146,13 @@ public class MoteurDeJoeur {
 
     }
  
-    public  void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
+      void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
         
+        //if(iniativeWinner==JEUR_US) 
+        //listUSAll.addAll(listHostAll);
+        //else 
         listUSAll.addAll(listHostAll);
+        
         BaseAction[] arrayOrderd=new BaseAction[listUSAll.size()];
         for(BaseAction b:listUSAll){
             System.out.println(b);
@@ -154,7 +167,6 @@ public class MoteurDeJoeur {
             BaseAction clone=b.clone();
             System.out.println("--clone--->"+clone+"<-----");
             c.makeAction((Soldat)b.getProtagoniste(), b);
-            
             playAllGraficInterface(clone);
             
         }
@@ -163,14 +175,22 @@ public class MoteurDeJoeur {
         
     
     }
-    public void endTurn(){
-        
-        if(conditionVictoire()==GeneriqueJoeurs.JOEUR_US){
-            
-        }else if(conditionVictoire()==GeneriqueJoeurs.JOEUR_HOST){
-            
-        }else playTurn();
+    
+    public void playGame(){
+    startGame();
+    do{
+         
+         commandDeliveryJaeurActiveTurn();
+         changeJeur();
+         commandDeliveryJaeurActiveTurn();
+         playTurn();
+         changeJeur();
+    
+        }while(conditionVictoire()!=-1);
+    
     }
+    
+
     public int conditionVictoire(){
     if(hostile.length==0)  return GeneriqueJoeurs.JOEUR_US;
     else if(patrouille.length==0) return GeneriqueJoeurs.JOEUR_HOST;

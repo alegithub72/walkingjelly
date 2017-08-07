@@ -240,11 +240,11 @@ public void decoderTaille(String line){
                      if(k>i1)listp.add(p);
                     System.out.println("cas5) k="+k+"-> "+p) ;                       
                     }
-                 }else if(i2<i1){
-                 for(int k=i2;k<i1;k++){
+                 }else if(i2<=i1){
+                 for(int k=i2;k<=i1;k++){
                      PointCarte p=new PointCarte(k, j2);
                      PointCarte previous=null;
-                     if(k>i2)  previous=listp.set((k-i2), p);
+                     if(k>i2)  previous=listp.set((k-i2-1), p);
                      else previous=p;
                      listp.add(previous);
                     System.out.println("cas6) k="+k+"-> "+p) ;                       

@@ -49,7 +49,7 @@ public class PlayerTest {
     public void testPatternCommand() {
         gj.setInCommand(new ByteArrayInputStream("m12,13;56,67".getBytes()));
         gj.getCommand();
-        assertEquals("m12,13;56,67", gj.getTextCommand());
+         assertEquals("m12,13;56,67", gj.getTextCommand());
     }
 
     @Test

@@ -41,6 +41,7 @@ public class KeyboardJoeur extends Joeur {
             System.out.println(command);
         } while (cnotTyped);
         actual=decodeCommand(command);
+        textCommand=actual.toString();
 
   
     }

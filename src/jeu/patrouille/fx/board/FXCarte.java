@@ -175,7 +175,8 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             helper.setAct(act);
 
         }
-        buildDisplayRange();
+
+
         
     }
    protected void initHelperInstance(FXSoldat s){
@@ -201,6 +202,8 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
        }
        helper= new FXMouseJeurHelper(s, carte);
     }   
+   
+
    
  
 

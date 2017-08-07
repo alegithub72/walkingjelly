@@ -24,7 +24,7 @@ public class WalkItem extends SoldatMenuItem{
         BaseAction lsact=fxs.getSoldat().lastAction();
          BaseAction action=null;
         if(lsact!=null)
-         action=new MarcheAction(lsact.getI1(),lsact.getJ1(),-1,-1,null);
+         action=new MarcheAction(lsact.getI1(),lsact.getJ1(),-1,-1,fxs.getSoldat());
         else action = new MarcheAction(fxs.getSoldat().getI(),fxs.getSoldat().getJ(),-1,-1,fxs.getSoldat());
 
         return action;

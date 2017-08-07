@@ -91,6 +91,8 @@ public int compareTo(BaseAction b) {
     
     }
     
+
+    
     @Override
     public String toString() {
         char c=' ';
@@ -98,9 +100,9 @@ public int compareTo(BaseAction b) {
         else if(type==BaseAction.MARCHE) c='m';
         
         
-        String txt=c+" "+i0+","+j0+";"+i1+","+j1+"\nordreInitiative="+this.ordreInitiative;
+        String txt=c+""+i0+","+j0+";"+i1+","+j1;
         return txt;
-    }
+    }    
 
     @Override
     public BaseAction clone() {

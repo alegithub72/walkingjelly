@@ -25,21 +25,7 @@ public class FXMouseJeurHelper {
     private boolean actionSeletione;
     private int rangeCursorHelper;
 
-    public void setActionSeletione(boolean actionSeletione) {
-        this.actionSeletione = actionSeletione;
-    }
 
-    public boolean isActionSeletione() {
-        return actionSeletione;
-    }
-
-    public int getRangeCursorHelper() {
-        return rangeCursorHelper;
-    }
-
-    public void setRangeCursorHelper(int rangeCursorHelper) {
-      this.rangeCursorHelper = rangeCursorHelper;
-    }
     
     
     
@@ -63,7 +49,21 @@ public class FXMouseJeurHelper {
     }
     
     
+    public void setActionSeletione(boolean actionSeletione) {
+        this.actionSeletione = actionSeletione;
+    }
 
+    public boolean isActionSeletione() {
+        return actionSeletione;
+    }
+
+    public int getRangeCursorHelper() {
+        return rangeCursorHelper;
+    }
+
+    public void setRangeCursorHelper(int rangeCursorHelper) {
+      this.rangeCursorHelper = rangeCursorHelper;
+    }
     
     public void resetCursorHelper(){
         if(act.getType()==BaseAction.MARCHE 
