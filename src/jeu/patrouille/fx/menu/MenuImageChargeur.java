@@ -16,6 +16,7 @@ import jeu.patrouille.fx.sprite.Sprite;
 public class MenuImageChargeur {
     
     public static int MARCHE_IMG=0,OP_FIRE_IMG=1,RUN_IMG=2,FEU_IMG=3;
+           ;
     Image[] menuImages;
     static MenuImageChargeur ss;
      

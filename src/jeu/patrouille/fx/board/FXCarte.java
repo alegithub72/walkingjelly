@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.AIJoeur;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.AISoldat;
@@ -32,19 +33,22 @@ import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.OpFeuItem;
 import jeu.patrouille.fx.menu.RunItem;
 import jeu.patrouille.fx.menu.WalkItem;
-import jeu.patrouille.fx.menu.eventhandler.SoldatClickOnMenuItemsEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatClickedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsFXCarteEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatRelasedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXHostile;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.sprite.Sprite;
+import jeu.patrouille.util.ImageChargeur;
 
 /**
  *
  * @author appleale
  */
-public  class FXCarte extends Parent {
+public  class FXCarte extends Parent implements GraficCarteInterface{
     
     public static final int TOP_H = 0;
     public static final int BAR_H = 50;
@@ -87,6 +91,20 @@ public  class FXCarte extends Parent {
 
     public void playTurn() {
         mj.playTurn();
+    }
+
+    @Override
+    public void play(BaseAction b) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("paly gaarfic fx");
+    }
+
+    public void setActionSeletione(boolean actionSeletione) {
+        helper.setActionSeletione(actionSeletione);
+    }
+
+    public boolean isActionSeletione() {
+        return helper.isActionSeletione();
     }
     
     
@@ -192,7 +210,7 @@ public  class FXCarte extends Parent {
     }
 
     protected void visualizeRangePointer(double mousex,double mousey){
-        if(displayRange==null) buildDisplayRange();           
+            buildDisplayRange();           
             int scrollMousej = (int) (mousex / FXCarte.TILE_SIZE);
             int scrollMousei = (int) (mousey / FXCarte.TILE_SIZE);  
             System.out.println("---------visualizeRangePointer----------------------_->"+scrollMousej);
@@ -219,9 +237,18 @@ public  class FXCarte extends Parent {
     }
     private void buildDisplayRange(){
         if (displayRange == null) {
-
-            displayRange = new Sprite(50, 50, 50, 50, "rangeArrow.png", null);
+            if(helper.getFXSoldatSelectionee() instanceof FXHostile)
+            displayRange = new Sprite(50, 50, 50, 50, "rangeArrow3.png", null);
+            else displayRange = new Sprite(50, 50, 50, 50, "rangeArrow2.png", null);
             this.rootGroup.getChildren().add(displayRange);
+        }else{
+         Image img=null;
+         if(helper.getFXSoldatSelectionee() instanceof FXHostile) 
+              img=ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_HOST_RANGE);
+         else img=ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_US_RANGE);
+        displayRange.setFrameImages(img);
+      
+        
         }
         
     }
@@ -600,7 +627,7 @@ public  class FXCarte extends Parent {
             //rootGroup.getChildren().add(l);
 
             buildSoldatAction();
-
+            fxpl.sendMessageToPlayer("Choisir une action");
 
         }else {
             defaceMenuItems();
@@ -614,7 +641,7 @@ public  class FXCarte extends Parent {
      for (int k = 0; k < actionMenu.length; k++) {
             if (actionMenu[k] != null) {
                actionMenu[k].setVisible(true);
-               actionMenu[k].setFrame(0);
+               actionMenu[k].release();
             }
         }
     
@@ -683,8 +710,11 @@ public  class FXCarte extends Parent {
             m.setX(menuItemx);
             m.setY(menuItemy);
             rootGroup.getChildren().add(m);
-            if(s.getSoldat().getActionPoint()>=BaseAction.ACTIONPOINTVALOR[BaseAction.MARCHE]) 
-                m.setOnMouseClicked(new SoldatClickOnMenuItemsEventHandler(actionMenu[0], actionMenu, fxpl)); 
+            if(s.getSoldat().getActionPoint()>=BaseAction.ACTIONPOINTVALOR[BaseAction.MARCHE]) {
+            m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
+                m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));
+            }
             else m.setEffect(new GaussianBlur());
             
        
@@ -699,7 +729,9 @@ public  class FXCarte extends Parent {
             m.setX(menuItemx);
             m.setY(menuItemy);   
             rootGroup.getChildren().add(m);   
-            m.setOnMouseClicked(new SoldatClickOnMenuItemsEventHandler(m, actionMenu, fxpl));
+            m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
+            m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));            
             actionMenu[1] = m;            
     
     }
@@ -714,7 +746,9 @@ public  class FXCarte extends Parent {
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             rootGroup.getChildren().add(m);
             //rootGroup.getChildren().add(l);
-            m.setOnMouseClicked(new SoldatClickOnMenuItemsEventHandler(m, actionMenu, fxpl));
+           m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
+                m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));            
             actionMenu[2] = m;    
         
     }
@@ -728,7 +762,9 @@ public  class FXCarte extends Parent {
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
             m.setX(menuItemx);
             m.setY(menuItemy);
-            m.setOnMouseClicked(new SoldatClickOnMenuItemsEventHandler(m, actionMenu, fxpl));
+           m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
+            m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));            
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             rootGroup.getChildren().add(m);
             //rootGroup.getChildren().add(l);

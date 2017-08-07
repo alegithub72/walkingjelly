@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.terrains.Terrain;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -35,7 +36,7 @@ import jeu.patrouille.coeur.terrains.StreetBorder;
  *
  * @author appleale
  */
-public class Carte {
+public class Carte implements GraficCarteInterface{
 
     public static  int CARTE_SIZE_J = 48;
     public static  int CARTE_SIZE_I= 36;
@@ -77,6 +78,14 @@ public class Carte {
     public String getMapTxt() {
         return mapTxt.toString();
     }
+
+    @Override
+    public void play(BaseAction b) {
+       System.out.println("paly garafic text");
+    }
+    
+
+    
     
 public void decoderTaille(String line){
         int ipos=line.indexOf('x');

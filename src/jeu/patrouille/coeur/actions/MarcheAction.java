@@ -20,6 +20,10 @@ public class MarcheAction extends BaseAction{
     super(BaseAction.MARCHE, i0 ,j0, i1, j1, protagoniste, null);
     
     }
+    public MarcheAction(MarcheAction a){
+    super(BaseAction.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste,null);
+    
+    }
     PointCarte mapTile[];
 
     private void setMapTile(PointCarte[] mapTile) {
@@ -29,8 +33,8 @@ public class MarcheAction extends BaseAction{
     @Override
     public List<BaseAction> spreadAction() {
         List<BaseAction> list=new ArrayList<>();
-        int i1=this.protagoniste.getI();
-        int j1=this.protagoniste.getJ();
+        int i1=(protagoniste!=null)?this.protagoniste.getI():this.i0;
+        int j1=(protagoniste!=null)?this.protagoniste.getJ():this.j0;
         for(int k=0;k<mapTile.length;k++){
             if(k>0){ 
                 i1=mapTile[k-1].getI();
@@ -39,6 +43,8 @@ public class MarcheAction extends BaseAction{
             int i2=mapTile[k].getI();
             int j2=mapTile[k].getJ();
             MarcheAction b= new MarcheAction(i1, j1, i2, j2, protagoniste);
+            System.out.println("k="+k+"----->(i1,j1)----(i2,j2)");
+            System.out.println("k="+k+"----->"+i1+","+j1+"----"+""+i2+","+j2);
             b.setMapTile(new PointCarte[]{mapTile[k]});
             b.calculeActionPointDesActions();
             list.add(b);
@@ -53,10 +59,20 @@ public class MarcheAction extends BaseAction{
                 mapTile =Carte.getLigne(i0, j0, i1, j1);
             }
             int letgthp=mapTile.length;
-            System.out.println("distanza calcolata---------_>"+letgthp+"punti base"+apbase);
             int calcp=(apbase* letgthp);
        tempActivite=calcp;
     }
+
+    @Override
+    public MarcheAction clone()  {        
+       MarcheAction m= new MarcheAction(this);
+       m.setMapTile(this.mapTile);
+       m.setOrdreInitiative(ordreInitiative);
+       m.setTempActivite(tempActivite);
+       return m;
+    }
+    
+    
 
 
     

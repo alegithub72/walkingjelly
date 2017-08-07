@@ -8,10 +8,9 @@ package jeu.patrouille.coeur;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.BaseActionCompratorImpl;
+import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -23,7 +22,7 @@ import jeu.patrouille.coeur.pieces.Soldat;
 public class MoteurDeJoeur {
     
     
-
+    List<GraficCarteInterface> listgrafic;
     public static final int JEUR_HOSTILE=10;
         public static final int JEUR_US=20;
     Carte c;
@@ -38,6 +37,7 @@ public class MoteurDeJoeur {
         this.jHOST=jHOST;
         patrouille=jUS.getEquip();
         hostile=jHOST.getEquip();
+        listgrafic=new ArrayList();
         initGame();
     }
 
@@ -46,7 +46,9 @@ public class MoteurDeJoeur {
         else return jHOST;
  
     }
-
+    public void add(GraficCarteInterface g){
+        listgrafic.add(g);
+    }
     void initGame() throws IOException {
 
 
@@ -114,37 +116,47 @@ public class MoteurDeJoeur {
     }
     public void playTurn(){        
         turn++;
-
-        for(int td=1;td<=10;td++){
         List<BaseAction> listAllUS=new ArrayList<>();
-        List<BaseAction> listAllHost=new ArrayList<>();            
+        List<BaseAction> listAllHost=new ArrayList<>();
+        for(int tdInc=1;tdInc<=10;tdInc++){
+         
             for(int k=0;k<patrouille.length;k++){
-                listAllUS.addAll(patrouille[k].getBaseActionSum(td));
+                listAllUS.addAll(patrouille[k].getBaseActionSum(tdInc));
             }
             
             for(int k=0;k<hostile.length;k++){
-                listAllHost.addAll(hostile[k].getBaseActionSum(td));
+                listAllHost.addAll(hostile[k].getBaseActionSum(tdInc));
             }            
-            System.out.println("-----------STEP  "+td+"---------------------");
-            playStep(td,listAllUS,listAllHost );            
+            System.out.println("-----------STEP  "+tdInc+"---------------------");
+            System.out.println("-listAllHost-->"+listAllHost.size());
+            System.out.println("-listAllUS-->"+listAllUS.size());            
+            playStep(tdInc,listAllUS,listAllHost );  
+            listAllUS=new ArrayList<>();
+            listAllHost=new ArrayList<>();            
         }
 
     }
  
-    public  void playStep(int td,List<BaseAction> listUS,List<BaseAction> listHost){
-         listUS.addAll(listHost);
-        BaseAction[] arrayOrderd=new BaseAction[listUS.size()];
-        for(BaseAction b:listUS){
-        System.out.println(b);
-        }
-        System.out.println("------------------------SORTED--------------------------");
+    public  void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
         
-        Arrays.sort(listUS.toArray( arrayOrderd), BaseAction.baseActionCompratorImpl);
+        listUSAll.addAll(listHostAll);
+        BaseAction[] arrayOrderd=new BaseAction[listUSAll.size()];
+        for(BaseAction b:listUSAll){
+            System.out.println(b);
+        }
+        System.out.println("-----------size all----"+listUSAll.size()+"--------SORTED--------------------------");
+        
+        Arrays.sort(listUSAll.toArray( arrayOrderd), BaseAction.baseActionCompratorImpl);
  
         for (BaseAction b : arrayOrderd) {
             Soldat s=(Soldat)b.getProtagoniste();
-            s.resetAction();
+            //s.resetAction();
+            BaseAction clone=b.clone();
+            System.out.println("--clone--->"+clone+"<-----");
             c.makeAction((Soldat)b.getProtagoniste(), b);
+            
+            playAllGraficInterface(clone);
+            
         }
 
         
@@ -174,5 +186,9 @@ public class MoteurDeJoeur {
         this.activeJeur = activeJeur;
     }
     
-    
+    void playAllGraficInterface(BaseAction b){
+        for (GraficCarteInterface g : listgrafic) {
+            g.play(b);
+        }
+    }
 }

@@ -60,6 +60,7 @@ public class Sprite extends Parent {
     }
 
     public void setFrameImages(Image frameImages) {
+        this.getChildren().remove(imgView);
         this.frameImages = frameImages;
         buildFrameImages();
         imgView = new ImageView(frameImages);

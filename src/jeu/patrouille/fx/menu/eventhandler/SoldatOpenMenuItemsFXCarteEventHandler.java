@@ -31,14 +31,15 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
      
 
           
-           if (event.getButton() == MouseButton.PRIMARY) {
+ 
+           if (event.getButton() == MouseButton.SECONDARY
+                   && event.getClickCount()<=1 ) {
+                pl.openCurrentSoldatMenuItems();
+               
+           }  else if(event.getButton()==MouseButton.SECONDARY
+                   && event.getClickCount()>1){
                 pl.closeFXCarteMenuItems();
-
            }
-           if (event.getButton() == MouseButton.SECONDARY) {
-
-                 pl.openCurrentSoldatMenuItems();
-           }  
        
 
         

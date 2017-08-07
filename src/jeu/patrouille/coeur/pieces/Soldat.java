@@ -216,7 +216,7 @@ public class Soldat extends Piece {
     @Override
     public String toStringSimple() {
         return ""
-                + "" + nom +" "+ nomDeFamilie +"\n";
+                + "" + nom +" "+ nomDeFamilie +"";
                 
     }
    

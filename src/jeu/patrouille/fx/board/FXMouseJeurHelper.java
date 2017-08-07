@@ -20,6 +20,16 @@ public class FXMouseJeurHelper {
     private FXSoldat seletctionee;
     private Carte carte;
     private boolean commanNotvalid;
+    private boolean actionSeletione;
+
+    public void setActionSeletione(boolean actionSeletione) {
+        this.actionSeletione = actionSeletione;
+    }
+
+    public boolean isActionSeletione() {
+        return actionSeletione;
+    }
+    
     
     public FXMouseJeurHelper(BaseAction act,Carte carte){
         this.act=act;

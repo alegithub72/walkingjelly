@@ -96,8 +96,18 @@ public int compareTo(BaseAction b) {
         char c=' ';
         if(type==BaseAction.FEU) c='f';
         else if(type==BaseAction.MARCHE) c='m';
-        return protagoniste.toStringSimple()+":"+c+" "+i0+","+j0+";"+i1+","+j1+"->TD->"+tempActivite+"->ordreInitiative="+this.ordreInitiative;
+        
+        
+        String txt=c+" "+i0+","+j0+";"+i1+","+j1+"\nordreInitiative="+this.ordreInitiative;
+        return txt;
     }
+
+    @Override
+    public BaseAction clone() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 
 
 

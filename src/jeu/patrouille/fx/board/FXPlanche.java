@@ -28,12 +28,8 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -71,8 +67,8 @@ public class FXPlanche extends Application {
     FXCarte fxCarte;
     Label message;
     List<Sprite> fxActionsPoolSelectionee;
-    Text profile;
-    Font font;
+
+     FXInfoPanel infPl;
     Font fontTitle;
 
     public void playFXCarteTurn() {
@@ -98,9 +94,9 @@ public class FXPlanche extends Application {
     public void start(Stage primaryStage) throws Exception {
         InputStream i = ClassLoader.getSystemResourceAsStream("Lintsec Regular.ttf");
         borderPan = new BorderPane();
-        font = Font.loadFont(i, 12);
+
         //i = ClassLoader.getSystemResourceAsStream("BlackOpsOne-Regular.ttf");        
-        fontTitle = Font.font(font.getName(), 16);
+        fontTitle =Font.loadFont(i, 18);
 
         fxActionsPoolSelectionee = new ArrayList<>();
         Image img = new Image("bc.jpeg");
@@ -129,6 +125,10 @@ public class FXPlanche extends Application {
 
     }
 
+    public Font getFontTitle() {
+        return fontTitle;
+    }
+    
     void defaceMenuItems() {
         this.fxCarte.defaceMenuItems();
 
@@ -139,8 +139,10 @@ public class FXPlanche extends Application {
     }
 
     final void setFXCarteOnMouseClicked(EventHandler<? super MouseEvent> value) {
+        //fxCarte.setOnMouseClicked(value);
         fxCarte.setOnMouseClicked(value);
     }
+
 
     final void setFXCarteCursor(Cursor value) {
         fxCarte.current = value;
@@ -213,36 +215,37 @@ public class FXPlanche extends Application {
 
 
     void buildBar() throws IOException {
+        
         canvasBar = new Canvas(FXCarte.PIXEL_SCROLL_AREA_W + FXCarte.DROIT_BAR_W, FXCarte.BAR_H);
-
+        rootBarGroup = new Group();
+        rootBarGroup.getChildren().add(canvasBar);
         GraphicsContext gc = canvasBar.getGraphicsContext2D();
         gc.setFill(Color.TRANSPARENT);
         gc.fillRect(0, 0, FXCarte.PIXEL_SCROLL_AREA_W + FXCarte.DROIT_BAR_W, FXCarte.BAR_H);
-        rootBarGroup = new Group();
-        rootBarGroup.getChildren().add(canvasBar);
-        message = new Label("");
-        message.setFont(font);
-//      Reflection reflection = new Reflection();
-//      reflection.setFraction(0.7);    
-//      label.setEffect(reflection);
-        message.relocate(120, 6);
-        message.setTextFill(Color.WHITE);
-        message.setStyle("");
-        rootBarGroup.getChildren().add(message);
         gc.drawImage(new Image("barConsole.png"), 0, 0);
+        
+        
+        //gc.setFont(fontTitle);
+        //gc.setFill(Color.BISQUE);
+        //gc.fillText("Message:", 10, 18);
+        
+        message = new Label("");
+        message.setTextFill(Color.WHITE);
+        message.setFont(fontTitle);
+        message.relocate(10, 5);
+        message.setStyle("");
+
+
         borderPan.setBottom(rootBarGroup);
-        gc.setFont(fontTitle);
-        gc.setFill(Color.BISQUE);
-        gc.fillText("Message:", 10, 18);
+
         Sprite endButton = new Sprite(120, 50, 120, 50, "endturn.png", this);
         endButton.setX(880);
         endButton.setY(0);
-        endButton.setOnMouseClicked(new EndTurnEventHandler(this));
+        EventHandler e=new EndTurnEventHandler(this, endButton);
+        endButton.setOnMousePressed(e);
+        endButton.setOnMouseReleased(e);
         rootBarGroup.getChildren().add(endButton);
-        //BorderWidths bw = new BorderWidths(3);
-        //CornerRadii cr = new CornerRadii(2);
-
-        //Border b = new Border(new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID, cr, bw));
+        rootBarGroup.getChildren().add(message);
     }
  
     void buildTop() {
@@ -255,11 +258,16 @@ public class FXPlanche extends Application {
     }
 
     void buildDroitBar() {
-
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1.0);
+        dropShadow.setOffsetX(1.0);
+        dropShadow.setOffsetY(1.0);
+        dropShadow.setSpread(1);
+        dropShadow.setColor(Color.BLACK);
         rootDroitBarGroup = new Group();
         droitCanvasBar = new Canvas(FXCarte.DROIT_BAR_W, FXCarte.PIXEL_SCROLL_AREA_H);
         GraphicsContext gc = droitCanvasBar.getGraphicsContext2D();
-        Image img = new Image("backCamo5.png");
+        Image img = new Image("backCamo2.png");
         //gc.setFill(Color.rgb(64, 128, 0, 1));
         gc.setFill(Color.TRANSPARENT);
 
@@ -268,25 +276,27 @@ public class FXPlanche extends Application {
         gc.fillRect(0, 0, FXCarte.DROIT_BAR_W,
                 FXCarte.PIXEL_SCROLL_AREA_H);
         gc.drawImage(img, 0, 0);
-        gc.setFill(Color.BISQUE);
+        //gc.setFill(Color.rgb(128,0,255)); grape
+        gc.setFill(Color.MAGENTA); 
         gc.setFont(fontTitle);
-
-        gc.fillText("SOLDAT RESUME", 0, 38);
-
-        gc.fillText("EQUIPMENT", 0, 270);
+ 
         borderPan.setRight(rootDroitBarGroup);
-        profile = new Text(10, 80, "");
-
-        profile.setFill(Color.color(1, 1, 1));
-        profile.setFont(font);
+        
+        gc.fillText("Nom:", 2, 26);
+        gc.fillText("Classment:", 2, 78+10);
+        gc.fillText("TD:", 2, 130+30);
+        gc.fillText("EQUIPMENT:", 11, 315);
+        infPl=new FXInfoPanel(this, 10, 40);
+        
         rootDroitBarGroup.getChildren().add(droitCanvasBar);
-        rootDroitBarGroup.getChildren().add(profile);
+        rootDroitBarGroup.getChildren().add(infPl);
 
+      
         BorderWidths bw = new BorderWidths(3);
-        CornerRadii cr = new CornerRadii(2);
+        
 
-        Border b = new Border(new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID, cr, bw));
-        borderPan.setBorder(b);
+        //Border b = new Border(new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID, cr, bw));
+        //borderPan.setBorder(b);
         //droitPan.getGraphicsContext2D().setFill(Color.DARKKHAKI);
 
         //droitPan.getGraphicsContext2D().fillRect(w, 0, w+DROIT_BAR_W, h);
@@ -336,7 +346,7 @@ public class FXPlanche extends Application {
         if (this.fxCarte.getHelper() != null) {
             s = this.fxCarte.getHelper().getSeletctionee();
         }
-        profile.setText(s.toString());
+        this.infPl.imprimerInfo(s);
     }
 
     void suprimerActionVisualization() {
@@ -352,7 +362,7 @@ public class FXPlanche extends Application {
         initFXCarteHelperInstance(s);
         imprimerProfile();
         buildFXCarteMenuItems();
-        sendMessageToPlayer(s.getSoldat().getNomDeFamilie() + " " + s.getSoldat().getNom());
+        sendMessageToPlayer("Choisir une action");
 
     }
     synchronized public void openCurrentSoldatMenuItems() {
@@ -364,9 +374,21 @@ public class FXPlanche extends Application {
       
         closeFXCarteMenuItems();
         buildFXCarteMenuItems();
-        sendMessageToPlayer(s.getSoldat().getNomDeFamilie() + " " + s.getSoldat().getNom());
+        
 
     }
+
+    public void setFXCarteActionSeletione(boolean actionSeletione) {
+        fxCarte.setActionSeletione(actionSeletione);
+    }
+
+    public boolean isFXCarteActionSeletione() {
+        return fxCarte.isActionSeletione();
+    }
+    
+    
+    
+    
     synchronized public void clickOnButtonItems(MenuItem item) {
 
         item.setFrame(1);
@@ -374,11 +396,12 @@ public class FXPlanche extends Application {
 
         if (act.getType() == BaseAction.MARCHE) {
             addHelperInstance(act);
+            setFXCarteActionSeletione(true);
             setFXCarteOnMouseClicked(null);
             setFXCarteOnMouseClicked(new ItemMenuConfirmMarcheEventHandler((WalkItem) item, this));
             setFXCarteCursor(Cursor.HAND);
             setFXCarteOnMouseMoved(new ItemMenuRangeDisplayHandler(this));
-            sendMessageToPlayer("Scegli posizione");
+            sendMessageToPlayer("Choisir un emplacement");
             closeFXCarteMenuItems();
 
         } else if (act.getType() == BaseAction.FEU) {
@@ -416,10 +439,12 @@ public class FXPlanche extends Application {
         double relativex = relativeJ(mapLastActJ) * FXCarte.TILE_SIZE + 25;
         double relativey = relativeI(mapLastActI) * FXCarte.TILE_SIZE + 25;
         System.out.println("relativex,relativey " + relativex + "," + relativey);
-
-        getFXCarteActiveCanvas().getGraphicsContext2D().strokeLine(relativex, relativey,
+        GraphicsContext g=getFXCarteActiveCanvas().getGraphicsContext2D();
+        //g.setLineWidth(10);
+        g.strokeLine(relativex, relativey,
                 (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
-
+       // fxCarte.refreshCarte();
+       //TODO mettere una variabile per debug
         if (getFXCarteActionHelper().rangeMarcheSoldat(r)
                 && getFXCarteActionHelper().carteValiderRoute()) {
 
@@ -466,7 +491,7 @@ public class FXPlanche extends Application {
     }
 
    synchronized public void confirmMarcheActionCommand(MenuItem item, double mousex, double mousey) {
-        item.setFrame(0);
+
         double x = mousex;
         double y = mousey;
         double tmpI = (y / FXCarte.TILE_SIZE);
@@ -496,9 +521,10 @@ public class FXPlanche extends Application {
        
 
             setFXCarteCursor(Cursor.DEFAULT);
-            sendMessageToPlayer("Commando non valido");
+            sendMessageToPlayer("Action non valide");
         }
             setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));
+            setFXCarteActionSeletione(false);
     }
 
     synchronized public void annulleCommand() {
@@ -508,7 +534,7 @@ public class FXPlanche extends Application {
         setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));
         setFXCarteCursor(Cursor.DEFAULT);
         deactiveFXCarteRangePointer();
-        sendMessageToPlayer("Commando Annullato");
+        sendMessageToPlayer("Action effacer");
 
     }
 

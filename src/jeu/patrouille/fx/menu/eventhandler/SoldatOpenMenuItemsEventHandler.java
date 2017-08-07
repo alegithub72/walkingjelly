@@ -33,12 +33,13 @@ public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandl
         
         
         if(event.getButton()==MouseButton.PRIMARY) {
-                pl.openSoldatMenuItems(s);
+               pl.openSoldatMenuItems(s);
+               
              
           
         }
         else if(event.getButton()==MouseButton.SECONDARY){
-                 pl.closeFXCarteMenuItems();
+          
      
         }
         

@@ -77,4 +77,6 @@ public static final int[] ACTIONPOINTVALOR = {1, 3, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5
         this.j1 = j1;
     }
     public abstract List<BaseAction> spreadAction();
+    
+    public abstract Object clone();    
 }

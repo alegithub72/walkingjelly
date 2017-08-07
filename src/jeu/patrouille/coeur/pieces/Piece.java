@@ -33,6 +33,7 @@ public abstract class Piece  {
         this.tempDesponible=10;
         actionsPool=new ArrayList();
         this.boss=boss;
+        spreaded=false;
     }
 
     private void transformActionPool() {
@@ -41,27 +42,36 @@ public abstract class Piece  {
         for(BaseAction b:actionsPool){
             int type=b.getType();
             if(type==BaseAction.MARCHE){
-                newActionPool.addAll(b.spreadAction());
+                List<BaseAction> l=b.spreadAction(); 
+                System.out.println(" list spread ->"+l.size());
+                newActionPool.addAll(l);
             }
         }
-        actionsPool=newActionPool;
+        this.actionsPool=newActionPool;
     }
-    public List<BaseAction> getBaseActionSum(int td){
-        if(!spreaded) transformActionPool();
+    public List<BaseAction> getBaseActionSum(int tdInc){
+        if(!spreaded) {
+            System.out.println("transformed=====");
+            transformActionPool();
+        }
         int sum=0;
         List<BaseAction> list =new ArrayList<>();
         for (BaseAction b : actionsPool) {
              sum=sum+b.getTempActivite();
-             if(sum<=td) {
-                 Soldat s=(Soldat)b.getProtagoniste();
-                 int rollDice=boss.dice(10);
-                 b.setOrdreInitiative( rollDice -s.getCC());
-                 if(!b.isUsed()) list.add(b);
-                 b.setUsed(true);
+             if(sum<=tdInc) {
+                 if(!b.isUsed()){
+                        list.add(b);
+                        Soldat s=(Soldat)b.getProtagoniste();
+                        int rollDice=boss.dice(10);
+                        b.setOrdreInitiative( rollDice -s.getCC());
+                        b.setUsed(true);                     
+                 }
+
                  
              }
                  
         }
+        
         return list;
     }
     
