@@ -31,6 +31,9 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -45,6 +48,7 @@ import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsFXCarteEventHandler;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.sprite.Sprite;
+import jeu.patrouille.util.ImageChargeur;
 
 /**
  *
@@ -56,7 +60,7 @@ public class FXPlanche extends Application {
 
         launch(args);
     }
-
+    Path p;
     BorderPane borderPan;
     Canvas topPan;
     Canvas canvasBar;
@@ -94,7 +98,8 @@ public class FXPlanche extends Application {
     public void start(Stage primaryStage) throws Exception {
         InputStream i = ClassLoader.getSystemResourceAsStream("Lintsec Regular.ttf");
         borderPan = new BorderPane();
-
+       
+        
         //i = ClassLoader.getSystemResourceAsStream("BlackOpsOne-Regular.ttf");        
         fontTitle =Font.loadFont(i, 18);
 
@@ -112,6 +117,7 @@ public class FXPlanche extends Application {
         fxCarte = new FXCarte(this);
         borderPan.setCenter(fxCarte);
         // Pane pan = new Pane(rootGroup);
+        
 
         primaryStage.setResizable(false);
         //reg.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
@@ -146,6 +152,7 @@ public class FXPlanche extends Application {
 
     final void setFXCarteCursor(Cursor value) {
         fxCarte.current = value;
+        if(value!=fxCarte.getCursor())
         fxCarte.setCursor(value);
     }
 
@@ -196,6 +203,9 @@ public class FXPlanche extends Application {
     void initFXCarteHelperInstance(FXSoldat s) {
         fxCarte.initHelperInstance(s);
     }
+    void initFXCarteSoldatHelperInstance(FXSoldat s) {
+        fxCarte.initHelperSoldatInstance(s);
+    }    
 
     void setFXCarteHelperArrivalCarteCoord(int i1, int j1) {
         fxCarte.setFXHelperArrivalCarteCoord(i1, j1);
@@ -277,7 +287,7 @@ public class FXPlanche extends Application {
                 FXCarte.PIXEL_SCROLL_AREA_H);
         gc.drawImage(img, 0, 0);
         //gc.setFill(Color.rgb(128,0,255)); grape
-        gc.setFill(Color.MAGENTA); 
+        gc.setFill(Color.WHITE); 
         gc.setFont(fontTitle);
  
         borderPan.setRight(rootDroitBarGroup);
@@ -359,7 +369,7 @@ public class FXPlanche extends Application {
     synchronized public void openSoldatMenuItems(FXSoldat s) {
         defaceMenuItems();
         fxCarte.deselectionneSoldats();        
-        initFXCarteHelperInstance(s);
+        initFXCarteSoldatHelperInstance(s);
         imprimerProfile();
         buildFXCarteMenuItems();
         sendMessageToPlayer("Choisir une action");
@@ -370,7 +380,7 @@ public class FXPlanche extends Application {
         System.out.println("-------->"+s);
         setFXCarteHelperConmmanNoTValid(true);
         imprimerProfile();
-        initFXCarteHelperInstance(s);
+        initFXCarteSoldatHelperInstance(s);
       
         closeFXCarteMenuItems();
         buildFXCarteMenuItems();
@@ -400,7 +410,7 @@ public class FXPlanche extends Application {
             setFXCarteOnMouseClicked(null);
             setFXCarteOnMouseClicked(new ItemMenuConfirmMarcheEventHandler((WalkItem) item, this));
             setFXCarteCursor(Cursor.HAND);
-            setFXCarteOnMouseMoved(new ItemMenuRangeDisplayHandler(this));
+            setFXCarteOnMouseMoved(new ItemMenuRangeDisplayHandler(this,item.getActionType()));
             sendMessageToPlayer("Choisir un emplacement");
             closeFXCarteMenuItems();
 
@@ -410,9 +420,24 @@ public class FXPlanche extends Application {
 
     }
 
-    public void displayMarcheRangeAction(double mousex, double mousey) {
+    public synchronized void refreshFXCarteCarte() {
+        fxCarte.refreshCarte();
+    }
 
-        visualizeFXCarteDisplayRange(mousex, mousey);
+    public int getFXCarteRangeCursorHelper() {
+        return fxCarte.getRangeCursorHelper();
+    }
+
+    public void setFXCarteRangeCursorHelper(int rangeCursorHelper) {
+        fxCarte.setRangeCursorHelper(rangeCursorHelper);
+    }
+
+    
+    
+    public synchronized void displayMarcheRangeAction(double mousex, double mousey) {
+
+        
+       // visualizeFXCarteDisplayRange(mousex, mousey);
 
         int mapLastActI = getFXCarteActionHelper().mapLastI();
         int mapLastActJ = getFXCarteActionHelper().mapLastJ();
@@ -441,27 +466,50 @@ public class FXPlanche extends Application {
         System.out.println("relativex,relativey " + relativex + "," + relativey);
         GraphicsContext g=getFXCarteActiveCanvas().getGraphicsContext2D();
         //g.setLineWidth(10);
+        g.setStroke(Color.FLORALWHITE);
         g.strokeLine(relativex, relativey,
                 (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
+//        fxCarte.getRootGroup().getChildren().remove(p);
+//       // p.getElements().removeAll()
+//        p=new Path();
+//        //fxCarte.getRootGroup().getChildren().remove(p);
+//        LineTo lto=new LineTo( (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
+//        MoveTo mto=new MoveTo(relativex, relativey);
+//        mto.setAbsolute(true);
+//        lto.setAbsolute(true);
+//        p.getElements().add(mto);
+//        p.getElements().add(lto);
+//        
+//        fxCarte.getRootGroup().getChildren().add(p);
+
+        
+        
+        //p.setTranslateX(relativex);
+        //p.setTranslateY(relativey);
+
        // fxCarte.refreshCarte();
        //TODO mettere una variabile per debug
         if (getFXCarteActionHelper().rangeMarcheSoldat(r)
                 && getFXCarteActionHelper().carteValiderRoute()) {
-
             setFXCarteHelperConmmanNoTValid(false);
             setFXCarteCursor(Cursor.HAND);
-
+            resetCursorHelper();
+            visualizeFXCarteDisplayRange(mousex, mousey);
+           
             System.out.println("raggio---->" + r);
         } else {
-  
+            setFXCarteRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             setFXCarteHelperConmmanNoTValid(true);
-            ImageCursor imgcr = new ImageCursor(new Image("forbiddenCursor.png"));
-            setFXCarteCursor(imgcr);
-            deactiveFXCarteRangePointer();
-            
+            //setFXCarteCursor(Cursor.CLOSED_HAND);
+            //deactiveFXCarteRangePointer();
+            visualizeFXCarteDisplayRange(mousex, mousey);
             System.out.println("fuori raggio---->" + r);
         }
         
+    }
+
+    public void resetCursorHelper() {
+        fxCarte.resetCursorHelper();
     }
 
     private int relativeI(int reali) {
@@ -515,12 +563,12 @@ public class FXPlanche extends Application {
             //buildFXCarteMenuItems();
             //fxcarte.buildMenuItem((FXSoldat)item.getFXSoldat());
             sendMessageToPlayer(getFXCarteActionHelper().toString());
-            resetFXCarteHelperAction();
+            //resetFXCarteHelperAction();
 
         } else {
        
 
-            setFXCarteCursor(Cursor.DEFAULT);
+            
             sendMessageToPlayer("Action non valide");
         }
             setFXCarteOnMouseMoved(new ScrollEventHandler(fxCarte));

@@ -30,8 +30,10 @@ WalkItem item;
         //TODO modificare il cursore
         if (event.getButton() == MouseButton.PRIMARY) {
             fxpl.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
+            fxpl.refreshFXCarteCarte();
         }else if(event.getButton()==MouseButton.SECONDARY){
             fxpl.annulleCommand();
+            fxpl.refreshFXCarteCarte();
         }
         
         event.consume();

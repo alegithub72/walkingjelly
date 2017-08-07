@@ -89,6 +89,9 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     ImageCursor arrowCRDown=new ImageCursor(new Image("cursorScrollDOWN.png"));
     public Cursor current;
 
+    
+    
+    
     public void playTurn() {
         mj.playTurn();
     }
@@ -167,14 +170,13 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     
     
     protected void addHelperInstance(BaseAction act){
+     
         if(helper!=null) {
             helper.setAct(act);
 
         }
-        else {
-            helper= new FXMouseJeurHelper(act, carte);
-           
-    }
+        buildDisplayRange();
+        
     }
    protected void initHelperInstance(FXSoldat s){
        if (s != null) {
@@ -188,11 +190,19 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
        helper= new FXMouseJeurHelper(s, carte);
     }
    
-  private void newHelperInstance(FXSoldat s){
+   protected void initHelperSoldatInstance(FXSoldat s){
+       if (s != null) {
+           if (s instanceof FXSoldat) {
+               mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
+           } else {
+               mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
+           }
+           mj.getActiveJeur().setPieceSelectionee(s.getSoldat());
+       }
        helper= new FXMouseJeurHelper(s, carte);
-      
-   }
-    
+    }   
+   
+ 
 
     
     @Deprecated
@@ -205,12 +215,12 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     }
 
 
-    private Group getRootGroup() {
+    protected Group getRootGroup() {
         return rootGroup;
     }
 
     protected void visualizeRangePointer(double mousex,double mousey){
-            buildDisplayRange();           
+         
             int scrollMousej = (int) (mousex / FXCarte.TILE_SIZE);
             int scrollMousei = (int) (mousey / FXCarte.TILE_SIZE);  
             System.out.println("---------visualizeRangePointer----------------------_->"+scrollMousej);
@@ -233,25 +243,58 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
       
     }
     
+    
         
     }
+
+    public int getRangeCursorHelper() {
+        return helper.getRangeCursorHelper();
+    }
+
+    public void setRangeCursorHelper(int rangeCursorHelper) {
+        helper.setRangeCursorHelper(rangeCursorHelper);        
+        buildDisplayRange();
+        
+    }
+
+    public void resetCursorHelper() {
+        helper.resetCursorHelper();
+        buildDisplayRange();
+    }
+    
+    
+    
+    
     private void buildDisplayRange(){
+        
+        
         if (displayRange == null) {
-            if(helper.getFXSoldatSelectionee() instanceof FXHostile)
-            displayRange = new Sprite(50, 50, 50, 50, "rangeArrow3.png", null);
-            else displayRange = new Sprite(50, 50, 50, 50, "rangeArrow2.png", null);
+            if(helper.getRangeCursorHelper()==ImageChargeur.CURSOR_HOST_RANGE)
+            displayRange = new Sprite(50, 50, 50, 50, "rangeArrowHost.png", null);
+            else if(helper.getRangeCursorHelper()==ImageChargeur.CURSOR_US_RANGE) 
+                displayRange = new Sprite(50, 50, 50, 50, "rangeArrow2.png", null);
+            else if(helper.getRangeCursorHelper()==ImageChargeur.CURSOR_FORBIDDEN)
+                displayRange=new Sprite(50, 50, 50, 50, "forbiddenCursor.png", null);
             this.rootGroup.getChildren().add(displayRange);
         }else{
+
          Image img=null;
-         if(helper.getFXSoldatSelectionee() instanceof FXHostile) 
-              img=ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_HOST_RANGE);
-         else img=ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_US_RANGE);
-        displayRange.setFrameImages(img);
+            if (helper.getRangeCursorHelper() == ImageChargeur.CURSOR_FORBIDDEN) {
+                img = ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_FORBIDDEN);
+            }
+            if (helper.getRangeCursorHelper() == ImageChargeur.CURSOR_HOST_RANGE) {
+                img = ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_HOST_RANGE);
+            } else if (helper.getRangeCursorHelper() == ImageChargeur.CURSOR_US_RANGE) {
+                img = ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_US_RANGE);
+            }
+            displayRange.setFrameImages(img);
       
-        
+         
         }
+
         
     }
+
 
     private void setFXSoldatSelectionee(FXSoldat selectionee) {
 
@@ -315,7 +358,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     protected void refreshCarte(){
         if(this.switchsCanvas)
         buildCarte(c1);
-        else buildCarte(c1);
+        else buildCarte(c2);
     }
     void buildCarte(Canvas canv) {
         String a = "";

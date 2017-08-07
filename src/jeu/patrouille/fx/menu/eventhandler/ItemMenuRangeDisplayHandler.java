@@ -15,14 +15,24 @@ import jeu.patrouille.fx.board.FXPlanche;
 public class ItemMenuRangeDisplayHandler implements EventHandler<MouseEvent>{
     FXPlanche fxpl;
     boolean outOfScroll=false;
-    public ItemMenuRangeDisplayHandler(FXPlanche fxpl){
+    int count=0;
+    public ItemMenuRangeDisplayHandler(FXPlanche fxpl,int actionType){
         this.fxpl=fxpl;
     }
     @Override
     public void handle(MouseEvent event) {
+         count++;
          if (!fxpl.scrollFXCarteCanvas(event.getSceneX(), event.getSceneY())) {
             fxpl.displayMarcheRangeAction(event.getSceneX(),event.getSceneY());
+
+
          }
+        if(count>2) {
+                count=0;
+                fxpl.refreshFXCarteCarte();
+            }
+         
+         event.consume();
     }
     
  

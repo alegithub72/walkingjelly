@@ -6,10 +6,8 @@
 
 import java.io.ByteArrayInputStream;
 import java.util.regex.Pattern;
-import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.joeurs.KeyboardJoeur;
-import jeu.patrouille.coeur.pieces.Soldat;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

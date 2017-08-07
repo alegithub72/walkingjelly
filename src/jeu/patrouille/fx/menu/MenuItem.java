@@ -32,6 +32,17 @@ public abstract class MenuItem extends Sprite{
         setFrame(0);
     
     }
+
+    public int getActionType() {
+        return actionType;
+    }
+
+    public void setActionType(int actionType) {
+        this.actionType = actionType;
+    }
+    
+    
+    
     public  ObservableList<Node>  getChildrens(){
     return this.getChildren();
     }
