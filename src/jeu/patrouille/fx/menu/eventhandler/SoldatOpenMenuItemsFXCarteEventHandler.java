@@ -8,6 +8,7 @@ package jeu.patrouille.fx.menu.eventhandler;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import jeu.patrouille.fx.board.FXCarte;
 
 import jeu.patrouille.fx.board.FXPlanche;
 
@@ -20,8 +21,8 @@ import jeu.patrouille.fx.board.FXPlanche;
 public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.EventHandler<MouseEvent>{
 
  
-    FXPlanche pl;
-    public SoldatOpenMenuItemsFXCarteEventHandler(FXPlanche pl) {
+    FXCarte pl;
+    public SoldatOpenMenuItemsFXCarteEventHandler(FXCarte pl) {
 
     this.pl=pl;
     }

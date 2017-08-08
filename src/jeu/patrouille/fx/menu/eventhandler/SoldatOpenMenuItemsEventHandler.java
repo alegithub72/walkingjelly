@@ -8,6 +8,7 @@ package jeu.patrouille.fx.menu.eventhandler;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import jeu.patrouille.fx.board.FXCarte;
 
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
@@ -21,11 +22,11 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
 public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandler<MouseEvent>{
 
     FXUSSoldat s;
-    FXPlanche pl;
-    public SoldatOpenMenuItemsEventHandler(FXUSSoldat s,FXPlanche pl) {
+    FXCarte fxcarte;
+    public SoldatOpenMenuItemsEventHandler(FXUSSoldat s,FXCarte fxcarte) {
      
     this.s=s;
-    this.pl=pl;
+    this.fxcarte=fxcarte;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandl
         
         
         if(event.getButton()==MouseButton.PRIMARY) {
-               pl.openSoldatMenuItems(s);
+               fxcarte.openSoldatMenuItems(s);
                
              
           

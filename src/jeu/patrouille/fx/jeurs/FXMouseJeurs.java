@@ -8,6 +8,7 @@ package jeu.patrouille.fx.jeurs;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.joeurs.KeyboardJoeur;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
@@ -18,10 +19,10 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  */
 public class FXMouseJeurs extends KeyboardJoeur{
 
-    FXPlanche fxpl;
-    public FXMouseJeurs(int joueur,Carte c,FXPlanche fxpl) {
-        super( joueur , c );       
-        this.fxpl=fxpl;
+    FXCarte fxcarte;
+    public FXMouseJeurs(int joueur,FXCarte fxcarte) {
+        super( joueur , fxcarte.getCarte() );       
+        this.fxcarte=fxcarte;
         buildEquipe();
 
     }
@@ -31,7 +32,7 @@ public class FXMouseJeurs extends KeyboardJoeur{
 
         for(int i=0;i<equipe.length;i++){
            fxequipe[i]=new FXUSSoldat((Soldat) equipe[i],i);
-            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxpl));
+            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
            // fxequipeUS[i].setOnMouseClicked(new ActionMenuCloseEventHandler(rootGroup, actionMenu));
         }    
     }    

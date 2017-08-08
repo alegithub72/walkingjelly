@@ -9,6 +9,7 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.joeurs.AIJoeur;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.AISoldat;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXHostile;
@@ -19,10 +20,10 @@ import jeu.patrouille.fx.pieces.FXHostile;
  */
 public class FXAIJoueur extends AIJoeur{
 
-    FXPlanche fxpl;
-    public FXAIJoueur(Carte c , FXPlanche fxpl) {
-        super(GeneriqueJoeurs.JOEUR_HOST, c);
-        this.fxpl=fxpl;
+    FXCarte fxcarte;
+    public FXAIJoueur(FXCarte fxcarte) {
+        super(GeneriqueJoeurs.JOEUR_HOST,fxcarte.getCarte());
+        this.fxcarte=fxcarte;
         buildEquipe();
     }
     FXHostile[] fxequipe=new FXHostile[equipe.length];
@@ -36,7 +37,7 @@ public class FXAIJoueur extends AIJoeur{
            fxequipe[i] = new FXHostile((AISoldat)equipe[i],i);
            fxequipe[i].setDeafultFrme(0);
            fxequipe[i].defaultFrame();
-           fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxpl));
+           fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
           
         }
       

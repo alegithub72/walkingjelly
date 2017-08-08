@@ -113,6 +113,8 @@ public class FXUSSoldat extends Sprite{
     
     public void playMove(BaseAction act){
     
+        
+        
     }
     
 }

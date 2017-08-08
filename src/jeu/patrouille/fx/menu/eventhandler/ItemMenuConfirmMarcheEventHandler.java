@@ -18,10 +18,10 @@ import jeu.patrouille.fx.menu.WalkItem;
  * @author appleale
  */
 public class ItemMenuConfirmMarcheEventHandler  implements EventHandler<MouseEvent>{
-    FXPlanche fxpl;
+    FXCarte fxcarte;
 WalkItem item;
-    public ItemMenuConfirmMarcheEventHandler(WalkItem walk,FXPlanche fxpl) {
-        this.fxpl=fxpl;
+    public ItemMenuConfirmMarcheEventHandler(WalkItem walk,FXCarte fxcarte) {
+        this.fxcarte=fxcarte;
         this.item=walk;
     }
 
@@ -29,11 +29,11 @@ WalkItem item;
     public void handle(MouseEvent event) {
         //TODO modificare il cursore
         if (event.getButton() == MouseButton.PRIMARY) {
-            fxpl.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
-            fxpl.refreshFXCarteCarte();
+            fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
+            fxcarte.refreshCarte();
         }else if(event.getButton()==MouseButton.SECONDARY){
-            fxpl.annulleCommand();
-            fxpl.refreshFXCarteCarte();
+            fxcarte.annulleCommand();
+            fxcarte.refreshCarte();
         }
         
         event.consume();

@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.WalkItem;
@@ -23,13 +24,13 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
     
     MenuItem item;
     MenuItem mainMenu[];
-    FXPlanche fxpl;
+    FXCarte fxcarte;
     public SoldatClickedOnMenuItemsEventHandler(MenuItem item,
-            FXPlanche fxpl) {
+            FXCarte fxcarte) {
     
     this.item=item;
 
-    this.fxpl=fxpl;
+    this.fxcarte=fxcarte;
     }
     
     
@@ -41,7 +42,7 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
 
         if(event.getButton()==MouseButton.PRIMARY  ){
 
-           if(!fxpl.isFXCarteActionSeletione()) fxpl.clickOnButtonItems(item);
+           if(!fxcarte.isActionSeletione()) fxcarte.clickOnButtonItems(item);
             
         }
         

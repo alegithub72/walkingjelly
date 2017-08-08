@@ -23,12 +23,11 @@ public class SoldatRelasedOnMenuItemsEventHandler   implements EventHandler<Mous
     
     MenuItem item;
     MenuItem mainMenu[];
-    FXPlanche fxpl;
-    public SoldatRelasedOnMenuItemsEventHandler(MenuItem item,
-            FXPlanche fxpl) {
+
+    public SoldatRelasedOnMenuItemsEventHandler(MenuItem item) {
     
     this.item=item;
-    this.fxpl=fxpl;
+
     }
     
     
