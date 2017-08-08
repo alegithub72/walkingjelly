@@ -12,16 +12,15 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
-import jeu.patrouille.coeur.joeurs.AIJoeur;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
@@ -35,13 +34,13 @@ import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.OpFeuItem;
 import jeu.patrouille.fx.menu.RunItem;
 import jeu.patrouille.fx.menu.WalkItem;
-import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.ItemMenuConfirmMarcheEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.ItemMenuRangeDisplayHandler;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatClickedOnMenuItemsEventHandler;
-import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsFXCarteEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatRelasedOnMenuItemsEventHandler;
-import jeu.patrouille.fx.pieces.FXHostile;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.fx.sprite.Sprite;
 import jeu.patrouille.util.ImageChargeur;
@@ -85,16 +84,61 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     Sprite displayRange;
     boolean commanNotvalid;
     public Cursor current;
+    
+    
+    public FXCarte(FXPlanche fxpl) throws IOException{
+        
+        // arrow = new Sprite(100, 100, 100, 100, "arrowPng.png", null);
+        this.fxpl=fxpl;
+        rootGroup = new Group();        
+        displayRange=null;
+        carte = new Carte("src/mapDesert.txt");
+        FXAIJoueur  jHOST = new FXAIJoueur(this);
+        FXMouseJeurs jUS= new FXMouseJeurs(GeneriqueJoeurs.JOEUR_US,this);
+        
+        fxequipeUS=jUS.getFxEquipe();
+        fxequipeHost=jHOST.getFxEquipe();
+        
+        this.mj=new MoteurDeJoeur(jUS,jHOST,carte);
+        // mj.setActiveJeur(MoteurDeJoeur.JEUR_US);
+ 
+        AREA_SCROLL_J_W = (int) (PIXEL_SCROLL_AREA_W / TILE_SIZE);
+        AREA_SCROLL_I_H = (int) (PIXEL_SCROLL_AREA_H / TILE_SIZE);
+        System.out.println(PIXEL_SCROLL_AREA_W + "," + PIXEL_SCROLL_AREA_H);
+        actionMenu = new MenuItem[20];
+        
+        mapW = carte.getMapW();
+        mapH = carte.getMapH();
+        c1 = new Canvas(PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
+        rootGroup.getChildren().add(c1);
+        c2 = new Canvas(PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
+        rootGroup.getChildren().add(c2);
+        //ImageView test = new ImageView(new Image("menuItem.png"));
+        buildCarte(c1);
+        
+        
+        this.setOnMouseExited(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                setCursor(Cursor.DEFAULT);
+            }
+            
+        });
+        this.setOnMouseMoved(new ScrollEventHandler(this));
+        this.setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler( this));
+        this.getChildren().add(rootGroup);
+        
+    }
 
     
     
     
-    public void playTurn() {
+    public synchronized void playTurn() {
         mj.playTurn();
     }
 
     @Override
-    public void play(BaseAction b) {
+    public synchronized void play(BaseAction b) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("play grafic fx");
         //TODO disegnare lo schermo intorno al leader.....ma dove prendo l posizione del leader se faccio make e gia tutto cambiato
@@ -106,60 +150,144 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         //TODO per il momento.....
         
     }
+    synchronized public void closeFXCarteMenuItems() {
+        
+       devisualizeMenuItems();
 
-    public void setActionSeletione(boolean actionSeletione) {
-        helper.setActionSeletione(actionSeletione);
     }
+    protected void devisualizeMenuItems() {
+        for (int k = 0; k < actionMenu.length; k++) {
+            if (actionMenu[k] != null) {
+                actionMenu[k].setVisible(false);
+            }
+        }
 
-    public boolean isActionSeletione() {
+    }
+    
+    private void addHelperInstance(BaseAction act){
+     
+        if(helper!=null) {
+            helper.setAct(act);
+
+        }
+
+
+        
+    }    
+    
+
+    public synchronized boolean isActionSeletione() {
         return helper.isActionSeletione();
     }
-    
-    
-    public FXCarte(FXPlanche fxpl) throws IOException{
-        
-        arrow = new Sprite(100, 100, 100, 100, "arrowPng.png", null);
-        this.fxpl=fxpl;
-        displayRange=null;
-        carte = new Carte("src/mapDesert.txt");
-        FXAIJoueur  jHOST = new FXAIJoueur(carte,fxpl);
-        FXMouseJeurs jUS= new FXMouseJeurs(GeneriqueJoeurs.JOEUR_US,carte,fxpl);
-        
-        fxequipeUS=jUS.getFxEquipe();
-        fxequipeHost=jHOST.getFxEquipe();      
-                
-        this.mj=new MoteurDeJoeur(jUS,jHOST,carte);
-        // mj.setActiveJeur(MoteurDeJoeur.JEUR_US);
-        rootGroup = new Group();
-        AREA_SCROLL_J_W = (int) (PIXEL_SCROLL_AREA_W / TILE_SIZE);
-        AREA_SCROLL_I_H = (int) (PIXEL_SCROLL_AREA_H / TILE_SIZE);
-        System.out.println(PIXEL_SCROLL_AREA_W + "," + PIXEL_SCROLL_AREA_H);
-        actionMenu = new MenuItem[20];
 
-        mapW = carte.getMapW();
-        mapH = carte.getMapH();
-        c1 = new Canvas(PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
-        rootGroup.getChildren().add(c1);
-        c2 = new Canvas(PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
-        rootGroup.getChildren().add(c2);
-        ImageView test = new ImageView(new Image("menuItem.png"));
-        buildCarte(c1);
+    
+    protected void deactiveRangePointer(){
+    if(displayRange!=null) {
+        displayRange.setVisible(false);
+      
+    }
+    }
+    
+    synchronized public void annulleCommand() {
+        helper.setCommanNotvalid(true);
         
-        
-        this.setOnMouseExited(new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                setCursor(Cursor.DEFAULT);
-            }
-        
-        });
-        this.setOnMouseMoved(new ScrollEventHandler(this));
-        this.setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler( this.fxpl));
-        this.getChildren().add(rootGroup);
-        
+        setOnMouseMoved(null);
+        setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
+        setOnMouseMoved(new ScrollEventHandler(this));
+         setCursor(Cursor.DEFAULT);
+        deactiveRangePointer();
+        fxpl.sendMessageToPlayer("Action effacer");
+
+    }
+    private void imprimerProfile() {
+        Soldat s = null;
+        if (helper != null) {
+            s = helper.getSeletctionee();
+        }
+        fxpl.imprimerFXPLInfo(s);
+    }    
+   
+    
+ synchronized public void confirmMarcheActionCommand(MenuItem item, double mousex, double mousey) {
+
+        double x = mousex;
+        double y = mousey;
+        double tmpI = (y / FXCarte.TILE_SIZE);
+        double tmpJ = (x / FXCarte.TILE_SIZE);
+        System.out.println(x + "," + y);
+        int i1 = ((int) tmpI) + posI;
+        int j1 = ((int) tmpJ) + posJ;
+        System.out.println("walk here i1=" + i1 + " j1=" + j1);
+        helper.setArrivalCarteCoord(i1, j1);
+        deactiveRangePointer();
+
+        setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
+        setCursor(Cursor.DEFAULT);
+        if (!helper.isCommanNotvalid()) {
+
+            helper.addSoldataSelectioneeAction();
+
+            imprimerProfile();
+            fxpl.visualizeActionBarActual();
+            closeFXCarteMenuItems();
+            //buildFXCarteMenuItems();
+            //fxcarte.buildMenuItem((FXSoldat)item.getFXSoldat());
+            fxpl.sendMessageToPlayer(helper.toString());
+            //resetFXCarteHelperAction();
+            BaseAction act=  item.buildMenuItemAction();
+            addHelperInstance(act);
+
+        } else {
+       
+
+            BaseAction act=  item.buildMenuItemAction();
+            addHelperInstance(act);
+            fxpl.sendMessageToPlayer("Action non valide");
+        }
+            setOnMouseMoved(new ScrollEventHandler(this));
+            helper.setActionSeletione(false);
     }
 
 
+
+
+
+    
+    
+
+    public Carte getCarte() {
+        return carte;
+    }
+
+
+    
+    final void setFXCarteCursor(Cursor value) {
+        current = value;
+        if(value!=getCursor())
+        setCursor(value);
+    }    
+    
+    synchronized public void clickOnButtonItems(MenuItem item) {
+
+        item.setFrame(1);
+        BaseAction act = item.buildMenuItemAction();
+
+        if (act.getType() == BaseAction.MARCHE) {
+            addHelperInstance(act);
+            helper.setActionSeletione(true);
+            setOnMouseClicked(null);
+            setOnMouseClicked(new ItemMenuConfirmMarcheEventHandler((WalkItem) item, this));
+            setFXCarteCursor(Cursor.HAND);
+            setOnMouseMoved(new ItemMenuRangeDisplayHandler(this,item.getActionType()));
+            fxpl.sendMessageToPlayer("Choisir un emplacement");
+            closeFXCarteMenuItems();
+
+        } else if (act.getType() == BaseAction.FEU) {
+            setFXCarteCursor(Cursor.CROSSHAIR);
+        }
+
+    }
+    
 
     private MoteurDeJoeur getMj() {
         return mj;
@@ -173,28 +301,19 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
        return helper.carteValiderRoute();
    }  
 
-    protected int mapLastJ() {
+    private int mapLastJ() {
         return helper.mapLastJ();
     }
 
-    protected int mapLastI() {
+    private int mapLastI() {
         return helper.mapLastI();
     }
     
     
     
     
-    protected void addHelperInstance(BaseAction act){
-     
-        if(helper!=null) {
-            helper.setAct(act);
 
-        }
-
-
-        
-    }
-   protected void initHelperInstance(FXUSSoldat s){
+   private void initHelperInstance(FXUSSoldat s){
        if (s != null) {
            if (s instanceof FXUSSoldat) {
                mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
@@ -206,7 +325,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
        helper= new FXMouseJeurHelper(s, carte);
     }
    
-   protected void initHelperSoldatInstance(FXUSSoldat s){
+   private void initHelperSoldatInstance(FXUSSoldat s){
        if (s != null) {
            if (s instanceof FXUSSoldat) {
                mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
@@ -223,21 +342,14 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
  
 
     
-    @Deprecated
-    private Sprite getArrow() {
-        return arrow;
-    }
-   @Deprecated
-    private void setArrow(Sprite arrow) {
-        this.arrow = arrow;
-    }
 
 
-    protected Group getRootGroup() {
+
+    private Group getRootGroup() {
         return rootGroup;
     }
 
-    protected void visualizeRangePointer(double mousex,double mousey){
+    private void visualizeRangePointer(double mousex,double mousey){
          
             int scrollMousej = (int) (mousex / FXCarte.TILE_SIZE);
             int scrollMousei = (int) (mousey / FXCarte.TILE_SIZE);  
@@ -255,27 +367,21 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         
     
     }
-    protected void deactiveRangePointer(){
-    if(displayRange!=null) {
-        displayRange.setVisible(false);
-      
-    }
+
+
+
     
     
         
-    }
+    
 
-    public int getRangeCursorHelper() {
-        return helper.getRangeCursorHelper();
-    }
-
-    public void setRangeCursorHelper(int rangeCursorHelper) {
+    private void setRangeCursorHelper(int rangeCursorHelper) {
         helper.setRangeCursorHelper(rangeCursorHelper);        
         buildDisplayRange();
         
     }
 
-    public void resetCursorHelper() {
+    private void resetCursorHelper() {
         helper.resetCursorHelper();
         buildDisplayRange();
     }
@@ -318,11 +424,9 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
 
     }
 
-    protected void setFXHelperArrivalCarteCoord(int i1, int j1) {
-        helper.setArrivalCarteCoord(i1, j1);
-    }
 
-    protected void addSoldataSelectioneeAction() {
+
+    private void addSoldataSelectioneeAction() {
         helper.addSoldataSelectioneeAction();
     }
     
@@ -355,11 +459,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         this.helper = helper;
     }
 
-    protected boolean  rangeMarcheSoldat(double range) {
+    private boolean  rangeMarcheSoldat(double range) {
        return helper.rangeMarcheSoldat(range);
     }
     
-    protected void resetHelperAction(){
+    private void resetHelperAction(){
         helper.setAct(null);
     }
 
@@ -367,18 +471,96 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
 
     
     
-    protected Canvas activeCanvas(){
+    private Canvas activeCanvas(){
         if (switchsCanvas) {
             return c1;
         }
         return c2;
     }
-    protected void refreshCarte(){
+    
+    
+    
+    public synchronized void displayMarcheRangeAction(double mousex, double mousey) {
+
+        
+       // visualizeFXCarteDisplayRange(mousex, mousey);
+
+        int mapLastActI = helper.mapLastI();
+        int mapLastActJ = helper.mapLastJ();
+        double mapLastActy = mapLastActI * FXCarte.TILE_SIZE;
+        double mapLastActx = mapLastActJ * FXCarte.TILE_SIZE;
+        System.out.println(" (mapLastActI,mapLastActJ)=" + mapLastActI + "," + mapLastActJ);
+        int posi = posI;
+        int posj = posJ;
+        System.out.println(" (posi,posj)=" + posI + "," + posJ);
+
+        //TODO usare scrollmousej, and scrollMouei per verificare la validita del percorso
+        int scrollMousej = (int) (mousex / FXCarte.TILE_SIZE);
+        int scrollMousei = (int) (mousey / FXCarte.TILE_SIZE);
+        
+        helper.setArrivalCarteCoord(scrollMousei, scrollMousej);
+       
+
+        double mouseMapx = (scrollMousej + posj) * FXCarte.TILE_SIZE;
+        double mouseMapy = (scrollMousei + posi) * FXCarte.TILE_SIZE;
+
+        double circleX = Math.pow(mouseMapx - mapLastActx, 2);
+        double circleY = Math.pow(mouseMapy - mapLastActy, 2);
+        double r = Math.sqrt(circleX + circleY);
+
+        double relativex = relativeJ(mapLastActJ) * FXCarte.TILE_SIZE + 25;
+        double relativey = relativeI(mapLastActI) * FXCarte.TILE_SIZE + 25;
+        System.out.println("relativex,relativey " + relativex + "," + relativey);
+        GraphicsContext g=activeCanvas().getGraphicsContext2D();
+        //g.setLineWidth(10);
+        g.setStroke(Color.FLORALWHITE);
+        g.strokeLine(relativex, relativey,
+                (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
+//        fxCarte.getRootGroup().getChildren().remove(p);
+//       // p.getElements().removeAll()
+//        p=new Path();
+//        //fxCarte.getRootGroup().getChildren().remove(p);
+//        LineTo lto=new LineTo( (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
+//        MoveTo mto=new MoveTo(relativex, relativey);
+//        mto.setAbsolute(true);
+//        lto.setAbsolute(true);
+//        p.getElements().add(mto);
+//        p.getElements().add(lto);
+//        
+//        fxCarte.getRootGroup().getChildren().add(p);
+
+        
+        
+        //p.setTranslateX(relativex);
+        //p.setTranslateY(relativey);
+
+       // fxCarte.refreshCarte();
+       //TODO mettere una variabile per debug
+        if (helper.rangeMarcheSoldat(r)
+                && helper.carteValiderRoute()) {
+            helper.setCommanNotvalid(false);
+            setFXCarteCursor(Cursor.HAND);
+            resetCursorHelper();
+            visualizeRangePointer(mousex, mousey);
+           
+            System.out.println("raggio---->" + r);
+        } else {
+            setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
+            helper.setCommanNotvalid(true);
+            //setFXCarteCursor(Cursor.CLOSED_HAND);
+            //deactiveFXCarteRangePointer();
+            visualizeRangePointer(mousex, mousey);
+            System.out.println("fuori raggio---->" + r);
+        }
+        
+    }
+    
+    public synchronized void refreshCarte(){
         if(this.switchsCanvas)
         buildCarte(c1);
         else buildCarte(c2);
     }
-    void buildCarte(Canvas canv) {
+    private void buildCarte(Canvas canv) {
         String a = "";
         canv.getGraphicsContext2D().setFill(Color.rgb(64, 128, 0, 1));
         canv.getGraphicsContext2D().fillRect(0, 0, PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
@@ -434,7 +616,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         
     }
 
-    void suprimmerSoldatNotEnView() {
+    private void suprimmerSoldatNotEnView() {
         for (int h = 0; h < fxequipeHost.length; h++) {
             int i = ((AISoldat) fxequipeHost[h].getSoldat()).getI();
             int j = ((AISoldat) fxequipeHost[h].getSoldat()).getJ();
@@ -617,11 +799,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         return updateScroll;
     }
 
-    protected int getPosI() {
+    private int getPosI() {
         return posI;
     }
 
-    protected int getPosJ() {
+    private int getPosJ() {
         return posJ;
     }
    private void buildSoldatAction(){
@@ -698,7 +880,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     
     }
 
-    protected void openMenuItems(){
+    private void openMenuItems(){
      for (int k = 0; k < actionMenu.length; k++) {
             if (actionMenu[k] != null) {
                actionMenu[k].setVisible(true);
@@ -708,21 +890,38 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     
     }
     
-    protected void removeMenuItems() {
+    
+    synchronized public void openSoldatMenuItems(FXUSSoldat s) {
+        defaceMenuItems();
+        deselectionneSoldats();        
+        initHelperSoldatInstance(s);
+        imprimerProfile();
+        buildMenuItems();
+        fxpl.sendMessageToPlayer("Choisir une action");
+
+    }    
+    
+    synchronized public void openCurrentSoldatMenuItems() {
+        FXUSSoldat s=helper.getFXSoldatSelectionee();
+        System.out.println("-------->"+s);
+        helper.setCommanNotvalid(true);
+        imprimerProfile();
+        initHelperInstance(s);
+      
+        closeFXCarteMenuItems();
+        buildMenuItems();
+        
+
+    }    
+    
+    private void removeMenuItems() {
         for (int k = 0; k < actionMenu.length; k++) {
             if (actionMenu[k] != null) {
                 rootGroup.getChildren().remove(actionMenu[k]);
             }
         }
     }
-    protected void devisualizeMenuItems() {
-        for (int k = 0; k < actionMenu.length; k++) {
-            if (actionMenu[k] != null) {
-                actionMenu[k].setVisible(false);
-            }
-        }
-
-    }    
+    
     
 
     
@@ -772,9 +971,9 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             m.setY(menuItemy);
             rootGroup.getChildren().add(m);
             if(s.getSoldat().getActionPoint()>=BaseAction.ACTIONPOINTVALOR[BaseAction.MARCHE]) {
-            m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
-            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
-                m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));
+            m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  this));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));
+                m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));
             }
             else m.setEffect(new GaussianBlur());
             
@@ -790,9 +989,9 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             m.setX(menuItemx);
             m.setY(menuItemy);   
             rootGroup.getChildren().add(m);   
-            m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
-            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
-            m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));            
+            m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,this));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));
+            m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
             actionMenu[1] = m;            
     
     }
@@ -807,9 +1006,9 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             rootGroup.getChildren().add(m);
             //rootGroup.getChildren().add(l);
-           m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
-            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
-                m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));            
+           m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  this));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));
+                m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
             actionMenu[2] = m;    
         
     }
@@ -823,9 +1022,9 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
             m.setX(menuItemx);
             m.setY(menuItemy);
-           m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  fxpl));
-            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m,  fxpl));
-            m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m, fxpl));            
+            m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  this));
+            m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));
+            m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             rootGroup.getChildren().add(m);
             //rootGroup.getChildren().add(l);
@@ -873,6 +1072,30 @@ protected void buildDisableMenu(FXUSSoldat s){
 }    
 
 
+    private int relativeI(int reali) {
+        int relativei = -1;
+        int posi = posI;
+        if (reali < posi) {
+            relativei = -(posi - reali);
+        } else if (reali >= (posi)) {
+            relativei = (reali - posi);
+        }
+        return relativei;
 
+    }
+
+    private int relativeJ(int realj) {
+
+        int posj =posJ;
+        int relativej = -1;
+
+        if (realj < posj) {
+            relativej = -(posj - realj);
+        } else if (realj >= (posj)) {
+            relativej = (realj - posj);
+        }
+        return relativej;
+
+    }
 
 }
