@@ -166,8 +166,10 @@ public class MoteurDeJoeur {
             //s.resetAction();
             BaseAction clone=b.clone();
             System.out.println("--clone--->"+clone+"<-----");
-            c.makeAction((Soldat)b.getProtagoniste(), b);
+            //cosi sono valide le posizioni di tutti.....
             playAllGraficInterface(clone);
+            c.makeAction((Soldat)b.getProtagoniste(), b);
+            
             
         }
 

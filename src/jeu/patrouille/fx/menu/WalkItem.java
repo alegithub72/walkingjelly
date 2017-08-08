@@ -7,14 +7,14 @@ package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
-import jeu.patrouille.fx.pieces.FXSoldat;
+import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 /**
  *
  * @author appleale
  */
 public class WalkItem extends SoldatMenuItem{
-    public WalkItem(FXSoldat fxs){
+    public WalkItem(FXUSSoldat fxs){
         super(BaseAction.MARCHE,fxs);
         
     }

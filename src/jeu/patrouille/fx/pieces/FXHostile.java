@@ -13,7 +13,7 @@ import jeu.patrouille.coeur.terrains.PointCarte;
  *
  * @author appleale
  */
-public class FXHostile extends FXSoldat{
+public class FXHostile extends FXUSSoldat{
     
     public FXHostile(Soldat s,int pos){
         super( "frameHostile.png", s, pos);

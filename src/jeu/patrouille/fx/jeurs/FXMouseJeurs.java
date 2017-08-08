@@ -6,13 +6,11 @@
 package jeu.patrouille.fx.jeurs;
 
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.armes.AK74;
-import jeu.patrouille.coeur.armes.ArmeGenerique;
-import jeu.patrouille.coeur.armes.BenelliM3;
 import jeu.patrouille.coeur.joeurs.KeyboardJoeur;
-import jeu.patrouille.coeur.pieces.AISoldat;
-import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.board.FXPlanche;
+import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsEventHandler;
+import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 /**
  *
@@ -20,16 +18,34 @@ import jeu.patrouille.coeur.pieces.Soldat;
  */
 public class FXMouseJeurs extends KeyboardJoeur{
 
-    public FXMouseJeurs(int jeur,Carte c) {
-        super( jeur , c );       
+    FXPlanche fxpl;
+    public FXMouseJeurs(int joueur,Carte c,FXPlanche fxpl) {
+        super( joueur , c );       
+        this.fxpl=fxpl;
+        buildEquipe();
+
     }
+    FXUSSoldat fxequipe[]=new FXUSSoldat[equipe.length];
     
- 
+    private  void buildEquipe() {
+
+        for(int i=0;i<equipe.length;i++){
+           fxequipe[i]=new FXUSSoldat((Soldat) equipe[i],i);
+            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxpl));
+           // fxequipeUS[i].setOnMouseClicked(new ActionMenuCloseEventHandler(rootGroup, actionMenu));
+        }    
+    }    
+    
+   
 
     @Override
     public void getCommand() {
   
         
+    }
+
+    public FXUSSoldat[] getFxEquipe() {
+        return fxequipe;
     }
 
   

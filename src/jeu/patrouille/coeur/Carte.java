@@ -173,7 +173,7 @@ public void decoderTaille(String line){
                do{
                     jx=k+j1;
                     double iydouble=m*jx+h; 
-                    iy=plusGrand(iydouble);  
+                    iy=aroundN(iydouble,size,k,i1,i2);  
                     PointCarte p=new PointCarte(iy, jx);                    
                     if(k>0)listp.add(p);
                     System.out.println("cas1) k="+k+"-> "+p) ;                       
@@ -188,7 +188,7 @@ public void decoderTaille(String line){
                do{
                     jx=k+j2;
                     double iydouble=m*jx+h; 
-                    iy=plusGrand(iydouble);                   
+                    iy=aroundN(iydouble,size,k,i2,i1);                   
                     PointCarte p=new PointCarte(iy, jx);
                     PointCarte previous=null;
                     if(jx<j1){
@@ -206,8 +206,8 @@ public void decoderTaille(String line){
                  Integer  iy=null;
                  do{
                     iy=k+i1;
-                    double ixdouble=(iy-h)/m; 
-                    jx=plusGrand(ixdouble);  
+                    double jxdouble=(iy-h)/m; 
+                    jx=aroundN(jxdouble,size,k,j1,j2);  
                     PointCarte p=new PointCarte(iy, jx);                    
                     if(k>0)listp.add(p);
                     System.out.println("cas3) k="+k+"-> "+p) ;                       
@@ -219,9 +219,11 @@ public void decoderTaille(String line){
                 int k=0;
                  Integer  iy=null;
                  do{
+                     
                     iy=k+i2;
-                    double ixdouble=(iy-h)/m; 
-                    jx=plusGrand(ixdouble);  
+                    double jxdouble=(iy-h)/m;
+                    //TODO il piu grande se e' il primo il piu piccolo se e' l'ultimo
+                    jx=aroundN(jxdouble,size,k,j2,j1);  
                     PointCarte p=new PointCarte(iy, jx);    
                     PointCarte previous=null;
                     if(iy<i1){
@@ -260,12 +262,16 @@ public void decoderTaille(String line){
          return listp.toArray(customs);
     }
      
-   static int  plusGrand(double n){
-        int plusgrand=-100;
+   static int  aroundN(double n,int size,int k,int first,int last){
+        int plusgrand=(int)n;
         double intn=(int)n;
-        if(n-intn>0) 
+        if((n-intn)>0 && (k<size && k>0) && n<last ) 
             plusgrand=(int)n+1;
-                    else plusgrand=(int)n;
+        else 
+            if(k==0)
+               plusgrand=first ;
+            else if(k==size)plusgrand=last;
+    
         return plusgrand;
     }
     

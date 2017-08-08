@@ -10,7 +10,7 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.pieces.FXHostile;
-import jeu.patrouille.fx.pieces.FXSoldat;
+import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.util.ImageChargeur;
 
 /**
@@ -19,7 +19,7 @@ import jeu.patrouille.util.ImageChargeur;
  */
 public class FXMouseJeurHelper {
     private BaseAction act;
-    private FXSoldat seletctionee;
+    private FXUSSoldat seletctionee;
     private Carte carte;
     private boolean commanNotvalid;
     private boolean actionSeletione;
@@ -41,7 +41,7 @@ public class FXMouseJeurHelper {
     }
     
         
-    public FXMouseJeurHelper(FXSoldat s,Carte carte){
+    public FXMouseJeurHelper(FXUSSoldat s,Carte carte){
         this.seletctionee=s;
         this.carte=carte;
         this.commanNotvalid=false;
@@ -70,7 +70,7 @@ public class FXMouseJeurHelper {
                 &&  this.seletctionee instanceof FXHostile) 
         this.rangeCursorHelper=ImageChargeur.CURSOR_HOST_RANGE;
         else if(act.getType()==BaseAction.MARCHE 
-                && this.seletctionee instanceof FXSoldat) 
+                && this.seletctionee instanceof FXUSSoldat) 
             this.rangeCursorHelper=ImageChargeur.CURSOR_US_RANGE;     
     
     }
@@ -88,7 +88,7 @@ public class FXMouseJeurHelper {
         return seletctionee.getSoldat();
     }
 
-    public void setFXSeletctionee(FXSoldat seletctionee) {
+    public void setFXSeletctionee(FXUSSoldat seletctionee) {
         this.seletctionee = seletctionee;
     }
     
@@ -169,7 +169,7 @@ public class FXMouseJeurHelper {
         return i;
    }      
     
-public FXSoldat getFXSoldatSelectionee(){
+public FXUSSoldat getFXSoldatSelectionee(){
     return seletctionee;
 }    
 

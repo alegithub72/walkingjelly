@@ -10,7 +10,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import jeu.patrouille.fx.board.FXPlanche;
-import jeu.patrouille.fx.pieces.FXSoldat;
+import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 
 
@@ -20,9 +20,9 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  */
 public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandler<MouseEvent>{
 
-    FXSoldat s;
+    FXUSSoldat s;
     FXPlanche pl;
-    public SoldatOpenMenuItemsEventHandler(FXSoldat s,FXPlanche pl) {
+    public SoldatOpenMenuItemsEventHandler(FXUSSoldat s,FXPlanche pl) {
      
     this.s=s;
     this.pl=pl;

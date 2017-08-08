@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.util;
 
+import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 
 /**
@@ -19,8 +20,18 @@ public class ImageChargeur {
          array[0]=new Image("rangeArrowHost.png");
          array[1]=new Image("rangeArrow2.png");
          array[2]=new Image("forbiddenCursor.png");
+     arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
+     arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
+     arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
+     arrowCRDown=new ImageCursor(new Image("cursorScrollDOWN.png"));           
          
     }
+     
+    ImageCursor arrowCRRight;
+    ImageCursor arrowCRLeft;
+    ImageCursor arrowCRUp;
+    ImageCursor arrowCRDown;  
+   
    static ImageChargeur singleton;
      public static ImageChargeur getInstance(){
     if(singleton==null) singleton=new ImageChargeur();
@@ -29,5 +40,22 @@ public class ImageChargeur {
     public Image getImage(int n){
     return array[n];
     }
+
+    public ImageCursor getArrowCRRight() {
+        return arrowCRRight;
+    }
+
+    public ImageCursor getArrowCRLeft() {
+        return arrowCRLeft;
+    }
+
+    public ImageCursor getArrowCRUp() {
+        return arrowCRUp;
+    }
+
+    public ImageCursor getArrowCRDown() {
+        return arrowCRDown;
+    }
+    
      
 }

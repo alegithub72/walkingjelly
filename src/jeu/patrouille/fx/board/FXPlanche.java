@@ -43,7 +43,7 @@ import jeu.patrouille.fx.menu.eventhandler.ItemMenuConfirmMarcheEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.ItemMenuRangeDisplayHandler;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsFXCarteEventHandler;
-import jeu.patrouille.fx.pieces.FXSoldat;
+import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.fx.sprite.Sprite;
 import jeu.patrouille.util.ImageChargeur;
 
@@ -197,10 +197,10 @@ public class FXPlanche extends Application {
         return fxCarte.scrollCanvas(x, y);
     }
 
-    void initFXCarteHelperInstance(FXSoldat s) {
+    void initFXCarteHelperInstance(FXUSSoldat s) {
         fxCarte.initHelperInstance(s);
     }
-    void initFXCarteSoldatHelperInstance(FXSoldat s) {
+    void initFXCarteSoldatHelperInstance(FXUSSoldat s) {
         fxCarte.initHelperSoldatInstance(s);
     }    
 
@@ -363,7 +363,7 @@ public class FXPlanche extends Application {
         }
     }
 
-    synchronized public void openSoldatMenuItems(FXSoldat s) {
+    synchronized public void openSoldatMenuItems(FXUSSoldat s) {
         defaceMenuItems();
         fxCarte.deselectionneSoldats();        
         initFXCarteSoldatHelperInstance(s);
@@ -373,7 +373,7 @@ public class FXPlanche extends Application {
 
     }
     synchronized public void openCurrentSoldatMenuItems() {
-        FXSoldat s=getFXCarteActionHelper().getFXSoldatSelectionee();
+        FXUSSoldat s=getFXCarteActionHelper().getFXSoldatSelectionee();
         System.out.println("-------->"+s);
         setFXCarteHelperConmmanNoTValid(true);
         imprimerProfile();

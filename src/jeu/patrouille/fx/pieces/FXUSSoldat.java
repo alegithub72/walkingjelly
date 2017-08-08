@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.pieces;
 
 import javafx.scene.image.ImageView;
+import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.sprite.Sprite;
@@ -14,7 +15,7 @@ import jeu.patrouille.fx.sprite.Sprite;
  *
  * @author appleale
  */
-public class FXSoldat extends Sprite{
+public class FXUSSoldat extends Sprite{
 
     Soldat s;
     int pos;
@@ -24,7 +25,25 @@ public class FXSoldat extends Sprite{
     int defaultFrame;
     ImageView selectionneImg;
 
-    public FXSoldat(String f,Soldat s,int pos){
+    public FXUSSoldat(Soldat s,int pos){
+        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,
+                FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,"frameFigurineUS.png",null);
+
+        this.s=s;   
+        this.pos=pos;
+        blessureImg=new ImageView("wound.png");
+        flagImg=new ImageView("americanFlag.png");
+        if(s.getClassement()==Soldat.CLASS_SGT)  classmentImg=new ImageView("sgtGrade.png");
+        else if(s.getClassement()==Soldat.CLASS_SOLDAT)classmentImg=new ImageView("scelto.png");
+        selectionneImg=new ImageView("selectUS.png");       
+        //defaultFrame=s.getClassement();
+       defaultFrame=0;
+        defaultFrame();
+
+        
+    }
+    
+    public FXUSSoldat(String f,Soldat s,int pos){
         super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,
                 FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,f,null);
 
@@ -35,11 +54,12 @@ public class FXSoldat extends Sprite{
         if(s.getClassement()==Soldat.CLASS_SGT)  classmentImg=new ImageView("sgtGrade.png");
         else if(s.getClassement()==Soldat.CLASS_SOLDAT)classmentImg=new ImageView("scelto.png");
         selectionneImg=new ImageView("selectUS.png");       
-        defaultFrame=s.getClassement();
+        //defaultFrame=s.getClassement();
+       defaultFrame=0;
         defaultFrame();
 
         
-    }
+    }    
 
     public void setS(Soldat s) {
         this.s = s;
@@ -91,5 +111,8 @@ public class FXSoldat extends Sprite{
         return "s=" + s.toStringSimple() ;
     }
     
+    public void playMove(BaseAction act){
+    
+    }
     
 }

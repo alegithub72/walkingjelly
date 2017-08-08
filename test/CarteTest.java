@@ -46,6 +46,20 @@ public class CarteTest {
 
     
     @Test
+    public void testLOSinfinity_1() {
+        ///geligne (30 ,20 ) , (26 ,17 )
+        int i0 = 30, j0 = 20, i1 = 26, j1 = 17;
+
+        PointCarte[] line = null;
+        line = c.getLigne(i0, j0, i1, j1);
+        for (int n = 0; n < line.length; n++) {
+            System.out.println("(" + line[n].getI() + "," + line[n].getJ() + ")");
+        }
+        assertEquals(26, line[line.length - 1].getI());
+        assertEquals(17, line[line.length - 1].getJ());
+    }   
+    
+    @Test
     public void testLOSinfinity0() {
         //geligne (2 ,3 ) , (7 ,5 )
         int i0 = 30, j0 = 20, i1 = 26, j1 = 20;

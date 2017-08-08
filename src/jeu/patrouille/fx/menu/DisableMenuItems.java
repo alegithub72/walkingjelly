@@ -7,14 +7,14 @@ package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
 
-import jeu.patrouille.fx.pieces.FXSoldat;
+import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 /**
  *
  * @author appleale
  */
 public class DisableMenuItems extends SoldatMenuItem{
-    public DisableMenuItems(FXSoldat fxs){
+    public DisableMenuItems(FXUSSoldat fxs){
         super(BaseAction.NO_ACTION,fxs);
         setFrame(1);
         
