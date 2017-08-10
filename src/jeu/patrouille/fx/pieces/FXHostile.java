@@ -8,6 +8,7 @@ package jeu.patrouille.fx.pieces;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
+import jeu.patrouille.fx.board.FXCarte;
 
 /**
  *
@@ -15,8 +16,8 @@ import jeu.patrouille.coeur.terrains.PointCarte;
  */
 public class FXHostile extends FXUSSoldat{
     
-    public FXHostile(Soldat s,int pos){
-        super( "frameHostile.png", s, pos);
+    public FXHostile(Soldat s,int pos,FXCarte fxcarte){
+        super( "frameHostile.png", s, pos,fxcarte);
         this.flagImg=new ImageView("hosFlag.png");
        
      

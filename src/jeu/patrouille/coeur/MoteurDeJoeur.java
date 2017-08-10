@@ -19,7 +19,7 @@ import jeu.patrouille.coeur.pieces.Soldat;
  *
  * @author appleale
  */
-public class MoteurDeJoeur {
+public class MoteurDeJoeur implements  Runnable{
     
     
     List<GraficCarteInterface> listgrafic;
@@ -72,7 +72,7 @@ public class MoteurDeJoeur {
             
     }
 
-    public void startGame(){
+    public void initJeours(){
         Soldat leaderUS = jUS.findSquadLeader();
         Soldat leaderHOST = jHOST.findSquadLeader();
         int tnUS = jUS.dice(10) - leaderUS.getCC();
@@ -123,35 +123,52 @@ public class MoteurDeJoeur {
     public Piece[] getPatrouille() {
         return patrouille;
     }
-    public void playTurn(){        
+    
+    public void startTurn(){
+        
+    Thread t=new Thread(this);
+    initJeours();    
+    t.start();
+    
+    
+    }
+    public void resolveTurnActions(){        
         turn++;
-        List<BaseAction> listAllUS=new ArrayList<>();
-        List<BaseAction> listAllHost=new ArrayList<>();
+        List<BaseAction> listAllActionUS=new ArrayList<>();
+        List<BaseAction> listAllActionHost=new ArrayList<>();
         for(int tdInc=1;tdInc<=10;tdInc++){
          
             for(int k=0;k<patrouille.length;k++){
-                listAllUS.addAll(patrouille[k].getBaseActionSum(tdInc));
+                listAllActionUS.addAll(patrouille[k].getBaseActionSum(tdInc));
             }
             
             for(int k=0;k<hostile.length;k++){
-                listAllHost.addAll(hostile[k].getBaseActionSum(tdInc));
+                listAllActionHost.addAll(hostile[k].getBaseActionSum(tdInc));
             }            
             System.out.println("-----------STEP  "+tdInc+"---------------------");
-            System.out.println("-listAllHost-->"+listAllHost.size());
-            System.out.println("-listAllUS-->"+listAllUS.size());            
-            playStep(tdInc,listAllUS,listAllHost );  
-            listAllUS=new ArrayList<>();
-            listAllHost=new ArrayList<>();            
+            System.out.println("-listAllHost-->"+listAllActionHost.size());
+            System.out.println("-listAllUS-->"+listAllActionUS.size());            
+            playStep(tdInc,listAllActionUS,listAllActionHost );  
+          
+            listAllActionUS=new ArrayList<>();
+            listAllActionHost=new ArrayList<>();      
+           //break;
         }
 
+    }   
+
+    @Override
+    public void run() {
+        
+        resolveTurnActions();
     }
  
       void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
         
-        //if(iniativeWinner==JEUR_US) 
-        //listUSAll.addAll(listHostAll);
-        //else 
+       if(iniativeWinner==JEUR_US) 
         listUSAll.addAll(listHostAll);
+        else 
+        listHostAll.addAll(listUSAll);
         
         BaseAction[] arrayOrderd=new BaseAction[listUSAll.size()];
         for(BaseAction b:listUSAll){
@@ -160,32 +177,43 @@ public class MoteurDeJoeur {
         System.out.println("-----------size all----"+listUSAll.size()+"--------SORTED--------------------------");
         
         Arrays.sort(listUSAll.toArray( arrayOrderd), BaseAction.baseActionCompratorImpl);
- 
-        for (BaseAction b : arrayOrderd) {
+        int k=0;
+        do {
+          
+            if(allAnimFinished() && k<arrayOrderd.length){
+            BaseAction b=arrayOrderd[k];
             Soldat s=(Soldat)b.getProtagoniste();
             //s.resetAction();
             BaseAction clone=b.clone();
             System.out.println("--clone--->"+clone+"<-----");
             //cosi sono valide le posizioni di tutti.....
             playAllGraficInterface(clone);
-            c.makeAction((Soldat)b.getProtagoniste(), b);
-            
-            
-        }
-
+              k++;
+           
+            //c.makeAction((Soldat)b.getProtagoniste(), b);
+            }     
+            //break;
+        }while(k<arrayOrderd.length);
+        System.out.println("fine turno");
         
         
     
     }
-    
+    private boolean allAnimFinished(){
+        boolean b=true;
+        for(GraficCarteInterface c:listgrafic){
+            b=b && c.isAnimFinished();
+        }
+        return b;
+    }
     public void playGame(){
-    startGame();
+    initJeours();
     do{
          
          commandDeliveryJaeurActiveTurn();
          changeJeur();
          commandDeliveryJaeurActiveTurn();
-         playTurn();
+         resolveTurnActions();
          changeJeur();
     
         }while(conditionVictoire()!=-1);
@@ -208,9 +236,11 @@ public class MoteurDeJoeur {
         this.activeJeur = activeJeur;
     }
     
-    void playAllGraficInterface(BaseAction b){
+      void   playAllGraficInterface(BaseAction b){
         for (GraficCarteInterface g : listgrafic) {
             g.play(b);
         }
     }
+     
+     
 }

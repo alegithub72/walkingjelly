@@ -13,5 +13,6 @@ import jeu.patrouille.coeur.actions.BaseAction;
  * @author appleale
  */
 public interface GraficCarteInterface  {
-   public void play(BaseAction  b);
+   public  void  play(BaseAction  b);
+   public boolean isAnimFinished();
 }

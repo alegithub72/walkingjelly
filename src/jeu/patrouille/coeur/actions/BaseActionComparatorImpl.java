@@ -11,9 +11,9 @@ import java.util.Comparator;
  *
  * @author appleale
  */
-public class BaseActionCompratorImpl implements Comparator<BaseAction> {
+public class BaseActionComparatorImpl implements Comparator<BaseAction> {
 
-        public BaseActionCompratorImpl() {
+        public BaseActionComparatorImpl() {
         }
 
         @Override

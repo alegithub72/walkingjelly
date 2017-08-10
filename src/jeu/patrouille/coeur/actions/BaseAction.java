@@ -16,7 +16,7 @@ import jeu.patrouille.coeur.pieces.Piece;
  */
 public  class BaseAction extends AbstractAction {
     public static  BaseAction QUIT=new BaseAction(-1, -1, -1, -1,-1, null, null);
-    public static  Comparator baseActionCompratorImpl=new BaseActionCompratorImpl();
+    public static  Comparator baseActionCompratorImpl=new BaseActionComparatorImpl();
     Piece protagoniste;
     Piece[] antagonistes;
     boolean used;

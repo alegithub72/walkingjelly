@@ -5,6 +5,12 @@
  */
 package jeu.patrouille.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 
@@ -16,10 +22,10 @@ public class ImageChargeur {
     public static int CURSOR_HOST_RANGE=0,CURSOR_US_RANGE=1,CURSOR_FORBIDDEN=2;
     Image[] array;
      ImageChargeur() {
-         array=new Image[5];
-         array[0]=new Image("rangeArrowHost.png");
-         array[1]=new Image("rangeArrow2.png");
-         array[2]=new Image("forbiddenCursor.png");
+     array=new Image[5];
+     array[0]=new Image("rangeArrowHost.png");
+     array[1]=new Image("rangeArrow2.png");
+     array[2]=new Image("forbiddenCursor.png");
      arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
      arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
      arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
@@ -57,5 +63,42 @@ public class ImageChargeur {
         return arrowCRDown;
     }
     
-     
+    public static void decodeImage()
+            throws FileNotFoundException,IOException{
+        InputStream in=new FileInputStream("/Users/appleale/rangeArrow.png");
+        //byte[] buf=new byte[1];
+        ByteArrayOutputStream outByte=new ByteArrayOutputStream(1);
+        while(in.available()>0){
+            byte b=(byte)in.read();
+            outByte.write(~b);
+        }
+        in.close();
+        outByte.close();
+        FileOutputStream outFile=new FileOutputStream("/Users/appleale/NOtrangeArrowHost.png");
+        outFile.write(outByte.toByteArray());
+        outFile.close();
+        
+    }     
+   public static void loadDecodeImage() throws IOException{
+       
+       
+   FileInputStream inFile=new FileInputStream("/Users/appleale/NOtrangeArrowHost.png");
+   ByteArrayOutputStream outByte=new ByteArrayOutputStream(1);
+   while(inFile.available()>0){
+    byte b=(byte)inFile.read();
+    outByte.write(~b);
+   }
+   outByte.close();
+   inFile.close();
+   FileOutputStream outFile=new FileOutputStream("/Users/appleale/backrangearrow.png");
+   
+   outFile.write(outByte.toByteArray());
+   outFile.close();
+   
+   }
+    public static  void main(String ars[])throws IOException{
+        decodeImage();
+        loadDecodeImage();
+    }
+    
 }

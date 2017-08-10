@@ -175,7 +175,7 @@ public void decoderTaille(String line){
                     double iydouble=m*jx+h; 
                     iy=aroundN(iydouble,size,k,i1,i2);  
                     PointCarte p=new PointCarte(iy, jx);                    
-                    if(k>0)listp.add(p);
+                    listp.add(p);
                     System.out.println("cas1) k="+k+"-> "+p) ;                       
                     k++;      
                  } while(iy==null || !(iy==i2 && jx==j2));
@@ -190,12 +190,8 @@ public void decoderTaille(String line){
                     double iydouble=m*jx+h; 
                     iy=aroundN(iydouble,size,k,i2,i1);                   
                     PointCarte p=new PointCarte(iy, jx);
-                    PointCarte previous=null;
-                    if(jx<j1){
-                    if(k>0 ) previous=listp.set(k-1, p);
-                    else previous=p;
-                    listp.add(k, previous);
-                    }
+                    if(k>0) listp.add(0,p);
+                    else listp.add(p);
                     System.out.println("cas2) k="+k+"-> "+p) ;        
                     k++;
                  } while(iy==null || !(iy==i1 && jx==j1));
@@ -209,7 +205,7 @@ public void decoderTaille(String line){
                     double jxdouble=(iy-h)/m; 
                     jx=aroundN(jxdouble,size,k,j1,j2);  
                     PointCarte p=new PointCarte(iy, jx);                    
-                    if(k>0)listp.add(p);
+                    listp.add(p);
                     System.out.println("cas3) k="+k+"-> "+p) ;                       
                     k++;         
                  }while((iy==null && jx==null) || !(iy==i2 && jx==j2));
@@ -225,13 +221,10 @@ public void decoderTaille(String line){
                     //TODO il piu grande se e' il primo il piu piccolo se e' l'ultimo
                     jx=aroundN(jxdouble,size,k,j2,j1);  
                     PointCarte p=new PointCarte(iy, jx);    
-                    PointCarte previous=null;
-                    if(iy<i1){
-                    if(k>0 ) previous=listp.set(k-1, p);
-                    else previous=p;
-                    listp.add(k, previous);
-                    }
-                    System.out.println("cas4) k="+k+"-> "+p) ;                     
+                    if(k>0) listp.add(0,p);
+                    else listp.add(p);
+                    
+                    System.out.println("cas4) k="+(k-1)+"-> "+p) ;                     
                     k++;         
                  }while((iy==null && jx==null) || !(iy==i1 && jx==j1));
                  
@@ -239,23 +232,44 @@ public void decoderTaille(String line){
                  if(i2>i1){
                  for(int k=i1;k<=i2;k++){
                      PointCarte p=new PointCarte(k, j2);
-                     if(k>i1)listp.add(p);
-                    System.out.println("cas5) k="+k+"-> "+p) ;                       
+                     listp.add(p);
+                    System.out.println("cas5) k="+(k-i1)+"-> "+p) ;                       
                     }
-                 }else if(i2<=i1){
+                 }else if(i2<i1){
                  for(int k=i2;k<=i1;k++){
-                     PointCarte p=new PointCarte(k, j2);
-                     PointCarte previous=null;
-                     if(k>i2)  previous=listp.set((k-i2-1), p);
-                     else previous=p;
-                     listp.add(previous);
-                    System.out.println("cas6) k="+k+"-> "+p) ;                       
+                      PointCarte p=new PointCarte(k,j2);
+                      if(k>i2)
+                      listp.add(0,p);
+                      else listp.add(p);  
+                    System.out.println("cas6) k="+(k-i2)+"-> "+p) ;                         
                      
                  }
+                 }else if(i2==i1){
+                         if(j1>=j2){
+                             for(int k=j1;k<=j2;k++){
+                             PointCarte p=new PointCarte(i1, k);
+                             listp.add(p);
+                             }
+                             
+                         }else if(j1<j2){
+                             for(int k=j1;k<=j2;k++){
+                             PointCarte p=new PointCarte(i1, k);
+                             if(k>j2) listp.add(0,p);
+                             else listp.add(p);
+                         }
+                         
+                         }
                  }
              
              }
-
+            System.out.println("------------------REULT LIGNE----------------------------------");         
+         int k=0;
+             for(PointCarte p:listp){
+                 
+                 System.out.println(k+"="+p);
+                 k++;                 
+                         
+             }
              System.out.println("-------------------LIGNE FINI----------------------------------");
              PointCarte[] customs = new PointCarte[listp.size()];
             
@@ -447,6 +461,11 @@ public void decoderTaille(String line){
         
         return true;
         }    
+
+    @Override
+    public boolean isAnimFinished() {
+        return true;
+    }
     
     
 }

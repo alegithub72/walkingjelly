@@ -27,7 +27,7 @@ public class Sprite extends Parent {
   
     
     
-    ImageView imgView;
+    protected ImageView imgView;
 
 
     public static int MOVE_TRANSITION = 0;
@@ -39,9 +39,9 @@ public class Sprite extends Parent {
     int wSquare;
     int hSquare;
     int nframes = 0;
-    FrameAnimationTimer frameAnimTimer[];
+    protected FrameAnimationTimer frameAnimTimer[];
     int k;
-    Animation[] ptList;
+    protected Animation[] ptList;
     FXPlanche fxpl;
 
     public Sprite(int w, int h,int wboardBox,int hBoardBox,String img,FXPlanche fxpl) {
@@ -139,7 +139,8 @@ public class Sprite extends Parent {
     }
 
     public boolean isAnimMoveFini() {
-        return ptList[0].getStatus() == Animation.Status.STOPPED;
+        if(ptList==null || ptList[0]==null) return true;
+        else return ptList[0].getStatus() == Animation.Status.STOPPED;
     }
 
     public void removeAnimationSetting() {

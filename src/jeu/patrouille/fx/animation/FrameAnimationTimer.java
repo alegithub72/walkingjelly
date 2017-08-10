@@ -7,11 +7,8 @@ package jeu.patrouille.fx.animation;
 
 import java.net.URL;
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Bounds;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
-import jeu.patrouille.coeur.pieces.Piece;
-import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.sprite.Sprite;
 
 
@@ -92,6 +89,7 @@ public class FrameAnimationTimer extends AnimationTimer{
         this.ciclyc=cyclic;
         i=this.f1;
         this.interval=interval;
+       
     }    
      
     

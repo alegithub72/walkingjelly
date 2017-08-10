@@ -154,11 +154,7 @@ public class Soldat extends Piece {
     public Direction getFace() {
         return face;
     }
-    
-    public void addMarcheAction(BaseAction b){
-        Carte.getLigne(b.getI0(), b.getJ0(), b.getI1(), b.getJ1());
-        
-    }
+
     @Override
     public Piece[] losView() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

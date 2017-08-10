@@ -17,9 +17,12 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.AISoldat;
@@ -41,6 +44,7 @@ import jeu.patrouille.fx.menu.eventhandler.SoldatClickedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsFXCarteEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatRelasedOnMenuItemsEventHandler;
+import jeu.patrouille.fx.pieces.FXHostile;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.fx.sprite.Sprite;
 import jeu.patrouille.util.ImageChargeur;
@@ -101,7 +105,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         
         this.mj=new MoteurDeJoeur(jUS,jHOST,carte);
         // mj.setActiveJeur(MoteurDeJoeur.JEUR_US);
- 
+        mj.add(this);
         AREA_SCROLL_J_W = (int) (PIXEL_SCROLL_AREA_W / TILE_SIZE);
         AREA_SCROLL_I_H = (int) (PIXEL_SCROLL_AREA_H / TILE_SIZE);
         System.out.println(PIXEL_SCROLL_AREA_W + "," + PIXEL_SCROLL_AREA_H);
@@ -134,11 +138,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     
     
     public synchronized void playTurn() {
-        mj.playTurn();
+        mj.startTurn();
     }
 
     @Override
-    public synchronized void play(BaseAction b) {
+    public  void play(BaseAction b) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("play grafic fx");
         //TODO disegnare lo schermo intorno al leader.....ma dove prendo l posizione del leader se faccio make e gia tutto cambiato
@@ -148,8 +152,46 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         //TODO movimento ...se e' uno sparo visualizzi prima il soldato che spara al centro..e animi
         //TODO poi visualizzi il bersaglio e animi..........
         //TODO per il momento.....
-        
+        System.out.println("satrt animation........................."+b);
+        setOnMouseMoved(null);
+        //refreshCarte();
+        FXUSSoldat s=findFXUSSoldat((Soldat)b.getProtagoniste());
+        if(s!=null) {
+            s.playMove((MarcheAction)b);
+            helper.setFXSeletctionee(s);
+        }
+        else{
+        FXHostile hs=(FXHostile)findFXHostile((Soldat)b.getProtagoniste());
+        if(hs!=null) {
+            hs.playMove((MarcheAction)b);
+            helper.setFXSeletctionee(s);
+        }
+        }
     }
+
+    @Override
+    public boolean isAnimFinished() {
+
+        boolean b=helper.getFXSoldatSelectionee().isAnimMoveFini();
+        return b;
+    }
+    
+    private FXUSSoldat findFXUSSoldat(Soldat s){
+        FXUSSoldat sfxT=null;
+        for(FXUSSoldat sfx:  fxequipeUS){
+            if(sfx.getSoldat()==s)sfxT=sfx;
+        }
+        return sfxT;
+    }
+    private FXUSSoldat findFXHostile(Soldat s){
+        
+        FXUSSoldat sfxT=null;
+        for(FXUSSoldat sfx:  fxequipeHost){
+            if(sfx.getSoldat()==s)sfxT=sfx;
+        }
+        return sfxT;
+    }    
+    
     synchronized public void closeFXCarteMenuItems() {
         
        devisualizeMenuItems();
@@ -514,8 +556,13 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         GraphicsContext g=activeCanvas().getGraphicsContext2D();
         //g.setLineWidth(10);
         g.setStroke(Color.FLORALWHITE);
+        
+        g.setLineJoin(StrokeLineJoin.ROUND);
+        
         g.strokeLine(relativex, relativey,
                 (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
+        double angle =Piece.getDirection(relativex, relativey, (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
+       
 //        fxCarte.getRootGroup().getChildren().remove(p);
 //       // p.getElements().removeAll()
 //        p=new Path();
@@ -544,6 +591,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             visualizeRangePointer(mousex, mousey);
            
             System.out.println("raggio---->" + r);
+             System.out.println("angle------------------------------------------>"+angle);
         } else {
             setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             helper.setCommanNotvalid(true);
@@ -799,11 +847,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         return updateScroll;
     }
 
-    private int getPosI() {
+    public int getPosI() {
         return posI;
     }
 
-    private int getPosJ() {
+    public int getPosJ() {
         return posJ;
     }
    private void buildSoldatAction(){
@@ -847,6 +895,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
                 spritecenterx = spritecenterx - (MenuItem.MENU_W  * 2);
             }      
             Point2D spritecenter2D=new Point2D(spritecenterx, spritecentery);
+         
             return spritecenter2D;
             
    } 
@@ -857,7 +906,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             Point2D spritecoord2D=getMenuCoord();
             FXUSSoldat s=helper.getFXSoldatSelectionee();
             double r= (2 * Math.PI) / 8;
-            s.surlignerSoldat();
+            s.selectioneFXSoldat();
             if (s.getSoldat().isPossileDesplacer()) {
             
           
@@ -940,13 +989,13 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
       for (int k = 0; k < fxequipeHost.length; k++) {
 
               fxequipeHost[k].defaultFrame();
-              fxequipeHost[k].soldatDeselectionne();
+              fxequipeHost[k].deselectioneFXSoldat();
 
       }
       for (int k = 0; k < fxequipeUS.length; k++) {
 
               fxequipeUS[k].defaultFrame();
-              fxequipeUS[k].soldatDeselectionne();
+              fxequipeUS[k].deselectioneFXSoldat();
           }
 
  

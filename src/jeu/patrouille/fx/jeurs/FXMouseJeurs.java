@@ -31,7 +31,7 @@ public class FXMouseJeurs extends KeyboardJoeur{
     private  void buildEquipe() {
 
         for(int i=0;i<equipe.length;i++){
-           fxequipe[i]=new FXUSSoldat((Soldat) equipe[i],i);
+           fxequipe[i]=new FXUSSoldat((Soldat) equipe[i],i,fxcarte);
             fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
            // fxequipeUS[i].setOnMouseClicked(new ActionMenuCloseEventHandler(rootGroup, actionMenu));
         }    
