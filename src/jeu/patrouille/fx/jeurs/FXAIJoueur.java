@@ -42,7 +42,11 @@ public class FXAIJoueur extends AIJoeur{
         for(int i=0;i<equipe.length;i++) {
            fxequipe[i] = new FXHostile((AISoldat)equipe[i],i,fxcarte);
            fxequipe[i].setDeafultFrme(0);
+           fxequipe[i].buildFXUSSoldat();  
            fxequipe[i].defaultFrame();
+          
+
+
            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
            fxcarte.addSprite(fxequipe[i]);
           

@@ -14,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.GaussianBlur;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineJoin;
@@ -84,7 +83,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     FXPlanche fxpl;
 
     FXMouseJeurHelper helper;
-    Sprite displayRange;
+
     boolean commanNotvalid;
     public Cursor current;
     boolean animOn;
@@ -100,7 +99,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         this.fxpl=fxpl;
         rootGroup = new Group();    
         
-        displayRange=null;
+
         carte = new Carte("src/mapDesert.txt");
 
         
@@ -346,10 +345,8 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
     
     protected void deactiveRangePointer(){
-    if(displayRange!=null) {
-        displayRange.setVisible(false);
-      
-    }
+    rootGroup.getChildren().remove(helper.getDisplayRange());
+
     }
     
     synchronized public void annulleCommand() {
@@ -487,6 +484,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
            mj.getActiveJeur().setPieceSelectionee(s);
        }
        helper= new FXMouseJeurHelper(sfx, carte);
+       
     }   
    
 
@@ -500,12 +498,21 @@ private boolean isScrollAreaChanged(int i1,int j1){
         rootGroup.getChildren().add(s);
     
     }
-    private Group getRootGroup() {
+    public Group getRootGroup() {
         return rootGroup;
     }
 
-    private void visualizeRangePointer(double mousex,double mousey){
-         
+    private void removeDisplayRange(){
+    
+        if(rootGroup.getChildren().contains(helper.getDisplayRange()))
+            rootGroup.getChildren().remove(helper.getDisplayRange());
+            
+    }
+    private void visualizeRangePointers(double mousex,double mousey){
+            if(!rootGroup.getChildren().contains(helper.getDisplayRange()))
+                rootGroup.getChildren().add( helper.getDisplayRange());
+            helper.getDisplayRange().toFront();
+            helper.getDisplayRange().setVisible(true);
             int scrollMousej = (int) (mousex / FXCarte.TILE_SIZE);
             int scrollMousei = (int) (mousey / FXCarte.TILE_SIZE);  
             System.out.println("---------visualizeRangePointer----------------------_->"+scrollMousej);
@@ -513,12 +520,11 @@ private boolean isScrollAreaChanged(int i1,int j1){
             double arrowPosx=(scrollMousej * FXCarte.TILE_SIZE);
             double arrowPosY=(scrollMousei * FXCarte.TILE_SIZE) ;
             if(arrowPosx>0 && arrowPosx<FXCarte.PIXEL_SCROLL_AREA_W) 
-                displayRange.setX( arrowPosx);
+                helper.getDisplayRange().setTranslateX( arrowPosx);
             if (arrowPosY >0 && arrowPosY<FXCarte.PIXEL_SCROLL_AREA_H)
-                displayRange.setY(arrowPosY);    
+                helper.getDisplayRange().setTranslateY(arrowPosY);    
             System.out.println("arrowrange (x,y) =("+arrowPosx+","+arrowPosY+")");
-
-            displayRange.setVisible(true);
+            
         
     
     }
@@ -530,54 +536,24 @@ private boolean isScrollAreaChanged(int i1,int j1){
         
     
 
-    private void setRangeCursorHelper(int rangeCursorHelper) {
+    private void setRangeCursorHelpers(int rangeCursorHelper) {
         helper.setRangeCursorHelper(rangeCursorHelper);        
-        buildDisplayRange();
+
         
     }
 
     private void resetCursorHelper() {
         helper.resetCursorHelper();
-        buildDisplayRange();
-    }
-    
-    
-    
-    
-    private void buildDisplayRange(){
-        
-        
-        if (displayRange == null) {
-            if(helper.getRangeCursorHelper()==ImageChargeur.CURSOR_HOST_RANGE)
-            displayRange = new Sprite(50, 50, 50, 50, "rangeArrowHost.png", null);
-            else if(helper.getRangeCursorHelper()==ImageChargeur.CURSOR_US_RANGE) 
-                displayRange = new Sprite(50, 50, 50, 50, "rangeArrow2.png", null);
-            else if(helper.getRangeCursorHelper()==ImageChargeur.CURSOR_FORBIDDEN)
-                displayRange=new Sprite(50, 50, 50, 50, "forbiddenCursor.png", null);
-            this.rootGroup.getChildren().add(displayRange);
-        }else{
-
-         Image img=null;
-            if (helper.getRangeCursorHelper() == ImageChargeur.CURSOR_FORBIDDEN) {
-                img = ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_FORBIDDEN);
-            }
-            if (helper.getRangeCursorHelper() == ImageChargeur.CURSOR_HOST_RANGE) {
-                img = ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_HOST_RANGE);
-            } else if (helper.getRangeCursorHelper() == ImageChargeur.CURSOR_US_RANGE) {
-                img = ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_US_RANGE);
-            }
-            displayRange.buildFrameImages(img);
-      
-         
-        }
-
-        
-    }
-
-
-    private void setFXSoldatSelectionee(FXUSSoldat selectionee) {
 
     }
+    
+    
+    
+    
+
+
+
+
 
 
 
@@ -701,17 +677,21 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 && helper.carteValiderRoute()) {
             helper.setCommanNotvalid(false);
             setFXCarteCursor(Cursor.HAND);
+            removeDisplayRange();
             resetCursorHelper();
-            visualizeRangePointer(mousex, mousey);
+            
+            visualizeRangePointers(mousex, mousey);
            
             System.out.println("raggio---->" + r);
              System.out.println("angle------------------------------------------>"+angle);
         } else {
-            setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
+            removeDisplayRange();
+            helper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             helper.setCommanNotvalid(true);
             //setFXCarteCursor(Cursor.CLOSED_HAND);
             //deactiveFXCarteRangePointer();
-            visualizeRangePointer(mousex, mousey);
+            
+            visualizeRangePointers(mousex, mousey);
             System.out.println("fuori raggio---->" + r);
         }
         
@@ -802,7 +782,11 @@ System.out.println("------------------SCROLL PRINT------------------------------
 
     void enableSoldatoInView(FXUSSoldat s, double x0, double y0) {
         System.out.println(x0+","+y0);
-        s.buildFXUSSoldat(x0,y0);        
+        //s.buildFXUSSoldat();
+        s.setTranslateX(x0);
+        s.setTranslateY(y0);
+        //s.setLayoutX(x0);
+        //s.setLayoutY(y0);
         s.toFront();
         s.setVisible(true);
         
@@ -1164,8 +1148,8 @@ System.out.println("------------------SCROLL PRINT------------------------------
         deselectionneAllSoldats();  
         initFXHelperInstance(s);
         imprimerFXHelperSoldatProfile();
-        double sx=s.getX();
-        double sy=s.getY();
+        double sx=s.getLayoutX();
+        double sy=s.getLayoutY();
         int i=s.getSoldat().getI();
         int j=s.getSoldat().getJ();
         buildMenuItems(sx,sy,i,j);
@@ -1240,8 +1224,8 @@ System.out.println("------------------SCROLL PRINT------------------------------
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
             //m.setOnMouseClicked(new ActionMenuSelectionEventHandler(m, actionMenu, this));
             actionMenu[0] = m;
-            m.setX(menuItemx);
-            m.setY(menuItemy);
+            m.setLayoutX(menuItemx);
+            m.setLayoutY(menuItemy);
             rootGroup.getChildren().add(m);
             if(s.getSoldat().getActionPoint()>=BaseAction.ACTIONPOINTVALOR[BaseAction.MARCHE]) {
             m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  this));
@@ -1259,8 +1243,8 @@ System.out.println("------------------SCROLL PRINT------------------------------
             double y = (100 * Math.sin(1 * grad));
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
-            m.setX(menuItemx);
-            m.setY(menuItemy);   
+            m.setLayoutX(menuItemx);
+            m.setLayoutY(menuItemy);   
             rootGroup.getChildren().add(m);   
             m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,this));
             m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));
@@ -1274,8 +1258,8 @@ System.out.println("------------------SCROLL PRINT------------------------------
             double y = (100 * Math.sin(2 * grad));
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
-            m.setX(menuItemx);
-            m.setY(menuItemy);
+            m.setLayoutX(menuItemx);
+            m.setLayoutY(menuItemy);
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             rootGroup.getChildren().add(m);
             //rootGroup.getChildren().add(l);
@@ -1293,8 +1277,8 @@ System.out.println("------------------SCROLL PRINT------------------------------
             double y = (100 * Math.sin(3 * grad));
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
-            m.setX(menuItemx);
-            m.setY(menuItemy);
+            m.setLayoutX(menuItemx);
+            m.setLayoutY(menuItemy);
             m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  this));
             m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));
             m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
@@ -1316,8 +1300,8 @@ protected void buildDisableMenu(FXUSSoldat s){
             double x = 100 * Math.cos(0);
             double y = 100 * Math.sin(0);
             // Point2D d2s = s.localToScene(s.getX(), s.getY());
-            double sx = s.getX();
-            double sy = s.getY();
+            double sx = s.getLayoutX();
+            double sy = s.getLayoutY();
             double spritecentery = sy + (TILE_SIZE / 2);
             double spritecenterx = sx + (TILE_SIZE / 2);
             if (relativeI <= 3) {
@@ -1336,8 +1320,8 @@ protected void buildDisableMenu(FXUSSoldat s){
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
            // m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
             actionMenu[0] = m;
-            m.setX(menuItemx);
-            m.setY(menuItemy);
+            m.setLayoutX(menuItemx);
+            m.setLayoutY(menuItemy);
             rootGroup.getChildren().add(m);
             //m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
            

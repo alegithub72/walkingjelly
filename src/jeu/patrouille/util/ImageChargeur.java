@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
+import jeu.patrouille.fx.sprite.CursorHelper;
 
 /**
  *
@@ -20,17 +21,22 @@ import javafx.scene.image.Image;
  */
 public class ImageChargeur {
     public static int CURSOR_HOST_RANGE=0,CURSOR_US_RANGE=1,CURSOR_FORBIDDEN=2;
+    CursorHelper cursoHostRange = new CursorHelper(ImageChargeur.CURSOR_HOST_RANGE);
+    CursorHelper cursorUSRange = new CursorHelper(ImageChargeur.CURSOR_US_RANGE);
+    CursorHelper cursorForbidenRange=new CursorHelper(ImageChargeur.CURSOR_FORBIDDEN);    
     Image[] array;
      ImageChargeur() {
-     array=new Image[5];
-     array[0]=new Image("rangeArrowHost.png");
-     array[1]=new Image("rangeArrow2.png");
-     array[2]=new Image("forbiddenCursor.png");
-     arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
-     arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
-     arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
-     arrowCRDown=new ImageCursor(new Image("cursorScrollDOWN.png"));           
-         
+        array=new Image[5];
+        array[0]=new Image("rangeArrowHost.png");
+        array[1]=new Image("rangeArrow2.png");
+        array[2]=new Image("forbiddenCursor.png");
+        arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
+        arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
+        arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
+        arrowCRDown=new ImageCursor(new Image("cursorScrollDOWN.png")); 
+        cursoHostRange.buildFrameImages(array[CURSOR_HOST_RANGE]);
+        cursorForbidenRange.buildFrameImages(array[CURSOR_FORBIDDEN]);
+        cursorUSRange.buildFrameImages(array[CURSOR_US_RANGE]);
     }
      
     ImageCursor arrowCRRight;
@@ -46,6 +52,15 @@ public class ImageChargeur {
     public Image getImage(int n){
     return array[n];
     }
+    public CursorHelper getDisplayRange(int type){
+        if(type==ImageChargeur.CURSOR_US_RANGE)
+            return this.cursorUSRange;
+        else if(type==ImageChargeur.CURSOR_HOST_RANGE)
+            return this.cursoHostRange;
+        else if(type==ImageChargeur.CURSOR_FORBIDDEN)
+            return this.cursorForbidenRange;
+        return null;
+    } 
 
     public ImageCursor getArrowCRRight() {
         return arrowCRRight;

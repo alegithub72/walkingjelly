@@ -28,9 +28,9 @@ public class FXHostile extends FXUSSoldat{
     }
 
     @Override
-    public void buildFXUSSoldat(double x,double y) {
-        super.buildFXUSSoldat(x,y); 
-        sprites.getChildren().remove(classmentImg);
+    public void buildFXUSSoldat() {
+        super.buildFXUSSoldat();
+        getChildren().remove(classmentImg);
     }
     
     

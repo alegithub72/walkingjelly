@@ -135,9 +135,10 @@ public class FXPlanche extends Application {
 
         borderPan.setBottom(rootBarGroup);
 
-        Sprite endButton = new Sprite(120, 50, 120, 50, "endturn.png", this);
-        endButton.setX(880);
-        endButton.setY(0);
+        Sprite endButton = new Sprite(120, 50, 120, 50,null, this);
+        endButton.buildFrameImages(new Image( "endturn.png"));
+        endButton.setLayoutX(880);
+        endButton.setLayoutY(0);
         EventHandler e=new EndTurnEventHandler(fxCarte, endButton);
         endButton.setOnMousePressed(e);
         endButton.setOnMouseReleased(e);
@@ -240,11 +241,11 @@ public class FXPlanche extends Application {
             dropShadow.setOffsetX(3.0);
             dropShadow.setOffsetY(3.0);
             spAct.setEffect(dropShadow);
-            spAct.setX(500 + (k * (spAct.getW() / 2)));
+            spAct.setLayoutX(500 + (k * (spAct.getW() / 2)));
             if (k < 10) {
-                spAct.setY(-23);
+                spAct.setLayoutY(-23);
             } else {
-                spAct.setY((spAct.getH() / 2));
+                spAct.setLayoutY((spAct.getH() / 2));
             }
             this.fxActionsPoolSelectionee.add(spAct);
         }

@@ -8,9 +8,12 @@ package jeu.patrouille.fx.board;
 
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.pieces.FXHostile;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
+import jeu.patrouille.fx.sprite.CursorHelper;
+import jeu.patrouille.fx.sprite.Sprite;
 import jeu.patrouille.util.ImageChargeur;
 
 /**
@@ -24,6 +27,7 @@ public class FXMouseJeurHelper {
     private boolean commanNotvalid;
     private boolean actionSeletione;
     private int rangeCursorHelper;
+            
 
 
     
@@ -31,14 +35,7 @@ public class FXMouseJeurHelper {
     
     
     
-    public FXMouseJeurHelper(BaseAction act,Carte carte){
-        this.act=act;
-        this.carte=carte;
-        this.rangeCursorHelper=-1;
-        this.commanNotvalid=false;
-        this.seletctionee=null;
 
-    }
     
         
     public FXMouseJeurHelper(FXUSSoldat s,Carte carte){
@@ -67,14 +64,19 @@ public class FXMouseJeurHelper {
     
     public void resetCursorHelper(){
         if(act.getType()==BaseAction.MARCHE 
-                &&  this.seletctionee instanceof FXHostile) 
+                &&  this.seletctionee.getSoldat().
+                        getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST) 
         this.rangeCursorHelper=ImageChargeur.CURSOR_HOST_RANGE;
         else if(act.getType()==BaseAction.MARCHE 
-                && this.seletctionee instanceof FXUSSoldat) 
+                && this.seletctionee.
+                        getSoldat().getBoss().getJeur()== GeneriqueJoeurs.JOEUR_US) 
             this.rangeCursorHelper=ImageChargeur.CURSOR_US_RANGE;     
     
     }
+    public CursorHelper getDisplayRange(){
+        return ImageChargeur.getInstance().getDisplayRange(rangeCursorHelper);
     
+    }
     public BaseAction getAct() {
         return act;
     }

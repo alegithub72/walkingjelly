@@ -243,8 +243,8 @@ public class MoteurDeJoeur implements Runnable{
                 while(allAnimOn());
                 System.out.println("------------WAKEUPPPPPPPPPP  ="+allAnimOn());
 
-                 c.makeAction((Soldat)b.getProtagoniste(), b);   
-                 refreshAllGraficInterface();
+               //  c.makeAction((Soldat)b.getProtagoniste(), b);   
+                // refreshAllGraficInterface();
                  //TODO vedere per aggiorantre la mappa quando!!!!
                  k++;
                 }     

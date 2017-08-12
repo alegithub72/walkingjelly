@@ -98,6 +98,7 @@ public class FrameAnimationTimer extends AnimationTimer{
 
         long intervalTemp=System.currentTimeMillis()-before;
         double lx=0,ly=0;
+       // System.out.println(""+source.getTranslateX()+","+source.getTranslateY());
         //System.out.println("now="+now);
 /**
         if(target!=null ){
@@ -120,7 +121,7 @@ public class FrameAnimationTimer extends AnimationTimer{
             
             before=System.currentTimeMillis();
             source.setFrame(i);
- 
+            
                    
             i++;
             if(this.ciclyc){

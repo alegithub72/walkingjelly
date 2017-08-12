@@ -25,10 +25,11 @@ import jeu.patrouille.fx.board.FXPlanche;
  *
  * @author appleale
  */
-public class Sprite extends Parent {
+public class Sprite extends Parent
+{
   
     
-    protected Group sprites;
+
     protected ImageView imgView;
 
 
@@ -46,6 +47,7 @@ public class Sprite extends Parent {
     protected Animation[] ptList;
     FXPlanche fxpl;
     double x,y;
+
     
     public Sprite(int w, int h,int wboardBox,int hBoardBox,String img,FXPlanche fxpl) {
         this.w = w;
@@ -53,9 +55,9 @@ public class Sprite extends Parent {
         this.wSquare=wboardBox;
         this.hSquare=hBoardBox;
         this.fxpl=fxpl;
-         sprites=new Group();
-        if(img!=null) buildFrameImages(new Image(img));
-        getChildren().add(sprites);
+        
+        if(img!=null) this.frameImages=new Image(img);
+
         ptList=new Animation[5];
 
         frameAnimTimer=new FrameAnimationTimer[2];
@@ -63,23 +65,36 @@ public class Sprite extends Parent {
     }
 
     public void buildFrameImages(Image frameImages) {
-        sprites.getChildren().remove(imgView);
+
         this.frameImages = frameImages;
-        buildFrameImages();
+        createShapeFrame();        
         imgView = new ImageView(frameImages);
-        imgView.setViewport(frames[0]);  
-        sprites.getChildren().add(imgView);        
+        imgView.setViewport(frames[0]);          
+        if(!getChildren().contains(imgView))
+            getChildren().add(imgView);
+
+
+       
        
         
     }
-  
+      protected void buildFrameImages() {
+
+
+        createShapeFrame();
+        imgView = new ImageView(frameImages);
+        imgView.setViewport(frames[0]);  
+        getChildren().add(imgView);        
+       
+        
+    }
     
     public void setFXPlanche(FXPlanche fxpl){
         this.fxpl=fxpl;
     }
     
     
-    public void buildFrameImages(){
+    public void createShapeFrame(){
         int n = (frameImages.widthProperty().intValue() / w);
         frames = new Rectangle2D[n];
         for (int i = 0; i < n; i++) {
@@ -110,24 +125,8 @@ public class Sprite extends Parent {
         imgView.setViewport(frames[i]);
     }
 
-    public double getX() {
-        return x;
-        
-    }
 
-    public void setX(double x) {        
-        this.x = x;
-        imgView.setX(x);  
-    }
 
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        imgView.setY(y);
-        this.y = y;
-    }
 
 
 
