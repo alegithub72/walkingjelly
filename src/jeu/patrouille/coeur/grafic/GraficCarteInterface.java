@@ -16,4 +16,5 @@ public interface GraficCarteInterface  {
    public  void  play(BaseAction  b);
     public boolean isAnimOn() ;
     public void setAnimOn(boolean value);
+    public void refreshGraficCarte();
 }

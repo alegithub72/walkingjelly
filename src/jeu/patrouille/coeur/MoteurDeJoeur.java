@@ -59,24 +59,9 @@ public class MoteurDeJoeur implements Runnable{
     public void add(GraficCarteInterface g){
         listgrafic.add(g);
     }
-    public void initGame() throws IOException {
-        displacementEquipeHost();
-        displacementEquipeUS();
-    }
-    public void displacementEquipeUS(){
-        for(int k=0;k<patrouille.length;k++){
-            c.desplacementSoldat(patrouille[k], 30, k+20);
 
-            
-        }
-    }
-    public void displacementEquipeHost(){
-        for(int k=0;k<hostile.length;k++){
-            c.desplacementSoldat(hostile[k], 2, k);
 
-        }
-            
-    }
+
 
     public void initJeours(){
         Soldat leaderUS = jUS.findSquadLeader();
@@ -167,34 +152,46 @@ public class MoteurDeJoeur implements Runnable{
         turn++;
         List<BaseAction> listAllActionUS=new ArrayList<>();
         List<BaseAction> listAllActionHost=new ArrayList<>();
+        System.out.println("----------------------------- RESOLVE TURN START-----------"+turn+"---------------------------------");
         for(int td=1;td<=10;td++){
-         System.out.println("--------------------------->TD------>"+td+"<------------");
+         System.out.println("--------------------------->TD--CONSIDERED--START-->"+td+"<------------");
             for(int k=0;k<patrouille.length;k++){
                 List<BaseAction> l=patrouille[k].getBaseActionSum(td);
-                System.out.println("---Action sum--->"+l.size());
+               // System.out.println("---Action sum--->"+l.size());
                 listAllActionUS.addAll(l);
             }
             
             for(int k=0;k<hostile.length;k++){
                 List<BaseAction> l=hostile[k].getBaseActionSum(td);
-                System.out.println("--Action sum---->"+l.size());
+                //System.out.println("--Action sum---->"+l.size());
                 listAllActionHost.addAll(l);
             }            
-            System.out.println("-----------TD CONSIDEREDED "+td+"---------------------");
-            System.out.println("-listAllHost-->"+listAllActionHost.size());
-            System.out.println("-listAllUS-->"+listAllActionUS.size()); 
+           // System.out.println("-----------TD CONSIDEREDED "+td+"---------------------");
+            //System.out.println("-listAllHost-->"+listAllActionHost.size());
+           // System.out.println("-listAllUS-->"+listAllActionUS.size()); 
             
             playStep(td,listAllActionUS,listAllActionHost );  
 
             listAllActionUS=new ArrayList<>();
-            listAllActionHost=new ArrayList<>();      
+            listAllActionHost=new ArrayList<>();   
+            System.out.println("--------------------------->TD--CONSIDERED--END-->"+td+"<------------");
            //break;
         }
+        System.out.println("reset action pool");
+        resetAllSoldatActionPool();
+        System.out.println("-----------------------------RESOLVE TURN  END-----------"+turn+"---------------------------------");
       
     }   
 
   
-    
+   void resetAllSoldatActionPool(){
+   for(int k=0;k<this.patrouille.length;k++)
+       patrouille[k].resetActionPoool();
+   for(int k=0;k<hostile.length;k++)
+       hostile[k].resetActionPoool();
+   
+   
+   }
    void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
         BaseAction[] arrayOrderd=null;
        if(iniativeWinner==JEUR_US) 
@@ -220,6 +217,7 @@ public class MoteurDeJoeur implements Runnable{
         
         if(arrayOrderd!=null && arrayOrderd.length>0){
         int k=0;
+       
             do {
 
                 if(  k<arrayOrderd.length){
@@ -228,10 +226,10 @@ public class MoteurDeJoeur implements Runnable{
                 Soldat s=(Soldat)b.getProtagoniste();
                 //s.resetAction();
 
-                System.out.println("--PLAY--ACTION->"+b+"<-----");
+                System.out.println("--MJ PLAY STEP--->"+b+"<----->"+b.getProtagoniste().toStringSimple()+"<----------");
                 //cosi sono valide le posizioni di tutti.....
                 playAllGraficInterface(b);
-                  k++;
+             
 //                try {
 //                Thread.currentThread().wait(0);
 //                } catch (InterruptedException ex) {
@@ -239,25 +237,22 @@ public class MoteurDeJoeur implements Runnable{
 //                }catch(java.lang.IllegalMonitorStateException i){
 //                    i.printStackTrace();
 //                }
+                System.out.println("--MJ PLAY STEP------------------------------END----><-----");
                 int zz=0;
-                System.out.println("wait  ="+allAnimOn());
+                System.out.println("------------Zzzzzzzzzzzzz="+allAnimOn());
                 while(allAnimOn());
-                System.out.println("wait  ="+allAnimOn());
-                System.out.println("---------------->FINE WAIT<----------------");
-                 // try{
-                    //wait(0);
-                  //}catch(InterruptedException i){
-                  //    System.out.println("TREAD SBLOCKED");
-                 // }
-                  //
-                 //c.makeAction((Soldat)b.getProtagoniste(), b);   
+                System.out.println("------------WAKEUPPPPPPPPPP  ="+allAnimOn());
+
+                 c.makeAction((Soldat)b.getProtagoniste(), b);   
+                 refreshAllGraficInterface();
                  //TODO vedere per aggiorantre la mappa quando!!!!
-
+                 k++;
                 }     
-
+                
                 //break;
             }while(k<arrayOrderd.length);
             System.out.println("fine turno");
+            
         }
         
     
@@ -312,6 +307,19 @@ public class MoteurDeJoeur implements Runnable{
             return;
         }
     }
-     
+
+     void   refreshAllGraficInterface(){
+         
+        for (GraficCarteInterface g : listgrafic) {
+            g.setAnimOn(true);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    g.refreshGraficCarte();
+                }
+            } );
+            return;
+        }
+    }
      
 }

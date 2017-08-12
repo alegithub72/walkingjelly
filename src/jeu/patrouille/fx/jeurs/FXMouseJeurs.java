@@ -21,11 +21,20 @@ public class FXMouseJeurs extends KeyboardJoeur{
     public FXMouseJeurs(int joueur,FXCarte fxcarte) {
         super( joueur , fxcarte.getCarte() );       
         this.fxcarte=fxcarte;
+        displacementEquipe();
         buildFXEquipe();
 
     }
     FXUSSoldat fxequipe[]=new FXUSSoldat[equipe.length];
     
+    
+    public void displacementEquipe(){
+        for(int k=0;k<equipe.length;k++){
+            carte.desplacementSoldat(equipe[k], 30, 20+k);
+
+        }
+            
+    }
     private  void buildFXEquipe() {
 
         
@@ -38,7 +47,10 @@ public class FXMouseJeurs extends KeyboardJoeur{
         }    
     }    
     
-   
+   public  FXUSSoldat[] rebuildFXEquipe(){
+        buildFXEquipe();
+        return fxequipe;
+   }
 
     @Override
     public void getCommand() {

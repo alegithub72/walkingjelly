@@ -27,7 +27,7 @@ public abstract class GeneriqueJoeurs {
     InputStream inCommand;
     String ptSt = "(s|m|f)(\\d){1,3},(\\d){1,3};((\\d){1,3},(\\d){1,3})?";
     Piece selectionee;
-    Carte carte;
+    protected Carte carte;
     int jeur;
     public GeneriqueJoeurs(int jeur,Carte c) {
         if(jeur==JOEUR_HOST)

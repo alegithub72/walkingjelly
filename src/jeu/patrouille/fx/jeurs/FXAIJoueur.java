@@ -5,14 +5,13 @@
  */
 package jeu.patrouille.fx.jeurs;
 
-import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.joeurs.AIJoeur;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXHostile;
+import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 /**
  *
@@ -24,15 +23,22 @@ public class FXAIJoueur extends AIJoeur{
     public FXAIJoueur(FXCarte fxcarte) {
         super(GeneriqueJoeurs.JOEUR_HOST,fxcarte.getCarte());
         this.fxcarte=fxcarte;
+        displacementEquipe();   
         buildFXEquipe();
     }
     FXHostile[] fxequipe=new FXHostile[equipe.length];
     
-    private  void buildFXEquipe(){
-        
 
-        
-      
+    public void displacementEquipe(){
+        for(int k=0;k<equipe.length;k++){
+            carte.desplacementSoldat(equipe[k], 2, k);
+
+        }
+            
+    }    
+    
+
+    private  void buildFXEquipe(){
         for(int i=0;i<equipe.length;i++) {
            fxequipe[i] = new FXHostile((AISoldat)equipe[i],i,fxcarte);
            fxequipe[i].setDeafultFrme(0);
@@ -43,6 +49,11 @@ public class FXAIJoueur extends AIJoeur{
         }
       
     }    
+    
+   public  FXUSSoldat[] rebuildFXEquipe(){
+        buildFXEquipe();
+        return fxequipe;
+   }    
 
     public FXHostile[] getFxEquipe() {
         return fxequipe;

@@ -450,11 +450,13 @@ public void decoderTaille(String line){
      */
     public void makeAction(Soldat s, BaseAction a) {
         //TODO rendere effettive le modifiche .....
-        terrain[s.getI()][s.getJ()].setPiece(null);
+        terrain[ a.getI0()][ a.getJ0()].setPiece(null);
+        System.out.println("updated terrain --null-->"+a.getI0()+"--->"+a.getJ0());
         terrain[a.getI1()][a.getJ1()].setPiece(s);
+        System.out.println("updated terrain --soldat-"+s.toStringSimple()+"---->"+a.getI1()+"--->"+a.getJ1());
         s.setI(a.getI1());
         s.setJ(a.getJ1());
-        System.out.println("updated position ---->"+s);
+        System.out.println("updated position -soldat--->"+s.toStringSimple()+"--->"+a.getI1()+","+a.getJ1());
     }
     public void desplacementSoldat(Piece s,int i,int j){
         s.setI(i);
@@ -473,6 +475,11 @@ public void decoderTaille(String line){
     }
     public void setAnimOn(boolean value){
         return ;
+    }
+
+    @Override
+    public void refreshGraficCarte() {
+        return;
     }
 
     

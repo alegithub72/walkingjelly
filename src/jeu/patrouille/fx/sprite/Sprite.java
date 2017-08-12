@@ -7,6 +7,8 @@ package jeu.patrouille.fx.sprite;
 
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
@@ -26,7 +28,7 @@ import jeu.patrouille.fx.board.FXPlanche;
 public class Sprite extends Parent {
   
     
-    
+    protected Group sprites;
     protected ImageView imgView;
 
 
@@ -43,29 +45,30 @@ public class Sprite extends Parent {
     int k;
     protected Animation[] ptList;
     FXPlanche fxpl;
-
+    double x,y;
+    
     public Sprite(int w, int h,int wboardBox,int hBoardBox,String img,FXPlanche fxpl) {
         this.w = w;
         this.h = h;
         this.wSquare=wboardBox;
         this.hSquare=hBoardBox;
         this.fxpl=fxpl;
-         
-        if(img!=null) setFrameImages(new Image(img));
-
+         sprites=new Group();
+        if(img!=null) buildFrameImages(new Image(img));
+        getChildren().add(sprites);
         ptList=new Animation[5];
 
         frameAnimTimer=new FrameAnimationTimer[2];
         
     }
 
-    public void setFrameImages(Image frameImages) {
-        this.getChildren().remove(imgView);
+    public void buildFrameImages(Image frameImages) {
+        sprites.getChildren().remove(imgView);
         this.frameImages = frameImages;
         buildFrameImages();
         imgView = new ImageView(frameImages);
         imgView.setViewport(frames[0]);  
-        getChildren().add(imgView);        
+        sprites.getChildren().add(imgView);        
        
         
     }
@@ -90,6 +93,7 @@ public class Sprite extends Parent {
     return frameImages;
     }
     protected Sprite() {
+                super();
     }
 
     public int getK() {
@@ -106,20 +110,28 @@ public class Sprite extends Parent {
         imgView.setViewport(frames[i]);
     }
 
-    public void setX(double x) {
-        imgView.setX(x);
+    public double getX() {
+        return x;
+        
+    }
+
+    public void setX(double x) {        
+        this.x = x;
+        imgView.setX(x);  
+    }
+
+    public double getY() {
+        return y;
     }
 
     public void setY(double y) {
         imgView.setY(y);
+        this.y = y;
     }
 
-    public double getX(){
-       return  imgView.getX();
-    }    
-    public double getY(){
-        return imgView.getY();
-    }
+
+
+
     
     
     public int getW() {
@@ -200,7 +212,6 @@ public Image composedImage(String f) {
     SnapshotParameters params = new SnapshotParameters();
     params.setFill(Color.TRANSPARENT);
     Image rotatedImage = test.snapshot(params, null);
-
     return rotatedImage;
 
 }    

@@ -48,8 +48,8 @@ public class MarcheAction extends BaseAction{
     public List<BaseAction> spreadAction() {
         MarcheAction derivedAct=new MarcheAction(this);
         List<BaseAction> list=new ArrayList<>();
-        int i1=(protagoniste!=null)?this.protagoniste.getI():this.i0;
-        int j1=(protagoniste!=null)?this.protagoniste.getJ():this.j0;
+        int i1=protagoniste.getI();
+        int j1=protagoniste.getJ();
         for(int k=0;k<mapTile.length;k++){
             if(k>0){ 
                 i1=mapTile[k-1].getI();
@@ -64,8 +64,8 @@ public class MarcheAction extends BaseAction{
                 b.calculeActionPointDesActions();
                 list.add(b); 
             
-            System.out.println("k="+k+"----->(i1,j1)----(i2,j2)");
-            System.out.println("k="+k+"----->"+i1+","+j1+"----"+""+i2+","+j2);                  
+            System.out.println("spread action marche k="+k+"--"+protagoniste.toStringSimple()+"--->(i1,j1)----(i2,j2)");
+            System.out.println("spread action marche k="+k+"----->"+i1+","+j1+"----"+""+i2+","+j2);                  
         }
          
         }

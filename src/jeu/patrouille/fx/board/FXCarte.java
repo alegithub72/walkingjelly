@@ -82,14 +82,16 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     Sprite arrow;
 
     FXPlanche fxpl;
-    FXUSSoldat[]  fxequipeHost;
-    FXUSSoldat[]  fxequipeUS;
+
     FXMouseJeurHelper helper;
     Sprite displayRange;
     boolean commanNotvalid;
     public Cursor current;
     boolean animOn;
-
+    FXAIJoueur jHOST ;
+    FXMouseJeurs jUS ;
+    FXUSSoldat[] fxequipeUS ;
+    FXUSSoldat[] fxequipeHost ;
     
     
     public FXCarte(FXPlanche fxpl) throws IOException{
@@ -130,14 +132,13 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
 
     public void initFXCarte() throws IOException{
         
-        FXAIJoueur jHOST = new FXAIJoueur(this);
-        FXMouseJeurs jUS = new FXMouseJeurs(GeneriqueJoeurs.JOEUR_US, this);
+        jHOST = new FXAIJoueur(this);
+        jUS = new FXMouseJeurs(GeneriqueJoeurs.JOEUR_US, this);
 
         fxequipeUS = jUS.getFxEquipe();
         fxequipeHost = jHOST.getFxEquipe();
        
         this.mj = new MoteurDeJoeur(jUS, jHOST, carte);
-        mj.initGame();
         mj.add(this);
         buildCarteScroll(c1);
         this.getChildren().add(rootGroup);
@@ -173,7 +174,8 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     @Override
     public  void play(BaseAction b) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        System.out.println("play grafic fx");
+        System.out.println("---------------FXCARTE (NEW THREAD "+Thread.currentThread().getName()+")----------CREATE ANIM  -----INIZIO-----"
+                + "-----------------------------------------><------");
         //TODO disegnare lo schermo intorno al leader.....ma dove prendo l posizione del leader se faccio make e gia tutto cambiato
         //TODO devo fare una copia di tutte le posizioni dei soldati al momento dell'azione...?????no faccio prima l'animazione e poi
         //TODO cambio lo stato......
@@ -185,16 +187,17 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
              =b.getProtagoniste().getBoss().findSquadLeader();
       
          
-        System.out.println("squad leader "+sl);
+       // System.out.println("squad leader "+sl);
             
         System.out.println("posi="+posI+"posj="+posJ);
        // suprimmerSoldatsNotEnView();
         
-        System.out.println("FXCARTE PLAY........................."+b);
+       
         setOnMouseMoved(null);
         centerScrollArea(sl.getI(), sl.getJ());
         refreshCarte();
-         resetAllPositionFXSoldatView();  
+        resetAllPositionFXSoldatView();  
+        initFXHelperInstance(null);
         if(b.getProtagoniste().getPieceType()==Piece.ActeurType.SOLDAT 
                 && b.getProtagoniste().getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST){
             //refreshScrollArea(sl.getI(), sl.getJ());
@@ -208,18 +211,26 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
  
             playUSSoldat(b);
         }
-        //refreshCarte();
 
+        System.out.println("---------------FXCARTE (NEW THREAD "+Thread.currentThread().getName()+")----------CREATE ANIM  ----FINE------"
+                + "-----------------------------------------><------");
    
     }
 private void centerScrollArea(int i,int j){
-    
-        if(i<=(FXCarte.AREA_SCROLL_I_H/2))
-            posI=0;
-        else posI=i-(FXCarte.AREA_SCROLL_I_H/2);
-        if(j<=(FXCarte.AREA_SCROLL_J_W/2))
+        int h2=(FXCarte.AREA_SCROLL_I_H/2);
+        int w2=(FXCarte.AREA_SCROLL_J_W/2);
+        if((i+h2)>=Carte.CARTE_SIZE_I)
+            posI=i-FXCarte.AREA_SCROLL_I_H;
+        if(i<=h2)
+            posI=0;        
+        else  posI=i-h2;
+        
+        if((j+w2)>=Carte.CARTE_SIZE_J)
+            posJ=j-(FXCarte.AREA_SCROLL_J_W);
+        else if(j<=w2)
             posJ=0;
-        else posJ=j-(FXCarte.AREA_SCROLL_J_W/2);
+        else posJ=j-w2;
+       
 }
 
 
@@ -290,7 +301,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     private FXUSSoldat findFXUSSoldat(Soldat s){
         FXUSSoldat searchedFX=null;
-        for(FXUSSoldat sfx:  fxequipeUS){
+        for(FXUSSoldat sfx:  this.jUS.getFxEquipe()){
             if(sfx.getSoldat()==s)searchedFX=sfx;
         }
         return searchedFX;
@@ -298,7 +309,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
     private FXUSSoldat findFXHostile(Soldat s){
         
         FXUSSoldat searchedFX=null;
-        for(FXUSSoldat sfx:  fxequipeHost){
+        for(FXUSSoldat sfx:  this.fxequipeHost){
             if(sfx.getSoldat()==s)searchedFX=sfx;
         }
         return searchedFX;
@@ -462,28 +473,20 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     
 
-   private void initHelperInstance(FXUSSoldat s){
-       if (s != null) {
-           if (s instanceof FXUSSoldat) {
-               mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
-           } else {
-               mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
-           }
-           mj.getActiveJeur().setPieceSelectionee(s.getSoldat());
-       }
-       helper= new FXMouseJeurHelper(s, carte);
-    }
+
    
-   private void initHelperSoldatInstance(FXUSSoldat s){
-       if (s != null) {
-           if (s instanceof FXUSSoldat) {
+   private void initFXHelperInstance(FXUSSoldat sfx){
+       if (sfx != null) {
+           Soldat s=sfx.getSoldat();
+           
+           if (s.getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST) {
                mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
            } else {
-               mj.setActiveJeur(GeneriqueJoeurs.JOEUR_HOST);
+               mj.setActiveJeur(GeneriqueJoeurs.JOEUR_US);
            }
-           mj.getActiveJeur().setPieceSelectionee(s.getSoldat());
+           mj.getActiveJeur().setPieceSelectionee(s);
        }
-       helper= new FXMouseJeurHelper(s, carte);
+       helper= new FXMouseJeurHelper(sfx, carte);
     }   
    
 
@@ -563,7 +566,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             } else if (helper.getRangeCursorHelper() == ImageChargeur.CURSOR_US_RANGE) {
                 img = ImageChargeur.getInstance().getImage(ImageChargeur.CURSOR_US_RANGE);
             }
-            displayRange.setFrameImages(img);
+            displayRange.buildFrameImages(img);
       
          
         }
@@ -673,7 +676,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
         double angle =Piece.getDirection(relativex, relativey, (scrollMousej * FXCarte.TILE_SIZE) + 25, (scrollMousei * FXCarte.TILE_SIZE) + 25);
         FXUSSoldat s=helper.getFXSoldatSelectionee();
-        s.setFXSoldatOrientation(angle);
+        //s.setFXSoldatOrientation(angle);
 //        fxCarte.getRootGroup().getChildren().remove(p);
 //       // p.getElements().removeAll()
 //        p=new Path();
@@ -731,8 +734,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         String a = "";
         canv.getGraphicsContext2D().setFill(Color.rgb(64, 128, 0, 1));
         canv.getGraphicsContext2D().fillRect(0, 0, PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
-        System.out.println("scroolw,scrollh=" + AREA_SCROLL_J_W + "," + AREA_SCROLL_I_H);
-        FXUSSoldat[] fxs = new FXUSSoldat[8];
+
         int k = 0;
         for (int i0 = 0; i0 < AREA_SCROLL_I_H; i0++) {
             for (int j0 = 0; j0 < AREA_SCROLL_J_W; j0++) {
@@ -757,9 +759,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
         String a = "";
         canv.getGraphicsContext2D().setFill(Color.rgb(64, 128, 0, 1));
         canv.getGraphicsContext2D().fillRect(0, 0, PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
-        System.out.println("scroolw,scrollh=" + AREA_SCROLL_J_W + "," + AREA_SCROLL_I_H);
-        FXUSSoldat[] fxs = new FXUSSoldat[8];
-        int k = 0;
+        //System.out.println("scroolw,scrollh=" + AREA_SCROLL_J_W + "," + AREA_SCROLL_I_H);
+
+        System.out.println("------------------SCROLL PRINT----------------------------------");
         for (int i0 = 0; i0 < AREA_SCROLL_I_H; i0++) {
             for (int j0 = 0; j0 < AREA_SCROLL_J_W; j0++) {
                 int j = j0 + posJ;
@@ -781,13 +783,13 @@ private boolean isScrollAreaChanged(int i1,int j1){
               //  System.out.println(tile+","+piece);
                 if (piece != null) {
                     if (piece.getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST) {
-                        fxs[k] = fxequipeHost[piece.getarrayN()];
-                        enableSoldatoInView(fxs[k], x0, y0);
-                        k++;
+                        System.out.println("----i,j="+i+","+j);
+                        enableSoldatoInView(fxequipeHost[piece.getarrayN()], x0, y0);
+                      
                     } else if (piece.getBoss().getJeur()==GeneriqueJoeurs.JOEUR_US) {
-                        fxs[k] = fxequipeUS[piece.getarrayN()];
-                        enableSoldatoInView(fxs[k], x0, y0);
-                        k++;
+                        System.out.println("----i,j="+i+","+j);
+                        enableSoldatoInView(fxequipeUS[piece.getarrayN()], x0, y0);
+                       
                     }
                     //System.out.println("here ="+x0+","+y0+" ");
                 }
@@ -795,14 +797,13 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 //if(ob!=null)
             }
         }
+System.out.println("------------------SCROLL PRINT----------------------------------");
     }
 
     void enableSoldatoInView(FXUSSoldat s, double x0, double y0) {
-        s.setX(x0);
-        s.setY(y0);  
-        s.defaultFrame();
+        System.out.println(x0+","+y0);
+        s.buildFXUSSoldat(x0,y0);        
         s.toFront();
-        s.buildSprite();
         s.setVisible(true);
         
     }
@@ -846,12 +847,12 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 else sfx.setVisible(true);                
         }
     
-   public void resetAllUSPositionFXSoldatView(){
+   private void resetAllUSPositionFXSoldatView(){
            for (int h = 0; h < fxequipeUS.length; h++) 
                resetPositionFXSoldatView(fxequipeUS[h]);
    
    }
-   public void resetAllHostPositionFXSoldatView(){
+   private void resetAllHostPositionFXSoldatView(){
            for (int h = 0; h < fxequipeHost.length; h++) 
                resetPositionFXSoldatView(fxequipeHost[h]);
    }    
@@ -861,14 +862,16 @@ private boolean isScrollAreaChanged(int i1,int j1){
             sfx.setVisible(false);
         } else {
             Soldat s = sfx.getSoldat();
+            System.out.println("reset position "+s.toStringSimple());
             Point2D p = getSceneCoord(s.getI(), s.getJ());
             enableSoldatoInView(sfx, p.getX(), p.getY());
         }    
     }
     
     public Point2D getSceneCoord(int  i,int j){
-        double x0=((j-posJ)*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2);
-        double y0=((i-posI)*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2); 
+        System.out.println(" get coord "+i+","+j+" posI,posj="+posI+","+posJ);
+        double x0=((j-posJ)*FXCarte.TILE_SIZE);
+        double y0=((i-posI)*FXCarte.TILE_SIZE); 
         Point2D p=new Point2D(x0, y0);
         return p;
     }    
@@ -879,13 +882,13 @@ private boolean isScrollAreaChanged(int i1,int j1){
     }
     public boolean estFXSoldatView(int i1,int j1){
          boolean b=true;
-            if (j1 > (posJ + (AREA_SCROLL_J_W - 1))) {
+            if (j1 > (posJ + (AREA_SCROLL_J_W ))) {
                 b=false;
             }
             if (j1 < (posJ )) {
                 b=false;
             }
-            if (i1 > (posI  + (AREA_SCROLL_I_H - 1))) {
+            if (i1 > (posI  + (AREA_SCROLL_I_H ))) {
                 b=false;
             }
             if (i1 < (posI )) {
@@ -1159,14 +1162,14 @@ private boolean isScrollAreaChanged(int i1,int j1){
     synchronized public void openSoldatMenuItems(FXUSSoldat s) {
         defaceMenuItems();
         deselectionneAllSoldats();  
-        initHelperSoldatInstance(s);
+        initFXHelperInstance(s);
         imprimerFXHelperSoldatProfile();
         double sx=s.getX();
         double sy=s.getY();
         int i=s.getSoldat().getI();
         int j=s.getSoldat().getJ();
         buildMenuItems(sx,sy,i,j);
-        fxpl.sendMessageToPlayer("Choisir une action");
+        fxpl.sendMessageToPlayer("Choisir une action from ("+i+","+j+")");
 
     }    
     
@@ -1177,8 +1180,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             System.out.println("-------->"+s);
             helper.setCommanNotvalid(true);
             imprimerFXHelperSoldatProfile();
-            initHelperInstance(s);
-
+            initFXHelperInstance(s);
             closeFXCarteMenuItems();
             buildMenuItems(sx,sy,p.getI(),p.getJ());
         }
@@ -1380,4 +1382,23 @@ protected void buildDisableMenu(FXUSSoldat s){
     
     }
 
+    @Override
+    public void refreshGraficCarte() {
+        
+        for(int k=0;k<fxequipeHost.length;k++)
+            this.rootGroup.getChildren().remove(fxequipeHost[k]);
+        
+        for(int k=0;k<fxequipeUS.length;k++)
+            this.getChildren().remove(fxequipeUS[k]);
+        
+        fxequipeHost=  jHOST.rebuildFXEquipe();
+        fxequipeUS=jUS.getFxEquipe();
+        refreshCarte();
+        resetAllPositionFXSoldatView();
+        
+    }
+  
+    
+    
+    
 }

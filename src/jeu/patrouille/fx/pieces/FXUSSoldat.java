@@ -51,12 +51,22 @@ public class FXUSSoldat extends Sprite {
         //defaultFrame=s.getClassement();
        defaultFrame=0;
        orientation=0;
-        if(!this.getChildren().contains(blessureImg))this.getChildren().add(blessureImg);
-        if(!this.getChildren().contains(flagImg))this.getChildren().add(flagImg);
-        if(!this.getChildren().contains(classmentImg))this.getChildren().add(classmentImg); 
-        defaultFrame();
+
 
         
+    }
+
+   @Override
+   public void setY(double y) {
+        
+        super.setY(y); 
+
+    }
+
+    @Override
+    public void setX(double x) {
+        super.setX(x); 
+     
     }
     
     public FXUSSoldat(String f,Soldat s,int pos,FXCarte fxcarte){
@@ -71,8 +81,8 @@ public class FXUSSoldat extends Sprite {
         else if(s.getClassement()==Soldat.CLASS_SOLDAT)classmentImg=new ImageView("scelto.png");
         selectionneImg=new ImageView("selectUS.png");       
         //defaultFrame=s.getClassement();
-       defaultFrame=0;
-        defaultFrame();
+        defaultFrame=0;
+    
    
 
         
@@ -85,8 +95,29 @@ public class FXUSSoldat extends Sprite {
     public void setDeafultFrme(int n){
     this.defaultFrame=n;
     }
-    public void buildSprite(){
+    public void buildFXUSSoldat(double x,double y){
+        //this.relocate(x, y);
+        this.setX(x);
+        this.setY(y); 
+        if(!sprites.getChildren().contains(imgView))
+            sprites.getChildren().add(imgView);
+        if(!sprites.getChildren().contains(blessureImg))
+            sprites.getChildren().add(blessureImg);
+        if(!sprites.getChildren().contains(flagImg))
+            sprites.getChildren().add(flagImg);
+        if(!sprites.getChildren().contains(classmentImg))
+            sprites.getChildren().add(classmentImg);    
 
+        defaultFrame();
+        //this.relocate(x, y);
+       
+        resetGroupSprite();
+        
+    
+    }
+    private void resetGroupSprite(){
+        
+        
         flagImg.relocate(this.getX(),this.getY());
         classmentImg.relocate(this.getX(),this.getY());
         classmentImg.setTranslateX(FXCarte.TILE_SIZE-20);
@@ -94,7 +125,7 @@ public class FXUSSoldat extends Sprite {
         blessureImg.relocate(this.getX(),this.getY());
         blessureImg.setTranslateX(0);
         blessureImg.setTranslateY(FXCarte.TILE_SIZE-10);
-        if(getChildren().contains(selectionneImg)) {
+        if(sprites.getChildren().contains(selectionneImg)) {
         selectionneImg.relocate(getX(), getY());
         }
         
@@ -109,8 +140,8 @@ public class FXUSSoldat extends Sprite {
     }
     public void selectioneFXSoldat(){
    
-    if(!getChildren().contains(selectionneImg)) {
-        getChildren().add(selectionneImg);
+    if(!sprites.getChildren().contains(selectionneImg)) {
+        sprites.getChildren().add(selectionneImg);
         selectionneImg.relocate(this.getX(), this.getY());
         selectionneImg.toBack();
     }else {
@@ -120,7 +151,7 @@ public class FXUSSoldat extends Sprite {
     }
     public void deselectioneFXSoldat(){
     
-    if(getChildren().contains(selectionneImg)) 
+    if(sprites.getChildren().contains(selectionneImg)) 
         selectionneImg.setVisible(false);
 
     //setFrame(3);
@@ -135,17 +166,34 @@ public class FXUSSoldat extends Sprite {
     
    public  void playMarche(MarcheAction  act){
         
-        System.out.println("-------------CREATE-ANIM INIZIO---------------------------_>");
+        System.out.println("------------- FXSOLDAT CREATE-ANIM ---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
         if(fxcarte.estFXSoldatView(act.getI1(), act.getJ1())){
-        System.out.println("soldato anim:"+act.getProtagoniste());
+        //System.out.println("soldato anim:"+act.getProtagoniste());
         Path p=new Path();
         this.deselectioneFXSoldat();
         Point2D p1=fxcarte.getSceneCoord(act.getI0(), act.getJ0());
-        MoveTo mTo=new MoveTo(p1.getX(),p1.getY() );
+        double x0=p1.getX()
+                +(FXCarte.TILE_SIZE/2)
+                ;
+        double y0=p1.getY()
+                +(FXCarte.TILE_SIZE/2)
+                ;
+        MoveTo mTo=new MoveTo(x0,y0);
+        
         Point2D p2=fxcarte.getSceneCoord(act.getI1(), act.getJ1());
-        LineTo l=new LineTo(p2.getX(),p2.getY());
-        p.getElements().add(mTo);
-        p.getElements().add(l);
+        double x1=p2.getX()
+                +(FXCarte.TILE_SIZE/2)
+                ;
+        double y1=p2.getY()
+                +(FXCarte.TILE_SIZE/2)
+                ;
+        
+        LineTo l=new LineTo(x1,y1);
+               
+              p.getElements().addAll(mTo,l);
+
+ 
+        //p.getElements().add(l);
 //        Point2D derivedCoordp0=getSceneCoord(act.getDerivedAction().getI0(), act.getDerivedAction().getJ0());
 //        Point2D derivedCoordp1=getSceneCoord(act.getDerivedAction().getI1(), act.getDerivedAction().getJ1());
         
@@ -160,48 +208,49 @@ public class FXUSSoldat extends Sprite {
 
         PathTransition  path=new PathTransition();
         path.setDuration(Duration.millis(1000));
-        path.setNode(this);
         path.setPath(p);
-        
+        path.setNode(this);
+
+        path.setRate(0.5);
         path.setOrientation(PathTransition.OrientationType.NONE);
         path.setCycleCount(1);
         path.setAutoReverse(false);
         createMove();
-   
+        //sprites.getChildren().add(p);
         ptList[0]=path;
+        frameAnimTimer[0].start();
+        ptList[0].play();     
+        
         path.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
               
-              if(event.getEventType()==ActionEvent.ANY){  
+
               System.out.println("***************STATUS "+ptList[0].getStatus());
               frameAnimTimer[0].stop();
               fxcarte.setAnimOn(false);
+              path.stop();
+              
+              //fxcarte.refreshCarte();
+              //fxcarte.resetAllUSPositionFXSoldatView();
               //ptList[0].stop();
              // try{
               //fxcarte.getMj().getThreadTurn().notify();
               //}catch(java.lang.IllegalMonitorStateException e){
               // e.printStackTrace();
              // }
-             System.out.println("--------------PLAY FINE---------------------------_>");
-              }
+             System.out.println("FXSOLDAT ANIM----->STOP");
+//              }
              event.consume();
             }
         });
 
-        System.out.println("---------------------------->PLAY START<-----------------");
-        frameAnimTimer[0].start();
-        ptList[0].play();
-     
-     
+        System.out.println("FXSOLDAT ANIM------> PLAY");
 
-         
-
-         
         }else{
             this.setVisible(false);
         }
-        System.out.println("-------------CREATE-ANIM FINE---------------------------_>");        
+System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->--------><---------");
     }
         
     
@@ -209,7 +258,7 @@ public class FXUSSoldat extends Sprite {
 
     }
     public void setFXSoldatOrientation(double angle){
-      imgView.setRotate(orientation  );
+      imgView.setRotate(-orientation  );
         updateSodlatOrientation(angle);
       orientation=angle;
       imgView.setRotate(angle);
@@ -227,7 +276,7 @@ public class FXUSSoldat extends Sprite {
         else if(angle<-120 && angle>-150) s.setFace(Piece.Direction.SW);
         else if(angle<=-60 && angle>=-120) s.setFace(Piece.Direction.W);
         else if(angle<-30 && angle >-60) s.setFace(Piece.Direction.NE);
-        System.out.println("\n"+angle+"-----orientation updataed--->"+s);
+        System.out.println("------>"+angle+"-----orientation updataed--->"+s.getFace());
         }
     
     private void createMove(){

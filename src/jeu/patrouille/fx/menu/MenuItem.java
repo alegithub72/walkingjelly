@@ -22,7 +22,7 @@ public abstract class MenuItem extends Sprite{
     public MenuItem(int type){
     super(MENU_W,MENU_H,MENU_W,MENU_H,null,null);
     menuImgChgr=MenuImageChargeur.geInstance();
-    setFrameImages(menuImgChgr.getImage(type));
+    buildFrameImages(menuImgChgr.getImage(type));
     actionType=type;
     }
     public void press(){

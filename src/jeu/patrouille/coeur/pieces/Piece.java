@@ -42,7 +42,7 @@ public abstract class Piece  {
 
     private void transformActionPool() {
         List<BaseAction> newActionPool=new ArrayList<>();
-        System.out.println("----SRPEAD START--------->");
+        System.out.println("*******SRPEAD START*******>");
         
         for(BaseAction b:actionsPool){
             int type=b.getType();
@@ -54,11 +54,11 @@ public abstract class Piece  {
             }
         }
         spreadDone=true;
-        System.out.println("----SRPEAD END--------->");
+        System.out.println("******SRPEAD END*****>");
         this.actionsPool=newActionPool;
     }
     public List<BaseAction> getBaseActionSum(int td){
-        System.out.println("----GET ACTION SUM START--------->"+spreadDone);
+        //System.out.println("----GET ACTION SUM START--------->"+spreadDone);
         if(!spreadDone) {
 
             transformActionPool();
@@ -80,7 +80,7 @@ public abstract class Piece  {
              }
                  
         }
-        System.out.println("----GET ACTION SUM END--------->");
+       // System.out.println("----GET ACTION SUM END--------->");
         return list;
     }
     
@@ -172,6 +172,10 @@ public abstract class Piece  {
     public GeneriqueJoeurs getBoss() {
         return boss;
     }
-    
+    public void resetActionPoool(){
+        actionsPool=new ArrayList<>();
+        this.tempDesponible=10;
+        spreadDone=false;
+    }
     
 }
