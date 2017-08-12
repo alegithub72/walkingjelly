@@ -320,7 +320,7 @@ public void decoderTaille(String line){
             if(j<CARTE_SIZE_J && i<CARTE_SIZE_I){
                 if (c1 == 'o' && c2 == 'o') {
                     int n=((int)(Math.random()*5))+1;
-                    System.out.println("--->"+n);
+                   // System.out.println("--->"+n);
                    terrain[i][j] =  new Haie(i, j,n); 
                 }
                 else
@@ -449,7 +449,12 @@ public void decoderTaille(String line){
      * @param a 
      */
     public void makeAction(Soldat s, BaseAction a) {
-        System.out.println(a);
+        //TODO rendere effettive le modifiche .....
+        terrain[s.getI()][s.getJ()].setPiece(null);
+        terrain[a.getI1()][a.getJ1()].setPiece(s);
+        s.setI(a.getI1());
+        s.setJ(a.getJ1());
+        System.out.println("updated position ---->"+s);
     }
     public void desplacementSoldat(Piece s,int i,int j){
         s.setI(i);
@@ -463,9 +468,13 @@ public void decoderTaille(String line){
         }    
 
     @Override
-    public boolean isAnimFinished() {
-        return true;
+    public boolean isAnimOn() {
+       return false;
     }
+    public void setAnimOn(boolean value){
+        return ;
+    }
+
     
     
 }

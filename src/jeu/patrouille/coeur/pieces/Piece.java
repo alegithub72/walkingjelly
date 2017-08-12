@@ -26,7 +26,7 @@ public abstract class Piece  {
     ActeurType type;
     int tempDesponible;
     List<BaseAction> actionsPool;   
-    boolean spreaded;
+    boolean spreadDone=false;
     GeneriqueJoeurs boss;
     int i,j;
     int arrayN;
@@ -37,32 +37,37 @@ public abstract class Piece  {
         this.tempDesponible=10;
         actionsPool=new ArrayList();
         this.boss=boss;
-        spreaded=false;
+        spreadDone=false;
     }
 
     private void transformActionPool() {
         List<BaseAction> newActionPool=new ArrayList<>();
-        spreaded=true;
+        System.out.println("----SRPEAD START--------->");
+        
         for(BaseAction b:actionsPool){
             int type=b.getType();
+            System.out.println("----TD COST--------->"+b.getTempActivite());
             if(type==BaseAction.MARCHE){
                 List<BaseAction> l=b.spreadAction(); 
                 System.out.println(" list spread ->"+l.size());
                 newActionPool.addAll(l);
             }
         }
+        spreadDone=true;
+        System.out.println("----SRPEAD END--------->");
         this.actionsPool=newActionPool;
     }
-    public List<BaseAction> getBaseActionSum(int tdInc){
-        if(!spreaded) {
-            System.out.println("transformed=====");
+    public List<BaseAction> getBaseActionSum(int td){
+        System.out.println("----GET ACTION SUM START--------->"+spreadDone);
+        if(!spreadDone) {
+
             transformActionPool();
         }
         int sum=0;
         List<BaseAction> list =new ArrayList<>();
         for (BaseAction b : actionsPool) {
              sum=sum+b.getTempActivite();
-             if(sum<=tdInc) {
+             if(sum<=td) {
                  if(!b.isUsed()){
                         list.add(b);
                         Soldat s=(Soldat)b.getProtagoniste();
@@ -75,7 +80,7 @@ public abstract class Piece  {
              }
                  
         }
-        
+        System.out.println("----GET ACTION SUM END--------->");
         return list;
     }
     
@@ -128,6 +133,7 @@ public abstract class Piece  {
         act.calculeActionPointDesActions();
         actionsPool.add(act);
         tempDesponible=tempDesponible-act.getTempActivite();
+        System.out.println("--TD RIMANENTE----->"+tempDesponible);
     }    
      
     public BaseAction nextAction(int i){
@@ -162,4 +168,10 @@ public abstract class Piece  {
       
             
     }
+
+    public GeneriqueJoeurs getBoss() {
+        return boss;
+    }
+    
+    
 }

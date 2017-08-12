@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -18,6 +19,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
@@ -64,6 +67,7 @@ public class FXPlanche extends Application {
         //    Background bc = new Background(bckImg);
         //borderPan.setBackground(  bc);
         fxCarte = new FXCarte(this);
+        fxCarte.initFXCarte();
         borderPan.setCenter(fxCarte);
         buildBar();
         buildDroitBar();
@@ -83,6 +87,8 @@ public class FXPlanche extends Application {
     public Font getFontTitle() {
         return fontTitle;
     }
+
+
     
 
 
@@ -135,6 +141,19 @@ public class FXPlanche extends Application {
         EventHandler e=new EndTurnEventHandler(fxCarte, endButton);
         endButton.setOnMousePressed(e);
         endButton.setOnMouseReleased(e);
+        endButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+            System.out.println(event);                
+            if(event.getButton()==MouseButton.PRIMARY && event.getEventType()==MouseEvent.MOUSE_CLICKED){
+               // Platform.runLater(fxCarte.getMj());  
+                fxCarte.playTurn();
+                
+            }
+                   event.consume();
+            }
+        
+        });
         rootBarGroup.getChildren().add(endButton);
         rootBarGroup.getChildren().add(message);
     }
@@ -262,6 +281,7 @@ public class FXPlanche extends Application {
     public static void main(String[] args) {
 
         launch(args);
+        
     }    
 }
 

@@ -19,7 +19,7 @@ public class FXHostile extends FXUSSoldat{
     public FXHostile(Soldat s,int pos,FXCarte fxcarte){
         super( "frameHostile.png", s, pos,fxcarte);
         this.flagImg=new ImageView("hosFlag.png");
-       
+        
      
         
         

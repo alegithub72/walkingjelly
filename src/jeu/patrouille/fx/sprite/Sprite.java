@@ -140,7 +140,10 @@ public class Sprite extends Parent {
 
     public boolean isAnimMoveFini() {
         if(ptList==null || ptList[0]==null) return true;
-        else return ptList[0].getStatus() == Animation.Status.STOPPED;
+        else{
+           // System.out.println("STATUS"+ptList[0].getStatus()+" time");
+            return ptList[0].getStatus() == Animation.Status.STOPPED;
+        }
     }
 
     public void removeAnimationSetting() {

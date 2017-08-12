@@ -24,11 +24,11 @@ public class FXAIJoueur extends AIJoeur{
     public FXAIJoueur(FXCarte fxcarte) {
         super(GeneriqueJoeurs.JOEUR_HOST,fxcarte.getCarte());
         this.fxcarte=fxcarte;
-        buildEquipe();
+        buildFXEquipe();
     }
     FXHostile[] fxequipe=new FXHostile[equipe.length];
     
-    private  void buildEquipe(){
+    private  void buildFXEquipe(){
         
 
         
@@ -38,6 +38,7 @@ public class FXAIJoueur extends AIJoeur{
            fxequipe[i].setDeafultFrme(0);
            fxequipe[i].defaultFrame();
            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
+           fxcarte.addSprite(fxequipe[i]);
           
         }
       

@@ -195,7 +195,7 @@ public class Soldat extends Piece {
         return ""
                 + "" + nom +" "+ nomDeFamilie +"\n"
                 +"Temp Desponible:"+tempDesponible+"\n"
-                + "" +((armeUtilise!=null)? armeUtilise.toString():"") + "";
+                + "" +((armeUtilise!=null)? armeUtilise.toString():"") + ",face:"+face+",("+i+","+j+")";
                 
     }
     

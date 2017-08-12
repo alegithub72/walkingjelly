@@ -19,7 +19,7 @@ import jeu.patrouille.fx.sprite.Sprite;
  */
 public class FrameAnimationTimer extends AnimationTimer{
     public int f1,f2;
-    public static String FIRE="fire5.wav";
+    public static String MARCHE="stepMod.wav";
     public static String EAT="eate.wav";
     public static String BITE="Dogbite.wav";
     public static String BIG_BITE="lion_roar_2.mp3";
@@ -138,7 +138,7 @@ public class FrameAnimationTimer extends AnimationTimer{
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+     @Override
     public void stop() {
        super.stop();
        if(mediaPlayer!=null)  {
@@ -165,7 +165,7 @@ public class FrameAnimationTimer extends AnimationTimer{
         
        if(mediaPlayer!=null)  {
        if(startMusic) {
-           if(this.sound==FIRE|| 
+           if(this.sound==MARCHE|| 
                    this.sound==EAT ||this.sound==MOVEBLACK ||this.sound==DAMAMOVE_B||this.sound==MOVESPACESOLDIER ) {
              // mediaPlayer.setCycleCount(10);
                //mediaPlayer.seek(Duration.ONE);

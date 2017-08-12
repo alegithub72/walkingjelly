@@ -82,7 +82,7 @@ public class MarcheAction extends BaseAction{
             }
             int letgthp=mapTile.length;
             int calcp=(apbase* letgthp);
-            System.out.println("------------------___>getigne"+mapTile.length);
+            System.out.println("----------------->CALCULATE TILE LINE SIZE:->"+mapTile.length);
        tempActivite=calcp;
     }
 

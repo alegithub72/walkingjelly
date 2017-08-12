@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
@@ -19,7 +20,7 @@ import jeu.patrouille.coeur.pieces.Soldat;
  *
  * @author appleale
  */
-public class MoteurDeJoeur implements  Runnable{
+public class MoteurDeJoeur implements Runnable{
     
     
     List<GraficCarteInterface> listgrafic;
@@ -32,6 +33,7 @@ public class MoteurDeJoeur implements  Runnable{
     int turn;
     int activeJeur;
     int iniativeWinner;
+    Thread threadTurn=null;
     public MoteurDeJoeur(GeneriqueJoeurs jUS,GeneriqueJoeurs jHOST,Carte carte) throws IOException{
         this.c=carte;
         this.jUS=jUS;
@@ -39,9 +41,16 @@ public class MoteurDeJoeur implements  Runnable{
         patrouille=jUS.getEquip();
         hostile=jHOST.getEquip();
         listgrafic=new ArrayList();
-        initGame();
+     
+       
     }
-
+    private GeneriqueJoeurs getJeur(int type){
+    if(type==JEUR_HOSTILE)
+        return jHOST;
+    return jUS;
+    
+    
+    }
     public GeneriqueJoeurs getActiveJeur() {
         if(activeJeur==JEUR_US) return jUS;
         else return jHOST;
@@ -50,10 +59,7 @@ public class MoteurDeJoeur implements  Runnable{
     public void add(GraficCarteInterface g){
         listgrafic.add(g);
     }
-    void initGame() throws IOException {
-
-
-
+    public void initGame() throws IOException {
         displacementEquipeHost();
         displacementEquipeUS();
     }
@@ -125,84 +131,141 @@ public class MoteurDeJoeur implements  Runnable{
     }
     
     public void startTurn(){
-        
-    Thread t=new Thread(this);
-    initJeours();    
-    t.start();
-    
-    
+        System.out.println("start thraed mj");
+        if(threadTurn==null ){
+         threadTurn=new Thread(this);
+        threadTurn.setDaemon(true);
+        threadTurn.start();
+        }else if(!threadTurn.isAlive()){
+        threadTurn=new Thread(this);
+        threadTurn.setDaemon(true);
+        threadTurn.start();
+        }
+     
+        //    run();
+      //  Platform.runLater(this);
+   //run()
     }
-    public void resolveTurnActions(){        
+
+    @Override
+    public void run() {
+        System.out.println("-------------------RUN THREAD<----------------------"+Thread.currentThread().getId());
+        initJeours();   
+        System.out.println("--------------------------->start tread turn :"+turn);
+        resolveTurnActions();
+
+    }
+
+    public Thread getThreadTurn() {
+        return threadTurn;
+    }
+ 
+
+    
+    
+   public  void resolveTurnActions(){        
         turn++;
         List<BaseAction> listAllActionUS=new ArrayList<>();
         List<BaseAction> listAllActionHost=new ArrayList<>();
-        for(int tdInc=1;tdInc<=10;tdInc++){
-         
+        for(int td=1;td<=10;td++){
+         System.out.println("--------------------------->TD------>"+td+"<------------");
             for(int k=0;k<patrouille.length;k++){
-                listAllActionUS.addAll(patrouille[k].getBaseActionSum(tdInc));
+                List<BaseAction> l=patrouille[k].getBaseActionSum(td);
+                System.out.println("---Action sum--->"+l.size());
+                listAllActionUS.addAll(l);
             }
             
             for(int k=0;k<hostile.length;k++){
-                listAllActionHost.addAll(hostile[k].getBaseActionSum(tdInc));
+                List<BaseAction> l=hostile[k].getBaseActionSum(td);
+                System.out.println("--Action sum---->"+l.size());
+                listAllActionHost.addAll(l);
             }            
-            System.out.println("-----------STEP  "+tdInc+"---------------------");
+            System.out.println("-----------TD CONSIDEREDED "+td+"---------------------");
             System.out.println("-listAllHost-->"+listAllActionHost.size());
-            System.out.println("-listAllUS-->"+listAllActionUS.size());            
-            playStep(tdInc,listAllActionUS,listAllActionHost );  
-          
+            System.out.println("-listAllUS-->"+listAllActionUS.size()); 
+            
+            playStep(td,listAllActionUS,listAllActionHost );  
+
             listAllActionUS=new ArrayList<>();
             listAllActionHost=new ArrayList<>();      
            //break;
         }
-
+      
     }   
 
-    @Override
-    public void run() {
-        
-        resolveTurnActions();
-    }
- 
-      void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
-        
+  
+    
+   void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
+        BaseAction[] arrayOrderd=null;
        if(iniativeWinner==JEUR_US) 
-        listUSAll.addAll(listHostAll);
-        else 
-        listHostAll.addAll(listUSAll);
+       {
+           listUSAll.addAll(listHostAll);
+           arrayOrderd=new BaseAction[listUSAll.size()];
+           Arrays.sort(listUSAll.toArray( arrayOrderd), BaseAction.baseActionCompratorImpl);
+           System.out.println("-----------JEUR US WIN INITIATIVE---SIZE=--->"+arrayOrderd.length+"<--------SORTED--------------------------");
+       }
+       else{
+           listHostAll.addAll(listUSAll);
+           arrayOrderd=new BaseAction[listHostAll.size()];
+            Arrays.sort(listHostAll.toArray(arrayOrderd),BaseAction.baseActionCompratorImpl);
+            System.out.println("-----------JEUR HOSTILE WIN INITIATIVE-SIZE=--->"+arrayOrderd.length+"<--------SORTED--------------------------");            
+       }    
         
-        BaseAction[] arrayOrderd=new BaseAction[listUSAll.size()];
-        for(BaseAction b:listUSAll){
-            System.out.println(b);
-        }
-        System.out.println("-----------size all----"+listUSAll.size()+"--------SORTED--------------------------");
         
-        Arrays.sort(listUSAll.toArray( arrayOrderd), BaseAction.baseActionCompratorImpl);
+ 
+       // for(BaseAction b:arrayOrderd){
+       //     System.out.println(b);
+       // }
+        
+        
+        if(arrayOrderd!=null && arrayOrderd.length>0){
         int k=0;
-        do {
-          
-            if(allAnimFinished() && k<arrayOrderd.length){
-            BaseAction b=arrayOrderd[k];
-            Soldat s=(Soldat)b.getProtagoniste();
-            //s.resetAction();
-            BaseAction clone=b.clone();
-            System.out.println("--clone--->"+clone+"<-----");
-            //cosi sono valide le posizioni di tutti.....
-            playAllGraficInterface(clone);
-              k++;
-           
-            //c.makeAction((Soldat)b.getProtagoniste(), b);
-            }     
-            //break;
-        }while(k<arrayOrderd.length);
-        System.out.println("fine turno");
-        
+            do {
+
+                if(  k<arrayOrderd.length){
+                BaseAction b=arrayOrderd[k];
+                BaseAction clone=b.clone();
+                Soldat s=(Soldat)b.getProtagoniste();
+                //s.resetAction();
+
+                System.out.println("--PLAY--ACTION->"+b+"<-----");
+                //cosi sono valide le posizioni di tutti.....
+                playAllGraficInterface(b);
+                  k++;
+//                try {
+//                Thread.currentThread().wait(0);
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                }catch(java.lang.IllegalMonitorStateException i){
+//                    i.printStackTrace();
+//                }
+                int zz=0;
+                System.out.println("wait  ="+allAnimOn());
+                while(allAnimOn());
+                System.out.println("wait  ="+allAnimOn());
+                System.out.println("---------------->FINE WAIT<----------------");
+                 // try{
+                    //wait(0);
+                  //}catch(InterruptedException i){
+                  //    System.out.println("TREAD SBLOCKED");
+                 // }
+                  //
+                 //c.makeAction((Soldat)b.getProtagoniste(), b);   
+                 //TODO vedere per aggiorantre la mappa quando!!!!
+
+                }     
+
+                //break;
+            }while(k<arrayOrderd.length);
+            System.out.println("fine turno");
+        }
         
     
     }
-    private boolean allAnimFinished(){
-        boolean b=true;
+    private boolean allAnimOn(){
+        boolean b=false;
         for(GraficCarteInterface c:listgrafic){
-            b=b && c.isAnimFinished();
+            b=b || c.isAnimOn();
         }
         return b;
     }
@@ -236,9 +299,17 @@ public class MoteurDeJoeur implements  Runnable{
         this.activeJeur = activeJeur;
     }
     
-      void   playAllGraficInterface(BaseAction b){
+       void   playAllGraficInterface(BaseAction b){
+         
         for (GraficCarteInterface g : listgrafic) {
-            g.play(b);
+            g.setAnimOn(true);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    g.play(b);
+                }
+            } );
+            return;
         }
     }
      

@@ -53,7 +53,7 @@ public class FXMouseJeurHelper {
         this.actionSeletione = actionSeletione;
     }
 
-    public boolean isActionSeletione() {
+    public boolean isActionSelectione() {
         return actionSeletione;
     }
 

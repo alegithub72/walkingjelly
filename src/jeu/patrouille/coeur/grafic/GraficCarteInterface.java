@@ -14,5 +14,6 @@ import jeu.patrouille.coeur.actions.BaseAction;
  */
 public interface GraficCarteInterface  {
    public  void  play(BaseAction  b);
-   public boolean isAnimFinished();
+    public boolean isAnimOn() ;
+    public void setAnimOn(boolean value);
 }

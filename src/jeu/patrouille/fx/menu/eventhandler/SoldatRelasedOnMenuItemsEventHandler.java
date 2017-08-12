@@ -7,13 +7,9 @@ package jeu.patrouille.fx.menu.eventhandler;
 
 
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.MenuItem;
-import jeu.patrouille.fx.menu.WalkItem;
 
 /**
  *

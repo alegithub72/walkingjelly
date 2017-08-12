@@ -28,12 +28,19 @@ public abstract class GeneriqueJoeurs {
     String ptSt = "(s|m|f)(\\d){1,3},(\\d){1,3};((\\d){1,3},(\\d){1,3})?";
     Piece selectionee;
     Carte carte;
+    int jeur;
     public GeneriqueJoeurs(int jeur,Carte c) {
         if(jeur==JOEUR_HOST)
         equipe = new Piece[EQUIPE_SIZE_HOSTILE];
         else equipe=new Piece[EQUIPE_SIZE_US];
         inCommand = System.in;
         this.carte=c;
+        this.jeur=jeur;
+        
+    }
+
+    public int getJeur() {
+        return jeur;
     }
 
 
@@ -59,7 +66,6 @@ public abstract class GeneriqueJoeurs {
     public Piece[] getEquip() {
         return equipe;
     }
-
 
 
     public Soldat findSquadLeader() {

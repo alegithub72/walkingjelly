@@ -8,6 +8,7 @@ package jeu.patrouille.fx.menu.eventhandler;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.fx.board.FXCarte;
 
 import jeu.patrouille.fx.board.FXPlanche;
@@ -21,10 +22,10 @@ import jeu.patrouille.fx.board.FXPlanche;
 public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.EventHandler<MouseEvent>{
 
  
-    FXCarte pl;
-    public SoldatOpenMenuItemsFXCarteEventHandler(FXCarte pl) {
+    FXCarte fxcarte;
+    public SoldatOpenMenuItemsFXCarteEventHandler(FXCarte fxcarte) {
 
-    this.pl=pl;
+    this.fxcarte=fxcarte;
     }
 
     @Override
@@ -35,11 +36,12 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
  
            if (event.getButton() == MouseButton.SECONDARY
                    && event.getClickCount()<=1 ) {
-                pl.openCurrentSoldatMenuItems();
+                
+                fxcarte.openCurrentSoldatMenuItems(event.getSceneX(),event.getSceneY());
                
-           }  else if(event.getButton()==MouseButton.SECONDARY
+           }  else if(event.getButton()==MouseButton.PRIMARY
                    && event.getClickCount()>1){
-                pl.closeFXCarteMenuItems();
+                fxcarte.closeFXCarteMenuItems();
            }
        
 
