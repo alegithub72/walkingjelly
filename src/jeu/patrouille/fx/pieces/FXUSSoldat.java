@@ -14,7 +14,6 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
-import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -26,7 +25,7 @@ import jeu.patrouille.fx.sprite.Sprite;
  *
  * @author appleale
  */
-public class FXUSSoldat extends Sprite implements Runnable{
+public class FXUSSoldat extends Sprite {
 
     Soldat s;
     int pos;
@@ -52,6 +51,9 @@ public class FXUSSoldat extends Sprite implements Runnable{
         //defaultFrame=s.getClassement();
        defaultFrame=0;
        orientation=0;
+        if(!this.getChildren().contains(blessureImg))this.getChildren().add(blessureImg);
+        if(!this.getChildren().contains(flagImg))this.getChildren().add(flagImg);
+        if(!this.getChildren().contains(classmentImg))this.getChildren().add(classmentImg); 
         defaultFrame();
 
         
@@ -71,6 +73,7 @@ public class FXUSSoldat extends Sprite implements Runnable{
         //defaultFrame=s.getClassement();
        defaultFrame=0;
         defaultFrame();
+   
 
         
     }    
@@ -83,9 +86,7 @@ public class FXUSSoldat extends Sprite implements Runnable{
     this.defaultFrame=n;
     }
     public void buildSprite(){
-        if(!this.getChildren().contains(blessureImg))this.getChildren().add(blessureImg);
-        if(!this.getChildren().contains(flagImg))this.getChildren().add(flagImg);
-        if(!this.getChildren().contains(classmentImg))this.getChildren().add(classmentImg);
+
         flagImg.relocate(this.getX(),this.getY());
         classmentImg.relocate(this.getX(),this.getY());
         classmentImg.setTranslateX(FXCarte.TILE_SIZE-20);
@@ -130,31 +131,29 @@ public class FXUSSoldat extends Sprite implements Runnable{
         return "s=" + s.toStringSimple() ;
     }
     
-    Point2D getSceneCoord(int i,int j){
-        double x0=((j-fxcarte.getPosJ())*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2);
-        double y0=((i-fxcarte.getPosI())*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2); 
-        Point2D p=new Point2D(x0, y0);
-        return p;
-    }
+
     
-    public  void playMove(MarcheAction  act){
-    
+   public  void playMarche(MarcheAction  act){
+        
+        System.out.println("-------------CREATE-ANIM INIZIO---------------------------_>");
+        if(fxcarte.estFXSoldatView(act.getI1(), act.getJ1())){
+        System.out.println("soldato anim:"+act.getProtagoniste());
         Path p=new Path();
         this.deselectioneFXSoldat();
-        Point2D p1=getSceneCoord(act.getI0(), act.getJ0());
+        Point2D p1=fxcarte.getSceneCoord(act.getI0(), act.getJ0());
         MoveTo mTo=new MoveTo(p1.getX(),p1.getY() );
-        Point2D p2=getSceneCoord(act.getI1(), act.getJ1());
+        Point2D p2=fxcarte.getSceneCoord(act.getI1(), act.getJ1());
         LineTo l=new LineTo(p2.getX(),p2.getY());
         p.getElements().add(mTo);
         p.getElements().add(l);
-        Point2D derivedCoordp0=getSceneCoord(act.getDerivedAction().getI0(), act.getDerivedAction().getJ0());
-        Point2D derivedCoordp1=getSceneCoord(act.getDerivedAction().getI1(), act.getDerivedAction().getJ1());
+//        Point2D derivedCoordp0=getSceneCoord(act.getDerivedAction().getI0(), act.getDerivedAction().getJ0());
+//        Point2D derivedCoordp1=getSceneCoord(act.getDerivedAction().getI1(), act.getDerivedAction().getJ1());
         
         //double angle=Piece.getDirection(derivedCoordp0.getX(),derivedCoordp0.getY(),
          //       derivedCoordp1.getX(),derivedCoordp1.getY());
         //this.
         double angle=Piece.getDirection(p1.getX(),p1.getY(),p2.getX(),p2.getY());
-        setSoldatOrintetion(angle  );
+        setFXSoldatOrientation(angle);
                 
         System.out.println("rotate "+angle);
 
@@ -168,45 +167,73 @@ public class FXUSSoldat extends Sprite implements Runnable{
         path.setCycleCount(1);
         path.setAutoReverse(false);
         createMove();
-
-
+   
+        ptList[0]=path;
         path.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-              frameAnimTimer[0].stop();
-              //path.stop();
               
+              if(event.getEventType()==ActionEvent.ANY){  
+              System.out.println("***************STATUS "+ptList[0].getStatus());
+              frameAnimTimer[0].stop();
+              fxcarte.setAnimOn(false);
+              //ptList[0].stop();
+             // try{
+              //fxcarte.getMj().getThreadTurn().notify();
+              //}catch(java.lang.IllegalMonitorStateException e){
+              // e.printStackTrace();
+             // }
+             System.out.println("--------------PLAY FINE---------------------------_>");
+              }
+             event.consume();
             }
         });
+
+        System.out.println("---------------------------->PLAY START<-----------------");
+        frameAnimTimer[0].start();
+        ptList[0].play();
      
-       
-         path.play();
-         ptList[0]=path;
-        // Thread t=new Thread(this);
-        // t.start();
-        run();
-        
+     
+
+         
+
+         
+        }else{
+            this.setVisible(false);
+        }
+        System.out.println("-------------CREATE-ANIM FINE---------------------------_>");        
     }
+        
+    
     private void getAngle(Point2D p0,Point2D p2){
 
     }
-    public void setSoldatOrintetion(double angle){
+    public void setFXSoldatOrientation(double angle){
       imgView.setRotate(orientation  );
+        updateSodlatOrientation(angle);
       orientation=angle;
       imgView.setRotate(angle);
     }
     
-    @Override
-    public void run() {
-    frameAnimTimer[0].start();
-     ptList[0].play();
-    }
+    void updateSodlatOrientation(double angle){
+        if(angle>=-30 && angle<=30 ) 
+            this.s.setFace(Piece.Direction.N);
+        else if(angle>30 && angle<60 )s.setFace(Piece.Direction.NW);        
+        else if(angle>=60 && angle<=120)s.setFace(Piece.Direction.W);
+        else if(angle>120 && angle<150) s.setFace(Piece.Direction.SW);        
+        else if((angle>=150 && 
+                angle <180 )|| (angle<=-150 && angle>=-180))  
+            s.setFace(Piece.Direction.S);
+        else if(angle<-120 && angle>-150) s.setFace(Piece.Direction.SW);
+        else if(angle<=-60 && angle>=-120) s.setFace(Piece.Direction.W);
+        else if(angle<-30 && angle >-60) s.setFace(Piece.Direction.NE);
+        System.out.println("\n"+angle+"-----orientation updataed--->"+s);
+        }
     
     private void createMove(){
-        frameAnimTimer[0]=new FrameAnimationTimer(1, 4, this, 0, true, 200, null);
+        frameAnimTimer[0]=new FrameAnimationTimer(1, 4, this, 0, true, 200, FrameAnimationTimer.MARCHE);
         
     }
     
-    
-    
+
 }
