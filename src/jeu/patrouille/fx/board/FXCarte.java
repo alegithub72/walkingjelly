@@ -157,7 +157,8 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     public void playTurn(){
        
         //Platform.setImplicitExit(true);
-        mj.startTurn();
+        mj.debutRond();
+        
     }
     @Override
     public boolean isAnimOn() {
@@ -344,19 +345,15 @@ private boolean isScrollAreaChanged(int i1,int j1){
     }
 
     
-    protected void deactiveRangePointer(){
-    rootGroup.getChildren().remove(helper.getDisplayRange());
 
-    }
     
     synchronized public void annulleCommand() {
+        removeDisplayRange();
         helper.setCommanNotvalid(true);
-        
         setOnMouseMoved(null);
         setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
         setOnMouseMoved(new ScrollEventHandler(this));
         setCursor(Cursor.DEFAULT);
-        deactiveRangePointer();
         fxpl.sendMessageToPlayer("Action effacer");
 
     }
@@ -374,7 +371,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         int j1 = ((int) tmpJ) + posJ;
         System.out.println("walk here i1=" + i1 + " j1=" + j1);
         helper.setArrivalCarteCoord(i1, j1);
-        deactiveRangePointer();
+        removeDisplayRange();
 
         setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
         setCursor(Cursor.DEFAULT);
@@ -396,7 +393,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
         } else {
        
-
+            removeDisplayRange();
             BaseAction act=  item.buildMenuItemAction();
             addHelperInstance(act);
             fxpl.sendMessageToPlayer("Action non valide");
@@ -430,6 +427,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         BaseAction act = item.buildMenuItemAction();
 
         if (act.getType() == BaseAction.MARCHE) {
+            
             addHelperInstance(act);
             helper.setActionSeletione(true);
             setOnMouseClicked(null);
@@ -1148,8 +1146,8 @@ System.out.println("------------------SCROLL PRINT------------------------------
         deselectionneAllSoldats();  
         initFXHelperInstance(s);
         imprimerFXHelperSoldatProfile();
-        double sx=s.getLayoutX();
-        double sy=s.getLayoutY();
+        double sx=s.getTranslateX();
+        double sy=s.getTranslateY();
         int i=s.getSoldat().getI();
         int j=s.getSoldat().getJ();
         buildMenuItems(sx,sy,i,j);
@@ -1369,16 +1367,16 @@ protected void buildDisableMenu(FXUSSoldat s){
     @Override
     public void refreshGraficCarte() {
         
-        for(int k=0;k<fxequipeHost.length;k++)
-            this.rootGroup.getChildren().remove(fxequipeHost[k]);
-        
-        for(int k=0;k<fxequipeUS.length;k++)
-            this.getChildren().remove(fxequipeUS[k]);
-        
-        fxequipeHost=  jHOST.rebuildFXEquipe();
-        fxequipeUS=jUS.getFxEquipe();
+//        for(int k=0;k<fxequipeHost.length;k++)
+//            this.rootGroup.getChildren().remove(fxequipeHost[k]);
+//        
+//        for(int k=0;k<fxequipeUS.length;k++)
+//            this.getChildren().remove(fxequipeUS[k]);
+//        
+//        fxequipeHost=  jHOST.rebuildFXEquipe();
+//        fxequipeUS=jUS.getFxEquipe();
         refreshCarte();
-        resetAllPositionFXSoldatView();
+        //resetAllPositionFXSoldatView();
         
     }
   

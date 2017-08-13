@@ -63,7 +63,7 @@ public class MoteurDeJoeur implements Runnable{
 
 
 
-    public void initJeours(){
+    public void debutJeours(){
         Soldat leaderUS = jUS.findSquadLeader();
         Soldat leaderHOST = jHOST.findSquadLeader();
         int tnUS = jUS.dice(10) - leaderUS.getCC();
@@ -78,7 +78,7 @@ public class MoteurDeJoeur implements Runnable{
         }
     
     }
-    public void changeJeur() {
+    public void changeJoueur() {
 
 
         if(activeJeur==JEUR_US) activeJeur=JEUR_HOSTILE;
@@ -88,7 +88,7 @@ public class MoteurDeJoeur implements Runnable{
 
     }
     
-    public void commandDeliveryJaeurActiveTurn() {
+    public void commandLivrasionActiveJoueur() {
         BaseAction ac = null;
         do {
             getActiveJeur().getCommand();
@@ -115,7 +115,7 @@ public class MoteurDeJoeur implements Runnable{
         return patrouille;
     }
     
-    public void startTurn(){
+    public void debutRond(){
         System.out.println("start thraed mj");
         if(threadTurn==null ){
          threadTurn=new Thread(this);
@@ -135,20 +135,15 @@ public class MoteurDeJoeur implements Runnable{
     @Override
     public void run() {
         System.out.println("-------------------RUN THREAD<----------------------"+Thread.currentThread().getId());
-        initJeours();   
+        debutJeours();   
         System.out.println("--------------------------->start tread turn :"+turn);
-        resolveTurnActions();
+        resolveAllRondeActions();
 
     }
 
-    public Thread getThreadTurn() {
-        return threadTurn;
-    }
- 
 
     
-    
-   public  void resolveTurnActions(){        
+   public  void resolveAllRondeActions(){        
         turn++;
         List<BaseAction> listAllActionUS=new ArrayList<>();
         List<BaseAction> listAllActionHost=new ArrayList<>();
@@ -170,7 +165,7 @@ public class MoteurDeJoeur implements Runnable{
             //System.out.println("-listAllHost-->"+listAllActionHost.size());
            // System.out.println("-listAllUS-->"+listAllActionUS.size()); 
             
-            playStep(td,listAllActionUS,listAllActionHost );  
+            resolveTempPas(td,listAllActionUS,listAllActionHost );  
 
             listAllActionUS=new ArrayList<>();
             listAllActionHost=new ArrayList<>();   
@@ -192,7 +187,7 @@ public class MoteurDeJoeur implements Runnable{
    
    
    }
-   void playStep(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
+   void resolveTempPas(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
         BaseAction[] arrayOrderd=null;
        if(iniativeWinner==JEUR_US) 
        {
@@ -243,8 +238,8 @@ public class MoteurDeJoeur implements Runnable{
                 while(allAnimOn());
                 System.out.println("------------WAKEUPPPPPPPPPP  ="+allAnimOn());
 
-               //  c.makeAction((Soldat)b.getProtagoniste(), b);   
-                // refreshAllGraficInterface();
+                c.makeAction((Soldat)b.getProtagoniste(), b);   
+                refreshAllGraficInterface();
                  //TODO vedere per aggiorantre la mappa quando!!!!
                  k++;
                 }     
@@ -265,14 +260,14 @@ public class MoteurDeJoeur implements Runnable{
         return b;
     }
     public void playGame(){
-    initJeours();
+    debutJeours();
     do{
          
-         commandDeliveryJaeurActiveTurn();
-         changeJeur();
-         commandDeliveryJaeurActiveTurn();
-         resolveTurnActions();
-         changeJeur();
+         commandLivrasionActiveJoueur();
+         changeJoueur();
+         commandLivrasionActiveJoueur();
+         resolveAllRondeActions();
+         changeJoueur();
     
         }while(conditionVictoire()!=-1);
     

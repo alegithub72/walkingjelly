@@ -10,7 +10,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.fx.board.FXCarte;
 
-import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 
