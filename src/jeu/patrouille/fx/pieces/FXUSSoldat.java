@@ -19,6 +19,7 @@ import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
+import static jeu.patrouille.fx.board.FXCarte.PIXEL_SCROLL_AREA_W;
 import jeu.patrouille.fx.sprite.Sprite;
 
 /**
@@ -154,31 +155,49 @@ public class FXUSSoldat extends Sprite {
         //System.out.println("soldato anim:"+act.getProtagoniste());
         Path p=new Path();
         this.deselectioneFXSoldat();
-        Point2D p1=fxcarte.getSceneCoord(act.getProtagoniste(),act.getI0(), act.getJ0());
+        Point2D p1=getSceneCoordMove(act.getProtagoniste(),act.getI0(), act.getJ0());
         float x0=((float)(p1.getX()
                 //-this.getLayoutX()
                 )
-                +(FXCarte.TILE_SIZE/2))
+                +(FXCarte.TILE_SIZE/2)
+                )
                 ;
         float y0=((float)(p1.getY()
                // -this.getLayoutY()
                 )
-                +(FXCarte.TILE_SIZE/2))
+                +(FXCarte.TILE_SIZE/2)
+                )
                 ;
 
         MoveTo mTo=new MoveTo(x0,y0);
  
-        Point2D p2=fxcarte.getSceneCoord(act.getProtagoniste(),act.getI1(), act.getJ1());
+        Point2D p2=getSceneCoordMove(act.getProtagoniste(),act.getI1(), act.getJ1());
         float x1=((float)(p2.getX()
                // -this.getLayoutX()
                 )
-                +(FXCarte.TILE_SIZE/2))
+                +(FXCarte.TILE_SIZE/2)
+                )
                 ;
         float y1=((float)(p2.getY()
                 //-this.getLayoutY()
                 )
-                +(FXCarte.TILE_SIZE/2))
+                +(FXCarte.TILE_SIZE/2)
+                )
                 ;
+        //TODO esteticamente modificare i movimenti agli estremi dello schermo di scrolll
+//        if(x1<=FXCarte.TILE_SIZE)x1=30;
+//        if(y1<=FXCarte.TILE_SIZE)y1=30;
+//        if(x1>=(FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE))
+//            x1=(float)FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-20;
+//        if(y1>=(FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE))
+//            y1=(float)FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-20;
+//        
+//        if(x0<=FXCarte.TILE_SIZE)x0=30;
+//        if(y0<=FXCarte.TILE_SIZE)y0=30;
+//        if(x0>=(FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE))
+//            x0=(float)FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-20;
+//        if(y0>=(FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE))
+//            y0=(float)FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-20;        
         
         LineTo l=new LineTo(x1,y1);
         
@@ -281,6 +300,30 @@ System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->----
         frameAnimTimer[0]=new FrameAnimationTimer(1, 3, this, 0, true, 200, FrameAnimationTimer.MARCHE);
         
     }
+    public Point2D getSceneCoordMove(Piece s,int  i,int j){
+        int posj=fxcarte.getPosJ(),posi=fxcarte.getPosI();
+        System.out.println(" get coord "+i+","+j+" posI,posj="+posi+","+posj);
+        int scrollI=i-posi,scrollJ=j-posj;
+     
+        double x0=(scrollJ*FXCarte.TILE_SIZE);
+        double y0=(scrollI*FXCarte.TILE_SIZE); 
+         y0=esteticCorrectionY0(scrollI,y0);
+         x0=esteticCorrectionX0(scrollJ,x0);
+        Point2D p=new Point2D(x0, y0);
+        return p;
+    }         
     
+    private double esteticCorrectionY0(int scrollI,double y){
+        double y0=y;
+        if(scrollI==0) y0=10;
+        else if(scrollI==(FXCarte.AREA_SCROLL_I_H-1)) y0=FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-10;
+        return y0;
+    }
+    private double esteticCorrectionX0(int scrollJ,double x){
+        double x0=x;
+        if(scrollJ==0) x0=10;
+        else if(scrollJ==(FXCarte.AREA_SCROLL_J_W-1)) x0=PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-10;
+        return x0;
+    }    
 
 }

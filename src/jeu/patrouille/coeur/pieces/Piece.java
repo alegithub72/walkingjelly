@@ -39,7 +39,14 @@ public abstract class Piece  {
         this.boss=boss;
         spreadDone=false;
     }
-
+    public boolean isHostile(){
+        return boss.getJeur()==GeneriqueJoeurs.JOEUR_HOST;
+    
+    }
+    public boolean isUS(){
+    return boss.getJeur()==GeneriqueJoeurs.JOEUR_US;
+    
+    }
     private void transformActionPool() {
         List<BaseAction> newActionPool=new ArrayList<>();
         System.out.println("*******SRPEAD START*******>");

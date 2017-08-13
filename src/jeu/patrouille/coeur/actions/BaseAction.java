@@ -8,6 +8,7 @@ package jeu.patrouille.coeur.actions;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Piece;
 
 /**
@@ -46,7 +47,12 @@ public int compareTo(BaseAction b) {
         return ordreInitiative;
     }
     
-    
+    public boolean isProtagonisteTypeSoldat(){
+    return protagoniste.getPieceType()==Piece.ActeurType.SOLDAT;
+    }
+    public boolean isProtagonisteHostile(){
+        return protagoniste.getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST;
+    }
 //    @Override
 //    public int compareTo(BaseAction o) {
 //      return (this.getTempActivite()-o.getTempActivite());
