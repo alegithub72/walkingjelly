@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.fx.board;
 
+import java.awt.PointerInfo;
 import java.io.IOException;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -754,30 +755,43 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 //canv.getGraphicsContext2D()
                 canv.getGraphicsContext2D().fillText(i + "," + j, x0 + 10, y0 + 25);
                 // canv.getGraphicsContext2D().strokeRect(x0, y0, PointCarte.TILE_SIZE, PointCarte.TILE_SIZE);
-                Piece piece = null;
-                if (tile != null) {
-                    piece = tile.getPiece();
-                }
-              //  System.out.println(tile+","+piece);
-                if (piece != null) {
-                    if (piece.getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST) {
-                        System.out.println("----i,j="+i+","+j);
-                        enableSoldatoInView(fxequipeHost[piece.getarrayN()], x0, y0);
-                      
-                    } else if (piece.getBoss().getJeur()==GeneriqueJoeurs.JOEUR_US) {
-                        System.out.println("----i,j="+i+","+j);
-                        enableSoldatoInView(fxequipeUS[piece.getarrayN()], x0, y0);
-                       
-                    }
-                    //System.out.println("here ="+x0+","+y0+" ");
-                }
+                enableAllFXSoldat(tile, x0, y0);
                 //if(ob!=null)System.out.println(" i,j"+(m+posX)+","+(n+posY));
                 //if(ob!=null)
             }
         }
 System.out.println("------------------SCROLL PRINT----------------------------------");
     }
+    void enableAllFXSoldat(Terrain tile,double x0,double y0){
+        Piece piece = null;
 
+        piece = tile.getPiece();
+
+        //  System.out.println(tile+","+piece);
+        if (piece != null) {
+            if (piece.getBoss().getJeur() == GeneriqueJoeurs.JOEUR_HOST) {
+                System.out.println("----i,j=" + tile.getI() + "," + tile.getJ());
+                enableSoldatoInView(fxequipeHost[piece.getarrayN()], x0, y0);
+                int k=1;
+                for(Piece p:tile.getExtraPiece()){
+                    enableSoldatoInView(fxequipeHost[p.getarrayN()], x0+(20*k), y0+(k*20));
+                    k++;
+                }
+
+            } else if (piece.getBoss().getJeur() == GeneriqueJoeurs.JOEUR_US) {
+                System.out.println("----i,j=" + tile.getI() + "," + tile.getJ());
+                enableSoldatoInView(fxequipeUS[piece.getarrayN()], x0, y0);
+                int k=1;
+                for(Piece p:tile.getExtraPiece()){
+                    enableSoldatoInView(fxequipeUS[p.getarrayN()], x0+(20*k), y0+(20*k));
+                    k++;
+                }
+            }
+            //System.out.println("here ="+x0+","+y0+" ");
+        } 
+    
+    }
+    
     void enableSoldatoInView(FXUSSoldat s, double x0, double y0) {
         System.out.println(x0+","+y0);
         //s.buildFXUSSoldat();
@@ -845,15 +859,20 @@ System.out.println("------------------SCROLL PRINT------------------------------
         } else {
             Soldat s = sfx.getSoldat();
             System.out.println("reset position "+s.toStringSimple());
-            Point2D p = getSceneCoord(s.getI(), s.getJ());
+            Point2D p = getSceneCoord(s,s.getI(), s.getJ());
             enableSoldatoInView(sfx, p.getX(), p.getY());
         }    
     }
     
-    public Point2D getSceneCoord(int  i,int j){
+    public Point2D getSceneCoord(Piece s,int  i,int j){
         System.out.println(" get coord "+i+","+j+" posI,posj="+posI+","+posJ);
+        PointCarte cp=carte.getPointCarte(i, j);
         double x0=((j-posJ)*FXCarte.TILE_SIZE);
         double y0=((i-posI)*FXCarte.TILE_SIZE); 
+        if(cp.getPiece()!=s && cp.isInExtra(s)){
+            x0=((j-posJ)*FXCarte.TILE_SIZE)+((cp.extraPiecePostion(s)+1)*20);
+            y0=((i-posI)*FXCarte.TILE_SIZE)+((cp.extraPiecePostion(s)+1)*20);
+        }
         Point2D p=new Point2D(x0, y0);
         return p;
     }    

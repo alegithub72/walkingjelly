@@ -41,7 +41,7 @@ public class FXUSSoldat extends Sprite {
 
     public FXUSSoldat(Soldat s,int pos,FXCarte fxcarte){
         super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,
-                FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,"frameFigurineUS.png",null);
+                FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,"frameSoldierUS2.png",null);
         this.fxcarte=fxcarte;
         this.s=s;   
         this.pos=pos;
@@ -154,7 +154,7 @@ public class FXUSSoldat extends Sprite {
         //System.out.println("soldato anim:"+act.getProtagoniste());
         Path p=new Path();
         this.deselectioneFXSoldat();
-        Point2D p1=fxcarte.getSceneCoord(act.getI0(), act.getJ0());
+        Point2D p1=fxcarte.getSceneCoord(act.getProtagoniste(),act.getI0(), act.getJ0());
         float x0=((float)(p1.getX()
                 //-this.getLayoutX()
                 )
@@ -168,7 +168,7 @@ public class FXUSSoldat extends Sprite {
 
         MoveTo mTo=new MoveTo(x0,y0);
  
-        Point2D p2=fxcarte.getSceneCoord(act.getI1(), act.getJ1());
+        Point2D p2=fxcarte.getSceneCoord(act.getProtagoniste(),act.getI1(), act.getJ1());
         float x1=((float)(p2.getX()
                // -this.getLayoutX()
                 )
@@ -278,7 +278,7 @@ System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->----
         }
     
     private void createMove(){
-        frameAnimTimer[0]=new FrameAnimationTimer(1, 4, this, 0, true, 200, FrameAnimationTimer.MARCHE);
+        frameAnimTimer[0]=new FrameAnimationTimer(1, 3, this, 0, true, 200, FrameAnimationTimer.MARCHE);
         
     }
     

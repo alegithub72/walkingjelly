@@ -5,6 +5,8 @@
  */
 package jeu.patrouille.coeur.terrains;
 
+import java.util.ArrayList;
+import java.util.List;
 import jeu.patrouille.coeur.grafic.TerrainTextRapresentation;
 import jeu.patrouille.coeur.pieces.Piece;
 
@@ -27,7 +29,7 @@ public  class PointCarte implements TerrainTextRapresentation{
     protected int type;
     protected int v;
     Piece piece=null;
-    
+    List<Piece> extraPiece;
     public Piece getPiece() {
         return piece;
     }
@@ -38,6 +40,25 @@ public  class PointCarte implements TerrainTextRapresentation{
      this.i=i;
      this.j=j;
      this.v=1;
+     this.extraPiece=new ArrayList<>();
+    }
+    public void addExtraPiece(Piece p){
+    extraPiece.add(p);
+    
+    }
+    public void remvoeExtraPiece(Piece p){
+    extraPiece.remove(p);
+    }
+    public boolean isInExtra(Piece p){
+        return extraPiece.contains(p);
+        
+    }
+    public int extraPiecePostion(Piece p){
+    return extraPiece.indexOf(p);
+        
+    }
+    public List<Piece> getExtraPiece(){
+        return extraPiece;
     }
     public PointCarte() {
     }

@@ -448,14 +448,26 @@ public void decoderTaille(String line){
      * @param s
      * @param a 
      */
-    public void makeAction(Soldat s, BaseAction a) {
+    public void makeMarcheAction(Soldat s, BaseAction a) {
         //TODO rendere effettive le modifiche .....
-        terrain[ a.getI0()][ a.getJ0()].setPiece(null);
+        int i0=a.getI0(),j0=a.getJ0();
+        int i1=a.getI1(),j1=a.getJ1();
+        if(terrain[i0][j0].getPiece()==s)
+            terrain[i0][j0] .setPiece(null); 
+        else if(terrain[i0][j0].isInExtra(s))
+            terrain[i0][j0].remvoeExtraPiece(s);
+        
         System.out.println("updated terrain --null-->"+a.getI0()+"--->"+a.getJ0());
-        terrain[a.getI1()][a.getJ1()].setPiece(s);
+        
+        if(terrain[i1][j1].getPiece()!=null)  
+            terrain[i1][j1].addExtraPiece(s);
+        else terrain[i1][j1].setPiece(s);
+        //TODO if enemy do a close fight...!!!!
+        
+        
         System.out.println("updated terrain --soldat-"+s.toStringSimple()+"---->"+a.getI1()+"--->"+a.getJ1());
-        s.setI(a.getI1());
-        s.setJ(a.getJ1());
+        s.setI(i1);
+        s.setJ(j1);
         System.out.println("updated position -soldat--->"+s.toStringSimple()+"--->"+a.getI1()+","+a.getJ1());
     }
     public void desplacementSoldat(Piece s,int i,int j){

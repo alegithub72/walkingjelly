@@ -12,6 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -84,7 +85,12 @@ public class Sprite extends Parent
         createShapeFrame();
         imgView = new ImageView(frameImages);
         imgView.setViewport(frames[0]);  
-        getChildren().add(imgView);        
+        getChildren().add(imgView);   
+        DropShadow ds=new DropShadow(5, Color.BLACK);
+        ds.setOffsetX(5);
+        ds.setOffsetY(5);        
+        imgView.setEffect(ds);
+
        
         
     }

@@ -236,9 +236,9 @@ public class MoteurDeJoeur implements Runnable{
                 int zz=0;
                 System.out.println("------------Zzzzzzzzzzzzz="+allAnimOn());
                 while(allAnimOn());
-                System.out.println("------------WAKEUPPPPPPPPPP  ="+allAnimOn());
+                System.out.println("------------Svegliaaaaaaaa="+allAnimOn());
 
-                c.makeAction((Soldat)b.getProtagoniste(), b);   
+                makeAction((Soldat)b.getProtagoniste(), b);   
                 refreshAllGraficInterface();
                  //TODO vedere per aggiorantre la mappa quando!!!!
                  k++;
@@ -252,6 +252,12 @@ public class MoteurDeJoeur implements Runnable{
         
     
     }
+   private void makeAction(Soldat s,BaseAction a){
+       if(a.getType()==BaseAction.MARCHE){
+           c.makeMarcheAction(s, a);
+       }
+    
+   }
     private boolean allAnimOn(){
         boolean b=false;
         for(GraficCarteInterface c:listgrafic){
