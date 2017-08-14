@@ -17,13 +17,13 @@ public class StreetBorder extends Terrain {
         public StreetBorder(int i,int j,int rot){
         super(i,j,rot,"streetBorder.png");
         this.type=PointCarte.PORTE;
-        this.v=7;
+
 
     }
         public StreetBorder(int i,int j){
         super(i,j,"streetBorder.png");
         this.type=PointCarte.PORTE;
-        this.v=7;
+
 
     }        
 }

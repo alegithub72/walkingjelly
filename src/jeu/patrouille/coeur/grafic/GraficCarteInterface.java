@@ -17,4 +17,5 @@ public interface GraficCarteInterface  {
     public boolean isAnimOn() ;
     public void setAnimOn(boolean value);
     public void refreshGraficCarte();
+    public void reMountFXCarteMenuItemsAndScroll();
 }

@@ -62,6 +62,16 @@ public class FXAIJoueur extends AIJoeur{
     public FXHostile[] getFxEquipe() {
         return fxequipe;
     }
-    
+    public void removeMenuItemsOnFXEquipe() {
+        for (FXUSSoldat sfx : fxequipe) {
+            sfx.setOnMouseClicked(null);
+        }
+    }
+
+    public void mountMenuItemOnFXEquipe() {
+        for (FXUSSoldat sfx : fxequipe) {
+            sfx.setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(sfx, fxcarte));
+        }
+    }    
     
 }

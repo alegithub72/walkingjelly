@@ -16,14 +16,14 @@ public class FenetreCoin extends Terrain{
     public FenetreCoin(int i,int j,int rot){
         super(i,j,rot,"fenetre.png");
         this.type=PointCarte.FENETRE;
-        this.v=5;
+        this.v=0.4;
 
     }
     
     public FenetreCoin(int i,int j){
         super(i,j,"fenetre.png");
         this.type=PointCarte.FENETRE;
-        this.v=5;
+        this.v=0.4;
 
     }    
     public char graficRaprestation(){

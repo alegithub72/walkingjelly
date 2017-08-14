@@ -16,7 +16,7 @@ public class Arbre2 extends Terrain {
     public Arbre2(int i,int j){
         super(i, j,"treeBig2bis.png");
         this.type=PointCarte.ARBRE;
-        this.v=8;
+        this.v=0.6;
        
         
     }

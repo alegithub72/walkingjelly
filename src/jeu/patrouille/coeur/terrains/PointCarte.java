@@ -27,7 +27,7 @@ public  class PointCarte implements TerrainTextRapresentation{
     protected int i;
     protected int j;
     protected int type;
-    protected int v;
+    protected double v;
     Piece piece=null;
     List<Piece> extraPiece;
     public Piece getPiece() {
@@ -75,7 +75,7 @@ public  class PointCarte implements TerrainTextRapresentation{
         return type;
     }
 
-    public int getValue() {
+    public double getValue() {
         return v;
     }
 

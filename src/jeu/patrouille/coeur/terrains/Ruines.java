@@ -14,6 +14,6 @@ public class Ruines extends Terrain{
     public Ruines(int i,int j,int rot){
         super(i,j,rot,null);
         this.type=PointCarte.RUINES;
-        this.v=6;
+        this.v=0.6;
     }
 }

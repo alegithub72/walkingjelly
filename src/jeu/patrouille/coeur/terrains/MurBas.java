@@ -14,7 +14,7 @@ public class MurBas extends PointCarte {
         this.i=i;
         this.j=j;
         this.type=PointCarte.MURBAS;
-        this.v=5;
+        this.v=0.7;
     }
    
     

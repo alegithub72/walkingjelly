@@ -17,7 +17,7 @@ public class Porte extends Terrain  {
         this.i=i;
         this.j=j;
         this.type=PointCarte.PORTE;
-        this.v=7;
+        this.v=0.6;
        
     }
     public Porte(int i,int j){
@@ -25,7 +25,7 @@ public class Porte extends Terrain  {
         this.i=i;
         this.j=j;
         this.type=PointCarte.PORTE;
-        this.v=7;
+        this.v=0.6;
        
     }    
 }

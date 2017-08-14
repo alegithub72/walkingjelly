@@ -155,8 +155,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     }
     
     public void playTurn(){
-       
-        //Platform.setImplicitExit(true);
+               
+        setOnMouseMoved(null);
+        setOnMouseClicked(null);
+        removeMenuItemsMenuOnFXUSEquipe();
+        removeMenuItemsonFXHostileEquipe();
         mj.debutRond();
         
     }
@@ -193,7 +196,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
        // suprimmerSoldatsNotEnView();
         
         int centerI=sl.getI(),centerJ=sl.getJ();
-        setOnMouseMoved(null);
+
         if(isNeedeCenterScrollAreaUpdate(centerI, centerJ)){
             centerScrollArea(centerI,centerJ); 
             refreshCarte();
@@ -426,7 +429,13 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
 
     
-    
+    public void reMountFXCarteMenuItemsAndScroll(){
+        this.setOnMouseMoved(new ScrollEventHandler(this));
+        this.setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
+        mountMenuItemsOnFXHostileEquipe();
+        mountMenuItemsOnFXUSEquipe();
+        
+    }
 
     public Carte getCarte() {
         return carte;
@@ -536,10 +545,11 @@ private boolean isScrollAreaChanged(int i1,int j1){
             System.out.println("------------visualizeRangePointer-------------------_->"+scrollMousei);             
             double arrowPosx=(scrollMousej * FXCarte.TILE_SIZE);
             double arrowPosY=(scrollMousei * FXCarte.TILE_SIZE) ;
-            if(arrowPosx>0 && arrowPosx<FXCarte.PIXEL_SCROLL_AREA_W) 
-                helper.getDisplayRange().setTranslateX( arrowPosx);
-            if (arrowPosY >0 && arrowPosY<FXCarte.PIXEL_SCROLL_AREA_H)
-                helper.getDisplayRange().setTranslateY(arrowPosY);    
+            //TODO se ai limiti mettere le coordinate correttive
+            arrowPosx=esteticCorrectionX0(scrollMousej, arrowPosx);
+            arrowPosY=esteticCorrectionY0(scrollMousei,arrowPosY);
+            helper.getDisplayRange().setTranslateX( arrowPosx);
+            helper.getDisplayRange().setTranslateY(arrowPosY);    
             System.out.println("arrowrange (x,y) =("+arrowPosx+","+arrowPosY+")");
             
         
@@ -862,8 +872,13 @@ private void refreshCarteFXSoldatPosition(FXUSSoldat sfx){
         } else {
             Soldat s = sfx.getSoldat();
             System.out.println("reset position "+s.toStringSimple());
-            Point2D p = getSceneCoordForRefreshCarte(s,s.getI(), s.getJ());
-            enableSoldatoInView(sfx, p.getX(), p.getY());
+            int i0=s.getI(),j0=s.getJ();
+            Point2D p = getSceneCoordForRefreshCarte(s,i0, j0);
+            double x0=p.getX();
+            double y0=p.getY();
+            x0=esteticCorrectionX0(j0, x0);
+            y0=esteticCorrectionY0(i0, y0);
+            enableSoldatoInView(sfx, x0, y0);
         }    
     }
     
@@ -931,20 +946,21 @@ private void refreshCarteFXSoldatPosition(FXUSSoldat sfx){
     
     }   
     
-    private void removeHostileEquipe(){
-            for (int h = 0; h < fxequipeHost.length; h++) {
-            fxequipeHost[h].setVisible(false);
-            
-        }
+    private void removeMenuItemsMenuOnFXUSEquipe(){
+            this.jUS.removeMenuItemsOnFXEquipe();
     
     }
-        private void removeUSEquipe(){
-            for (int h = 0; h < fxequipeUS.length; h++) {
-            fxequipeUS[h].setVisible(false);
-            
-        }
+        private void removeMenuItemsonFXHostileEquipe(){
+            jHOST.removeMenuItemsOnFXEquipe();
     
     }
+        
+   private void mountMenuItemsOnFXUSEquipe(){
+    jUS.mountMenuItemOnFXEquipe();   
+   }     
+   private void mountMenuItemsOnFXHostileEquipe(){
+       jHOST.mountMenuItemOnFXEquipe();
+   }
 
     public synchronized boolean scrollCanvas(double x, double y) {
 

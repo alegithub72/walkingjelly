@@ -13,11 +13,11 @@ import jeu.patrouille.fx.menu.WalkItem;
  *
  * @author appleale
  */
-public class MenuItemsDossier {
+public class FXMenuItemsDossier {
     
     MenuItem[] items=new MenuItem[10];
 
-    public MenuItemsDossier() {
+    public FXMenuItemsDossier() {
    // items[BaseAction.MARCHE]=new WalkItem()
     
     }

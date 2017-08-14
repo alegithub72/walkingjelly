@@ -19,7 +19,7 @@ public class Haie extends Terrain{
     public Haie(int i,int j,int type){     
         super(i,j,"arbuste"+type+".png");
         this.type=PointCarte.HAIE;
-        this.v=4;
+        this.v=0.5;
        
     }
 

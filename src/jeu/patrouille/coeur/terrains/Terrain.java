@@ -23,7 +23,6 @@ public class Terrain extends PointCarte {
     public Terrain(int i,int j,int rot,String f){
         super(i,j);
         this.type=PointCarte.TERRAIN;
-        this.v=1;
         this.imgFile=f;
         this.rot=rot;
        
@@ -31,7 +30,6 @@ public class Terrain extends PointCarte {
     public Terrain(int i,int j){
         super(i,j);
         this.type=PointCarte.TERRAIN;
-        this.v=1;
         imgFile="vert2.png";
         rot=0;
 
@@ -40,7 +38,6 @@ public class Terrain extends PointCarte {
     public Terrain(int i,int j,String f){
         super(i,j);
         this.type=PointCarte.TERRAIN;
-        this.v=1;
         this.imgFile=f;
         rot=0;
         

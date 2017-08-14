@@ -18,7 +18,7 @@ public class Fenetre extends Terrain{
         this.i=i;
         this.j=j;
         this.type=PointCarte.FENETRE;
-        this.v=7;
+        this.v=0.4;
 
     }
     public Fenetre(int i,int j){
@@ -26,7 +26,7 @@ public class Fenetre extends Terrain{
         this.i=i;
         this.j=j;
         this.type=PointCarte.FENETRE;
-        this.v=7;
+        this.v=0.5;
 
     }    
     

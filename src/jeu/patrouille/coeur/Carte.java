@@ -57,6 +57,13 @@ public class Carte implements GraficCarteInterface{
     public Carte(){
 
     }
+
+    @Override
+    public void reMountFXCarteMenuItemsAndScroll() {
+    //    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
     public int getMapW(){
         return CARTE_SIZE_J;
     }

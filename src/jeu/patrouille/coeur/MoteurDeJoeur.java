@@ -175,7 +175,7 @@ public class MoteurDeJoeur implements Runnable{
         System.out.println("reset action pool");
         resetAllSoldatActionPool();
         System.out.println("-----------------------------RESOLVE TURN  END-----------"+turn+"---------------------------------");
-      
+        reMountMenuItemsAndScroll();
     }   
 
   
@@ -322,6 +322,16 @@ public class MoteurDeJoeur implements Runnable{
             } );
             return;
         }
+    }
+    void reMountMenuItemsAndScroll(){
+       for(GraficCarteInterface g:listgrafic){
+           Platform.runLater(new Runnable() {
+               @Override
+               public void run() {
+                   g.reMountFXCarteMenuItemsAndScroll();
+               }
+           });
+       }
     }
      
 }

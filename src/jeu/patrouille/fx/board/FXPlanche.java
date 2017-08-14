@@ -146,7 +146,9 @@ public class FXPlanche extends Application {
             @Override
             public void handle(MouseEvent event) {
             System.out.println(event);                
-            if(event.getButton()==MouseButton.PRIMARY && event.getEventType()==MouseEvent.MOUSE_CLICKED){
+            if(event.getButton()==MouseButton.PRIMARY 
+                    && event.getEventType()==MouseEvent.MOUSE_CLICKED){
+                
                // Platform.runLater(fxCarte.getMj());  
                 fxCarte.playTurn();
                 
