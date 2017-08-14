@@ -193,11 +193,21 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         System.out.println("posi="+posI+"posj="+posJ);
        // suprimmerSoldatsNotEnView();
         
-       
+        int centerI=sl.getI(),centerJ=sl.getJ();
         setOnMouseMoved(null);
-        centerScrollArea(sl.getI(), sl.getJ());
-        refreshCarte();
-        refreshCarteAllFXSoldatViewPosition();  
+        if(
+        ((centerI-posI)<3 ) ||
+        ((FXCarte.AREA_SCROLL_I_H-(centerI-posI))<3)  ||
+        ((centerJ-posJ)<3  )||
+        ((FXCarte.AREA_SCROLL_J_W-(centerJ-posJ))<3)
+        )        
+                      
+        {
+            centerScrollArea(centerI,centerJ); 
+            refreshCarte();
+            refreshCarteAllFXSoldatViewPosition(); 
+        }
+ 
         initFXHelperInstance(null);
         if(b.isProtagonisteTypeSoldat()
                 && b.isProtagonisteHostile()){
