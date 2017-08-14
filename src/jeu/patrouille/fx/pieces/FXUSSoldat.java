@@ -265,6 +265,7 @@ public class FXUSSoldat extends Sprite {
         System.out.println("FXSOLDAT ANIM------> PLAY");
 
         }else{
+            fxcarte.setAnimOn(false);
             this.setVisible(false);
         }
 System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->--------><---------");

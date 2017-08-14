@@ -213,9 +213,9 @@ public class MoteurDeJoeur implements Runnable{
         if(arrayOrderd!=null && arrayOrderd.length>0){
         int k=0;
        
-            do {
+            while(k<arrayOrderd.length) {
 
-                if(  k<arrayOrderd.length){
+
                 BaseAction b=arrayOrderd[k];
                 BaseAction clone=b.clone();
                 Soldat s=(Soldat)b.getProtagoniste();
@@ -237,16 +237,16 @@ public class MoteurDeJoeur implements Runnable{
                 System.out.println("------------Zzzzzzzzzzzzz="+allAnimOn());
                 while(allAnimOn());
                 System.out.println("------------Svegliaaaaaaaa="+allAnimOn());
-
+                
                 makeAction((Soldat)b.getProtagoniste(), b);   
                 refreshAllGraficInterface();
                  //TODO vedere per aggiorantre la mappa quando!!!!
                  k++;
-                }     
+                
                 
                 //break;
-            }while(k<arrayOrderd.length);
-            System.out.println("fine turno");
+            };
+            System.out.println("fine TD pas "+td);
             
         }
         
@@ -265,6 +265,7 @@ public class MoteurDeJoeur implements Runnable{
         }
         return b;
     }
+    
     public void playGame(){
     debutJeours();
     do{

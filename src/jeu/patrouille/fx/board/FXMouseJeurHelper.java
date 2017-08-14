@@ -10,10 +10,8 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.fx.pieces.FXHostile;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.fx.sprite.CursorHelper;
-import jeu.patrouille.fx.sprite.Sprite;
 import jeu.patrouille.util.ImageChargeur;
 
 /**
