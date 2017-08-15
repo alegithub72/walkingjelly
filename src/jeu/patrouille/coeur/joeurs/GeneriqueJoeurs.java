@@ -71,11 +71,12 @@ public abstract class GeneriqueJoeurs {
     public Soldat findSquadLeader() {
         Soldat leader = null;
         
-        for (int i = 0; i < equipe.length; i++) {
-            Soldat tmp=(Soldat)equipe[i];
-            if (leader == null || tmp.getClassement() > leader.getClassement()) {
+        for (Piece p : equipe) {
+            Soldat tmp = (Soldat) p;
+            if ( leader==null ) 
                 leader = tmp;
-            }
+            if(tmp.getClassement()
+                    > leader.getClassement()) leader=tmp;
         }
         return leader;
     }

@@ -45,6 +45,23 @@ public class CarteTest {
     }
 
     
+   @Test
+    public void testLOSinfinity_31() {
+        //eligne (2 ,2 ) , (9 ,7 )
+        int i0 = 2, j0 = 2, i1 = 9, j1 = 7;
+        double a=-4,b=5;
+        assertTrue((a/b)<0);
+        PointCarte[] line = null;
+        line = c.getLigne(i0, j0, i1, j1);
+        for (int n = 0; n < line.length; n++) {
+            System.out.println("(" + line[n].getI() + "," + line[n].getJ() + ")");
+        }
+        
+        assertEquals(9, line[line.length - 1].getI());
+        assertEquals(7, line[line.length - 1].getJ());
+    }
+
+    
     @Test
     public void testLOSinfinity_1() {
         ///geligne (30 ,20 ) , (26 ,17 )
@@ -235,6 +252,8 @@ public class CarteTest {
             assertNotNull(line[n]);
             System.out.println("(" + line[n].getI() + "," + line[n].getJ() + ")");
         }
+        assertEquals(0, line[0].getI());
+        assertEquals(0, line[0].getJ());
         assertEquals(9, line[line.length - 1].getI());
         assertEquals(0, line[line.length - 1].getJ());
     }     

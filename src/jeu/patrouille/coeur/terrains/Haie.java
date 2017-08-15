@@ -5,12 +5,6 @@
  */
 package jeu.patrouille.coeur.terrains;
 
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-
 /**
  *
  * @author appleale
@@ -20,6 +14,7 @@ public class Haie extends Terrain{
         super(i,j,"arbuste"+type+".png");
         this.type=PointCarte.HAIE;
         this.v=0.5;
+        this.c=Consistance.NO;        
        
     }
 

@@ -17,6 +17,7 @@ public class Arbre4 extends Terrain {
         super(i, j,"treeBig4bis.png");
         this.type=PointCarte.ARBRE;
         this.v=0.6;
+        this.c=Consistance.DUR;
        
         
     }

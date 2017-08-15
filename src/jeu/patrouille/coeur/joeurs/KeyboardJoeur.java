@@ -7,13 +7,10 @@ package jeu.patrouille.coeur.joeurs;
 
 import java.util.Scanner;
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.armes.ArmeGenerique;
 import jeu.patrouille.coeur.armes.BenelliM3;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.coeur.terrains.PointCarte;
 
 /**
  *

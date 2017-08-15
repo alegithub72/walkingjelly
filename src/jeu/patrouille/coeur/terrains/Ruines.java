@@ -15,5 +15,6 @@ public class Ruines extends Terrain{
         super(i,j,rot,null);
         this.type=PointCarte.RUINES;
         this.v=0.6;
+         this.c=Consistance.DUR;
     }
 }

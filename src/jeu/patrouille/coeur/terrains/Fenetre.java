@@ -5,8 +5,6 @@
  */
 package jeu.patrouille.coeur.terrains;
 
-import javafx.scene.image.Image;
-
 /**
  *
  * @author appleale
@@ -18,7 +16,8 @@ public class Fenetre extends Terrain{
         this.i=i;
         this.j=j;
         this.type=PointCarte.FENETRE;
-        this.v=0.4;
+        this.v=0.5;
+        this.c=Consistance.DUR;        
 
     }
     public Fenetre(int i,int j){
@@ -27,6 +26,7 @@ public class Fenetre extends Terrain{
         this.j=j;
         this.type=PointCarte.FENETRE;
         this.v=0.5;
+        this.c=Consistance.DUR;        
 
     }    
     

@@ -16,15 +16,17 @@ import javafx.scene.paint.Color;
  * @author appleale
  */
 public class Terrain extends PointCarte {
-
+    public enum Consistance {LEGER,DUR,NO}
     int orientation;
     int rot;
     String imgFile;
+    Consistance c;
     public Terrain(int i,int j,int rot,String f){
         super(i,j);
         this.type=PointCarte.TERRAIN;
         this.imgFile=f;
         this.rot=rot;
+        this.c=Consistance.NO;
        
     }
     public Terrain(int i,int j){
@@ -32,6 +34,7 @@ public class Terrain extends PointCarte {
         this.type=PointCarte.TERRAIN;
         imgFile="vert2.png";
         rot=0;
+         this.c=Consistance.NO;
 
 
     }

@@ -9,12 +9,14 @@ package jeu.patrouille.coeur.terrains;
  *
  * @author appleale
  */
-public class MurBas extends PointCarte {
+public class MurBas extends Terrain {
     public MurBas(int i,int j){
+        super(i, j);
         this.i=i;
         this.j=j;
         this.type=PointCarte.MURBAS;
         this.v=0.7;
+        this.c=Terrain.Consistance.DUR;                ;
     }
    
     

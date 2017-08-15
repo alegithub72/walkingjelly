@@ -157,9 +157,15 @@ public void decoderTaille(String line){
          System.out.println("(i2-i1)=" + i2i1);
          System.out.println("(j2-j1)=" + j2j1);
          System.out.println("m=" + m);
-         Double h =null;
-         if(j2j1==0)  h=0d;
-         else  h =Double.valueOf((( ((j2*i1)-(j1*i2)))/(j2-j1)));
+         double h =0;
+         if(j2j1==0) 
+             h=0d;
+         else {
+                double a=(j2*i1)-(j1*i2);
+                double b=(j2-j1);
+                h=a/b;
+         }
+             
          System.out.println("h=" + h);
          double circleX = Math.pow(i2i1, 2);
          double circleY = Math.pow(j2j1, 2);
@@ -461,14 +467,14 @@ public void decoderTaille(String line){
         int i1=a.getI1(),j1=a.getJ1();
         if(terrain[i0][j0].getPiece()==s)
             terrain[i0][j0] .setPiece(null); 
-        else if(terrain[i0][j0].isInExtra(s))
+        if(terrain[i0][j0].isInExtra(s))
             terrain[i0][j0].remvoeExtraPiece(s);
         
         System.out.println("updated terrain --null-->"+a.getI0()+"--->"+a.getJ0());
         
-        if(terrain[i1][j1].getPiece()!=null)  
-            terrain[i1][j1].addExtraPiece(s);
-        else terrain[i1][j1].setPiece(s);
+        if(terrain[i1][j1].getPiece()==null)  
+            terrain[i1][j1].setPiece(s);
+        else terrain[i1][j1].addExtraPiece(s);
         //TODO if enemy do a close fight...!!!!
         
         

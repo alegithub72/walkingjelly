@@ -14,12 +14,14 @@ public class AngleGrosMur extends Terrain {
         super(i,j,rot,"wallAngleLight.png");
         this.type=PointCarte.GROSMUR;
         this.v=0;
+        this.c=Consistance.DUR;        
 
     }
     public AngleGrosMur(int i,int j){
         super(i,j,"wallAngleLight.png");
         this.type=PointCarte.GROSMUR;
         this.v=0;
+        this.c=Consistance.DUR;        
 
     }    
 }

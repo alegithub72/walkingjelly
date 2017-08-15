@@ -19,7 +19,7 @@ import jeu.patrouille.fx.sprite.Sprite;
  */
 public class FrameAnimationTimer extends AnimationTimer{
     public int f1,f2;
-    public static String MARCHE="stepMod.wav";
+    public static String MARCHE="goodStep.wav";
     public static String EAT="eate.wav";
     public static String BITE="Dogbite.wav";
     public static String BIG_BITE="lion_roar_2.mp3";

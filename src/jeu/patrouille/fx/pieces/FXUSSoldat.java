@@ -183,42 +183,19 @@ public class FXUSSoldat extends Sprite {
                 )
                 +(FXCarte.TILE_SIZE/2)
                 )
-                ;
-        //TODO esteticamente modificare i movimenti agli estremi dello schermo di scrolll
-//        if(x1<=FXCarte.TILE_SIZE)x1=30;
-//        if(y1<=FXCarte.TILE_SIZE)y1=30;
-//        if(x1>=(FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE))
-//            x1=(float)FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-20;
-//        if(y1>=(FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE))
-//            y1=(float)FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-20;
-//        
-//        if(x0<=FXCarte.TILE_SIZE)x0=30;
-//        if(y0<=FXCarte.TILE_SIZE)y0=30;
-//        if(x0>=(FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE))
-//            x0=(float)FXCarte.PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-20;
-//        if(y0>=(FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE))
-//            y0=(float)FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-20;        
+                ;       
         
         LineTo l=new LineTo(x1,y1);
         
         p.getElements().addAll(mTo,l);
 
         System.out.println("2D coord p1="+p1+" p2="+p2);
-        //System.out.println(this.getBoundsInLocal()+","+this.sett);
-        //p.getElements().add(l);
-//        Point2D derivedCoordp0=getSceneCoord(act.getDerivedAction().getI0(), act.getDerivedAction().getJ0());
-//        Point2D derivedCoordp1=getSceneCoord(act.getDerivedAction().getI1(), act.getDerivedAction().getJ1());
-        
-        //double angle=Piece.getDirection(derivedCoordp0.getX(),derivedCoordp0.getY(),
-         //       derivedCoordp1.getX(),derivedCoordp1.getY());
-        //this.
+
         double angle=Piece.getDirection(p1.getX(),p1.getY(),p2.getX(),p2.getY());
         setFXSoldatOrientation(angle);
                 
         System.out.println("rotate "+angle);
 
-
-        //this.setLayoutX(0);this.setLayoutY(0);
         PathTransition  path=new PathTransition();
         path.setDuration(Duration.millis(500));
         path.setPath(p);
@@ -229,11 +206,7 @@ public class FXUSSoldat extends Sprite {
         path.setCycleCount(1);
         path.setAutoReverse(false);
         createMove();
-        
-          
-        //fxcarte.getRootGroup().getChildren().add(p);
 
-        //sprites.getChildren().add(p);
         ptList[0]=path;
         frameAnimTimer[0].start();
         ptList[0].play();     
@@ -247,15 +220,7 @@ public class FXUSSoldat extends Sprite {
               frameAnimTimer[0].stop();
               fxcarte.setAnimOn(false);
               path.stop();
-              
-              //fxcarte.refreshCarte();
-              //fxcarte.resetAllUSPositionFXSoldatView();
-              //ptList[0].stop();
-             // try{
-              //fxcarte.getMj().getThreadTurn().notify();
-              //}catch(java.lang.IllegalMonitorStateException e){
-              // e.printStackTrace();
-             // }
+
              System.out.println("FXSOLDAT ANIM----->STOP");
 //              }
              event.consume();
@@ -297,8 +262,8 @@ System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->----
         System.out.println("------>"+angle+"-----orientation updataed--->"+s.getFace());
         }
     
-    private void createMove(){
-        frameAnimTimer[0]=new FrameAnimationTimer(1, 3, this, 0, true, 200, FrameAnimationTimer.MARCHE);
+    protected void createMove(){
+        frameAnimTimer[0]=new FrameAnimationTimer(1, 3, this, 0, true, 300, FrameAnimationTimer.MARCHE);
         
     }
     public Point2D getSceneCoordMove(Piece s,int  i,int j){
@@ -316,15 +281,15 @@ System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->----
     
     private double esteticCorrectionY0(int scrollI,double y){
         double y0=y;
-        if(scrollI==0) y0=10;
-        else if(scrollI==(FXCarte.AREA_SCROLL_I_H-1)) y0=FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-10;
+        if(scrollI==0) y0=30;
+        else if(scrollI==(FXCarte.AREA_SCROLL_I_H-1)) y0=FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-30;
         return y0;
     }
     private double esteticCorrectionX0(int scrollJ,double x){
         double x0=x;
-        if(scrollJ==0) x0=10;
-        else if(scrollJ==(FXCarte.AREA_SCROLL_J_W-1)) x0=PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-10;
+        if(scrollJ==0) x0=30;
+        else if(scrollJ==(FXCarte.AREA_SCROLL_J_W-1)) x0=PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-30;
         return x0;
-    }    
+    } 
 
 }

@@ -8,8 +8,6 @@ package jeu.patrouille.coeur.pieces;
 
 
 import java.util.ArrayList;
-import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.armes.ArmeGenerique;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 
@@ -195,7 +193,7 @@ public class Soldat extends Piece {
         return ""
                 + "" + nom +" "+ nomDeFamilie +"\n"
                 +"Temp Desponible:"+tempDesponible+"\n"
-                + "" +((armeUtilise!=null)? armeUtilise.toString():"") + ",face:"+face+",("+i+","+j+")";
+                + "" +((armeUtilise!=null)? armeUtilise.toString():"") + ",face:"+face+",(i="+i+",j="+j+")";
                 
     }
     

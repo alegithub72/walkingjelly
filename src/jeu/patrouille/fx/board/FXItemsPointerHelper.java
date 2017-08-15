@@ -18,13 +18,14 @@ import jeu.patrouille.util.ImageChargeur;
  *
  * @author appleale
  */
-public class FXMouseJeurHelper {
+public class FXItemsPointerHelper {
     private BaseAction act;
     private FXUSSoldat seletctionee;
     private Carte carte;
     private boolean commanNotvalid;
     private boolean actionSeletione;
     private int rangeCursorHelper;
+    private int lastVisualizationRond;
             
 
 
@@ -36,11 +37,12 @@ public class FXMouseJeurHelper {
 
     
         
-    public FXMouseJeurHelper(FXUSSoldat s,Carte carte){
+    public FXItemsPointerHelper(FXUSSoldat s,Carte carte){
         this.seletctionee=s;
         this.carte=carte;
         this.commanNotvalid=false;
         this.act=null;
+        this.lastVisualizationRond=-1;
     }
     
     
@@ -92,10 +94,7 @@ public class FXMouseJeurHelper {
         this.seletctionee = seletctionee;
     }
     
-    public void setSeletctionee(Soldat s) {
-        
-        this.seletctionee.setS(s);
-    }
+
     public void setArrivalCarteCoord(int i1,int j1){
         act.setI1(i1);
         act.setJ1(j1);
@@ -182,4 +181,11 @@ public FXUSSoldat getFXSoldatSelectionee(){
             this.rangeCursorHelper=ImageChargeur.CURSOR_FORBIDDEN;
         this.commanNotvalid = commanNotvalid;
     }
+    
+    public boolean isLastUSVisualizationTurn(Soldat s){
+        Soldat slast=seletctionee.getSoldat();
+               
+        return  lastVisualizationRond!=slast.getBoss().getJeur();
+    }
+
 }

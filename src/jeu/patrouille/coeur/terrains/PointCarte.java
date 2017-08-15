@@ -24,6 +24,7 @@ public  class PointCarte implements TerrainTextRapresentation{
     public static final int FENETRE=6;
     public static final int PORTE=7;
     public static final int INTERIOR=8;
+
     protected int i;
     protected int j;
     protected int type;

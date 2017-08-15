@@ -16,12 +16,14 @@ public class GrosMur extends Terrain {
         super(i,j,rot,"wallLight.png");
         this.type=PointCarte.GROSMUR;
         this.v=0;
+        this.c=Consistance.DUR;        
 
     }
     public GrosMur(int i,int j){
         super(i,j,"wallLight.png");
         this.type=PointCarte.GROSMUR;
         this.v=0;
+        this.c=Consistance.DUR;        
 
     }    
 }

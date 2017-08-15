@@ -16,7 +16,8 @@ public class Interior extends Terrain {
     public Interior(int i,int j){
         super(i,j,"inside.png");
         this.type=PointCarte.INTERIOR;
-        this.v=0.999;
+        this.v=0.99;
+        this.c=Consistance.NO;
       
     }
     
