@@ -10,6 +10,7 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.fx.sprite.CursorHelper;
 import jeu.patrouille.util.ImageChargeur;
@@ -119,7 +120,7 @@ public class FXItemsPointerHelper {
     
     }
     
-   public boolean carteValiderRoute(){
+   public PointCarte carteValiderRoute(){
        return carte.validerLeRoute(act);
    }     
    

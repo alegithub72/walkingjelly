@@ -476,7 +476,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         return mj.getActiveJeur();
     }
 
-   protected boolean carteValiderRoute(){
+   protected PointCarte carteValiderRoute(){
        return fxIMHelper.carteValiderRoute();
    }  
 
@@ -695,8 +695,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
        // fxCarte.refreshCarte();
        //TODO mettere una variabile per debug
+        PointCarte obst=fxIMHelper.carteValiderRoute();
         if (fxIMHelper.rangeMarcheSoldat(r)
-                && fxIMHelper.carteValiderRoute()) {
+                && obst==null ) {
             fxIMHelper.setCommanNotvalid(false);
             setFXCarteCursor(Cursor.HAND);
             removeDisplayRange();
@@ -710,11 +711,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
             removeDisplayRange();
             fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             fxIMHelper.setCommanNotvalid(true);
-            //setFXCarteCursor(Cursor.CLOSED_HAND);
-            //deactiveFXCarteRangePointer();
-            
+            if(obst!=null) fxpl.sendMessageToPlayer("Obstacole sur sentier: "+obst.getI()+","+obst.getJ());
             visualizeRangePointers(mousex, mousey);
-            System.out.println("fuori raggio---->" + r);
+            System.out.println("Horse de Rayon---->" + r);
         }
         
     }

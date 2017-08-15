@@ -489,11 +489,23 @@ public void decoderTaille(String line){
         terrain[i][j].setPiece(s);
     }
     
-    public   boolean  validerLeRoute(BaseAction act){
-        
-        return true;
-        }    
+    public   PointCarte  validerLeRoute(BaseAction act){
+        PointCarte ligne[]=getLigne(act.getI0(), act.getJ0(), act.getI1(), act.getJ1());
+        PointCarte product=null;
+        for (int i = 0; i < ligne.length; i++) {
+            PointCarte c = ligne[i];
+            Terrain t=terrain[c.getI()][c.getJ()];
+            if(t.getType()==Terrain.FENETRE ||
+                    t.getType()==Terrain.GROSMUR ||
+                    t.getType()==Terrain.MURBAS)  {
+                product=ligne[i];
+                break;
+              
+            }
 
+        }  
+        return product;   
+    }
     @Override
     public boolean isAnimOn() {
        return false;
