@@ -7,7 +7,6 @@ package jeu.patrouille.fx.pieces;
 
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
 

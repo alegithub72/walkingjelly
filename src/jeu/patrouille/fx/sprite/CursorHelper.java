@@ -16,7 +16,11 @@ public class CursorHelper extends Sprite{
     public CursorHelper(int type){
     super(50, 50, 50, 50, null, null);
     this.type=type;
+    this.setTranslateX(x);
     }
 
+
+    
+    
     
 }

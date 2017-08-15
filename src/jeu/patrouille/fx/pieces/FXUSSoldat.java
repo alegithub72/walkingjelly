@@ -19,6 +19,8 @@ import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
+import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_I_H;
+import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_J_W;
 import static jeu.patrouille.fx.board.FXCarte.PIXEL_SCROLL_AREA_W;
 import jeu.patrouille.fx.sprite.Sprite;
 
@@ -151,11 +153,11 @@ public class FXUSSoldat extends Sprite {
    public  void playMarche(MarcheAction  act){
         
         System.out.println("------------- FXSOLDAT CREATE-ANIM ---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
-        if(fxcarte.estFXSoldatView(act.getI1(), act.getJ1())){
+        if(estFXSoldatView(act.getI1(), act.getJ1())){
         //System.out.println("soldato anim:"+act.getProtagoniste());
         Path p=new Path();
         this.deselectioneFXSoldat();
-        Point2D p1=getSceneCoordMove(act.getProtagoniste(),act.getI0(), act.getJ0());
+        Point2D p1=getSceneCoordMove(act.getI0(), act.getJ0());
         float x0=((float)(p1.getX()
                 //-this.getLayoutX()
                 )
@@ -171,7 +173,7 @@ public class FXUSSoldat extends Sprite {
 
         MoveTo mTo=new MoveTo(x0,y0);
  
-        Point2D p2=getSceneCoordMove(act.getProtagoniste(),act.getI1(), act.getJ1());
+        Point2D p2=getSceneCoordMove(act.getI1(), act.getJ1());
         float x1=((float)(p2.getX()
                // -this.getLayoutX()
                 )
@@ -189,7 +191,7 @@ public class FXUSSoldat extends Sprite {
         
         p.getElements().addAll(mTo,l);
 
-        System.out.println("2D coord p1="+p1+" p2="+p2);
+        System.out.println(" p1="+p1+" move to p2="+p2);
 
         double angle=Piece.getDirection(p1.getX(),p1.getY(),p2.getX(),p2.getY());
         setFXSoldatOrientation(angle);
@@ -266,9 +268,9 @@ System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->----
         frameAnimTimer[0]=new FrameAnimationTimer(1, 3, this, 0, true, 300, FrameAnimationTimer.MARCHE);
         
     }
-    public Point2D getSceneCoordMove(Piece s,int  i,int j){
+     Point2D getSceneCoordMove(int  i,int j){
         int posj=fxcarte.getPosJ(),posi=fxcarte.getPosI();
-        System.out.println(" get coord "+i+","+j+" posI,posj="+posi+","+posj);
+        //System.out.println(" get coord "+i+","+j+" posI,posj="+posi+","+posj);
         int scrollI=i-posi,scrollJ=j-posj;
      
         double x0=(scrollJ*FXCarte.TILE_SIZE);
@@ -279,17 +281,66 @@ System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->----
         return p;
     }         
     
-    private double esteticCorrectionY0(int scrollI,double y){
-        double y0=y;
-        if(scrollI==0) y0=30;
-        else if(scrollI==(FXCarte.AREA_SCROLL_I_H-1)) y0=FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-30;
-        return y0;
-    }
-    private double esteticCorrectionX0(int scrollJ,double x){
-        double x0=x;
-        if(scrollJ==0) x0=30;
-        else if(scrollJ==(FXCarte.AREA_SCROLL_J_W-1)) x0=PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-30;
-        return x0;
-    } 
+
+    
+    private boolean estFXSoldatView(int i1,int j1){
+         boolean b=true;
+         int posJ=fxcarte.getPosJ();
+         int posI=fxcarte.getPosI();
+            int H=(AREA_SCROLL_I_H)-1;
+            int W=(AREA_SCROLL_J_W)-1;
+            if (j1 >(posJ+ W )) {
+                b=false;
+            }
+            if (j1 < posJ) {
+                b=false;
+            }
+
+            if (i1 > (posI+H)) {
+                b=false;
+            }
+
+            if (i1 < posI ) {
+                b=false;
+            }        
+     return b;
+    
+    }       
+    
+    public boolean estFXSoldatView(){
+        return estFXSoldatView(s.getI(), s.getJ());
+        
+    }    
+    
+    public void enableSoldatoInView(int k) {
+
+        
+        System.out.println("reset position " + s.toStringSimple());
+        int i0 = s.getI(), j0 = s.getJ();
+        Point2D p = getSceneCoordForRefreshCarte(i0, j0);
+        double x0 = p.getX();
+        double y0 = p.getY();
+        x0= x0 + (20 * k);
+        y0= y0 + (20 * k);
+        int scrollJ=j0-fxcarte.getPosJ();
+        int scrollI=i0-fxcarte.getPosI();
+        System.out.println(" enable node--->"+s+"x0,y0="+x0+","+y0);        
+        x0 = esteticCorrectionX0(scrollJ, x0);
+        y0 = esteticCorrectionY0(scrollI, y0);       
+        setTranslateX(x0);
+        setTranslateY(y0);
+        toFront();
+        setVisible(true);
+        
+    }    
+    
+    Point2D getSceneCoordForRefreshCarte(int  i,int j){
+        int posI=fxcarte.getPosI(),posJ=fxcarte.getPosJ();
+        System.out.println(" get coord "+i+","+j+" posI,posj="+posI+","+posJ);
+        double x0=((j-posJ)*FXCarte.TILE_SIZE);
+        double y0=((i-posI)*FXCarte.TILE_SIZE); 
+        Point2D p=new Point2D(x0, y0);
+        return p;
+    }       
 
 }
