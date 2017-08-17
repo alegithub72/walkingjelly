@@ -159,6 +159,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
                
         setOnMouseMoved(null);
         setOnMouseClicked(null);
+        
         removeMenuItemsMenuOnFXUSEquipe();
         removeMenuItemsonFXHostileEquipe();
         mj.debutRond();
@@ -1090,7 +1091,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
     }
     
     public  void visualizeMiniIconAction(BaseAction act){
-
+        
        actionIcon =new FXPatrouilleSprite(FXCarte.TILE_SIZE,
                 FXCarte.TILE_SIZE, "actionWalk.png", this);
        actionIcon.create();
@@ -1363,17 +1364,9 @@ protected void buildDisableMenu(FXSoldat s){
 
     @Override
     public void refreshGraficCarte() {
-        
-//        for(int k=0;k<fxequipeHost.length;k++)
-//            this.rootGroup.getChildren().remove(fxequipeHost[k]);
-//        
-//        for(int k=0;k<fxequipeUS.length;k++)
-//            this.getChildren().remove(fxequipeUS[k]);
-//        
-//        fxequipeHost=  jHOST.rebuildFXEquipe();
-//        fxequipeUS=jUS.getFxEquipe();
+
         refreshCarte();
-        //resetAllPositionFXSoldatView();
+        refreshCarteAllFXSoldatViewPosition();
         
     }
   

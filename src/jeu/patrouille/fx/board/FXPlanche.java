@@ -18,8 +18,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
@@ -30,9 +28,12 @@ import javafx.stage.Stage;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.menu.WalkItem;
+import jeu.patrouille.fx.menu.eventhandler.EndTurnButtonEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.MiniActionClickEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.MiniActionExitEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatRelasedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 import jeu.patrouille.fx.sprite.Sprite;
 
@@ -141,28 +142,17 @@ public class FXPlanche extends Application {
         endButton.buildFrameImages(new Image( "endturn.png"));
         endButton.setLayoutX(880);
         endButton.setLayoutY(0);
-        EventHandler e=new EndTurnEventHandler(fxCarte, endButton);
+        EventHandler e=new EndTurnButtonEventHandler(fxCarte, endButton);
         endButton.setOnMousePressed(e);
         endButton.setOnMouseReleased(e);
-        endButton.setOnMouseClicked(new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-            System.out.println(event);                
-            if(event.getButton()==MouseButton.PRIMARY 
-                    && event.getEventType()==MouseEvent.MOUSE_CLICKED){
-                
-               // Platform.runLater(fxCarte.getMj());  
-                fxCarte.playTurn();
-                
-            }
-                   event.consume();
-            }
-        
-        });
+        endButton.setOnMouseClicked(new EndTurnEventHandler(this));
         rootBarGroup.getChildren().add(endButton);
         rootBarGroup.getChildren().add(message);
     }
- 
+    public void endTurn(){
+        suprimerActionVisualization(); 
+        fxCarte.playTurn();
+    }
     void buildTop() {
         topPan = new Canvas(FXCarte.PIXEL_SCROLL_AREA_W, FXCarte.TOP_H);
         //borderPan.setTop(topPan);      
@@ -234,13 +224,15 @@ public class FXPlanche extends Application {
 
         if (act.getType() == BaseAction.MARCHE) {
             Sprite spAct = new WalkItem(null);
-            rootBarGroup.getChildren().add(spAct);
+            boolean add = rootBarGroup.getChildren().add(spAct);
             spAct.setScaleX(0.5);
             spAct.setScaleY(0.5);
-            spAct.setFrame(1);
+            spAct.setFrame(0);
             spAct.toFront();
             spAct.setOnMouseClicked(new MiniActionClickEventHandler(act, fxCarte));
             spAct.setOnMouseExited(new MiniActionExitEventHandler(act, fxCarte));
+            spAct.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(spAct));
+            spAct.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(spAct));
             DropShadow dropShadow = new DropShadow();
             dropShadow.setRadius(5.0);
             dropShadow.setOffsetX(3.0);

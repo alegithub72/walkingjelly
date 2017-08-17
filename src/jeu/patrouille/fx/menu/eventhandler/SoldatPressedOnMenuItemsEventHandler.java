@@ -15,6 +15,7 @@ import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.WalkItem;
+import jeu.patrouille.fx.sprite.Sprite;
 
 /**
  *
@@ -22,12 +23,11 @@ import jeu.patrouille.fx.menu.WalkItem;
  */
 public class SoldatPressedOnMenuItemsEventHandler  implements EventHandler<MouseEvent>{
     
-    MenuItem item;
-    MenuItem mainMenu[];
-
-    public SoldatPressedOnMenuItemsEventHandler(MenuItem item) {
+    Sprite sp;
+ 
+    public SoldatPressedOnMenuItemsEventHandler(Sprite sp) {
     
-    this.item=item;
+    this.sp=sp;
 
 
     }
@@ -41,7 +41,7 @@ public class SoldatPressedOnMenuItemsEventHandler  implements EventHandler<Mouse
 
         if(event.getButton()==MouseButton.PRIMARY ){
 
-            item.setFrame(1);
+            sp.setFrame(1);
             
         }
         

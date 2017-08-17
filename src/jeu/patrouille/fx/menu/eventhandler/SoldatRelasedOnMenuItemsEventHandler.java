@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.fx.menu.MenuItem;
+import jeu.patrouille.fx.sprite.Sprite;
 
 /**
  *
@@ -17,12 +18,11 @@ import jeu.patrouille.fx.menu.MenuItem;
  */
 public class SoldatRelasedOnMenuItemsEventHandler   implements EventHandler<MouseEvent>{
     
-    MenuItem item;
-    MenuItem mainMenu[];
+    Sprite sp;
 
-    public SoldatRelasedOnMenuItemsEventHandler(MenuItem item) {
+    public SoldatRelasedOnMenuItemsEventHandler(Sprite sp) {
     
-    this.item=item;
+    this.sp=sp;
 
     }
     
@@ -34,7 +34,7 @@ public class SoldatRelasedOnMenuItemsEventHandler   implements EventHandler<Mous
     public void handle(MouseEvent event) {
         if(event.getEventType()==MouseEvent.MOUSE_RELEASED &&
                 event.getButton()==MouseButton.PRIMARY) 
-        item.setFrame(0);
+        sp.setFrame(0);
         
 
     }
