@@ -7,7 +7,7 @@ package jeu.patrouille.coeur.pieces;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class Element {
     

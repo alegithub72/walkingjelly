@@ -8,19 +8,19 @@ package jeu.patrouille.fx.menu;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.fx.sprite.Sprite;
+import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 
 /**
  *
  * @author appleale
  */
-public abstract class MenuItem extends Sprite{
+public abstract class MenuItem extends FXPatrouilleSprite{
     public static int  MENU_H=100;
     public static int MENU_W=100;
     int actionType;
     MenuImageChargeur menuImgChgr;
     public MenuItem(int type){
-    super(MENU_W,MENU_H,MENU_W,MENU_H,null,null);
+    super(MENU_W,MENU_H,null,null);
     menuImgChgr=MenuImageChargeur.geInstance();
     buildFrameImages(menuImgChgr.getImage(type));
     actionType=type;

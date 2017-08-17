@@ -11,7 +11,7 @@ import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXHostile;
-import jeu.patrouille.fx.pieces.FXUSSoldat;
+import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
  *
@@ -41,8 +41,8 @@ public class FXAIJoueur extends AIJoeur{
     private  void buildFXEquipe(){
         for(int i=0;i<equipe.length;i++) {
            fxequipe[i] = new FXHostile((AISoldat)equipe[i],i,fxcarte);
-           fxequipe[i].setDeafultFrme(3);
-           fxequipe[i].buildFXUSSoldat();  
+           fxequipe[i].setDeafultFrame(3);
+           fxequipe[i].createFXSoldat();  
            fxequipe[i].defaultFrame();
           
 
@@ -54,7 +54,7 @@ public class FXAIJoueur extends AIJoeur{
       
     }    
     
-   public  FXUSSoldat[] rebuildFXEquipe(){
+   public  FXSoldat[] rebuildFXEquipe(){
         buildFXEquipe();
         return fxequipe;
    }    
@@ -63,13 +63,13 @@ public class FXAIJoueur extends AIJoeur{
         return fxequipe;
     }
     public void removeMenuItemsOnFXEquipe() {
-        for (FXUSSoldat sfx : fxequipe) {
+        for (FXSoldat sfx : fxequipe) {
             sfx.setOnMouseClicked(null);
         }
     }
 
     public void mountMenuItemOnFXEquipe() {
-        for (FXUSSoldat sfx : fxequipe) {
+        for (FXSoldat sfx : fxequipe) {
             sfx.setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(sfx, fxcarte));
         }
     }    

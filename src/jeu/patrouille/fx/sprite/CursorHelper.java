@@ -11,10 +11,10 @@ import jeu.patrouille.util.ImageChargeur;
  *
  * @author appleale
  */
-public class CursorHelper extends Sprite{
+public class CursorHelper extends FXPatrouilleSprite{
     int type;
     public CursorHelper(int type){
-    super(50, 50, 50, 50, null, null);
+    super(50, 50, null,null);
     this.type=type;
     this.setTranslateX(x);
     }

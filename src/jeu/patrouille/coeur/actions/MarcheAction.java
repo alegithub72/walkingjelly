@@ -13,7 +13,7 @@ import jeu.patrouille.coeur.terrains.PointCarte;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class MarcheAction extends BaseAction{
     

@@ -14,10 +14,10 @@ import jeu.patrouille.fx.board.FXCarte;
  *
  * @author appleale
  */
-public class FXHostile extends FXUSSoldat{
+public class FXHostile extends FXSoldat{
     
     public FXHostile(Soldat s,int pos,FXCarte fxcarte){
-        super( "frameHostile.png", s, pos,fxcarte);
+        super( FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s ,"frameHostile.png", fxcarte);
         this.flagImg=new ImageView("hosFlag.png");
         
      
@@ -28,13 +28,13 @@ public class FXHostile extends FXUSSoldat{
     }
 
     @Override
-    public void buildFXUSSoldat() {
-        super.buildFXUSSoldat();
+    public void createFXSoldat() {
+        super.createFXSoldat();
         getChildren().remove(classmentImg);
     }
 
     @Override
-    protected void createMove() {
+    protected void buildFramesMarcheAnim() {
         frameAnimTimer[0]=new FrameAnimationTimer(4, 7, this, 0, true, 200, FrameAnimationTimer.MARCHE);
     }
     

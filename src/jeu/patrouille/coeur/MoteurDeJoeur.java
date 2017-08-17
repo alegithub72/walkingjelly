@@ -18,7 +18,7 @@ import jeu.patrouille.coeur.pieces.Soldat;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class MoteurDeJoeur implements Runnable{
     

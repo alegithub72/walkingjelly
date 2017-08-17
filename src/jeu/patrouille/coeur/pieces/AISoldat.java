@@ -11,7 +11,7 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.fx.sprite.Sprite;
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class AISoldat extends Soldat {
 

@@ -10,7 +10,7 @@ import jeu.patrouille.coeur.actions.BaseAction;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public interface GraficCarteInterface  {
    public  void  play(BaseAction  b);

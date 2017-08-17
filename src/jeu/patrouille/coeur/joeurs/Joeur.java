@@ -6,14 +6,12 @@
 package jeu.patrouille.coeur.joeurs;
 
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.pieces.Piece;
 
 
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public abstract class Joeur extends GeneriqueJoeurs{
 

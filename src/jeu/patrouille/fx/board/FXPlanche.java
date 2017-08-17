@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -32,6 +31,9 @@ import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.menu.WalkItem;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.MiniActionClickEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.MiniActionExitEventHandler;
+import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 import jeu.patrouille.fx.sprite.Sprite;
 
 /**
@@ -135,7 +137,7 @@ public class FXPlanche extends Application {
 
         borderPan.setBottom(rootBarGroup);
 
-        Sprite endButton = new Sprite(120, 50, 120, 50,null, this);
+        FXPatrouilleSprite endButton = new FXPatrouilleSprite(120, 50, null, null);
         endButton.buildFrameImages(new Image( "endturn.png"));
         endButton.setLayoutX(880);
         endButton.setLayoutY(0);
@@ -221,23 +223,24 @@ public class FXPlanche extends Application {
     }
 
     void visualizeActionBarActual() {
-        int type = fxCarte.getHelper().getAct().getType();
+
         int k = fxCarte.getHelper().getSeletctionee().actionSize() - 1;
-        visualizeActionBar(type, k);
+        visualizeActionBar(fxCarte.getHelper().getAct(), k);
 
     }
 
-    void visualizeActionBar(int actionType, int k) {
+    void visualizeActionBar(BaseAction act, int k) {
         //TODO compliche trought scroll panel !!!!!!!
 
-        if (actionType == BaseAction.MARCHE) {
+        if (act.getType() == BaseAction.MARCHE) {
             Sprite spAct = new WalkItem(null);
             rootBarGroup.getChildren().add(spAct);
             spAct.setScaleX(0.5);
             spAct.setScaleY(0.5);
             spAct.setFrame(1);
             spAct.toFront();
-
+            spAct.setOnMouseClicked(new MiniActionClickEventHandler(act, fxCarte));
+            spAct.setOnMouseExited(new MiniActionExitEventHandler(act, fxCarte));
             DropShadow dropShadow = new DropShadow();
             dropShadow.setRadius(5.0);
             dropShadow.setOffsetX(3.0);

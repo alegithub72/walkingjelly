@@ -13,7 +13,7 @@ import jeu.patrouille.coeur.pieces.Piece;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public  class BaseAction extends AbstractAction {
     public static  BaseAction QUIT=new BaseAction(-1, -1, -1, -1,-1, null, null);

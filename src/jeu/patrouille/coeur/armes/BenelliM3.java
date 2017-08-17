@@ -9,7 +9,7 @@ package jeu.patrouille.coeur.armes;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class BenelliM3 extends ArmeGenerique{
     public BenelliM3(){

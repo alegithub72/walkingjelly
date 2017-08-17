@@ -16,7 +16,7 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public abstract class Piece  {
     public enum ActeurType{SOLDAT,JEEP,HELICOPTER,ARMOR }

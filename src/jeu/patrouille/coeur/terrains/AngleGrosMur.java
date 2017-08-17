@@ -7,7 +7,7 @@ package jeu.patrouille.coeur.terrains;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class AngleGrosMur extends Terrain {
     public AngleGrosMur(int i,int j,int rot){

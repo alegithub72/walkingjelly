@@ -7,6 +7,7 @@ package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 /**
@@ -14,7 +15,7 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  * @author appleale
  */
 public class FeuItem extends SoldatMenuItem{
-    public FeuItem(FXUSSoldat fxs){
+    public FeuItem(FXSoldat fxs){
         super(BaseAction.FEU,fxs);
     }
 

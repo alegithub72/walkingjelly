@@ -4,12 +4,9 @@
  * and open the template in the editor.
  */
 package jeu.patrouille.coeur.terrains;
-
-import javafx.scene.image.ImageView;
-import  javafx.scene.image.Image;
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class Arbre extends Terrain {
     

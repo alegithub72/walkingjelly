@@ -12,7 +12,7 @@ import jeu.patrouille.fx.board.FXPlanche;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class BasicRond {
     Piece[] equipeRondeUS;

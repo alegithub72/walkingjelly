@@ -7,7 +7,7 @@ package jeu.patrouille.coeur.grafic;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public interface TerrainTextRapresentation {
     

@@ -10,7 +10,7 @@ import jeu.patrouille.coeur.pieces.Piece;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class CoursAction extends BaseAction {
     public CoursAction( int i0, int j0, int i1, int j1, Piece protagoniste){

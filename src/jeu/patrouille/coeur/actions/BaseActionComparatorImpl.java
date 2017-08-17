@@ -9,7 +9,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class BaseActionComparatorImpl implements Comparator<BaseAction> {
 

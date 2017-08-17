@@ -14,7 +14,7 @@ import jeu.patrouille.coeur.pieces.Soldat;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class KeyboardJoeur extends Joeur {
 

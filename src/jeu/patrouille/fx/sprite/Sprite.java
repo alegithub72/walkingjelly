@@ -7,7 +7,6 @@ package jeu.patrouille.fx.sprite;
 
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,8 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
-import static jeu.patrouille.fx.board.FXCarte.PIXEL_SCROLL_AREA_W;
-import jeu.patrouille.fx.board.FXPlanche;
 
 
 
@@ -43,21 +40,20 @@ public class Sprite extends Parent
     int h;
     int wSquare;
     int hSquare;
-    int nframes = 0;
+    int defaultFrame;
     protected FrameAnimationTimer frameAnimTimer[];
     int k;
     protected Animation[] ptList;
-    FXPlanche fxpl;
     double x,y;
 
     
-    public Sprite(int w, int h,int wboardBox,int hBoardBox,String img,FXPlanche fxpl){
+    public Sprite(int w, int h,int wboardBox,int hBoardBox,String img){
         super();
         this.w = w;
         this.h = h;
         this.wSquare=wboardBox;
         this.hSquare=hBoardBox;
-        this.fxpl=fxpl;
+
         
         if(img!=null) this.frameImages=new Image(img);
 
@@ -75,10 +71,6 @@ public class Sprite extends Parent
         imgView.setViewport(frames[0]);          
         if(!getChildren().contains(imgView))
             getChildren().add(imgView);
-
-
-       
-       
         
     }
       protected void buildFrameImages() {
@@ -96,13 +88,10 @@ public class Sprite extends Parent
        
         
     }
-    
-    public void setFXPlanche(FXPlanche fxpl){
-        this.fxpl=fxpl;
-    }
+
     
     
-    public void createShapeFrame(){
+     void createShapeFrame(){
         int n = (frameImages.widthProperty().intValue() / w);
         frames = new Rectangle2D[n];
         for (int i = 0; i < n; i++) {
@@ -129,7 +118,7 @@ public class Sprite extends Parent
 
     public void setFrame(int i) {
         if(i>=frames.length)  i=0;
-        this.nframes = i;
+        this.defaultFrame = i;
         imgView.setViewport(frames[i]);
     }
 
@@ -222,27 +211,13 @@ public Image composedImage(String f) {
     return rotatedImage;
 
 }    
+public void defaultFrame(){
+        setFrame(defaultFrame);
+    }
 
-    protected double esteticCorrectionY0(int scrollI,double y){
-        double y0=y;
-        if(scrollI==0) y0=30;
-        else if(scrollI==(FXCarte.AREA_SCROLL_I_H-1)) y0=FXCarte.PIXEL_SCROLL_AREA_H-FXCarte.TILE_SIZE-30;
-        return y0;
+public void setDeafultFrame(int n){
+    this.defaultFrame=n;
     }
-    protected double esteticCorrectionX0(int scrollJ,double x){
-        double x0=x;
-        if(scrollJ==0) x0=30;
-        else if(scrollJ==(FXCarte.AREA_SCROLL_J_W-1)) x0=PIXEL_SCROLL_AREA_W-FXCarte.TILE_SIZE-30;
-        return x0;
-    } 
     
-    public  void setX(int scrollJ,double x){
-        x=esteticCorrectionX0(scrollJ, x);
-        setTranslateX(x);
-    }
-    public void setY(int scrollI,double y){
-    y=esteticCorrectionY0(scrollI, y);
-        setTranslateY(y);
-    
-    }
+
 }

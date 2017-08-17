@@ -34,7 +34,7 @@ import jeu.patrouille.coeur.terrains.StreetBorder;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public class Carte implements GraficCarteInterface{
 

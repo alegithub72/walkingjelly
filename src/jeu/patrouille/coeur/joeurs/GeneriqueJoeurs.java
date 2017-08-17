@@ -15,7 +15,7 @@ import jeu.patrouille.coeur.pieces.Soldat;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
 public abstract class GeneriqueJoeurs {
     public static final int JOEUR_US=30;

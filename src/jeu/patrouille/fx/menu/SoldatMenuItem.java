@@ -5,19 +5,20 @@
  */
 package jeu.patrouille.fx.menu;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 /**
  *
  * @author appleale
  */
 public abstract class SoldatMenuItem extends MenuItem{
-    FXUSSoldat fxs;
-    public SoldatMenuItem(int actionType,FXUSSoldat fxs) {
+    FXSoldat fxs;
+    public SoldatMenuItem(int actionType,FXSoldat fxs) {
         super(actionType);
         this.fxs=fxs;
     }
 
-    public FXUSSoldat getFXSoldat() {
+    public FXSoldat getFXSoldat() {
         return fxs;
     }
     

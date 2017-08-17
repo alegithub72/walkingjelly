@@ -5,57 +5,23 @@
  */
 package jeu.patrouille.fx.pieces;
 
-import javafx.animation.PathTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.util.Duration;
-import jeu.patrouille.coeur.actions.MarcheAction;
-import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
-import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_I_H;
-import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_J_W;
-import static jeu.patrouille.fx.board.FXCarte.PIXEL_SCROLL_AREA_W;
-import jeu.patrouille.fx.sprite.Sprite;
 
 /**
  *
- * @author appleale
+ * @author Alessio Sardaro
  */
-public class FXUSSoldat extends Sprite {
+public class FXUSSoldat extends FXSoldat {
 
-    Soldat s;
-    int pos;
-    ImageView blessureImg;
-    ImageView flagImg;
-    ImageView classmentImg;
-    int defaultFrame;
-    ImageView selectionneImg;
-    FXCarte fxcarte;
-    double orientation;
 
-            
 
     public FXUSSoldat(Soldat s,int pos,FXCarte fxcarte){
-        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,
-                FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,"frameSoldierUS2.png",null);
-        this.fxcarte=fxcarte;
-        this.s=s;   
-        this.pos=pos;
-        blessureImg=new ImageView("wound.png");
-        flagImg=new ImageView("americanFlag.png");
-        if(s.getClassement()==Soldat.CLASS_SGT)  classmentImg=new ImageView("sgtGrade.png");
-        else if(s.getClassement()==Soldat.CLASS_SOLDAT)classmentImg=new ImageView("scelto.png");
-        selectionneImg=new ImageView("selectUS.png");       
-        //defaultFrame=s.getClassement();
-       defaultFrame=0;
-       orientation=0;
+        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s,"frameSoldierUS2.png",fxcarte); 
+
+
 
 
 
@@ -65,83 +31,16 @@ public class FXUSSoldat extends Sprite {
 
     
     public FXUSSoldat(String f,Soldat s,int pos,FXCarte fxcarte){
-        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,
-                FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,f,null);
-        this.fxcarte=fxcarte;
-        this.s=s;   
-        this.pos=pos;
-        blessureImg=new ImageView("wound.png");
-        flagImg=new ImageView("americanFlag.png");
-        if(s.getClassement()==Soldat.CLASS_SGT)  classmentImg=new ImageView("sgtGrade.png");
-        else if(s.getClassement()==Soldat.CLASS_SOLDAT)classmentImg=new ImageView("scelto.png");
-        selectionneImg=new ImageView("selectUS.png");       
+        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s,f,fxcarte);
+        flagImg=new ImageView("americanFlag.png");    
         //defaultFrame=s.getClassement();
-        defaultFrame=0;
-       
-   
 
-        
     }    
 
-    public void setS(Soldat s) {
-        this.s = s;
-    }
-    
-    public void setDeafultFrme(int n){
-    this.defaultFrame=n;
-    }
-    public void buildFXUSSoldat(){
-        buildFrameImages();
-        if(!getChildren().contains(blessureImg))
-            getChildren().add(blessureImg);
-        if(!getChildren().contains(flagImg))
-            getChildren().add(flagImg);
-        if(!getChildren().contains(classmentImg))
-            getChildren().add(classmentImg);    
 
-        defaultFrame();
-        //this.relocate(x, y);
-        buildGroupSigns();
- 
-        
     
-    }
-    private void buildGroupSigns(){
-        
-        classmentImg.setTranslateX(FXCarte.TILE_SIZE-20);
-        classmentImg.setTranslateY(  0);
-        blessureImg.setTranslateX(0);
-        blessureImg.setTranslateY(FXCarte.TILE_SIZE-10);
 
-        
-    }
 
-    public Soldat getSoldat(){
-    return s;
-    }
-    
-    public void defaultFrame(){
-        setFrame(defaultFrame);
-    }
-    public void selectioneFXSoldat(){
-   
-    if(!getChildren().contains(selectionneImg)) {
-        getChildren().add(selectionneImg);
-        //selectionneImg.setLayoutX(this.getLayoutX());
-        //selectionneImg.setLayoutY(this.getLayoutY());
-        selectionneImg.toBack();
-    }
-    selectionneImg.setVisible(true);
-    
-    //setFrame(3);
-    }
-    public void deselectioneFXSoldat(){
-    
-    if(getChildren().contains(selectionneImg)) 
-        selectionneImg.setVisible(false);
-
-    //setFrame(3);
-    }
 
     @Override
     public String toString() {
@@ -150,197 +49,16 @@ public class FXUSSoldat extends Sprite {
     
 
     
-   public  void playMarche(MarcheAction  act){
-        
-        System.out.println("------------- FXSOLDAT CREATE-ANIM ---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
-        if(estFXSoldatView(act.getI1(), act.getJ1())){
-        //System.out.println("soldato anim:"+act.getProtagoniste());
-        Path p=new Path();
-        this.deselectioneFXSoldat();
-        Point2D p1=getSceneCoordMove(act.getI0(), act.getJ0());
-        float x0=((float)(p1.getX()
-                //-this.getLayoutX()
-                )
-                +(FXCarte.TILE_SIZE/2)
-                )
-                ;
-        float y0=((float)(p1.getY()
-               // -this.getLayoutY()
-                )
-                +(FXCarte.TILE_SIZE/2)
-                )
-                ;
 
-        MoveTo mTo=new MoveTo(x0,y0);
- 
-        Point2D p2=getSceneCoordMove(act.getI1(), act.getJ1());
-        float x1=((float)(p2.getX()
-               // -this.getLayoutX()
-                )
-                +(FXCarte.TILE_SIZE/2)
-                )
-                ;
-        float y1=((float)(p2.getY()
-                //-this.getLayoutY()
-                )
-                +(FXCarte.TILE_SIZE/2)
-                )
-                ;       
-        
-        LineTo l=new LineTo(x1,y1);
-        
-        p.getElements().addAll(mTo,l);
-
-        System.out.println(" p1="+p1+" move to p2="+p2);
-
-        double angle=Piece.getDirection(p1.getX(),p1.getY(),p2.getX(),p2.getY());
-        setFXSoldatOrientation(angle);
-                
-        System.out.println("rotate "+angle);
-
-        PathTransition  path=new PathTransition();
-        path.setDuration(Duration.millis(500));
-        path.setPath(p);
-        path.setNode(this);
-
-        path.setRate(0.5);
-        path.setOrientation(PathTransition.OrientationType.NONE);
-        path.setCycleCount(1);
-        path.setAutoReverse(false);
-        createMove();
-
-        ptList[0]=path;
-        frameAnimTimer[0].start();
-        ptList[0].play();     
-        
-        path.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-              
-
-              System.out.println("***************STATUS "+ptList[0].getStatus());
-              frameAnimTimer[0].stop();
-              fxcarte.setAnimOn(false);
-              path.stop();
-
-             System.out.println("FXSOLDAT ANIM----->STOP");
-//              }
-             event.consume();
-            }
-        });
-
-        System.out.println("FXSOLDAT ANIM------> PLAY");
-
-        }else{
-            fxcarte.setAnimOn(false);
-            this.setVisible(false);
-        }
-System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->--------><---------");
-    }
         
     
-    private void getAngle(Point2D p0,Point2D p2){
+    
 
-    }
-    public void setFXSoldatOrientation(double angle){
-      imgView.setRotate(-orientation  );
-        updateSodlatOrientation(angle);
-      orientation=angle;
-      imgView.setRotate(angle);
-    }
     
-    void updateSodlatOrientation(double angle){
-        if(angle>=-30 && angle<=30 ) 
-            this.s.setFace(Piece.Direction.N);
-        else if(angle>30 && angle<60 )s.setFace(Piece.Direction.NW);        
-        else if(angle>=60 && angle<=120)s.setFace(Piece.Direction.W);
-        else if(angle>120 && angle<150) s.setFace(Piece.Direction.SW);        
-        else if((angle>=150 && 
-                angle <180 )|| (angle<=-150 && angle>=-180))  
-            s.setFace(Piece.Direction.S);
-        else if(angle<-120 && angle>-150) s.setFace(Piece.Direction.SW);
-        else if(angle<=-60 && angle>=-120) s.setFace(Piece.Direction.W);
-        else if(angle<-30 && angle >-60) s.setFace(Piece.Direction.NE);
-        System.out.println("------>"+angle+"-----orientation updataed--->"+s.getFace());
-        }
-    
-    protected void createMove(){
+    protected void buildFramesMarcheAnim(){
         frameAnimTimer[0]=new FrameAnimationTimer(1, 3, this, 0, true, 300, FrameAnimationTimer.MARCHE);
         
     }
-     Point2D getSceneCoordMove(int  i,int j){
-        int posj=fxcarte.getPosJ(),posi=fxcarte.getPosI();
-        //System.out.println(" get coord "+i+","+j+" posI,posj="+posi+","+posj);
-        int scrollI=i-posi,scrollJ=j-posj;
      
-        double x0=(scrollJ*FXCarte.TILE_SIZE);
-        double y0=(scrollI*FXCarte.TILE_SIZE); 
-         y0=esteticCorrectionY0(scrollI,y0);
-         x0=esteticCorrectionX0(scrollJ,x0);
-        Point2D p=new Point2D(x0, y0);
-        return p;
-    }         
-    
-
-    
-    private boolean estFXSoldatView(int i1,int j1){
-         boolean b=true;
-         int posJ=fxcarte.getPosJ();
-         int posI=fxcarte.getPosI();
-            int H=(AREA_SCROLL_I_H)-1;
-            int W=(AREA_SCROLL_J_W)-1;
-            if (j1 >(posJ+ W )) {
-                b=false;
-            }
-            if (j1 < posJ) {
-                b=false;
-            }
-
-            if (i1 > (posI+H)) {
-                b=false;
-            }
-
-            if (i1 < posI ) {
-                b=false;
-            }        
-     return b;
-    
-    }       
-    
-    public boolean estFXSoldatView(){
-        return estFXSoldatView(s.getI(), s.getJ());
-        
-    }    
-    
-    public void enableSoldatoInView(int k) {
-
-        
-        System.out.println("reset position " + s.toStringSimple());
-        int i0 = s.getI(), j0 = s.getJ();
-        Point2D p = getSceneCoordForRefreshCarte(i0, j0);
-        double x0 = p.getX();
-        double y0 = p.getY();
-        x0= x0 + (20 * k);
-        y0= y0 + (20 * k);
-        int scrollJ=j0-fxcarte.getPosJ();
-        int scrollI=i0-fxcarte.getPosI();
-        System.out.println(" enable node--->"+s+"x0,y0="+x0+","+y0);        
-        x0 = esteticCorrectionX0(scrollJ, x0);
-        y0 = esteticCorrectionY0(scrollI, y0);       
-        setTranslateX(x0);
-        setTranslateY(y0);
-        toFront();
-        setVisible(true);
-        
-    }    
-    
-    Point2D getSceneCoordForRefreshCarte(int  i,int j){
-        int posI=fxcarte.getPosI(),posJ=fxcarte.getPosJ();
-        System.out.println(" get coord "+i+","+j+" posI,posj="+posI+","+posJ);
-        double x0=((j-posJ)*FXCarte.TILE_SIZE);
-        double y0=((i-posI)*FXCarte.TILE_SIZE); 
-        Point2D p=new Point2D(x0, y0);
-        return p;
-    }       
 
 }
