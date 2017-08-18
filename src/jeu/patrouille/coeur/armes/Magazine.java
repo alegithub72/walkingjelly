@@ -26,6 +26,11 @@ public class Magazine extends GeneriqueEquipment {
             quantity=7;
             capacity=7;
         }
+        else if(mod==GeneriqueArme.Model.M16){
+            quantity=30;
+            capacity=30;
+        }        
+        
         
     }
     

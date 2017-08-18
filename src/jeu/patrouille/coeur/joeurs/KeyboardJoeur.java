@@ -9,6 +9,7 @@ import java.util.Scanner;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.armes.GeneriqueArme;
 import jeu.patrouille.coeur.armes.BenelliM3;
+import jeu.patrouille.coeur.armes.M16;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 
@@ -47,7 +48,7 @@ public class KeyboardJoeur extends Joeur {
                 5, 5, 8, 9,Piece.Direction.N,this);
            BenelliM3 ben=new BenelliM3();
            
-            GeneriqueArme a[] = {ben};
+            GeneriqueArme a[] = {ben,new M16()};
             s.setArmeEquip(a);
             s.setClassement(Soldat.CLASS_SGT);
             s.setArraN(0);

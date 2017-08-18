@@ -37,7 +37,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     int evaluateDificulte = NOTVALUE;
     Magazine load;
     int TDrecharge = NOTVALUE;
-
+    int magazineUsed;
 
     public GeneriqueArme(String nom,Model model,EquipmentType type ,int court, int medium, int longe) {
         super(nom, type, model);
@@ -45,7 +45,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         porte[COURT] = court;
         porte[MED] = medium;
         porte[LONGE] = longe;
-        magazine=new Magazine[14];
+
 
     }
 
@@ -80,6 +80,8 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     public int getMF() {
         return modefeu;
     }
+    
+
 
     public int hitsNumMF(int dist) throws ModeDeFeuException {
         int sn = NOTVALUE;
@@ -136,6 +138,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         for (Magazine m : magazine) {
             if (m.getQuantity() == m.getCapacity()) {
                 load = m;
+                magazineUsed++;
             }
         }
         if (load == null) {
@@ -153,7 +156,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
     
     public int getNumMagazine(){
-        return magazine.length;
+        return (magazine.length-magazineUsed);
     }
 
 }

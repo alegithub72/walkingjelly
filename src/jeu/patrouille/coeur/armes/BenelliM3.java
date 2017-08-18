@@ -16,6 +16,7 @@ import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
 public class BenelliM3 extends GeneriqueArme{
     public BenelliM3(){
         super("Benelli M3",Model.BENELLI_M3,EquipmentType.FIRE_WEAPON,5,15,65);
+        magazine=new Magazine[14];
         for(int i=0;i<14;i++){
             magazine[i]=new Magazine(Model.BENELLI_M3);
         }
@@ -50,7 +51,7 @@ public class BenelliM3 extends GeneriqueArme{
 
 
     @Override
-    public int hitsNumMF(int dist) throws ModeDeFeuException {
+    public int hitsNumMF(int dist) throws ModeDeFeuException{
         int s=NOTVALUE;
         
         switch (getTypePorte(dist)) {
@@ -73,7 +74,7 @@ public class BenelliM3 extends GeneriqueArme{
         
     }
     
-
+ 
 
     @Override
     public GeneriqueArme cloneEquipmentGenerique() {
