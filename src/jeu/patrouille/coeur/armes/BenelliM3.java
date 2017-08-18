@@ -13,14 +13,13 @@ import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
  *
  * @author Alessio Sardaro
  */
-public class BenelliM3 extends ArmeGenerique{
+public class BenelliM3 extends GeneriqueArme{
     public BenelliM3(){
-        super("Benelli M3",5,15,65);
-        armeType=TEMP_SHOTGUN;
+        super("Benelli M3",Model.BENELLI_M3,EquipmentType.FIRE_WEAPON,5,15,65);
         for(int i=0;i<14;i++){
             magazine[i]=new Magazine(Model.BENELLI_M3);
         }
-        model=Model.BENELLI_M3;
+        armeFeuModel=TEMP_RIFLE;
         shotNumMF[MODE_FEU_SS]=1;
         shotNumMF[MODE_FEU_SA]=NOTVALUE;
         shotNumMF[MODE_FEU_BU]=NOTVALUE;
@@ -77,10 +76,15 @@ public class BenelliM3 extends ArmeGenerique{
 
 
     @Override
-    public ArmeGenerique cloneArmeGenerique() {
+    public GeneriqueArme cloneEquipmentGenerique() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public String toString() {
+        return "BenelliM3{" + '}';
+    }
 
+    
     
 }

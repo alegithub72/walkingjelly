@@ -145,7 +145,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         y0 = y0 + (20 * k);
         int scrollJ = j0 - fxcarte.getPosJ();
         int scrollI = i0 - fxcarte.getPosI();
-        System.out.println(" enable node--->" + s + "x0,y0=" + x0 + "," + y0);
+        System.out.println(" enable node--->" + s.getNom() + "x0,y0=" + x0 + "," + y0);
         x0 = esteticCorrectionX0(scrollJ, x0);
         y0 = esteticCorrectionY0(scrollI, y0);
         setTranslateX(x0);
@@ -274,5 +274,10 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->--------><---------");
     } 
     protected abstract void buildFramesMarcheAnim();    
+
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

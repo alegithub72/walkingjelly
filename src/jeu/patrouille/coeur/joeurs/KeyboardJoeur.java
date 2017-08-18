@@ -7,7 +7,7 @@ package jeu.patrouille.coeur.joeurs;
 
 import java.util.Scanner;
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.armes.ArmeGenerique;
+import jeu.patrouille.coeur.armes.GeneriqueArme;
 import jeu.patrouille.coeur.armes.BenelliM3;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -45,23 +45,25 @@ public class KeyboardJoeur extends Joeur {
   void costruirePatrouille() {
         Soldat s = new Soldat("Sgt.", "Smith", 7, 8, 6, 5, 6,
                 5, 5, 8, 9,Piece.Direction.N,this);
-            ArmeGenerique a[] = {new BenelliM3()};
+           BenelliM3 ben=new BenelliM3();
+           
+            GeneriqueArme a[] = {ben};
             s.setArmeEquip(a);
             s.setClassement(Soldat.CLASS_SGT);
-           s.setArraN(0);
+            s.setArraN(0);
         equipe[0] = s;
          
         s = new Soldat("Rifleman", "Williams", 7, 8, 6, 5, 6,
                 5, 5, 8, 8,Piece.Direction.N,this);
-            ArmeGenerique a1[] = {new BenelliM3()};
-           s.setArmeEquip(a1);
+            GeneriqueArme a1[] = {new BenelliM3()};
+            s.setArmeEquip(a1);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setArraN(1);
         equipe[1] = s;
          
         s = new Soldat("Rifleman", "Miller", 7, 8, 6, 5, 6,
                 5, 5, 8, 8,Piece.Direction.N,this);
-            ArmeGenerique a2[] = {new BenelliM3()};
+            GeneriqueArme a2[] = {new BenelliM3()};
             s.setArmeEquip(a2);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setArraN(2);
@@ -69,7 +71,7 @@ public class KeyboardJoeur extends Joeur {
         
         s = new Soldat("Rifleman", "Anderson", 7, 8, 6, 5, 5, 
                 5, 5, 8, 8,Piece.Direction.N,this);
-            ArmeGenerique a3[] = {new BenelliM3()};
+            GeneriqueArme a3[] = {new BenelliM3()};
             s.setArmeEquip(a3);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setArraN(3);

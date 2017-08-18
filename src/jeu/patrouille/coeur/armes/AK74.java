@@ -9,10 +9,10 @@ package jeu.patrouille.coeur.armes;
  *
  * @author Alessio Sardaro
  */
-public class AK74 extends ArmeGenerique{
+public class AK74 extends GeneriqueArme{
 
     public AK74() {
-        super("AK74", 15, 30, 200);
+        super("AK74",Model.AK74,EquipmentType.FIRE_WEAPON, 15, 30, 200);
         this.evaluateDamagePotentiel=3;
         this.evaluateModifierBlindee=-2;
         this.modefeu=MODE_FEU_SA;
@@ -22,8 +22,9 @@ public class AK74 extends ArmeGenerique{
         this.magazine=new Magazine[]{new Magazine(Model.AK74),
             new Magazine(Model.AK74),new Magazine(Model.AK74),new Magazine(Model.AK74)};
         this.evaluateDificulte=3;
-        armeType=TEMP_RIFLE;
-        model=Model.AK74;
+
+        armeFeuModel=TEMP_RIFLE;
+ 
         this.shotNumMF[MODE_FEU_SA]=1;
         this.shotNumMF[MODE_FEU_BU]=5;
         this.shotNumMF[MODE_FEU_FA]=10;
@@ -38,8 +39,13 @@ public class AK74 extends ArmeGenerique{
     }
 
     @Override
-    public ArmeGenerique cloneArmeGenerique() {
+    public GeneriqueArme cloneEquipmentGenerique() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String toString() {
+        return "AK74{" + '}';
     }
 
 

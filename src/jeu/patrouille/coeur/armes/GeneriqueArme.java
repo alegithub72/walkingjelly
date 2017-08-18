@@ -13,28 +13,24 @@ import jeu.patrouille.coeur.armes.exceptions.PaDeMagazineException;
  *
  * @author Alessio Sardaro
  */
-public abstract class ArmeGenerique {
+public abstract class GeneriqueArme extends GeneriqueEquipment {
 
-    public final int NOTVALUE = -111;
 
-    public enum Model {
-        BENELLI_M3, AK74, M16
-    };
-    String nom;
+
     public static final int COURT = 0, MED = 1, LONGE = 2;
     public static final int MODE_FEU_SS = 0, MODE_FEU_SA = 1, MODE_FEU_BU = 2, MODE_FEU_FA = 3;
     public static final int TEMP_SHOTGUN = 0, TEMP_RIFLE = 1, TEMP_PISTOL = 2, TEMP_MACHINE_GUN = 3;
+
     int porte[] = new int[3];
     int shotNumMF[] = new int[4];
     int[] TDfireWeapon = new int[4];
-    int armeType;
     //Map shotNumMFMed;
     //Map shotNumMFLonge;
     int modefeu;
     int doux = NOTVALUE;
     int fort = NOTVALUE;
     Magazine[] magazine;
-    Model model;
+    int armeFeuModel;
     int finalCartouch;
     int evaluateDamagePotentiel = NOTVALUE;
     int evaluateModifierBlindee = NOTVALUE;
@@ -42,8 +38,9 @@ public abstract class ArmeGenerique {
     Magazine load;
     int TDrecharge = NOTVALUE;
 
-    public ArmeGenerique(String nom, int court, int medium, int longe) {
-        this.nom = nom;
+
+    public GeneriqueArme(String nom,Model model,EquipmentType type ,int court, int medium, int longe) {
+        super(nom, type, model);
         TDfireWeapon=new int[4];
         porte[COURT] = court;
         porte[MED] = medium;
@@ -52,9 +49,6 @@ public abstract class ArmeGenerique {
 
     }
 
-    public String getNom() {
-        return nom;
-    }
 
     // public abstract void loadMagazine();
     public int getEDP() {
@@ -152,20 +146,14 @@ public abstract class ArmeGenerique {
     return load.quantity;
     
     }
-    abstract public ArmeGenerique cloneArmeGenerique();
+    abstract public GeneriqueArme cloneEquipmentGenerique();
 
-    @Override
-    public String toString() {
-        return this.nom + ""
-                + ":" + load.quantity + "";
-    }
 
-    public Model getModel() {
-        return model;
-    }
+   
 
-    public void setModel(Model model) {
-        this.model = model;
+    
+    public int getNumMagazine(){
+        return magazine.length;
     }
 
 }

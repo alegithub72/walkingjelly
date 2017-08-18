@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-import jeu.patrouille.coeur.armes.ArmeGenerique;
+import jeu.patrouille.coeur.armes.GeneriqueArme;
 import jeu.patrouille.coeur.armes.BenelliM3;
 import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
@@ -72,7 +72,7 @@ public class BenelliM3Test {
     @Test
     public void testShotNumFA() throws ModeDeFeuException{         
         ex.expect(ModeDeFeuException.class);
-        b.changeModeFeu(ArmeGenerique.MODE_FEU_FA);
+        b.changeModeFeu(GeneriqueArme.MODE_FEU_FA);
         b.hitsNumMF(1);
        
         

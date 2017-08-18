@@ -8,7 +8,7 @@ package jeu.patrouille.coeur.joeurs;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.armes.AK74;
-import jeu.patrouille.coeur.armes.ArmeGenerique;
+import jeu.patrouille.coeur.armes.GeneriqueArme;
 import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -43,7 +43,7 @@ public class AIJoeur extends GeneriqueJoeurs{
      void costruireHostile() {
         AISoldat s = new AISoldat("Leader", "Tribu ", 5, 5, 5, 4,
                 4, 5, 0, 7, 8,Piece.Direction.S,this);
-            ArmeGenerique a[] = {new AK74()};
+            GeneriqueArme a[] = {new AK74()};
             s.setArmeEquip(a);
             s.setClassement(Soldat.CLASS_SGT);
             s.setLeaderComportement(0, 0, 0, 0);
@@ -52,7 +52,7 @@ public class AIJoeur extends GeneriqueJoeurs{
         
         s = new AISoldat("Militia", "Taleban A", 5, 5, 5, 4,
                 4, 7, 0, 7, 6,Piece.Direction.S,this);
-            ArmeGenerique a1[] = {new AK74()};
+            GeneriqueArme a1[] = {new AK74()};
             s.setArmeEquip(a1);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
@@ -61,7 +61,7 @@ public class AIJoeur extends GeneriqueJoeurs{
         
         s = new AISoldat("Militia", "Taleban B", 5, 5, 5, 4,
                 4, 5, 0, 7, 6,Piece.Direction.S,this);
-            ArmeGenerique a2[] = {new AK74()};
+            GeneriqueArme a2[] = {new AK74()};
             s.setArmeEquip(a2);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
@@ -70,7 +70,7 @@ public class AIJoeur extends GeneriqueJoeurs{
         
         s = new AISoldat("Militia", "Taleban C", 5, 5, 5, 4,
                 4, 5, 0, 7, 6,Piece.Direction.S,this);
-            ArmeGenerique a3[] = {new AK74()};
+            GeneriqueArme a3[] = {new AK74()};
             s.setArmeEquip(a3);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);

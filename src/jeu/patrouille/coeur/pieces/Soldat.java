@@ -8,7 +8,8 @@ package jeu.patrouille.coeur.pieces;
 
 
 import java.util.ArrayList;
-import jeu.patrouille.coeur.armes.ArmeGenerique;
+import jeu.patrouille.coeur.armes.GeneriqueArme;
+import jeu.patrouille.coeur.armes.GeneriqueEquipment;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 
 /**
@@ -35,20 +36,28 @@ public class Soldat extends Piece {
     int moral=-1;
     int commandControler=-1;
     int classement=-1;
-    ArmeGenerique armeUtilise;
+    GeneriqueArme armeUtilise;
 
-    ArmeGenerique[] armeEquip;
+    GeneriqueEquipment[] equipmentGen;
 
-    public void setArmeEquip(ArmeGenerique[] armeEquip) {
-        this.armeEquip = armeEquip;
-        if(armeEquip.length>0) armeUtilise=armeEquip[0];
+    public void setArmeEquip(GeneriqueEquipment[] equipmentGen) {
+        this.equipmentGen = equipmentGen;
+        if(equipmentGen.length>0) armeUtilise=(GeneriqueArme)equipmentGen[0];
     }
-
-    public ArmeGenerique getArmeUtilise() {
+    public int getEquipmentChiffre(){
+        int n=equipmentGen.length;
+        for (GeneriqueEquipment equipe : equipmentGen) {
+            if (equipe.getEquipmentType() == GeneriqueArme.EquipmentType.FIRE_WEAPON) {
+                n = n + ((GeneriqueArme)equipe).getNumMagazine();
+            }
+        }
+        return n;
+    }
+    public GeneriqueArme getArmeUtilise() {
         return armeUtilise;
     }
 
-    public void setArmeUtilise(ArmeGenerique armeUtilise) {
+    public void setArmeUtilise(GeneriqueArme armeUtilise) {
         this.armeUtilise = armeUtilise;
     }
 
@@ -61,9 +70,6 @@ public class Soldat extends Piece {
     public int getClassement() {
         return classement;
     }
-    
-    
-
 
     public Soldat(String nom,String nomDeFamilie,
     int competenceArme,
@@ -175,11 +181,11 @@ public class Soldat extends Piece {
         s.setI(this.getI());
         s.setJ(this.getJ());
         s.arrayN = this.arrayN;
-        ArmeGenerique armeClone[] = null;
-        if (armeEquip != null) {
-            armeClone = new ArmeGenerique[armeEquip.length];
-            for (int a = 0; a < armeEquip.length; a++) {
-                armeClone[a] = armeEquip[a].cloneArmeGenerique();
+        GeneriqueArme armeClone[] = null;
+        if (equipmentGen != null) {
+            armeClone = new GeneriqueArme[equipmentGen.length];
+            for (int a = 0; a < equipmentGen.length; a++) {
+                armeClone[a] = equipmentGen[a].cloneEquipmentGenerique();
             }
             s.setArmeEquip(armeClone);
             s.setArmeUtilise(this.armeUtilise);
@@ -219,8 +225,8 @@ public class Soldat extends Piece {
     this.actionsPool=new ArrayList<>();
     }
     
-   public  ArmeGenerique[] getEquipment(){
-        return armeEquip;
+   public  GeneriqueEquipment[] getEquipment(){
+        return equipmentGen;
     }
    
 }
