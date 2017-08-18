@@ -12,7 +12,8 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 /**
  *
  * @author appleale
- */
+ */ 
+@Deprecated
 public class FXBenelliM3 extends FXPatrouilleSprite{
 
 

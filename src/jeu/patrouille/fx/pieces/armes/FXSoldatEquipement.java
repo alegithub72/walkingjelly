@@ -8,7 +8,6 @@ package jeu.patrouille.fx.pieces.armes;
 import javafx.scene.Parent;
 import jeu.patrouille.coeur.armes.GeneriqueArme;
 import jeu.patrouille.coeur.armes.GeneriqueEquipment;
-import jeu.patrouille.coeur.armes.GeneriqueEquipment.*;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
@@ -19,7 +18,7 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
  */
 public class FXSoldatEquipement extends Parent{
     FXPlanche fxpl;
-    FXPatrouilleSprite armes[];
+    FXPatrouilleSprite fxarmes[];
   public   FXSoldatEquipement(FXPlanche fxpl){
       super();      
       this.fxpl=fxpl;
@@ -29,75 +28,72 @@ public class FXSoldatEquipement extends Parent{
       
   }
   public void buildFXEquipment(Soldat s){
-      GeneriqueEquipment[]  list=s.getEquipment();
-       
-      armes=new FXPatrouilleSprite[s.getEquipmentChiffre()];
+      GeneriqueEquipment[] list = s.getEquipment();
+
+      fxarmes = new FXPatrouilleSprite[s.getEquipmentChiffre()];
       //DropShadow ds=new DropShadow(5, Color.DARKOLIVEGREEN);
       //ds.setOffsetX(5);
-      //ds.setOffsetY(5);   
+      //ds.setOffsetY(5);  
+      int k=0,n=0;
       for (int i = 0; i < list.length; i++) {
-          GeneriqueEquipment arm = list[i]; 
-          
-          if(Model.BENELLI_M3==arm.getModel()) {
-              armes[i]=new FXBenelliM3();
-              GeneriqueArme a= ((GeneriqueArme)arm);
-               createFXEquipment(armes[i],i);
-              for(int k=0;k<a.getNumMagazine() ;k++){
-              armes[i+k+1]=FXMagazine.createInstance(arm.getModel());
-               createFXEquipment(armes[i+k+1],i+k+1);
-               
-              System.out.println("arme----------------->"+arm);
-              }
-              i=i+a.getNumMagazine();
-
-          }
-          if(Model.AK74==arm.getModel()){
-              GeneriqueArme a= ((GeneriqueArme)arm);
-             armes[i]=new FXAK74();
-              createFXEquipment(armes[i],i);
-            System.out.println("arme----------------->"+arm);
-            for(int k=0;k<a.getNumMagazine() ;k++){
-              armes[i+k+1]=FXMagazine.createInstance(arm.getModel());
-              createFXEquipment(armes[i+k+1],i+k+1);
-            }
-               i=i+a.getNumMagazine();
-          
-            
-          }
-
-          
-
-         
+              GeneriqueEquipment arm = list[i];
+              fxarmes[n] = FXEquipment.createIstance(arm.getModel());
+              double y0=createFXEquipment(fxarmes[n], n);              
+              if(n>0) y0=y0-40;
+              n++;
+              
+              GeneriqueArme a = ((GeneriqueArme) arm);
+              if(a==s.getArmeUtilise()) ((FXEquipment)fxarmes[i]).addUsed(fxarmes[i].getW());
+              n =n+ visualizeMagazin(a, n,y0);
 
       }
-  
+
   }
-  void createFXEquipment(FXPatrouilleSprite sp,int i){
-            if(sp!=null){
+  
+  int visualizeMagazin(GeneriqueArme a,int i,double y0){
+      int k=0;
+      for (; k < a.getNumMagazine(); k++) {
+                  fxarmes[i + k ] = FXMagazine.createInstance(a.getModel());
+                  createFXMagazine(fxarmes[i + k ], i + k,y0 );
+                  //System.out.println("arme----------------->" + arm);
+              }
+  return k;
+  }
+  void createFXMagazine(FXPatrouilleSprite sp,int i,double y0){
+      if (sp != null) {
+          sp.create();
+          sp.setEffect(null);
+          this.getChildren().add(sp);
+          int max = 4;
+          double k = Math.nextDown((i / max) - 0.1d);
+          double y = (k * 10)+y0+30;
+          double x = sp.getW() * ((i - (k * max))-1);
+          if(k>0) x=sp.getW()*((i-(k*max)));
+          sp.setTranslateY(y);
+          sp.setTranslateX(x);
+
+          sp.toFront();
+          sp.setVisible(true);
+      }
+  }
+  
+  double createFXEquipment(FXPatrouilleSprite sp,double i){
+
               sp.create();
               sp.setEffect(null);
               this.getChildren().add(sp);
-
-              int max=4;
-              
-              if(i>0){
-                  double k=Math.nextDown((i/max)-0.1d);
-                  double y=(k+2)*sp.getH();
-                  double x=sp.getW()*((i-(k*max))-1);
-                  if(k>0) x=sp.getW()*((i-(k*max)));
-                      sp.setTranslateY(y);
-                  sp.setTranslateX(x);
-                  
-              } 
-
-              
-              
-           /// equipment.setTranslateX((315+(28 * i)) );
-            // equipment.setTranslateY(11);
-           //   equipment.relocate((315+(28 * i)) , 11);
+              double k=Math.nextDown((i/4)-0.1d);
+              double y=(k)*20;
+              double x=10;
+           
+              sp.setTranslateY(y);
+              sp.setTranslateX(x);
               sp.toFront();
               sp.setVisible(true);
+              
+
+            return y;
           }
-  }
+  
     
 }

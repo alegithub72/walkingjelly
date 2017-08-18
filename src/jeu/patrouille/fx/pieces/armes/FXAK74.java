@@ -8,9 +8,10 @@ package jeu.patrouille.fx.pieces.armes;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 
 /**
- *
+ * 
  * @author appleale
  */
+@Deprecated 
 public class FXAK74 extends FXPatrouilleSprite{
 
     public FXAK74() {
