@@ -17,14 +17,9 @@ import jeu.patrouille.fx.board.FXCarte;
 public class FXUSSoldat extends FXSoldat {
 
 
-
+    
     public FXUSSoldat(Soldat s,int pos,FXCarte fxcarte){
-        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s,"frameSoldierUS2.png",fxcarte); 
-
-
-
-
-
+        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s,"frameSoldierUS2.png",fxcarte);
         
     }
 

@@ -12,7 +12,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import jeu.patrouille.coeur.armes.AK74;
 import jeu.patrouille.coeur.armes.ArmeGenerique;
-import jeu.patrouille.coeur.armes.ModeDeFeuException;
+import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.armes.exceptions.PaDeMagazineException;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
@@ -25,8 +27,9 @@ public class AK74Test {
     @Rule
     public ExpectedException ex=ExpectedException.none();
     AK74 ak;
-    public AK74Test() {
+    public AK74Test() throws PaDeMagazineException{
         ak=new AK74();
+        ak.loadMagazine();
     }
     
     @BeforeClass
@@ -47,26 +50,36 @@ public class AK74Test {
 
     
    @Test
-   public void testPorte() throws ModeDeFeuException{
+   public void testPorte() throws ModeDeFeuException,LoadMagazineFiniException{
        assertEquals(ArmeGenerique.MODE_FEU_SA ,  ak.getMF());
        assertEquals( 3 ,ak.fireWeapon());
+       assertEquals(29, ak.shotRemain());
    }
    
    @Test 
-   public void testPorteBU() throws ModeDeFeuException{
+   public void testPorteBU() throws ModeDeFeuException,LoadMagazineFiniException{
        ak.changeModeFeu(ArmeGenerique.MODE_FEU_BU);
        assertEquals(ArmeGenerique.MODE_FEU_BU,ak.getMF());
        assertEquals(5,ak.fireWeapon());
+       assertEquals(25, ak.shotRemain());
    
    }
    @Test
-   public void testPorteSS()throws ModeDeFeuException{
+   public void testPorteSS()throws ModeDeFeuException,LoadMagazineFiniException{
         ex.expect(ModeDeFeuException.class);
         ak.changeModeFeu(ArmeGenerique.MODE_FEU_SS);
         ak.fireWeapon();
-    
+        assertEquals(29, ak.shotRemain());
        
    }
+   @Test
+   public void testPorteFA()throws ModeDeFeuException,LoadMagazineFiniException{
+
+        ak.changeModeFeu(ArmeGenerique.MODE_FEU_FA);
+        ak.fireWeapon();
+        assertEquals(20, ak.shotRemain());
+       
+   }   
    
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:

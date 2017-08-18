@@ -18,18 +18,19 @@ public class AK74 extends ArmeGenerique{
         this.modefeu=MODE_FEU_SA;
         this.doux=5;
         this.fort=NOTVALUE;
-        this.APrecharge=3;
-        this.maxCharge=30;
-        this.capaciteMunition=30;
+        this.TDrecharge=3;
+        this.magazine=new Magazine[]{new Magazine(Model.AK74),
+            new Magazine(Model.AK74),new Magazine(Model.AK74),new Magazine(Model.AK74)};
         this.evaluateDificulte=3;
         armeType=TEMP_RIFLE;
+        model=Model.AK74;
         this.shotNumMF[MODE_FEU_SA]=1;
         this.shotNumMF[MODE_FEU_BU]=5;
         this.shotNumMF[MODE_FEU_FA]=10;
-        this.APfireWeapon[MODE_FEU_SA]=3;
-        this.APfireWeapon[MODE_FEU_BU ]=5;
-        this.APfireWeapon[MODE_FEU_FA]=6;
-        this.APfireWeapon[MODE_FEU_SS]=NOTVALUE;
+        this.TDfireWeapon[MODE_FEU_SA]=3;
+        this.TDfireWeapon[MODE_FEU_BU ]=5;
+        this.TDfireWeapon[MODE_FEU_FA]=6;
+        this.TDfireWeapon[MODE_FEU_SS]=NOTVALUE;
         
         
         

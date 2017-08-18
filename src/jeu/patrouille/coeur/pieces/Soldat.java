@@ -204,6 +204,7 @@ public class Soldat extends Piece {
         return tempDesponible>0;
         
     }
+    @Override
     public int getActionPoint(){
         return tempDesponible;
     }
@@ -216,6 +217,10 @@ public class Soldat extends Piece {
    
     public void resetAction(){
     this.actionsPool=new ArrayList<>();
+    }
+    
+   public  ArmeGenerique[] getEquipment(){
+        return armeEquip;
     }
    
 }

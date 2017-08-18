@@ -44,7 +44,6 @@ import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatRelasedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXHostile;
 import jeu.patrouille.fx.pieces.FXSoldat;
-import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 import jeu.patrouille.fx.sprite.Sprite;
 import jeu.patrouille.util.ImageChargeur;
@@ -93,6 +92,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     FXSoldat[] fxequipeUS ;
     FXSoldat[] fxequipeHost ;
     FXPatrouilleSprite actionIcon;
+    boolean debug=false;
     
     public FXCarte(FXPlanche fxpl) throws IOException{
         
@@ -159,7 +159,6 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
                
         setOnMouseMoved(null);
         setOnMouseClicked(null);
-        
         removeMenuItemsMenuOnFXUSEquipe();
         removeMenuItemsonFXHostileEquipe();
         mj.debutRond();
@@ -705,7 +704,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 }
                 canv.getGraphicsContext2D().setFill(Color.BLACK);
                 //canv.getGraphicsContext2D()
-                canv.getGraphicsContext2D().fillText(i + "," + j, x0 + 10, y0 + 25);
+                if(debug)canv.getGraphicsContext2D().fillText(i + "," + j, x0 + 10, y0 + 25);
                 // canv.getGraphicsContext2D().strokeRect(x0, y0, PointCarte.TILE_SIZE, PointCarte.TILE_SIZE);
                 //if(ob!=null)System.out.println(" i,j"+(m+posX)+","+(n+posY));
                 //if(ob!=null)
@@ -731,7 +730,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 }
                 canv.getGraphicsContext2D().setFill(Color.BLACK);
                 //canv.getGraphicsContext2D()
-                canv.getGraphicsContext2D().fillText(i + "," + j, x0 + 10, y0 + 25);
+                if(debug)canv.getGraphicsContext2D().fillText(i + "," + j, x0 + 10, y0 + 25);
                 // canv.getGraphicsContext2D().strokeRect(x0, y0, PointCarte.TILE_SIZE, PointCarte.TILE_SIZE);
                 //System.out.println("scrollI,scrollJ"+i+","+j);
 
@@ -781,11 +780,11 @@ System.out.println("------------------SCROLL PRINT------------------------------
 
     private void visibilityOFFAllFXSoldatsPatEnView() {
  
-        for (int h = 0; h < fxequipeUS.length; h++) {
-            fxequipeUS[h].setVisible(false);
+        for (FXSoldat fxequipeUS1 : fxequipeUS) {
+            fxequipeUS1.setVisible(false);
         }
-        for (int h = 0; h < fxequipeHost.length; h++) {
-            fxequipeHost[h].setVisible(false);
+        for (FXSoldat fxequipeHost1 : fxequipeHost) {
+            fxequipeHost1.setVisible(false);
         }
     }    
     
@@ -799,13 +798,15 @@ System.out.println("------------------SCROLL PRINT------------------------------
 
 
    private void refreshCarteUSFXSoldatPosition(){
-           for (int h = 0; h < fxequipeUS.length; h++) 
-               refreshCarteFXSoldatPosition(fxequipeUS[h]);
+        for (FXSoldat fxequipeUS1 : fxequipeUS) {
+            refreshCarteFXSoldatPosition(fxequipeUS1);
+        }
    
    }
    private void refreshCarteHostFXSoldatPosition(){
-           for (int h = 0; h < fxequipeHost.length; h++) 
-               refreshCarteFXSoldatPosition(fxequipeHost[h]);
+        for (FXSoldat fxequipeHost1 : fxequipeHost) {
+            refreshCarteFXSoldatPosition(fxequipeHost1);
+        }
    }     
     
 
@@ -1149,6 +1150,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
         int i=sfx.getSoldat().getI();
         int j=sfx.getSoldat().getJ();
         buildMenuItems(sx,sy,i,j);
+        fxpl.buildFXSoldatEquipement(sfx.getSoldat());
         fxpl.sendMessageToPlayer("Choisir une action from ("+i+","+j+")");
 
     }    

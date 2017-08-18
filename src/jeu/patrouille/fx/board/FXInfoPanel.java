@@ -44,12 +44,12 @@ public class FXInfoPanel extends Parent{
         this.x=x;
         this.y=y;
         font=Font.font(fxpl.getFontTitle().getName(), 12);
-        buildInfoPanel();
+       
     
     }
     void buildInfoPanel(){
         
-        Color textColor=Color.SPRINGGREEN;
+        Color textColor=Color.LAWNGREEN;
         
         bo=getBorder();
         bk=getBlackBackgound();
@@ -83,7 +83,7 @@ public class FXInfoPanel extends Parent{
      Border getBorder(){
          BorderWidths w=new BorderWidths(2);
          CornerRadii cr = new CornerRadii(20);
-         BorderStroke bs = new BorderStroke(Color.SPRINGGREEN ,
+         BorderStroke bs = new BorderStroke(Color.LAWNGREEN ,
                  BorderStrokeStyle.SOLID,
                  cr,
                  w);

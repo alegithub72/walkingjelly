@@ -6,7 +6,9 @@
 
 import jeu.patrouille.coeur.armes.ArmeGenerique;
 import jeu.patrouille.coeur.armes.BenelliM3;
-import jeu.patrouille.coeur.armes.ModeDeFeuException;
+import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.armes.exceptions.PaDeMagazineException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,8 +30,9 @@ public class BenelliM3Test {
     @Rule
     public ExpectedException ex= ExpectedException.none();
     
-    public BenelliM3Test() {
+    public BenelliM3Test() throws PaDeMagazineException{
            b=new BenelliM3();
+           b.loadMagazine();
            
     }
     
@@ -58,11 +61,11 @@ public class BenelliM3Test {
     }
     @Test 
     public void testShotMFCourt() throws ModeDeFeuException{
-        assertEquals(3,b.shotNumMF(1));
+        assertEquals(3,b.hitsNumMF(1));
     }
     @Test
     public void testShotNumMFMed() throws ModeDeFeuException{
-        assertEquals( 2,b.shotNumMF(6));
+        assertEquals( 2,b.hitsNumMF(6));
     
     }
     
@@ -70,14 +73,14 @@ public class BenelliM3Test {
     public void testShotNumFA() throws ModeDeFeuException{         
         ex.expect(ModeDeFeuException.class);
         b.changeModeFeu(ArmeGenerique.MODE_FEU_FA);
-        b.shotNumMF(1);
+        b.hitsNumMF(1);
        
         
     }
     @Test
     public void testCapaciteMunition(){
     
-        assertEquals(7,b.getCM());
+        assertEquals(7,b.shotRemain());
     }
     
     @Test
@@ -93,20 +96,21 @@ public class BenelliM3Test {
     assertEquals(-1,b.porteModifier(64));
     }
     @Test 
-    public void testFireAShot() throws ModeDeFeuException{
+    public void testFireAShot() throws ModeDeFeuException,LoadMagazineFiniException{
     b.fireWeapon();
-    assertEquals(6,b.getCM());
+    assertEquals(6,b.shotRemain());
     }
     /**
      * Ogni volta viene inizilizzata la classe di test ???
      * @throws ModeDeFeuException 
      */
     @Test 
-    public void testChargeArme() throws ModeDeFeuException{
+    public void testChargeArme() throws ModeDeFeuException,LoadMagazineFiniException,PaDeMagazineException{
        b.fireWeapon();
-       assertEquals(6,b.getCM());    
+      
+    assertEquals(6,b.shotRemain());   
     assertEquals (6,b.rechargeArme());
-    assertEquals(7,b.getCM());
+    assertEquals(7,b.shotRemain());
     
     }
     // TODO add test methods here.

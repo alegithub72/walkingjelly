@@ -80,10 +80,7 @@ public class Sprite extends Parent
         imgView = new ImageView(frameImages);
         imgView.setViewport(frames[0]);  
         getChildren().add(imgView);   
-        DropShadow ds=new DropShadow(5, Color.BLACK);
-        ds.setOffsetX(5);
-        ds.setOffsetY(5);        
-        imgView.setEffect(ds);
+
 
        
         

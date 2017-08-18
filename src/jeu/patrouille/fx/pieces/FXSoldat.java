@@ -9,7 +9,9 @@ import javafx.animation.PathTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -52,7 +54,14 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         blessureImg.setTranslateX(0);
         blessureImg.setTranslateY(FXCarte.TILE_SIZE - 10);
     }
-
+    protected void buildShadow(){
+    
+        DropShadow ds=new DropShadow(5, Color.BLACK);
+        ds.setOffsetX(5);
+        ds.setOffsetY(5);        
+        imgView.setEffect(ds);    
+    
+    }
     public Soldat getSoldat() {
         return s;
     }
@@ -172,6 +181,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         defaultFrame();
         //this.relocate(x, y);
         buildGroupSigns();
+        buildShadow();
  
         
     
