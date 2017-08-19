@@ -12,6 +12,8 @@ import java.util.List;
 import javafx.geometry.Point2D;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
+import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
 
 
 /**
@@ -21,6 +23,7 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 public abstract class Piece  {
     public enum ActeurType{SOLDAT,JEEP,HELICOPTER,ARMOR }
     public enum Direction{S,N,E,W,NW,NE,SE,SW}
+    public enum Pose{PRONE,GENOUCS,DROIT}
     public abstract String toStringSimple() ;    
     public  static final int NOACTION=-1;
     ActeurType type;
@@ -136,7 +139,7 @@ public abstract class Piece  {
     public abstract Piece clonerPiece();
    
     
-    public void  addAction(BaseAction act){
+    public void  addAction(BaseAction act)throws Exception{
         act.calculeActionPointDesActions();
         actionsPool.add(act);
         tempDesponible=tempDesponible-act.getTempActivite();

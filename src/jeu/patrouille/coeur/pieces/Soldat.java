@@ -8,9 +8,18 @@ package jeu.patrouille.coeur.pieces;
 
 
 import java.util.ArrayList;
+import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.armes.GeneriqueArme;
 import jeu.patrouille.coeur.armes.GeneriqueEquipment;
+import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
+import jeu.patrouille.coeur.pieces.Lesion.*;
+import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
+import jeu.patrouille.coeur.pieces.exceptions.IncoscientSoldatException;
+import jeu.patrouille.coeur.pieces.exceptions.MainArmeSoldatException;
+import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
 
 /**
  *
@@ -19,7 +28,7 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 public class Soldat extends Piece {
     
 
-    
+
     public static final int CLASS_SGT=8,CLASS_TEN=20,CLASS_SGT_MJR=15,CLASS_SOLDAT=7;
 
     int actionActuel=NOACTION;
@@ -37,39 +46,10 @@ public class Soldat extends Piece {
     int commandControler=-1;
     int classement=-1;
     GeneriqueArme armeUtilise;
-
+    Pose pose=Pose.DROIT;
     GeneriqueEquipment[] equipmentGen;
-
-    public void setArmeEquip(GeneriqueEquipment[] equipmentGen) {
-        this.equipmentGen = equipmentGen;
-        if(equipmentGen.length>0) armeUtilise=(GeneriqueArme)equipmentGen[0];
-    }
-    public int getEquipmentChiffre(){
-        int n=equipmentGen.length;
-        for (GeneriqueEquipment equipe : equipmentGen) {
-            if (equipe.getEquipmentType() == GeneriqueArme.EquipmentType.FIRE_WEAPON) {
-                n = n + ((GeneriqueArme)equipe).getNumMagazine();
-            }
-        }
-        return n;
-    }
-    public GeneriqueArme getArmeUtilise() {
-        return armeUtilise;
-    }
-
-    public void setArmeUtilise(GeneriqueArme armeUtilise) {
-        this.armeUtilise = armeUtilise;
-    }
-
-    
-    
-    public void setClassement(int classement) {
-        this.classement = classement;
-    }
-
-    public int getClassement() {
-        return classement;
-    }
+    boolean actived;
+    Statu st;
 
     public Soldat(String nom,String nomDeFamilie,
     int competenceArme,
@@ -93,12 +73,76 @@ public class Soldat extends Piece {
         this.sante=sante;
         this.moral=moral;
         this.commandControler=commandControler;
-
+        this.actived=false;
+        st=Statu.NORMAL;
        
         
     
     }
 
+    public boolean isActived() {
+        return actived;
+    }
+
+    public void setActived(boolean actived) {
+        this.actived = actived;
+    }
+    
+    public void blessure(Lesion l){
+        if(l.statu==Lesion.Statu.MORT) sante=-10;
+        else this.sante=sante-l.blessure;
+        if(sante<=0 && sante>-10) this.st=Statu.INCOSCIENT;
+        else if(sante<=-10) this.st=Statu.MORT;
+        
+    }
+
+    public Statu getStatu() {
+        return st;
+    }
+
+ 
+    
+    
+    public void setArmeEquip(GeneriqueEquipment[] equipmentGen) {
+        this.equipmentGen = equipmentGen;
+        if(equipmentGen.length>0) armeUtilise=(GeneriqueArme)equipmentGen[0];
+    }
+    public int getEquipmentChiffre(){
+        int n=equipmentGen.length;
+        for (GeneriqueEquipment equipe : equipmentGen) {
+            if (equipe.getEquipmentType() == GeneriqueArme.EquipmentType.FIRE_WEAPON) {
+                n = n + ((GeneriqueArme)equipe).getNumMagazine();
+            }
+        }
+        return n;
+    }
+    public GeneriqueArme getArmeUtilise() {
+        return armeUtilise;
+    }
+
+    public void setArmeUtilise(GeneriqueArme armeUtilise) {
+        this.armeUtilise = armeUtilise;
+    }
+
+    public Pose getPose() {
+        return pose;
+    }
+
+    public void setPose(Pose pose) {
+        this.pose = pose;
+    }
+
+ 
+
+    
+    
+    public void setClassement(int classement) {
+        this.classement = classement;
+    }
+
+    public int getClassement() {
+        return classement;
+    }
     
     
     public String getNom() {
@@ -150,6 +194,9 @@ public class Soldat extends Piece {
    public void setAction(int a){
     actionActuel=a;
    }
+   public int getAction(){
+    return actionActuel;
+   }
 
     public void setFace(Direction face) {
         this.face = face;
@@ -193,7 +240,12 @@ public class Soldat extends Piece {
 
         return s;
     }
-
+    public int fire(double dist) throws ModeDeFeuException,LoadMagazineFiniException{
+      int  n=armeUtilise.hitsNumMF(dist);
+      this.tempDesponible=tempDesponible-armeUtilise.fireWeapon();
+      return n;
+    
+    }
     @Override
     public String toString() {
         return ""
@@ -207,7 +259,9 @@ public class Soldat extends Piece {
 
 
     public boolean isPossileDesplacer(){
-        return tempDesponible>0;
+        return tempDesponible>0 || st!=Statu.MORT ||
+                   st!=Statu.IMMOBILSER
+                    || st!=Statu.INCOSCIENT;
         
     }
     @Override
@@ -227,6 +281,35 @@ public class Soldat extends Piece {
     
    public  GeneriqueEquipment[] getEquipment(){
         return equipmentGen;
+    }
+
+   
+   //TODO inserire vairiabile status UNCOSCIOUS,IMMOBILIZE,NORMAL,ETC....vedere bene health doc..
+    @Override
+    public void addAction(BaseAction act) throws Exception{
+        if(sante==5) super.addAction(act);
+        else if(st==Statu.MORT){
+            throw new KilledSoldatException();
+        }
+        else if(st==Statu.IMMOBILSER ){
+           throw new ImmobilzedSodlatException();
+        }else if(st==Statu.INCOSCIENT){
+            throw new IncoscientSoldatException();
+        }else if(st==Statu.LEGER_BLESSE){
+            super.addAction(act);
+        }else if(st==Statu.UN_ACTION){
+            if(this.actionsPool.size()>1) 
+                throw new UnActionSoldatException();
+        }else if(st==Statu.MAIN_ARME_SERIOUX){
+            if(armeUtilise.getArmeFeuModel()!=GeneriqueArme.TEMP_PISTOL 
+                    && (act.getType()==BaseAction.FEU || act.getType()==BaseAction.OP_FEU ))
+                throw new MainArmeSoldatException();//TODO migliorare su tutte le azioni di fuoco
+            super.addAction(act);
+            
+        }
+        
+        
+        
     }
    
 }

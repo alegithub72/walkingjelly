@@ -51,10 +51,10 @@ public class BenelliM3 extends GeneriqueArme{
 
 
     @Override
-    public int hitsNumMF(int dist) throws ModeDeFeuException{
+    public int hitsNumMF(double dist) throws ModeDeFeuException{
         int s=NOTVALUE;
-        
-        switch (getTypePorte(dist)) {
+        //TOdO conversion
+        switch (getTypePorte((int)dist)) {
             case COURT:
                 s=3;
                 break;

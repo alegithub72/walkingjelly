@@ -39,6 +39,10 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     int TDrecharge = NOTVALUE;
     int magazineUsed;
 
+    public int getArmeFeuModel() {
+        return armeFeuModel;
+    }
+
     public GeneriqueArme(String nom,Model model,EquipmentType type ,int court, int medium, int longe) {
         super(nom, type, model);
         TDfireWeapon=new int[4];
@@ -83,7 +87,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     
 
 
-    public int hitsNumMF(int dist) throws ModeDeFeuException {
+    public int hitsNumMF(double dist) throws ModeDeFeuException {
         int sn = NOTVALUE;
         sn = shotNumMF[modefeu];
         
@@ -103,7 +107,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         return fort;
     }
 
-    int getTypePorte(int dist) {
+    int getTypePorte(double dist) {
         if (dist <= porte[COURT]) {
             return COURT;
         } else if (dist <= porte[MED]) {
@@ -114,7 +118,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         return NOTVALUE;
     }
 
-    public int porteModifier(int dist) {
+    public int porteModifier(double dist) {
         int tp = getTypePorte(dist);
         switch (tp) {
             case COURT:

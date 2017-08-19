@@ -23,6 +23,7 @@ import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.Lesion;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -102,7 +103,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         
 
         carte = new Carte("src/mapDesert.txt");
-
+        carte.loadMap();
         
 
         // mj.setActiveJeur(MoteurDeJoeur.JEUR_US);
@@ -351,7 +352,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
    
     
- synchronized public void confirmMarcheActionCommand(MenuItem item, double mousex, double mousey) {
+ synchronized public void confirmMarcheActionCommand(MenuItem item, double mousex, double mousey)throws Exception {
 
         double x = mousex;
         double y = mousey;
@@ -552,7 +553,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
 
 
-    private void addSoldataSelectioneeAction() {
+    private void addSoldataSelectioneeAction() throws Exception{
         fxIMHelper.addSoldataSelectioneeAction();
     }
     
@@ -1062,21 +1063,22 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
    
    
     protected synchronized void buildMenuItems(double sx,double sy,int i,int j) {
-            FXSoldat s=fxIMHelper.getFXSoldatSelectionee();
+            FXSoldat sfx=fxIMHelper.getFXSoldatSelectionee();
 
             Point2D spritecoord2D=getMenuCoord(sx,sy,i,
                     j);
 
             double r= (2 * Math.PI) / 8;
-            s.selectioneFXSoldat();
-            if (s.getSoldat().isPossileDesplacer()) {
+            sfx.selectioneFXSoldat();
+            Soldat s=sfx.getSoldat();
+            if (s.isPossileDesplacer() ) {
             
           
             
-            buildMarcheMenuItem(s,spritecoord2D.getX(),spritecoord2D.getY());
-            buildCoreurMenuItem(s, spritecoord2D.getX(),spritecoord2D.getY(), r);
-            buildFeuMenuItem(s, spritecoord2D.getX(),spritecoord2D.getY(), r);
-            buildOpFeuMenuItem(s, spritecoord2D.getX(),spritecoord2D.getY(), r);
+            buildMarcheMenuItem(sfx,spritecoord2D.getX(),spritecoord2D.getY());
+            buildCoreurMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
+            buildFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
+            buildOpFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
            
             //rootGroup.getChildren().add(l);
 
@@ -1085,8 +1087,10 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
 
         }else {
             defaceMenuItems();
-            buildDisableMenu(s);
-            fxpl.sendMessageToPlayer("Il ne peut pas agir");
+            buildDisableMenu(sfx);
+            String mes="";
+            if(s.getStatu()!=Lesion.Statu.NORMAL) mes=s.getStatu().name();
+            fxpl.sendMessageToPlayer("Il ne peut pas agir "+mes);
         }
     
     }
@@ -1224,7 +1228,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             actionMenu[0] = m;
             m.setTranslateX(menuItemx);
             m.setTranslateY(menuItemy);
-            rootGroup.getChildren().add(m);
+            rootGroup.getChildren().add(m);   
             if(s.getSoldat().getActionPoint()>=BaseAction.ACTIONPOINTVALOR[BaseAction.MARCHE]) {
             m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  this));
             m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));

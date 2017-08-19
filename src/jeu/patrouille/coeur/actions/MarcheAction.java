@@ -8,7 +8,9 @@ package jeu.patrouille.coeur.actions;
 import java.util.ArrayList;
 import java.util.List;
 import jeu.patrouille.coeur.Carte;
+import jeu.patrouille.coeur.pieces.Lesion;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
 
 /**
@@ -77,6 +79,9 @@ public class MarcheAction extends BaseAction{
     @Override   
     public void calculeActionPointDesActions() {
             int apbase= BaseAction.ACTIONPOINTVALOR[type];
+            Soldat s=(Soldat)protagoniste;
+            if(s.getStatu()==Lesion.Statu.IMPOSSIBLE_COURSE)
+                apbase=apbase*2;
             if(mapTile==null){
                 mapTile =Carte.getLigne(i0, j0, i1, j1);
             }

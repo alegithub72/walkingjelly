@@ -20,7 +20,7 @@ public static final int MARCHE=0,COURS=1,CRAWL=2,COUCHER=3
             ,LEVER=4,MONTER=6,SAUT=7,
             PRENDRE=8,LACHER_OBJ=9,JETER_GRENATE=10,
             OP_FEU=11,
-            CHANGE_DIR=12,TRIGGER=13,FEU=15,Reload=16,GEOUX=17,NO_ACTION=18;
+            CHANGE_DIR=12,TRIGGER=13,FEU=15,Reload=16,GEOUX=17,NO_ACTION=18,VISER_FEU=19;
 public static final int[] ACTIONPOINTVALOR = {1, 3, 2, 3, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 6, 2, 0, 0};
     int type;
     int j0;

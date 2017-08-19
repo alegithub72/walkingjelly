@@ -7,6 +7,7 @@
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.regex.Pattern;
+import javafx.geometry.Point2D;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.terrains.PointCarte;
+import jeu.patrouille.fx.board.FXCarte;
 
 /**
  *
@@ -26,6 +28,7 @@ public class CarteTest {
 
     public CarteTest() throws IOException {
         c = new Carte();
+        c.loadMap();
     }
 
     @BeforeClass
@@ -289,6 +292,16 @@ public class CarteTest {
         assertTrue(Pattern.matches(mapLines, c.getMapTxt()));
 
     }
+    @Test 
+    public void testDistance(){
+        double d=c.distance(0, 0, 10, 10, FXCarte.TILE_SIZE);
+        Point2D p0=new Point2D(25, 25);
+        Point2D p1=new Point2D((10*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2)
+                ,(10*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2));
+        assertEquals(p1.distance(p0),d,0.0d);
+    
+    }
+    
 
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:

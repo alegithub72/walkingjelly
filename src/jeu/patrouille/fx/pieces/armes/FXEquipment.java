@@ -29,7 +29,7 @@ public static FXEquipment createIstance(GeneriqueEquipment.Model mod){
 }
 
 public void addUsed(double x){
-    FXPatrouilleSprite sp=new FXPatrouilleSprite(50, 40, "usedArmes.png", null);
+    FXPatrouilleSprite sp=new FXPatrouilleSprite(40, 33, "usedArmes.png", null);
         sp.create();
     getChildren().add(sp);
     sp.toFront();

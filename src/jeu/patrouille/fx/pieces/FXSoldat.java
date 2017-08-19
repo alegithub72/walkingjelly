@@ -51,6 +51,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     protected void buildGroupSigns() {
         classmentImg.setTranslateX(FXCarte.TILE_SIZE - 20);
         classmentImg.setTranslateY(0);
+
         blessureImg.setTranslateX(0);
         blessureImg.setTranslateY(FXCarte.TILE_SIZE - 10);
     }

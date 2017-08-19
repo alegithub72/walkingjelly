@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.Lesion;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Soldat;
 
 /**
  *
@@ -19,7 +21,7 @@ public  class BaseAction extends AbstractAction {
     public static  BaseAction QUIT=new BaseAction(-1, -1, -1, -1,-1, null, null);
     public static  Comparator baseActionCompratorImpl=new BaseActionComparatorImpl();
     Piece protagoniste;
-    Piece[] antagonistes;
+    Piece antagoniste;
     boolean used;
     int ordreInitiative;
 
@@ -62,14 +64,14 @@ public int compareTo(BaseAction b) {
         return protagoniste;
     }
     
-    public BaseAction(int type, int i0, int j0, int i1, int j1, Piece protagoniste, Piece[] antagonistes) {
+    public BaseAction(int type, int i0, int j0, int i1, int j1, Piece protagoniste, Piece antagoniste) {
         this.type = type;
         this.j0 = j0;
         this.i0 = i0;
         this.j1 = j1;
         this.i1 = i1;
         this.protagoniste = protagoniste;
-        this.antagonistes = antagonistes;
+        this.antagoniste = antagoniste;
         used=false;             
     }
 
@@ -113,6 +115,14 @@ public int compareTo(BaseAction b) {
     @Override
     public BaseAction clone() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Piece getAntagoniste() {
+        return antagoniste;
+    }
+
+    public void setAntagoniste(Piece antagoniste) {
+        this.antagoniste = antagoniste;
     }
 
     

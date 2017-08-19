@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.armes.GeneriqueArme;
+import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
+import jeu.patrouille.coeur.pieces.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.terrains.Terrain;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -31,6 +35,7 @@ import jeu.patrouille.coeur.terrains.Interior;
 import jeu.patrouille.coeur.terrains.Porte;
 import jeu.patrouille.coeur.terrains.Street;
 import jeu.patrouille.coeur.terrains.StreetBorder;
+import jeu.patrouille.fx.board.FXCarte;
 
 /**
  *
@@ -50,8 +55,6 @@ public class Carte implements GraficCarteInterface{
         fileMap=file;
         mapDelimiter="q{1}\\R?Q?";
         mapInput=new FileInputStream(new File(fileMap));
-
-        loadMap();
         System.out.println("map"+fileMap);
     }
     public Carte(){
@@ -94,7 +97,7 @@ public class Carte implements GraficCarteInterface{
 
     
     
-public void decoderTaille(String line){
+private void decoderTaille(String line){
         int ipos=line.indexOf('x');
         String is=line.substring(0,ipos);
         int i_taille=Integer.parseInt(is);
@@ -135,7 +138,7 @@ public void decoderTaille(String line){
            if(i!=37) mapTxt.append(ra);
     
     } 
-    public void setTerrain(int i, int j, int t) {
+    private void setTerrain(int i, int j, int t) {
         terrain[i][j] = new Terrain(i, j);
     }
 
@@ -310,6 +313,23 @@ public void decoderTaille(String line){
             return 0;
         }
     }
+    
+    
+    public double distance(int i0,int j0,int i1,int j1,int tilesize){
+    double x0=(j0*tilesize)+(tilesize/2);
+    double y0=(i0*tilesize)+(tilesize/2);
+    double y1=(i1*tilesize)+(tilesize/2);
+    double x1=(j1*tilesize)+(tilesize/2);
+    double x1x0=x1-x0;
+    double y1y0=y1-y0;
+    double pouce=1/FXCarte.TILE_SIZE;
+   // x1x0=x1x0*x1x0;
+   // y1y0=y1y0*y1y0;
+    double dist=Math.sqrt(Math.pow(y1y0,2)+Math.pow(x1x0,2));
+    return dist*pouce;
+    
+    
+    }
 
     public PointCarte[] getLigne(Terrain p0, Terrain p1) {
 
@@ -317,7 +337,7 @@ public void decoderTaille(String line){
 
     }
 
-    public void elaborationFileLine(int i, String line) {
+    private void elaborationFileLine(int i, String line) {
         char[] l = line.toCharArray();
         char c1='x';
         char c2='x';
@@ -456,33 +476,9 @@ public void decoderTaille(String line){
         System.out.println(c.getMapTxt());
 
     }
-    /**
-     * @todo un sacco de lavoro
-     * @param s
-     * @param a 
-     */
-    public void makeMarcheAction(Soldat s, BaseAction a) {
-        //TODO rendere effettive le modifiche .....
-        int i0=a.getI0(),j0=a.getJ0();
-        int i1=a.getI1(),j1=a.getJ1();
-        if(terrain[i0][j0].getPiece()==s)
-            terrain[i0][j0] .setPiece(null); 
-        if(terrain[i0][j0].isInExtra(s))
-            terrain[i0][j0].remvoeExtraPiece(s);
-        
-        System.out.println("updated terrain --null-->"+a.getI0()+"--->"+a.getJ0());
-        
-        if(terrain[i1][j1].getPiece()==null)  
-            terrain[i1][j1].setPiece(s);
-        else terrain[i1][j1].addExtraPiece(s);
-        //TODO if enemy do a close fight...!!!!
-        
-        
-        System.out.println("updated terrain --soldat-"+s.toStringSimple()+"---->"+a.getI1()+"--->"+a.getJ1());
-        s.setI(i1);
-        s.setJ(j1);
-        System.out.println("updated position -soldat--->"+s.toStringSimple()+"--->"+a.getI1()+","+a.getJ1());
-    }
+
+    
+
     public void desplacementSoldat(Piece s,int i,int j){
         s.setI(i);
         s.setJ(j);

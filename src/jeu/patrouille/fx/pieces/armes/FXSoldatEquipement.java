@@ -38,12 +38,11 @@ public class FXSoldatEquipement extends Parent{
       for (int i = 0; i < list.length; i++) {
               GeneriqueEquipment arm = list[i];
               fxarmes[n] = FXEquipment.createIstance(arm.getModel());
-              double y0=createFXEquipment(fxarmes[n], n);              
+              double y0=createFXEquipment(fxarmes[n], n);       
+              GeneriqueArme a = ((GeneriqueArme) arm);
+              if(a==s.getArmeUtilise()) ((FXEquipment)fxarmes[n]).addUsed(fxarmes[n].getW());              
               if(n>0) y0=y0-40;
               n++;
-              
-              GeneriqueArme a = ((GeneriqueArme) arm);
-              if(a==s.getArmeUtilise()) ((FXEquipment)fxarmes[i]).addUsed(fxarmes[i].getW());
               n =n+ visualizeMagazin(a, n,y0);
 
       }

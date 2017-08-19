@@ -11,11 +11,16 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.armes.GeneriqueArme;
+import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-
+import jeu.patrouille.fx.board.FXCarte;
+import jeu.patrouille.coeur.pieces.Lesion;
 /**
  *
  * @author Alessio Sardaro
@@ -34,6 +39,9 @@ public class MoteurDeJoeur implements Runnable{
     int activeJeur;
     int iniativeWinner;
     Thread threadTurn=null;
+    LesionEstimation lesionEsti;
+    
+    
     public MoteurDeJoeur(GeneriqueJoeurs jUS,GeneriqueJoeurs jHOST,Carte carte) throws IOException{
         this.c=carte;
         this.jUS=jUS;
@@ -41,6 +49,8 @@ public class MoteurDeJoeur implements Runnable{
         patrouille=jUS.getEquip();
         hostile=jHOST.getEquip();
         listgrafic=new ArrayList();
+        lesionEsti=new LesionEstimation();
+        
      
        
     }
@@ -97,7 +107,9 @@ public class MoteurDeJoeur implements Runnable{
             if (p.getPieceType() == Piece.ActeurType.SOLDAT) {
                 ps = (Soldat) p;
             }
+            try{
             p.addAction(ac);
+            }catch(Exception e){};
            
         } while (ac == null);
     }
@@ -254,7 +266,9 @@ public class MoteurDeJoeur implements Runnable{
     }
    private void makeAction(Soldat s,BaseAction a){
        if(a.getType()==BaseAction.MARCHE){
-           c.makeMarcheAction(s, a);
+           makeMarcheAction(s, a);
+       }else if(a.getType()==BaseAction.FEU){
+       
        }
     
    }
@@ -332,6 +346,76 @@ public class MoteurDeJoeur implements Runnable{
                }
            });
        }
+    }
+    
+    /**
+     * @todo un sacco de lavoro
+     * @param s
+     * @param a 
+     */
+    public void makeMarcheAction(Soldat s, BaseAction a) {
+        //TODO rendere effettive le modifiche .....
+        
+        int i0=a.getI0(),j0=a.getJ0();
+        int i1=a.getI1(),j1=a.getJ1();
+        if(c.terrain[i0][j0].getPiece()==s)
+            c.terrain[i0][j0] .setPiece(null); 
+        if(c.terrain[i0][j0].isInExtra(s))
+            c.terrain[i0][j0].remvoeExtraPiece(s);
+        
+        System.out.println("updated terrain --null-->"+a.getI0()+"--->"+a.getJ0());
+        
+        if(c.terrain[i1][j1].getPiece()==null)  
+            c.terrain[i1][j1].setPiece(s);
+        else c.terrain[i1][j1].addExtraPiece(s);
+        //TODO if enemy do a close fight...!!!!
+        
+        s.setAction(BaseAction.MARCHE);
+        System.out.println("updated terrain --soldat-"+s.toStringSimple()+"---->"+a.getI1()+"--->"+a.getJ1());
+        s.setI(i1);
+        s.setJ(j1);
+        System.out.println("updated position -soldat--->"+s.toStringSimple()+"--->"+a.getI1()+","+a.getJ1());
+    }    
+
+
+        public void makeFeuAction(BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException{
+            
+            Soldat s=(Soldat)act.getProtagoniste();
+            Soldat target=(Soldat)act.getAntagoniste();
+            GeneriqueArme arme=s.getArmeUtilise();
+            double dist=c.distance(act.getI0(), act.getJ0(), act.getI1(), act.getJ1(), FXCarte.TILE_SIZE);
+            int shotN=s.fire(dist);
+            int dCM=0;
+            if(arme.getMF()==GeneriqueArme.MODE_FEU_BU) 
+                dCM=dCM-1;
+            else if(arme.getMF()==GeneriqueArme.MODE_FEU_FA)
+                dCM=dCM-3;
+
+            if(s.getAction()==BaseAction.MARCHE)dCM=dCM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
+            else if(s.getAction()==BaseAction.COURS)dCM=dCM-4;
+            else if(act.getType()==BaseAction.VISER_FEU)dCM=dCM+1;
+
+
+
+            if(s.getPose()==Piece.Pose.PRONE) dCM=dCM+1;
+            if(target.getAction()==BaseAction.COURS) dCM=dCM-2;
+            else if(target.getAction()==BaseAction.MARCHE)dCM=dCM-1;
+            if(target.getPose()==Piece.Pose.PRONE) dCM=dCM-1; 
+
+
+            int score=0;
+            for(int hits=0;hits<shotN;hits++){
+                int dice=s.getBoss().dice(10);
+                int tg=s.getArmeUtilise().porteModifier(dist)+s.getCA()+dCM;
+                if(dice<=tg) score++;
+            }
+            //TODO choose target.........
+            for (int sc=0;sc<score;sc++){
+                int location=s.getBoss().dice(10);
+                int blessure=s.getBoss().dice(10)-arme.getEDP();
+                Lesion l= lesionEsti.getLesion(location, blessure);
+                target.blessure(l);
+            }
     }
      
 }

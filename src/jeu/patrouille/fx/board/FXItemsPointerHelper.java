@@ -9,7 +9,9 @@ package jeu.patrouille.fx.board;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.Lesion;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
 import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
@@ -102,7 +104,7 @@ public class FXItemsPointerHelper {
         act.setJ1(j1);
     
     }
-    public void addSoldataSelectioneeAction(){
+    public void addSoldataSelectioneeAction()throws Exception{
         Soldat s=seletctionee.getSoldat();
         s.addAction(act);
     
@@ -115,10 +117,13 @@ public class FXItemsPointerHelper {
     
     public boolean rangeMarcheSoldat(double range){
              Soldat s=seletctionee.getSoldat();
+             int doubled=1;
+             if(s.getStatu()==Lesion.Statu.IMPOSSIBLE_COURSE)
+                doubled=2;   
       return ( range>0 
               && s.getActionPoint()>0 
-              && range<=(s.getActionPoint()*FXCarte.TILE_SIZE));
-    
+              && range<=(s.getActionPoint()*(FXCarte.TILE_SIZE*doubled)));
+   
     }
     
    public PointCarte carteValiderRoute(){

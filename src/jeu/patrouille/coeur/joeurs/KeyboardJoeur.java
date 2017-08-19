@@ -47,11 +47,13 @@ public class KeyboardJoeur extends Joeur {
         Soldat s = new Soldat("Sgt.", "Smith", 7, 8, 6, 5, 6,
                 5, 5, 8, 9,Piece.Direction.N,this);
            BenelliM3 ben=new BenelliM3();
-           
-            GeneriqueArme a[] = {ben,new M16()};
+           M16 m16=new M16();
+            GeneriqueArme a[] = {ben,m16};
             s.setArmeEquip(a);
             s.setClassement(Soldat.CLASS_SGT);
             s.setArraN(0);
+            s.setArmeUtilise(m16);
+            
         equipe[0] = s;
          
         s = new Soldat("Rifleman", "Williams", 7, 8, 6, 5, 6,
