@@ -7,8 +7,8 @@ package jeu.patrouille.coeur.joeurs;
 
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.armes.AK74;
-import jeu.patrouille.coeur.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.AK74;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;

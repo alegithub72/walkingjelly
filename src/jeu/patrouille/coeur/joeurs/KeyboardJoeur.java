@@ -7,9 +7,9 @@ package jeu.patrouille.coeur.joeurs;
 
 import java.util.Scanner;
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.armes.GeneriqueArme;
-import jeu.patrouille.coeur.armes.BenelliM3;
-import jeu.patrouille.coeur.armes.M16;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.BenelliM3;
+import jeu.patrouille.coeur.equipments.armes.M16;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 

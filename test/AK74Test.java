@@ -10,11 +10,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import jeu.patrouille.coeur.armes.AK74;
-import jeu.patrouille.coeur.armes.GeneriqueArme;
-import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
-import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
-import jeu.patrouille.coeur.armes.exceptions.PaDeMagazineException;
+import jeu.patrouille.coeur.equipments.armes.AK74;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 

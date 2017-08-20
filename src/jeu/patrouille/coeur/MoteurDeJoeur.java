@@ -9,11 +9,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.armes.GeneriqueArme;
-import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
-import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.actions.CoursAction;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.LesionEstimation;
@@ -149,13 +152,18 @@ public class MoteurDeJoeur implements Runnable{
         System.out.println("-------------------RUN THREAD<----------------------"+Thread.currentThread().getId());
         debutJeours();   
         System.out.println("--------------------------->start tread turn :"+turn);
-        resolveAllRondeActions();
+        try {
+            resolveAllRondeActions();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        
 
     }
 
 
     
-   public  void resolveAllRondeActions(){        
+   public  void resolveAllRondeActions()throws Exception{        
         turn++;
         List<BaseAction> listAllActionUS=new ArrayList<>();
         List<BaseAction> listAllActionHost=new ArrayList<>();
@@ -199,7 +207,7 @@ public class MoteurDeJoeur implements Runnable{
    
    
    }
-   void resolveTempPas(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll){
+   void resolveTempPas(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll)throws Exception{
         BaseAction[] arrayOrderd=null;
        if(iniativeWinner==JEUR_US) 
        {
@@ -228,14 +236,17 @@ public class MoteurDeJoeur implements Runnable{
             while(k<arrayOrderd.length) {
 
 
-                BaseAction b=arrayOrderd[k];
-                BaseAction clone=b.clone();
-                Soldat s=(Soldat)b.getProtagoniste();
+                BaseAction act=arrayOrderd[k];
+                BaseAction clone=act.clone();
+                Soldat s=(Soldat)act.getProtagoniste();
                 //s.resetAction();
-
-                System.out.println("--MJ PLAY STEP--->"+b+"<----->"+b.getProtagoniste().toStringSimple()+"<----------");
+                boolean ch=s.shellShockTest();
+                BaseAction fugitivAct=null;
+                if(ch) act=fugitivAct;//TODO   fugitiv action
+                
+                System.out.println("--MJ PLAY STEP--->"+act+"<----->"+act.getProtagoniste().toStringSimple()+"<----------");
                 //cosi sono valide le posizioni di tutti.....
-                playAllGraficInterface(b);
+                playAllGraficInterface(act);
              
 //                try {
 //                Thread.currentThread().wait(0);
@@ -250,25 +261,25 @@ public class MoteurDeJoeur implements Runnable{
                 while(allAnimOn());
                 System.out.println("------------Svegliaaaaaaaa="+allAnimOn());
                 
-                makeAction((Soldat)b.getProtagoniste(), b);   
+                makeAction((Soldat)act.getProtagoniste(), act);   
                 refreshAllGraficInterface();
                  //TODO vedere per aggiorantre la mappa quando!!!!
                  k++;
                 
                 
                 //break;
-            };
+            }
             System.out.println("fine TD pas "+td);
             
         }
         
     
     }
-   private void makeAction(Soldat s,BaseAction a){
+   private void makeAction(Soldat s,BaseAction a)throws Exception{
        if(a.getType()==BaseAction.MARCHE){
            makeMarcheAction(s, a);
        }else if(a.getType()==BaseAction.FEU){
-       
+           makeFeuAction(a);
        }
     
    }
@@ -280,7 +291,7 @@ public class MoteurDeJoeur implements Runnable{
         return b;
     }
     
-    public void playGame(){
+    public void playGame()throws Exception{
     debutJeours();
     do{
          
@@ -385,22 +396,27 @@ public class MoteurDeJoeur implements Runnable{
             GeneriqueArme arme=s.getArmeUtilise();
             double dist=c.distance(act.getI0(), act.getJ0(), act.getI1(), act.getJ1(), FXCarte.TILE_SIZE);
             int shotN=s.fire(dist);
-            int dCM=0;
+            int dCM=-s.isWounded();
+
             if(arme.getMF()==GeneriqueArme.MODE_FEU_BU) 
                 dCM=dCM-1;
             else if(arme.getMF()==GeneriqueArme.MODE_FEU_FA)
                 dCM=dCM-3;
-
+            
             if(s.getAction()==BaseAction.MARCHE)dCM=dCM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
             else if(s.getAction()==BaseAction.COURS)dCM=dCM-4;
-            else if(act.getType()==BaseAction.VISER_FEU)dCM=dCM+1;
+            
+            if(act.getType()==BaseAction.VISER_FEU)dCM=dCM+1;
 
 
 
             if(s.getPose()==Piece.Pose.PRONE) dCM=dCM+1;
+            
+            
             if(target.getAction()==BaseAction.COURS) dCM=dCM-2;
             else if(target.getAction()==BaseAction.MARCHE)dCM=dCM-1;
             if(target.getPose()==Piece.Pose.PRONE) dCM=dCM-1; 
+            
 
 
             int score=0;
@@ -409,12 +425,15 @@ public class MoteurDeJoeur implements Runnable{
                 int tg=s.getArmeUtilise().porteModifier(dist)+s.getCA()+dCM;
                 if(dice<=tg) score++;
             }
-            //TODO choose target.........
+            //TODO choose other target.........if full automatic in the line of sight
             for (int sc=0;sc<score;sc++){
                 int location=s.getBoss().dice(10);
                 int blessure=s.getBoss().dice(10)-arme.getEDP();
-                Lesion l= lesionEsti.getLesion(location, blessure);
+
+                Lesion l= lesionEsti.getLesion(location, blessure);   
+                //TODO blindage check and cover check
                 target.blessure(l);
+    
             }
     }
      

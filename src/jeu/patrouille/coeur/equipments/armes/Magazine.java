@@ -3,9 +3,10 @@
  * using javafx layer coding game all right reserved.
  * 
  */
-package jeu.patrouille.coeur.armes;
+package jeu.patrouille.coeur.equipments.armes;
 
-import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
+import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 
 /**
  *

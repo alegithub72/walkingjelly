@@ -6,8 +6,8 @@
 package jeu.patrouille.fx.pieces.armes;
 
 import javafx.scene.Parent;
-import jeu.patrouille.coeur.armes.GeneriqueArme;
-import jeu.patrouille.coeur.armes.GeneriqueEquipment;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;

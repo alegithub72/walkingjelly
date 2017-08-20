@@ -3,9 +3,9 @@
  * using javafx layer coding game all right reserved.
  * 
  */
-package jeu.patrouille.coeur.armes;
+package jeu.patrouille.coeur.equipments.armes;
 
-import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 
 /**
  *

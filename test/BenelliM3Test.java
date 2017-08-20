@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-import jeu.patrouille.coeur.armes.GeneriqueArme;
-import jeu.patrouille.coeur.armes.BenelliM3;
-import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
-import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
-import jeu.patrouille.coeur.armes.exceptions.PaDeMagazineException;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.BenelliM3;
+import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

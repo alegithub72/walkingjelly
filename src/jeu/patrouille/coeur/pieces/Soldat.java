@@ -9,16 +9,17 @@ package jeu.patrouille.coeur.pieces;
 
 import java.util.ArrayList;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.armes.GeneriqueArme;
-import jeu.patrouille.coeur.armes.GeneriqueEquipment;
-import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
-import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
+import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
 import jeu.patrouille.coeur.pieces.Lesion.*;
 import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
 import jeu.patrouille.coeur.pieces.exceptions.IncoscientSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.MainArmeSoldatException;
+import jeu.patrouille.coeur.pieces.exceptions.NotSautOrCourseSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
 
 /**
@@ -48,9 +49,17 @@ public class Soldat extends Piece {
     GeneriqueArme armeUtilise;
     Pose pose=Pose.DROIT;
     GeneriqueEquipment[] equipmentGen;
-    boolean actived;
+    boolean equipePorte;
+    boolean incoscient;
+    boolean objective;
+    boolean active;
+    boolean choc;
     Statu st;
 
+
+ 
+   
+    
     public Soldat(String nom,String nomDeFamilie,
     int competenceArme,
     int connaissanceArme,
@@ -73,26 +82,75 @@ public class Soldat extends Piece {
         this.sante=sante;
         this.moral=moral;
         this.commandControler=commandControler;
-        this.actived=false;
+        this.equipePorte=false;
         st=Statu.NORMAL;
+        incoscient=false;
+        objective=false;
+        active=false;
+        choc=false;
        
         
     
     }
 
-    public boolean isActived() {
-        return actived;
+    public boolean isDoubled() {
+        return st==Statu.GRAVE;
     }
 
-    public void setActived(boolean actived) {
-        this.actived = actived;
+    public int isWounded(){
+        return 6-sante;
+        
     }
-    
+
+    public boolean isEquipePorte() {
+        return equipePorte;
+    }
+
+    public void setEquipePorte(boolean equipePorte) {
+        this.equipePorte = equipePorte;
+    }
+
+
     public void blessure(Lesion l){
-        if(l.statu==Lesion.Statu.MORT) sante=-10;
-        else this.sante=sante-l.blessure;
-        if(sante<=0 && sante>-10) this.st=Statu.INCOSCIENT;
-        else if(sante<=-10) this.st=Statu.MORT;
+        if(l.statu==Lesion.Statu.CRITIQUE 
+                && l.location==Lesion.TETE) {
+            sante=-10;
+            st=Statu.CRITIQUE;
+        }
+        else {
+            this.sante=sante-l.blessure;
+            if(null!=l.statu) switch (l.statu) {
+                case CRITIQUE:
+                    this.moral=moral-2;
+                    tempDesponible=tempDesponible-boss.dice(10);
+                    this.pose=Pose.PRONE;
+                    break;
+                case GRAVE_TETE:
+                    moral=moral-1;
+                    tempDesponible=tempDesponible-boss.dice(6);                    
+                    break;
+                case GRAVE:
+                    moral=moral-1;
+                    tempDesponible=tempDesponible-boss.dice(6);
+                    if(l.location==Lesion.BRAS_DROITE ||
+                            l.location==Lesion.BRAS_GAUCHE)
+                        armeUtilise=null;
+                    //TODO one action per turn
+                    break;
+                case LEGER_BLESSE:
+                    tempDesponible=tempDesponible-4;
+                    break;
+                case MANQUE:
+                    tempDesponible=tempDesponible-2;
+                    
+                default:
+                    break;
+            }
+           
+        }
+        
+        objective=true;
+
         
     }
 
@@ -173,7 +231,7 @@ public class Soldat extends Piece {
         return courage;
     }
 
-    public int getS() {
+    public int getSante() {
         return sante;
     }
 
@@ -259,10 +317,13 @@ public class Soldat extends Piece {
 
 
     public boolean isPossileDesplacer(){
-        return tempDesponible>0 || st!=Statu.MORT ||
-                   st!=Statu.IMMOBILSER
-                    || st!=Statu.INCOSCIENT;
+        return tempDesponible>0 || st!=Statu.GRAVE_TETE ||
+                   st!=Statu.CRITIQUE || sante<=-10 || choc;
         
+    }
+    public boolean isPossibleCourse(){
+        return st!=Statu.GRAVE;
+       
     }
     @Override
     public int getActionPoint(){
@@ -274,7 +335,12 @@ public class Soldat extends Piece {
                 + "" + nom +" "+ nomDeFamilie +"";
                 
     }
-   
+    public boolean isTempDisponiblePour(int actiontype){
+        int baseTempDisponible=BaseAction.ACTIONPOINTVALOR[actiontype];
+        if(isDoubled())baseTempDisponible=baseTempDisponible*2;
+        return (tempDesponible>=baseTempDisponible);
+        
+    }
     public void resetAction(){
     this.actionsPool=new ArrayList<>();
     }
@@ -283,27 +349,33 @@ public class Soldat extends Piece {
         return equipmentGen;
     }
 
-   
+ public boolean isIncoscient(){
+        return st==Statu.GRAVE_TETE || sante<=0;
+ 
+ }
    //TODO inserire vairiabile status UNCOSCIOUS,IMMOBILIZE,NORMAL,ETC....vedere bene health doc..
     @Override
     public void addAction(BaseAction act) throws Exception{
         if(sante==5) super.addAction(act);
-        else if(st==Statu.MORT){
+        else if(st==Statu.CRITIQUE && sante<=-10){
             throw new KilledSoldatException();
         }
-        else if(st==Statu.IMMOBILSER ){
+        else if(st==Statu.CRITIQUE ){
            throw new ImmobilzedSodlatException();
-        }else if(st==Statu.INCOSCIENT){
-            throw new IncoscientSoldatException();
-        }else if(st==Statu.LEGER_BLESSE){
+        }else if(st==Statu.GRAVE_TETE  ){
+            throw new ImmobilzedSodlatException();
+        }else if(st==Statu.GRAVE){
+            if(act.getType()==BaseAction.COURS ||
+                    act.getType()==BaseAction.SAUT)
+                throw new NotSautOrCourseSoldatException();
             super.addAction(act);
-        }else if(st==Statu.UN_ACTION){
-            if(this.actionsPool.size()>1) 
+        }else if(st==Statu.LEGER_BLESSE){
+            
+            super.addAction(act);
+        }else if(st==Statu.GRAVE_BRASE){
+            if (this.actionsPool.size() > 1) 
                 throw new UnActionSoldatException();
-        }else if(st==Statu.MAIN_ARME_SERIOUX){
-            if(armeUtilise.getArmeFeuModel()!=GeneriqueArme.TEMP_PISTOL 
-                    && (act.getType()==BaseAction.FEU || act.getType()==BaseAction.OP_FEU ))
-                throw new MainArmeSoldatException();//TODO migliorare su tutte le azioni di fuoco
+            armeUtilise=null;
             super.addAction(act);
             
         }
@@ -311,5 +383,39 @@ public class Soldat extends Piece {
         
         
     }
-   
+   public boolean isObjective(){
+       return this.objective;
+   }
+   //TODO riguardare le regole
+   public boolean shellShockTest(){
+       boolean b=false;
+       if(isObjective()) 
+           b= boss.dice(10)<=moral;//TODO vedere i modificatori di morale
+       if(b) choc=true ;//TODO add an action run away nel pool di action
+       return choc;
+   }
+   public void notBandage(){
+      
+      boolean b= boss.dice(10)<=10+sante;
+      if(!b) sante=-10;//TODO at ending activqtion
+   }
+    public boolean isActive() {
+        return active;
+    }
+
+    public boolean isChoc() {
+        return choc;
+    }
+
+
+
+
+
+
+   public void resetRondCheck(){
+       this.objective=false;
+       this.active=false;
+       
+
+   }
 }

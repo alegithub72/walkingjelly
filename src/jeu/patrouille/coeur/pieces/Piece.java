@@ -63,9 +63,11 @@ public abstract class Piece  {
                 newActionPool.addAll(l);
             }
         }
+        
         spreadDone=true;
+        if(newActionPool.size()>0) this.actionsPool=newActionPool;
         System.out.println("******SRPEAD END*****>");
-        this.actionsPool=newActionPool;
+     
     }
     public List<BaseAction> getBaseActionSum(int td){
         //System.out.println("----GET ACTION SUM START--------->"+spreadDone);

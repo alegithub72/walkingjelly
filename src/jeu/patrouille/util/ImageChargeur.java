@@ -20,16 +20,18 @@ import jeu.patrouille.fx.sprite.CursorHelper;
  * @author appleale
  */
 public class ImageChargeur {
-    public static int CURSOR_HOST_RANGE=0,CURSOR_US_RANGE=1,CURSOR_FORBIDDEN=2;
+    public static int CURSOR_HOST_RANGE=0,CURSOR_US_RANGE=1,CURSOR_FORBIDDEN=2,CURSOR_CROSSHAIR=3;
     CursorHelper cursoHostRange = new CursorHelper(ImageChargeur.CURSOR_HOST_RANGE);
     CursorHelper cursorUSRange = new CursorHelper(ImageChargeur.CURSOR_US_RANGE);
-    CursorHelper cursorForbidenRange=new CursorHelper(ImageChargeur.CURSOR_FORBIDDEN);    
+    CursorHelper cursorForbidenRange=new CursorHelper(ImageChargeur.CURSOR_FORBIDDEN);  
+    CursorHelper cursorCrooshair=new CursorHelper(ImageChargeur.CURSOR_CROSSHAIR);
     Image[] array;
      ImageChargeur() {
         array=new Image[5];
         array[0]=new Image("rangeArrowHost.png");
         array[1]=new Image("rangeArrow2.png");
         array[2]=new Image("forbiddenCursor.png");
+        array[3]=new Image("crosshair.png");
         arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
         arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
         arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
@@ -37,13 +39,15 @@ public class ImageChargeur {
         cursoHostRange.buildFrameImages(array[CURSOR_HOST_RANGE]);
         cursorForbidenRange.buildFrameImages(array[CURSOR_FORBIDDEN]);
         cursorUSRange.buildFrameImages(array[CURSOR_US_RANGE]);
+
+        cursorCrooshair.buildFrameImages(array[CURSOR_CROSSHAIR]);
     }
      
     ImageCursor arrowCRRight;
     ImageCursor arrowCRLeft;
     ImageCursor arrowCRUp;
     ImageCursor arrowCRDown;  
-   
+    
    static ImageChargeur singleton;
      public static ImageChargeur getInstance(){
     if(singleton==null) singleton=new ImageChargeur();
@@ -59,6 +63,7 @@ public class ImageChargeur {
             return this.cursoHostRange;
         else if(type==ImageChargeur.CURSOR_FORBIDDEN)
             return this.cursorForbidenRange;
+        else if(type==CURSOR_CROSSHAIR) return this.cursorCrooshair;
         return null;
     } 
 

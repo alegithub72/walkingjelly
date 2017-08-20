@@ -7,8 +7,8 @@ package jeu.patrouille.fx.menu.eventhandler;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.board.FXPlanche;
 /**
  *
  * @author appleale
@@ -17,16 +17,21 @@ public class ItemMenuRangeDisplayHandler implements EventHandler<MouseEvent>{
     FXCarte fxcarte;
     boolean outOfScroll=false;
     int count=0;
+    int actionType;
     public ItemMenuRangeDisplayHandler(FXCarte fxcarte,int actionType){
         this.fxcarte=fxcarte;
+        this.actionType=actionType;
     }
   
     @Override
     public void handle(MouseEvent event) {
          count++;
          if (!fxcarte.scrollCanvas(event.getSceneX(), event.getSceneY())) {
-            fxcarte.displayMarcheRangeAction(event.getSceneX(),event.getSceneY());
-
+             
+           if(actionType==BaseAction.MARCHE) 
+               fxcarte.displayMarcheRangeAction(event.getSceneX(),event.getSceneY());
+           else if(actionType==BaseAction.FEU)
+               fxcarte.displayFeuRangeAction(event.getSceneX(), event.getSceneY());
 
          }
         if(count>2) {

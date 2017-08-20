@@ -3,7 +3,7 @@
  * using javafx layer coding game all right reserved.
  * 
  */
-package jeu.patrouille.coeur.armes.exceptions;
+package jeu.patrouille.coeur.equipments.armes.exceptions;
 
 /**
  *

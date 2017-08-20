@@ -5,9 +5,9 @@
  */
 package jeu.patrouille.fx.pieces.armes;
 
-import jeu.patrouille.coeur.armes.GeneriqueEquipment;
+import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
-import jeu.patrouille.coeur.armes.GeneriqueEquipment.*;
+import jeu.patrouille.coeur.equipments.GeneriqueEquipment.*;
 /**
  *
  * @author appleale

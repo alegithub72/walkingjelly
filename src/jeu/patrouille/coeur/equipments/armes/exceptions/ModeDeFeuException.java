@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jeu.patrouille.coeur.armes.exceptions;
+package jeu.patrouille.coeur.equipments.armes.exceptions;
 
 /**
  *

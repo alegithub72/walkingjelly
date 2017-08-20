@@ -40,34 +40,33 @@ public class LesionEstimation {
             else if(n==9) position=Lesion.BRAS_DROITE;
             else if(n==10) position=Lesion.BRAS_GAUCHE;
          if(m<0)   {
-             blessure= estimation[position][Lesion.SERIAUX];
-             gravite=Lesion.SERIAUX;
-             st=Statu.IMMOBILSER;
+             blessure= estimation[position][Lesion.CRITIQUE];
+             gravite=Lesion.CRITIQUE;
+             st=Statu.CRITIQUE;
           
          }
             else if(m>=1 && m<=2) {
-                blessure= estimation[position][Lesion.RISQUER];
-                gravite=Lesion.RISQUER;
-                st=Statu.IMPOSSIBLE_COURSE;
+                blessure= estimation[position][Lesion.GRAVE];
+                gravite=Lesion.GRAVE;
+                st=Statu.GRAVE;
 
             }
             else if(m>=3 && m<=5){
                 blessure= estimation[position][Lesion.LEGER];
                 gravite=Lesion.LEGER;
+                st=Statu.LEGER_BLESSE;
             }
             else if(m>6) {
                 blessure= estimation[position][Lesion.MANQUE];
                 gravite=Lesion.MANQUE;
+                st=Statu.MANQUE;
                 
             }
-         if(position==Lesion.TETE && gravite==Lesion.SERIAUX)
-             st=Statu.MORT;
-         if(position==Lesion.TETE && gravite==Lesion.RISQUER)
-             st=Statu.IMMOBILSER;
+         if(position==Lesion.TETE && gravite==Lesion.GRAVE)
+             st=Statu.GRAVE_TETE;
          if((position==Lesion.BRAS_DROITE || position==Lesion.BRAS_GAUCHE)
-                 && gravite==Lesion.RISQUER)st=Statu.UN_ACTION;
-         if((position==Lesion.BRAS_DROITE|| position==Lesion.BRAS_GAUCHE)
-                 && gravite==Lesion.SERIAUX) st=Statu.MAIN_ARME_SERIOUX;
+                 && gravite==Lesion.GRAVE)st=Statu.GRAVE_BRASE;
+
         
        return new Lesion(position, gravite,blessure,st);
       }

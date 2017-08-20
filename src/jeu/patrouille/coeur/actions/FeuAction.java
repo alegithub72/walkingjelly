@@ -22,8 +22,9 @@ public class FeuAction extends BaseAction{
     public void calculeActionPointDesActions() {
         int apbase= BaseAction.ACTIONPOINTVALOR[type];
         Soldat s=(Soldat)protagoniste;
-        if(s.getStatu()==Lesion.Statu.IMPOSSIBLE_COURSE)
+        if(s.getStatu()==Lesion.Statu.GRAVE || s.getStatu()==Lesion.Statu.GRAVE_BRASE)
         apbase=apbase*2;
+        tempActivite=apbase;
        // super.calculeActionPointDesActions(); //To change body of generated methods, choose Tools | Templates.
     }
     

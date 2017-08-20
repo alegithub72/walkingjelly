@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jeu.patrouille.coeur.armes;
+package jeu.patrouille.coeur.equipments.armes;
 
-import jeu.patrouille.coeur.armes.exceptions.LoadMagazineFiniException;
-import jeu.patrouille.coeur.armes.exceptions.ModeDeFeuException;
-import jeu.patrouille.coeur.armes.exceptions.PaDeMagazineException;
+import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
+import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
 
 /**
  *

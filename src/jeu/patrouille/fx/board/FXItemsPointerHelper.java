@@ -118,7 +118,7 @@ public class FXItemsPointerHelper {
     public boolean rangeMarcheSoldat(double range){
              Soldat s=seletctionee.getSoldat();
              int doubled=1;
-             if(s.getStatu()==Lesion.Statu.IMPOSSIBLE_COURSE)
+             if(s.isDoubled())
                 doubled=2;   
       return ( range>0 
               && s.getActionPoint()>0 

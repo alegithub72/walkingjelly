@@ -5,12 +5,16 @@
  */
 package jeu.patrouille.fx.menu.eventhandler;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.board.FXPlanche;
+import jeu.patrouille.fx.menu.MenuItem;
 import jeu.patrouille.fx.menu.WalkItem;
 
 /**
@@ -19,17 +23,27 @@ import jeu.patrouille.fx.menu.WalkItem;
  */
 public class ItemMenuConfirmMarcheEventHandler  implements EventHandler<MouseEvent>{
     FXCarte fxcarte;
-WalkItem item;
-    public ItemMenuConfirmMarcheEventHandler(WalkItem walk,FXCarte fxcarte) {
+    MenuItem item;
+    public ItemMenuConfirmMarcheEventHandler(MenuItem item,FXCarte fxcarte) {
         this.fxcarte=fxcarte;
-        this.item=walk;
+        this.item=item;
     }
 
     @Override
     public void handle(MouseEvent event) {
         //TODO modificare il cursore
+       
         if (event.getButton() == MouseButton.PRIMARY) {
-            fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
+            
+            try {
+                if(item.getActionType()==BaseAction.MARCHE)
+                    fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
+                else if(item.getActionType()==BaseAction.FEU){
+                    //TODO something
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
             fxcarte.refreshCarte();
         }else if(event.getButton()==MouseButton.SECONDARY){
             fxcarte.annulleCommand();
