@@ -42,39 +42,44 @@ public class AIJoeur extends GeneriqueJoeurs{
     }
      void costruireHostile() {
         AISoldat s = new AISoldat("Leader", "Tribu ", 5, 5, 5, 4,
-                4, 5, 0, 7, 8,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, 0, 7, 8,Piece.Direction.S,this);
             GeneriqueArme a[] = {new AK74()};
             s.setArmeEquip(a);
             s.setClassement(Soldat.CLASS_SGT);
             s.setLeaderComportement(0, 0, 0, 0);
             s.setArraN(0);
+            s.setArmeUtilise(a[0]);
         equipe[0] = s;
         
         s = new AISoldat("Militia", "Taleban A", 5, 5, 5, 4,
-                4, 7, 0, 7, 6,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, 0, 7, 6,Piece.Direction.S,this);
             GeneriqueArme a1[] = {new AK74()};
             s.setArmeEquip(a1);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
             s.setArraN(1);
+            s.setArmeUtilise(a1[0]);
+           
         equipe[1] = s;
         
         s = new AISoldat("Militia", "Taleban B", 5, 5, 5, 4,
-                4, 5, 0, 7, 6,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, 0, 7, 6,Piece.Direction.S,this);
             GeneriqueArme a2[] = {new AK74()};
             s.setArmeEquip(a2);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
             s.setArraN(2);
+            s.setArmeUtilise(a2[0]);
         equipe[2] = s;
         
         s = new AISoldat("Militia", "Taleban C", 5, 5, 5, 4,
-                4, 5, 0, 7, 6,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, 0, 7, 6,Piece.Direction.S,this);
             GeneriqueArme a3[] = {new AK74()};
             s.setArmeEquip(a3);
             s.setClassement(Soldat.CLASS_SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
             s.setArraN(3);
+            s.setArmeUtilise(a3[0]);            
         equipe[3] = s;
     }  
 }

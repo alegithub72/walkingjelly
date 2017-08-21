@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
@@ -16,12 +17,12 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  */
 public class OpFeuItem extends SoldatMenuItem{
     public OpFeuItem(FXSoldat fxs){
-        super(BaseAction.OP_FEU,fxs);
+        super(OrdreAction.OCCASION_DE_FEU,fxs);
     }
 
     @Override
     public BaseAction buildMenuItemAction() {
-       BaseAction act=new BaseAction(-1, -1, -1, -1, -1, fxs.getSoldat(), null);
+       BaseAction act=new BaseAction(OrdreAction.PA_ACTION, -1, -1, -1, -1, fxs.getSoldat(), null);
        return act;
     }
     

@@ -6,8 +6,7 @@
 package jeu.patrouille.coeur.equipments.armes;
 
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
-
-
+import jeu.patrouille.coeur.equipments.armes.Magazine.*;
 
 /**
  *
@@ -18,19 +17,19 @@ public class BenelliM3 extends GeneriqueArme{
         super("Benelli M3",Model.BENELLI_M3,EquipmentType.FIRE_WEAPON,5,15,65);
         magazine=new Magazine[14];
         for(int i=0;i<14;i++){
-            magazine[i]=new Magazine(Model.BENELLI_M3);
+            magazine[i]=new Magazine(Model.BENELLI_M3,SubType.SLUG);
         }
         armeFeuModel=TEMP_RIFLE;
-        shotNumMF[MODE_FEU_SS]=1;
-        shotNumMF[MODE_FEU_SA]=NOTVALUE;
-        shotNumMF[MODE_FEU_BU]=NOTVALUE;
-        shotNumMF[MODE_FEU_FA]=NOTVALUE;
+        shotNumMF[FeuMode.SC.ordinal()]=1;
+        shotNumMF[FeuMode.SA.ordinal()]=NOTVALUE;
+        shotNumMF[FeuMode.RA.ordinal()]=NOTVALUE;
+        shotNumMF[FeuMode.PA.ordinal()]=NOTVALUE;
 
  
-        TDfireWeapon[MODE_FEU_SS]= 3;
-        TDfireWeapon[MODE_FEU_SA]= NOTVALUE;
-        TDfireWeapon[MODE_FEU_BU]= NOTVALUE;
-        TDfireWeapon[MODE_FEU_FA]= NOTVALUE;
+        TDfireWeapon[FeuMode.SC.ordinal()]= 3;
+        TDfireWeapon[FeuMode.SA.ordinal()]= NOTVALUE;
+        TDfireWeapon[FeuMode.RA.ordinal()]= NOTVALUE;
+        TDfireWeapon[FeuMode.PA.ordinal()]= NOTVALUE;
 
         this.evaluateDamagePotentiel=4;
         this.evaluateDificulte=3;
@@ -39,8 +38,8 @@ public class BenelliM3 extends GeneriqueArme{
 
         
         this.TDrecharge=6;
-        this.modefeu=MODE_FEU_SS;
-        
+        this.modefeu=FeuMode.SC;
+        load=magazine[0];
         
         
         
@@ -53,22 +52,27 @@ public class BenelliM3 extends GeneriqueArme{
     @Override
     public int hitsNumMF(double dist) throws ModeDeFeuException{
         int s=NOTVALUE;
-        //TOdO conversion
-        switch (getTypePorte((int)dist)) {
-            case COURT:
-                s=3;
-                break;
-            case MED:
-                s=2;
-                break;
-            case LONGE:
-                s=1;
-                break;
-            default:
-                break;
-        }
-        if(s==NOTVALUE||modefeu!=MODE_FEU_SS ) 
-            throw new ModeDeFeuException("Mode de feu pa possible");
+     
+        if(load.sub==SubType.BUCK){
+            switch (getTypePorte((int)dist)) {
+                case COURT:
+                    s=3;
+                    break;
+                case MED:
+                    s=2;
+                    break;
+                case LONGE:
+                    s=1;
+                    break;
+                default:
+                    break;
+            }
+        }else s=shotNumMF[modefeu.ordinal()];
+        
+        
+        if(s==NOTVALUE ) 
+            throw new ModeDeFeuException("Mode de feu pa possible");   
+
 
         return s;
         

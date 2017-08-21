@@ -5,7 +5,7 @@
  */
 package jeu.patrouille.coeur.equipments.armes;
 
-/**
+import jeu.patrouille.coeur.equipments.armes.Magazine.*;/**
  *
  * @author Alessio Sardaro
  */
@@ -15,25 +15,24 @@ public class AK74 extends GeneriqueArme{
         super("AK74",Model.AK74,EquipmentType.FIRE_WEAPON, 15, 30, 200);
         this.evaluateDamagePotentiel=3;
         this.evaluateModifierBlindee=-2;
-        this.modefeu=MODE_FEU_SA;
         this.doux=5;
         this.fort=NOTVALUE;
         this.TDrecharge=3;
-        this.magazine=new Magazine[]{new Magazine(Model.AK74),
-            new Magazine(Model.AK74),new Magazine(Model.AK74),new Magazine(Model.AK74)};
+        this.magazine=new Magazine[]{new Magazine(Model.AK74,SubType.STANDARD),
+            new Magazine(Model.AK74,SubType.STANDARD),new Magazine(Model.AK74,SubType.STANDARD),new Magazine(Model.AK74,SubType.STANDARD)};
         this.evaluateDificulte=3;
 
         armeFeuModel=TEMP_RIFLE;
- 
-        this.shotNumMF[MODE_FEU_SA]=1;
-        this.shotNumMF[MODE_FEU_BU]=5;
-        this.shotNumMF[MODE_FEU_FA]=10;
-        this.TDfireWeapon[MODE_FEU_SA]=3;
-        this.TDfireWeapon[MODE_FEU_BU ]=5;
-        this.TDfireWeapon[MODE_FEU_FA]=6;
-        this.TDfireWeapon[MODE_FEU_SS]=NOTVALUE;
-        
-        
+        this.shotNumMF[FeuMode.SC.ordinal()]=NOTVALUE;
+        this.shotNumMF[FeuMode.SA.ordinal()]=3;
+        this.shotNumMF[FeuMode.RA.ordinal()]=5;
+        this.shotNumMF[FeuMode.PA.ordinal()]=10;
+        this.TDfireWeapon[FeuMode.SA.ordinal()]=3;
+        this.TDfireWeapon[FeuMode.RA.ordinal()]=5;
+        this.TDfireWeapon[FeuMode.PA.ordinal()]=6;
+        this.TDfireWeapon[FeuMode.SC.ordinal()]=NOTVALUE;
+        load=magazine[0];
+        modefeu=FeuMode.SA;
         
         
     }

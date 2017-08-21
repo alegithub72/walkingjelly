@@ -7,8 +7,8 @@ package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.fx.pieces.FXSoldat;
-import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 /**
  *
@@ -16,7 +16,7 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  */
 public class WalkItem extends SoldatMenuItem{
     public WalkItem(FXSoldat fxs){
-        super(BaseAction.MARCHE,fxs);
+        super(OrdreAction.MARCHE,fxs);
         
     }
 

@@ -51,32 +51,32 @@ public class AK74Test {
     
    @Test
    public void testPorte() throws ModeDeFeuException,LoadMagazineFiniException{
-       assertEquals(GeneriqueArme.MODE_FEU_SA ,  ak.getMF());
-       assertEquals( 3 ,ak.fireWeapon());
+       assertEquals(GeneriqueArme.FeuMode.SA ,  ak.getMF());
+       assertEquals( 3 ,ak.feuArme());
        assertEquals(29, ak.shotRemain());
    }
    
    @Test 
    public void testPorteBU() throws ModeDeFeuException,LoadMagazineFiniException{
-       ak.changeModeFeu(GeneriqueArme.MODE_FEU_BU);
-       assertEquals(GeneriqueArme.MODE_FEU_BU,ak.getMF());
-       assertEquals(5,ak.fireWeapon());
+       ak.changeModeFeu(GeneriqueArme.FeuMode.RA);
+       assertEquals(GeneriqueArme.FeuMode.RA,ak.getMF());
+       assertEquals(5,ak.feuArme());
        assertEquals(25, ak.shotRemain());
    
    }
    @Test
    public void testPorteSS()throws ModeDeFeuException,LoadMagazineFiniException{
         ex.expect(ModeDeFeuException.class);
-        ak.changeModeFeu(GeneriqueArme.MODE_FEU_SS);
-        ak.fireWeapon();
+        ak.changeModeFeu(GeneriqueArme.FeuMode.RA);
+        ak.feuArme();
         assertEquals(29, ak.shotRemain());
        
    }
    @Test
    public void testPorteFA()throws ModeDeFeuException,LoadMagazineFiniException{
 
-        ak.changeModeFeu(GeneriqueArme.MODE_FEU_FA);
-        ak.fireWeapon();
+        ak.changeModeFeu(GeneriqueArme.FeuMode.PA);
+        ak.feuArme();
         assertEquals(20, ak.shotRemain());
        
    }   

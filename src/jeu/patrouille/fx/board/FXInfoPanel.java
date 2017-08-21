@@ -101,7 +101,7 @@ public class FXInfoPanel extends Parent{
     }
     public void imprimerInfo(Soldat  s){
         nom.setText(s.toStringSimple());
-        tdLabel.setText (s.getActionPoint()+"");
+        tdLabel.setText (s.getTempDisponible()+"");
         String clText="Soldat";
         switch (s.getClassement()) {
             case Soldat.CLASS_SGT:

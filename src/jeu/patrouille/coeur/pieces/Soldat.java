@@ -7,8 +7,10 @@ package jeu.patrouille.coeur.pieces;
 
 
 
+import com.sun.jmx.remote.util.OrderClassLoaders;
 import java.util.ArrayList;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
@@ -17,10 +19,9 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
 import jeu.patrouille.coeur.pieces.Lesion.*;
 import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
-import jeu.patrouille.coeur.pieces.exceptions.IncoscientSoldatException;
-import jeu.patrouille.coeur.pieces.exceptions.MainArmeSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.NotSautOrCourseSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
 
 /**
  *
@@ -31,8 +32,8 @@ public class Soldat extends Piece {
 
 
     public static final int CLASS_SGT=8,CLASS_TEN=20,CLASS_SGT_MJR=15,CLASS_SOLDAT=7;
-
-    int actionActuel=NOACTION;
+    public static final int FULL_SANTE=6;
+    OrdreAction actionActuel=OrdreAction.PA_ACTION;
     Direction face;
     String nom=null;
     String nomDeFamilie=null;
@@ -54,22 +55,28 @@ public class Soldat extends Piece {
     boolean objective;
     boolean active;
     boolean choc;
+    boolean immobilize;
     Statu st;
 
 
  
    
     
-    public Soldat(String nom,String nomDeFamilie,
-    int competenceArme,
-    int connaissanceArme,
-    int combatRapproche,
-    int force,
-    int courage,
-    int sante,
-    int blindage,
-    int moral,
-    int commandControler,Direction d,GeneriqueJoeurs boss){
+    public Soldat(
+            String nom,
+            String nomDeFamilie,
+            int competenceArme,
+            int connaissanceArme,
+            int combatRapproche,
+            int force,
+            int courage,
+            int sante,
+            int blindage,
+            int moral,
+            int commandControler,
+            Direction d,
+            GeneriqueJoeurs boss)
+    {
         super(ActeurType.SOLDAT,boss);
         face=d;
         this.nom=nom;
@@ -86,6 +93,7 @@ public class Soldat extends Piece {
         st=Statu.NORMAL;
         incoscient=false;
         objective=false;
+        immobilize=false;
         active=false;
         choc=false;
        
@@ -116,6 +124,7 @@ public class Soldat extends Piece {
                 && l.location==Lesion.TETE) {
             sante=-10;
             st=Statu.CRITIQUE;
+            
         }
         else {
             this.sante=sante-l.blessure;
@@ -124,9 +133,12 @@ public class Soldat extends Piece {
                     this.moral=moral-2;
                     tempDesponible=tempDesponible-boss.dice(10);
                     this.pose=Pose.PRONE;
+                    this.immobilize=true;
                     break;
                 case GRAVE_TETE:
                     moral=moral-1;
+                    incoscient=true;
+                    immobilize=true;
                     tempDesponible=tempDesponible-boss.dice(6);                    
                     break;
                 case GRAVE:
@@ -135,6 +147,7 @@ public class Soldat extends Piece {
                     if(l.location==Lesion.BRAS_DROITE ||
                             l.location==Lesion.BRAS_GAUCHE)
                         armeUtilise=null;
+                    
                     //TODO one action per turn
                     break;
                 case LEGER_BLESSE:
@@ -249,10 +262,10 @@ public class Soldat extends Piece {
    public ActeurType getType() {
         return type;
     }
-   public void setAction(int a){
+   public void setAction(OrdreAction a){
     actionActuel=a;
    }
-   public int getAction(){
+   public OrdreAction getAction(){
     return actionActuel;
    }
 
@@ -282,7 +295,7 @@ public class Soldat extends Piece {
                 this.force, this.courage, this.sante,
                 this.blindage, this.moral,
                 this.commandControler, this.face,boss);
-        s.setActionPoint(this.tempDesponible);
+        s.setTempDesponible(this.tempDesponible);
         s.setI(this.getI());
         s.setJ(this.getJ());
         s.arrayN = this.arrayN;
@@ -300,7 +313,7 @@ public class Soldat extends Piece {
     }
     public int fire(double dist) throws ModeDeFeuException,LoadMagazineFiniException{
       int  n=armeUtilise.hitsNumMF(dist);
-      this.tempDesponible=tempDesponible-armeUtilise.fireWeapon();
+      this.tempDesponible=tempDesponible-armeUtilise.feuArme();
       return n;
     
     }
@@ -317,27 +330,23 @@ public class Soldat extends Piece {
 
 
     public boolean isPossileDesplacer(){
-        return tempDesponible>0 || st!=Statu.GRAVE_TETE ||
-                   st!=Statu.CRITIQUE || sante<=-10 || choc;
+        return tempDesponible>0 && st!=Statu.GRAVE_TETE &&
+                   st!=Statu.CRITIQUE && sante>=-10 && !choc;
         
     }
     public boolean isPossibleCourse(){
         return st!=Statu.GRAVE;
        
     }
-    @Override
-    public int getActionPoint(){
-        return tempDesponible;
-    }
+
     @Override
     public String toStringSimple() {
         return ""
                 + "" + nom +" "+ nomDeFamilie +"";
                 
     }
-    public boolean isTempDisponiblePour(int actiontype){
-        int baseTempDisponible=BaseAction.ACTIONPOINTVALOR[actiontype];
-        if(isDoubled())baseTempDisponible=baseTempDisponible*2;
+    public boolean isTempDisponiblePour(OrdreAction actiontype)throws Exception{
+        int baseTempDisponible=tempNecessarieDesActionBase(actiontype);
         return (tempDesponible>=baseTempDisponible);
         
     }
@@ -350,13 +359,13 @@ public class Soldat extends Piece {
     }
 
  public boolean isIncoscient(){
-        return st==Statu.GRAVE_TETE || sante<=0;
+        return incoscient || sante<=0;
  
  }
    //TODO inserire vairiabile status UNCOSCIOUS,IMMOBILIZE,NORMAL,ETC....vedere bene health doc..
     @Override
     public void addAction(BaseAction act) throws Exception{
-        if(sante==5) super.addAction(act);
+        if(sante==FULL_SANTE) super.addAction(act);
         else if(st==Statu.CRITIQUE && sante<=-10){
             throw new KilledSoldatException();
         }
@@ -365,17 +374,15 @@ public class Soldat extends Piece {
         }else if(st==Statu.GRAVE_TETE  ){
             throw new ImmobilzedSodlatException();
         }else if(st==Statu.GRAVE){
-            if(act.getType()==BaseAction.COURS ||
-                    act.getType()==BaseAction.SAUT)
+            if(act.getType()==OrdreAction.COURS ||
+                    act.getType()==OrdreAction.SAUT)
                 throw new NotSautOrCourseSoldatException();
             super.addAction(act);
         }else if(st==Statu.LEGER_BLESSE){
-            
             super.addAction(act);
         }else if(st==Statu.GRAVE_BRASE){
             if (this.actionsPool.size() > 1) 
                 throw new UnActionSoldatException();
-            armeUtilise=null;
             super.addAction(act);
             
         }
@@ -399,6 +406,10 @@ public class Soldat extends Piece {
       boolean b= boss.dice(10)<=10+sante;
       if(!b) sante=-10;//TODO at ending activqtion
    }
+   public boolean isKIA(){
+   return sante<=-10;
+   
+   }
     public boolean isActive() {
         return active;
     }
@@ -407,8 +418,16 @@ public class Soldat extends Piece {
         return choc;
     }
 
-
-
+@Override
+    public int tempNecessarieDesActionBase(OrdreAction actionType)throws Exception{
+        int apbase=-1;
+        if(actionType==OrdreAction.FEU  ||
+                actionType==OrdreAction.OCCASION_DE_FEU ) 
+            apbase=this.armeUtilise.fireTempNecessarie(); 
+        else apbase=actionType.TN();
+        if(isDoubled())apbase=apbase*2;
+        return apbase;
+    }
 
 
 
@@ -417,5 +436,26 @@ public class Soldat extends Piece {
        this.active=false;
        
 
+   }
+
+    public boolean isImmobilize() {
+        return immobilize;
+    }
+   
+   public boolean isDistanceLessMarcheMax(double dist){
+      try{
+            int apbase=this.tempNecessarieDesActionBase(OrdreAction.MARCHE);
+            double value=dist*apbase;
+            return tempDesponible<=value ;
+      }catch(Exception ex){
+          ex.printStackTrace();
+      }
+      return false;
+   }
+   public boolean isFeuArmePaPorte(double d){
+       double dlonge=armeUtilise.getDistancePorte(Porte.LONGE);
+       System.out.println("distance "+d+" >="+dlonge+"");
+       return d>=(dlonge*2);
+       
    }
 }

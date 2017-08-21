@@ -6,12 +6,11 @@
 package jeu.patrouille.fx.menu;
 
 import javafx.scene.image.Image;
-import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.fx.sprite.Sprite;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 
 /**
  *
- * @author appleale
+ * @author applealex
  */
 public class MenuImageChargeur {
     
@@ -22,20 +21,20 @@ public class MenuImageChargeur {
      
     
     MenuImageChargeur() {
-        menuImages=new Image[19];
-        menuImages[BaseAction.MARCHE]=new Image("walkButton.png");
-        menuImages[BaseAction.OP_FEU]=new Image("opFireButton.png");
-        menuImages[BaseAction.COURS]=new Image("runButton.png");
-        menuImages[BaseAction.FEU]=new Image("fireButton.png");
-        menuImages[BaseAction.NO_ACTION]=new Image("arrowPng.png");
+        menuImages=new Image[OrdreAction.values().length];
+        menuImages[OrdreAction.MARCHE.ordinal()]=new Image("walkButton.png");
+        menuImages[OrdreAction.OCCASION_DE_FEU.ordinal()]=new Image("opFireButton.png");
+        menuImages[OrdreAction.COURS.ordinal()]=new Image("runButton.png");
+        menuImages[OrdreAction.FEU.ordinal()]=new Image("fireButton.png");
+        menuImages[OrdreAction.PA_ACTION.ordinal()]=new Image("arrowPng.png");
         
     }
     
     
     
-    public  Image getImage(int type){
+    public  Image getImage(OrdreAction type){
 
-        return  menuImages[type];
+        return  menuImages[type.ordinal()];
     }
     public static MenuImageChargeur geInstance(){
         if(ss==null) ss=new MenuImageChargeur();

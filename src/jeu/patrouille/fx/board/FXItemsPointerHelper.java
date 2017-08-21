@@ -8,13 +8,13 @@ package jeu.patrouille.fx.board;
 
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.pieces.Lesion;
+import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
 import jeu.patrouille.coeur.terrains.PointCarte;
+import jeu.patrouille.coeur.terrains.Terrain;
 import jeu.patrouille.fx.pieces.FXSoldat;
-import jeu.patrouille.fx.pieces.FXUSSoldat;
 import jeu.patrouille.fx.sprite.CursorHelper;
 import jeu.patrouille.util.ImageChargeur;
 
@@ -31,16 +31,7 @@ public class FXItemsPointerHelper {
     private int rangeCursorHelper;
     private int lastVisualizationRond;
             
-
-
-    
-    
-    
-    
-    
-
-    
-        
+   
     public FXItemsPointerHelper(FXSoldat s,Carte carte){
         this.seletctionee=s;
         this.carte=carte;
@@ -67,11 +58,11 @@ public class FXItemsPointerHelper {
     }
     
     public void resetCursorHelper(){
-        if(act.getType()==BaseAction.MARCHE 
+        if(act.getType()==OrdreAction.MARCHE 
                 &&  this.seletctionee.getSoldat().
                         getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST) 
         this.rangeCursorHelper=ImageChargeur.CURSOR_HOST_RANGE;
-        else if(act.getType()==BaseAction.MARCHE 
+        else if(act.getType()==OrdreAction.MARCHE 
                 && this.seletctionee.
                         getSoldat().getBoss().getJeur()== GeneriqueJoeurs.JOEUR_US) 
             this.rangeCursorHelper=ImageChargeur.CURSOR_US_RANGE;     
@@ -104,7 +95,7 @@ public class FXItemsPointerHelper {
         act.setJ1(j1);
     
     }
-    public void addSoldataSelectioneeAction()throws Exception{
+    public void addActionToSoldat()throws Exception{
         Soldat s=seletctionee.getSoldat();
         s.addAction(act);
     
@@ -115,16 +106,7 @@ public class FXItemsPointerHelper {
         return   "act=" + act.toString() ;
     }
     
-    public boolean rangeMarcheSoldat(double range){
-             Soldat s=seletctionee.getSoldat();
-             int doubled=1;
-             if(s.isDoubled())
-                doubled=2;   
-      return ( range>0 
-              && s.getActionPoint()>0 
-              && range<=(s.getActionPoint()*(FXCarte.TILE_SIZE*doubled)));
-   
-    }
+
     
    public PointCarte carteValiderRoute(){
        return carte.validerLeRoute(act);
@@ -139,7 +121,8 @@ public class FXItemsPointerHelper {
         if (actionsize >0) {
             lastAct = s.lastAction();
             System.out.println("last action =" + lastAct);
-            if (lastAct.getJ1() >= 0) {
+            if (lastAct.getJ1() >= 0 &&
+                    lastAct.getType()!=OrdreAction.FEU) {
                 j = lastAct.getJ1();//TODO le azione che non muovono
             } else {
                 j = lastAct.getJ0();
@@ -161,7 +144,8 @@ public class FXItemsPointerHelper {
         int i = -1;
         if (actionsize > 0) {
             lastAct = s.nextAction(actionsize - 1);
-            if (lastAct.getI1() >= 0) {
+            if (lastAct.getI1() >= 0 && 
+                    lastAct.getType()!=OrdreAction.FEU) {
                 i = lastAct.getI1();//TODO le azione che non muovono
             } else {
                 i = s.getI();
@@ -194,5 +178,27 @@ public FXSoldat getFXSoldatSelectionee(){
                
         return  lastVisualizationRond!=slast.getBoss().getJeur();
     }
-
+    public void buildFeuAction(BaseAction act,int i1,int j1){
+        Terrain t= carte.getPointCarte(i1, j1);
+        Piece p=t.getPiece();
+        Soldat s=null;
+        if(p!=null  &&
+                p.getPieceType()==Piece.ActeurType.SOLDAT)
+            s=(Soldat)p;
+        else if(t.getExtraPiece().size()>0) 
+            s=(Soldat)t.getExtraPiece().get(0);
+        act.setI1(i1);
+        act.setJ1(j1);
+        act.setAntagoniste(s);
+        Soldat s0=(Soldat)act.getProtagoniste();
+        
+        act.setI0(s0.getI());
+        act.setJ0(s0.getJ());
+        this.act=act;
+    }
+    
+    public boolean isDistanceLessMarcheMax(double dist){
+       return  this.seletctionee.isDistanceLessMarcheMax(dist);
+    
+    }
 }

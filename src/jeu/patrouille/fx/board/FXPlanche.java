@@ -27,7 +27,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.menu.FeuItem;
 import jeu.patrouille.fx.menu.WalkItem;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnButtonEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnEventHandler;
@@ -217,31 +219,34 @@ public class FXPlanche extends Application {
 
     void visualizeActionBar(BaseAction act, int k) {
         //TODO compliche trought scroll panel !!!!!!!
+        Sprite spAct=null;
+        if (act.getType() == OrdreAction.MARCHE) {
+            spAct = new WalkItem(null);
 
-        if (act.getType() == BaseAction.MARCHE) {
-            Sprite spAct = new WalkItem(null);
-            boolean add = rootBarGroup.getChildren().add(spAct);
-            spAct.setScaleX(0.5);
-            spAct.setScaleY(0.5);
-            spAct.setFrame(0);
-            spAct.toFront();
-            spAct.setOnMouseClicked(new MiniActionClickEventHandler(act, fxCarte));
-            spAct.setOnMouseExited(new MiniActionExitEventHandler(act, fxCarte));
-            spAct.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(spAct));
-            spAct.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(spAct));
-            DropShadow dropShadow = new DropShadow();
-            dropShadow.setRadius(5.0);
-            dropShadow.setOffsetX(3.0);
-            dropShadow.setOffsetY(3.0);
-            spAct.setEffect(dropShadow);
-            spAct.setLayoutX(500 + (k * (spAct.getW() / 2)));
-            if (k < 10) {
-                spAct.setLayoutY(-23);
-            } else {
-                spAct.setLayoutY((spAct.getH() / 2));
-            }
-            this.fxActionsPoolSelectionee.add(spAct);
+        }if(act.getType()==OrdreAction.FEU){
+            spAct=new FeuItem(null);
         }
+        boolean add = rootBarGroup.getChildren().add(spAct);
+        spAct.setScaleX(0.5);
+        spAct.setScaleY(0.5);
+        spAct.setFrame(0);
+        spAct.toFront();
+        spAct.setOnMouseClicked(new MiniActionClickEventHandler(act, fxCarte));
+        spAct.setOnMouseExited(new MiniActionExitEventHandler(act, fxCarte));
+        spAct.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(spAct));
+        spAct.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(spAct));
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(5.0);
+        dropShadow.setOffsetX(3.0);
+        dropShadow.setOffsetY(3.0);
+        spAct.setEffect(dropShadow);
+        spAct.setLayoutX(500 + (k * (spAct.getW() / 2)));
+        if (k < 10) {
+            spAct.setLayoutY(-23);
+        } else {
+            spAct.setLayoutY((spAct.getH() / 2));
+        }
+        this.fxActionsPoolSelectionee.add(spAct);        
 
     }
 

@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.coeur.actions;
 
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.pieces.Piece;
 
@@ -14,12 +15,12 @@ import jeu.patrouille.coeur.pieces.Piece;
  */
 public class CoursAction extends BaseAction {
     public CoursAction( int i0, int j0, int i1, int j1, Piece protagoniste){
-    super(BaseAction.COURS, i0, j0, i1, j1, protagoniste, null);
-    }
+    super(OrdreAction.COURS, i0, j0, i1, j1, protagoniste, null);
+    } 
 
     @Override
-    public void calculeActionPointDesActions() {
-        int base= BaseAction.ACTIONPOINTVALOR[type];
+    public void calculeActionPointDesAction() {
+        int base=type.TN();
         double n= Carte.tileDistance(i0, j0, i1, j1)/5;
         int sum = (int)(base *n);
         tempActivite= sum;

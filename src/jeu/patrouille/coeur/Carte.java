@@ -15,14 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
-import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
-import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
-import jeu.patrouille.coeur.pieces.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.terrains.Terrain;
-import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.AngleGrosMur;
 import jeu.patrouille.coeur.terrains.Arbre;
 import jeu.patrouille.coeur.terrains.Arbre2;
@@ -35,7 +30,6 @@ import jeu.patrouille.coeur.terrains.Interior;
 import jeu.patrouille.coeur.terrains.Porte;
 import jeu.patrouille.coeur.terrains.Street;
 import jeu.patrouille.coeur.terrains.StreetBorder;
-import jeu.patrouille.fx.board.FXCarte;
 
 /**
  *
@@ -314,22 +308,22 @@ private void decoderTaille(String line){
         }
     }
     
+public static double distance(int i0,int j0,int i1,int j1,int tilesize){
+        double x0=(j0*tilesize)+(tilesize/2);
+        double y0=(i0*tilesize)+(tilesize/2);
+        double y1=(i1*tilesize)+(tilesize/2);
+        double x1=(j1*tilesize)+(tilesize/2);
+        double x1x0=x1-x0;
+        double y1y0=y1-y0;
+       // x1x0=x1x0*x1x0;
+       // y1y0=y1y0*y1y0;
+       double inch=1/tilesize;
+        double dist=Math.sqrt(Math.pow(y1y0,2)+Math.pow(x1x0,2));
+    return dist*inch;
     
-    public double distance(int i0,int j0,int i1,int j1,int tilesize){
-    double x0=(j0*tilesize)+(tilesize/2);
-    double y0=(i0*tilesize)+(tilesize/2);
-    double y1=(i1*tilesize)+(tilesize/2);
-    double x1=(j1*tilesize)+(tilesize/2);
-    double x1x0=x1-x0;
-    double y1y0=y1-y0;
-    double pouce=1/FXCarte.TILE_SIZE;
-   // x1x0=x1x0*x1x0;
-   // y1y0=y1y0*y1y0;
-    double dist=Math.sqrt(Math.pow(y1y0,2)+Math.pow(x1x0,2));
-    return dist*pouce;
     
-    
-    }
+    }    
+
 
     public PointCarte[] getLigne(Terrain p0, Terrain p1) {
 

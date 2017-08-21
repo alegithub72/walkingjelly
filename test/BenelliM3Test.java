@@ -72,7 +72,7 @@ public class BenelliM3Test {
     @Test
     public void testShotNumFA() throws ModeDeFeuException{         
         ex.expect(ModeDeFeuException.class);
-        b.changeModeFeu(GeneriqueArme.MODE_FEU_FA);
+        b.changeModeFeu(GeneriqueArme.FeuMode.PA);
         b.hitsNumMF(1);
        
         
@@ -97,7 +97,7 @@ public class BenelliM3Test {
     }
     @Test 
     public void testFireAShot() throws ModeDeFeuException,LoadMagazineFiniException{
-    b.fireWeapon();
+    b.feuArme();
     assertEquals(6,b.shotRemain());
     }
     /**
@@ -106,7 +106,7 @@ public class BenelliM3Test {
      */
     @Test 
     public void testChargeArme() throws ModeDeFeuException,LoadMagazineFiniException,PaDeMagazineException{
-       b.fireWeapon();
+       b.feuArme();
       
     assertEquals(6,b.shotRemain());   
     assertEquals (6,b.rechargeArme());

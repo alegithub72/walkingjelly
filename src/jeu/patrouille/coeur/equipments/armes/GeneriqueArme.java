@@ -17,9 +17,8 @@ import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
 public abstract class GeneriqueArme extends GeneriqueEquipment {
 
 
-
-    public static final int COURT = 0, MED = 1, LONGE = 2;
-    public static final int MODE_FEU_SS = 0, MODE_FEU_SA = 1, MODE_FEU_BU = 2, MODE_FEU_FA = 3;
+    public enum Porte {COURT,MED,LONGE}
+    public enum FeuMode{SC,SA,RA,PA}
     public static final int TEMP_SHOTGUN = 0, TEMP_RIFLE = 1, TEMP_PISTOL = 2, TEMP_MACHINE_GUN = 3;
 
     int porte[] = new int[3];
@@ -27,7 +26,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     int[] TDfireWeapon = new int[4];
     //Map shotNumMFMed;
     //Map shotNumMFLonge;
-    int modefeu;
+    FeuMode modefeu;
     int doux = NOTVALUE;
     int fort = NOTVALUE;
     Magazine[] magazine;
@@ -47,9 +46,11 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     public GeneriqueArme(String nom,Model model,EquipmentType type ,int court, int medium, int longe) {
         super(nom, type, model);
         TDfireWeapon=new int[4];
-        porte[COURT] = court;
-        porte[MED] = medium;
-        porte[LONGE] = longe;
+        porte[Porte.COURT.ordinal()] = court;
+        porte[Porte.LONGE.ordinal()] = medium;
+        porte[Porte.LONGE.ordinal()] = longe;
+        
+
 
 
     }
@@ -69,20 +70,26 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     }
 
     //TODO vedere per avere AP e shot
-    public int fireWeapon() throws ModeDeFeuException,LoadMagazineFiniException {
-        finalCartouch = load.fire(modefeu);
-        int ap = TDfireWeapon[modefeu];
+    public int feuArme() throws ModeDeFeuException,LoadMagazineFiniException {
+        finalCartouch = load.depot(modefeu);
+        int ap = TDfireWeapon[modefeu.ordinal()];
         if (ap == NOTVALUE) {
             throw new ModeDeFeuException("Mode de feu not avaiable");
         }
         return ap;
     }
-
-    public void changeModeFeu(int f) throws ModeDeFeuException {
+    public int fireTempNecessarie()throws ModeDeFeuException{
+        int td= TDfireWeapon[modefeu.ordinal()];
+        if (td == NOTVALUE) {
+            throw new ModeDeFeuException("Mode de feu not avaiable");
+        }
+        return td;
+    }
+    public void changeModeFeu(FeuMode f) throws ModeDeFeuException {
         modefeu = f;
     }
 
-    public int getMF() {
+    public FeuMode getMF() {
         return modefeu;
     }
     
@@ -90,7 +97,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
     public int hitsNumMF(double dist) throws ModeDeFeuException {
         int sn = NOTVALUE;
-        sn = shotNumMF[modefeu];
+        sn = shotNumMF[modefeu.ordinal()];
         
         if (sn == NOTVALUE) {
             throw new ModeDeFeuException("Mode de feu pa possible");
@@ -108,19 +115,19 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         return fort;
     }
 
-    int getTypePorte(double dist) {
-        if (dist <= porte[COURT]) {
-            return COURT;
-        } else if (dist <= porte[MED]) {
-            return MED;
-        } else if (dist <= porte[LONGE]) {
-            return LONGE;
+    Porte getTypePorte(double dist) {
+        if (dist <= porte[Porte.COURT.ordinal()]) {
+            return Porte.COURT;
+        } else if (dist <= porte[Porte.MED.ordinal()]) {
+            return Porte.MED;
+        } else if (dist <= porte[Porte.LONGE.ordinal()]) {
+            return Porte.LONGE;
         }
-        return NOTVALUE;
+        return null;
     }
 
     public int porteModifier(double dist) {
-        int tp = getTypePorte(dist);
+        Porte tp = getTypePorte(dist);
         switch (tp) {
             case COURT:
                 return +1;
@@ -132,7 +139,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
                 return NOTVALUE;//impossible to achieve out of the range
         }
     }
-
+    
     public int rechargeArme() throws PaDeMagazineException {
         loadMagazine();
         return TDrecharge;
@@ -158,7 +165,9 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
 
    
-
+    public double getDistancePorte(Porte p){
+        return porte[p.ordinal()];
+    }
     
     public int getNumMagazine(){
         return (magazine.length-magazineUsed);

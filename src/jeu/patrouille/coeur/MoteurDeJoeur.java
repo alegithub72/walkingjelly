@@ -9,11 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.CoursAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
@@ -24,6 +22,7 @@ import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.coeur.pieces.Lesion;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
 /**
  *
  * @author Alessio Sardaro
@@ -237,32 +236,26 @@ public class MoteurDeJoeur implements Runnable{
 
 
                 BaseAction act=arrayOrderd[k];
-                BaseAction clone=act.clone();
+                //BaseAction clone=act.clone();
                 Soldat s=(Soldat)act.getProtagoniste();
                 //s.resetAction();
                 boolean ch=s.shellShockTest();
                 BaseAction fugitivAct=null;
                 if(ch) act=fugitivAct;//TODO   fugitiv action
-                
-                System.out.println("--MJ PLAY STEP--->"+act+"<----->"+act.getProtagoniste().toStringSimple()+"<----------");
-                //cosi sono valide le posizioni di tutti.....
-                playAllGraficInterface(act);
-             
-//                try {
-//                Thread.currentThread().wait(0);
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }catch(java.lang.IllegalMonitorStateException i){
-//                    i.printStackTrace();
-//                }
-                System.out.println("--MJ PLAY STEP------------------------------END----><-----");
-                int zz=0;
-                System.out.println("------------Zzzzzzzzzzzzz="+allAnimOn());
-                while(allAnimOn());
-                System.out.println("------------Svegliaaaaaaaa="+allAnimOn());
-                
-                makeAction((Soldat)act.getProtagoniste(), act);   
-                refreshAllGraficInterface();
+                if(!s.isIncoscient()||!s.isImmobilize()||!s.isKIA()){
+                    
+                    System.out.println("--MJ PLAY STEP--->"+act+"<----->"+act.getProtagoniste().toStringSimple()+"<----------");
+                    //cosi sono valide le posizioni di tutti.....
+                    playAllGraficInterface(act);
+                    System.out.println("--MJ PLAY STEP------------------------------END----><-----");
+                    int zz=0;
+                    System.out.println("------------Zzzzzzzzzzzzz="+allAnimOn());
+                    while(allAnimOn());
+                    System.out.println("------------Svegliaaaaaaaa="+allAnimOn());
+
+                    makeAction((Soldat)act.getProtagoniste(), act);   
+                    refreshAllGraficInterface();
+                }
                  //TODO vedere per aggiorantre la mappa quando!!!!
                  k++;
                 
@@ -276,9 +269,9 @@ public class MoteurDeJoeur implements Runnable{
     
     }
    private void makeAction(Soldat s,BaseAction a)throws Exception{
-       if(a.getType()==BaseAction.MARCHE){
+       if(a.getType()==OrdreAction.MARCHE){
            makeMarcheAction(s, a);
-       }else if(a.getType()==BaseAction.FEU){
+       }else if(a.getType()==OrdreAction.FEU){
            makeFeuAction(a);
        }
     
@@ -366,7 +359,7 @@ public class MoteurDeJoeur implements Runnable{
      */
     public void makeMarcheAction(Soldat s, BaseAction a) {
         //TODO rendere effettive le modifiche .....
-        
+        System.out.println("--------------MARCHE MAKE---------------------");
         int i0=a.getI0(),j0=a.getJ0();
         int i1=a.getI1(),j1=a.getJ1();
         if(c.terrain[i0][j0].getPiece()==s)
@@ -381,40 +374,42 @@ public class MoteurDeJoeur implements Runnable{
         else c.terrain[i1][j1].addExtraPiece(s);
         //TODO if enemy do a close fight...!!!!
         
-        s.setAction(BaseAction.MARCHE);
+        s.setAction(OrdreAction.MARCHE);
         System.out.println("updated terrain --soldat-"+s.toStringSimple()+"---->"+a.getI1()+"--->"+a.getJ1());
         s.setI(i1);
         s.setJ(j1);
         System.out.println("updated position -soldat--->"+s.toStringSimple()+"--->"+a.getI1()+","+a.getJ1());
+        System.out.println("--------------MARCHE MAKE---------------------");        
     }    
 
 
         public void makeFeuAction(BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException{
-            
+            System.out.println("--------------FEUUUU MAKE---------------------");
             Soldat s=(Soldat)act.getProtagoniste();
             Soldat target=(Soldat)act.getAntagoniste();
             GeneriqueArme arme=s.getArmeUtilise();
-            double dist=c.distance(act.getI0(), act.getJ0(), act.getI1(), act.getJ1(), FXCarte.TILE_SIZE);
+            //TODO generalizzare in FXcarte....
+            double dist=Carte.distance(act.getI0(), act.getJ0(), act.getI1(), act.getJ1(),FXCarte.TILE_SIZE);
             int shotN=s.fire(dist);
             int dCM=-s.isWounded();
 
-            if(arme.getMF()==GeneriqueArme.MODE_FEU_BU) 
+            if(arme.getMF()==FeuMode.RA) 
                 dCM=dCM-1;
-            else if(arme.getMF()==GeneriqueArme.MODE_FEU_FA)
+            else if(arme.getMF()==FeuMode.PA)
                 dCM=dCM-3;
             
-            if(s.getAction()==BaseAction.MARCHE)dCM=dCM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
-            else if(s.getAction()==BaseAction.COURS)dCM=dCM-4;
+            if(s.getAction()==OrdreAction.MARCHE)dCM=dCM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
+            else if(s.getAction()==OrdreAction.COURS)dCM=dCM-4;
             
-            if(act.getType()==BaseAction.VISER_FEU)dCM=dCM+1;
+            if(act.getType()==OrdreAction.FEU_VISER)dCM=dCM+1;
 
 
 
             if(s.getPose()==Piece.Pose.PRONE) dCM=dCM+1;
             
             
-            if(target.getAction()==BaseAction.COURS) dCM=dCM-2;
-            else if(target.getAction()==BaseAction.MARCHE)dCM=dCM-1;
+            if(target.getAction()==OrdreAction.COURS) dCM=dCM-2;
+            else if(target.getAction()==OrdreAction.MARCHE)dCM=dCM-1;
             if(target.getPose()==Piece.Pose.PRONE) dCM=dCM-1; 
             
 
@@ -433,8 +428,9 @@ public class MoteurDeJoeur implements Runnable{
                 Lesion l= lesionEsti.getLesion(location, blessure);   
                 //TODO blindage check and cover check
                 target.blessure(l);
-    
+                System.out.println(l.toString());
             }
+        System.out.println("--------------FEUUUU MAKE---------------------");            
     }
      
 }

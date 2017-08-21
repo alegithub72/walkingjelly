@@ -4,16 +4,15 @@
  * and open the template in the editor.
  */
 package jeu.patrouille.fx.menu;
-import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.fx.pieces.FXSoldat;
-import jeu.patrouille.fx.pieces.FXUSSoldat;
 /**
  *
  * @author appleale
  */
 public abstract class SoldatMenuItem extends MenuItem{
     FXSoldat fxs;
-    public SoldatMenuItem(int actionType,FXSoldat fxs) {
+    public SoldatMenuItem(OrdreAction actionType,FXSoldat fxs) {
         super(actionType);
         this.fxs=fxs;
     }

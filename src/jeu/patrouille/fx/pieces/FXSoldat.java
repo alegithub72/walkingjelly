@@ -27,7 +27,7 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
  * @author appleale
  */
 public abstract class FXSoldat extends FXPatrouilleSprite {
-    
+
     Soldat s;
     ImageView blessureImg;
     ImageView flagImg;
@@ -136,7 +136,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     }
 
     public void enableSoldatoInView(int k) {
-        System.out.println("reset position " + s.toStringSimple());
+        //System.out.println("reset position " + s.toStringSimple());
         int i0 = s.getI();
         int j0 = s.getJ();
         Point2D p = fxcarte.getSceneCoordForRefreshCarte(i0, j0);
@@ -146,7 +146,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         y0 = y0 + (20 * k);
         int scrollJ = j0 - fxcarte.getPosJ();
         int scrollI = i0 - fxcarte.getPosI();
-        System.out.println(" enable node--->" + s.getNom() + "x0,y0=" + x0 + "," + y0);
+        //System.out.println(" enable node--->" + s.getNom() + "x0,y0=" + x0 + "," + y0);
         x0 = esteticCorrectionX0(scrollJ, x0);
         y0 = esteticCorrectionY0(scrollI, y0);
         setTranslateX(x0);
@@ -169,7 +169,13 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         else if(angle<-30 && angle >-60) s.setFace(Piece.Direction.NE);
         System.out.println("------>"+angle+"-----orientation updataed--->"+s.getFace());
         }    
+
+    public boolean isDistanceLessMarcheMax(double dist){  
+      return ( dist>0 
+              && s.getTempDisponible()>0 
+              && s.isDistanceLessMarcheMax(dist*FXCarte.INCHxPIXEL));
     
+    }
     public void createFXSoldat(){
         buildFrameImages();
         if(!getChildren().contains(blessureImg))

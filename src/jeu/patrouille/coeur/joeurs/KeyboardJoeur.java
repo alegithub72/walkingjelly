@@ -45,7 +45,7 @@ public class KeyboardJoeur extends Joeur {
     }
   void costruirePatrouille() {
         Soldat s = new Soldat("Sgt.", "Smith", 7, 8, 6, 5, 6,
-                5, 5, 8, 9,Piece.Direction.N,this);
+                Soldat.FULL_SANTE, 5, 8, 9,Piece.Direction.N,this);
            BenelliM3 ben=new BenelliM3();
            M16 m16=new M16();
             GeneriqueArme a[] = {ben,m16};
@@ -57,7 +57,7 @@ public class KeyboardJoeur extends Joeur {
         equipe[0] = s;
          
         s = new Soldat("Rifleman", "Williams", 7, 8, 6, 5, 6,
-                5, 5, 8, 8,Piece.Direction.N,this);
+                Soldat.FULL_SANTE, 5, 8, 8,Piece.Direction.N,this);
             GeneriqueArme a1[] = {new BenelliM3()};
             s.setArmeEquip(a1);
             s.setClassement(Soldat.CLASS_SOLDAT);
@@ -65,7 +65,7 @@ public class KeyboardJoeur extends Joeur {
         equipe[1] = s;
          
         s = new Soldat("Rifleman", "Miller", 7, 8, 6, 5, 6,
-                5, 5, 8, 8,Piece.Direction.N,this);
+                Soldat.FULL_SANTE, 5, 8, 8,Piece.Direction.N,this);
             GeneriqueArme a2[] = {new BenelliM3()};
             s.setArmeEquip(a2);
             s.setClassement(Soldat.CLASS_SOLDAT);
@@ -73,7 +73,7 @@ public class KeyboardJoeur extends Joeur {
        equipe[2] = s;
         
         s = new Soldat("Rifleman", "Anderson", 7, 8, 6, 5, 5, 
-                5, 5, 8, 8,Piece.Direction.N,this);
+                Soldat.FULL_SANTE, 5, 8, 8,Piece.Direction.N,this);
             GeneriqueArme a3[] = {new BenelliM3()};
             s.setArmeEquip(a3);
             s.setClassement(Soldat.CLASS_SOLDAT);

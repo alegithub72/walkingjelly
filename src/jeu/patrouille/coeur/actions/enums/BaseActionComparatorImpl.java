@@ -3,9 +3,10 @@
  * using javafx layer coding game all right reserved.
  * 
  */
-package jeu.patrouille.coeur.actions;
+package jeu.patrouille.coeur.actions.enums;
 
 import java.util.Comparator;
+import jeu.patrouille.coeur.actions.BaseAction;
 
 /**
  *

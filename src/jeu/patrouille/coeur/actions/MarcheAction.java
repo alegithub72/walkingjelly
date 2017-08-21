@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.coeur.actions;
 
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import java.util.ArrayList;
 import java.util.List;
 import jeu.patrouille.coeur.Carte;
@@ -22,11 +23,11 @@ public class MarcheAction extends BaseAction{
     MarcheAction derivedAction;
     
     public MarcheAction( int i0, int j0, int i1, int j1, Piece protagoniste){
-    super(BaseAction.MARCHE, i0 ,j0, i1, j1, protagoniste, null);
+    super(OrdreAction.MARCHE, i0 ,j0, i1, j1, protagoniste, null);
     
     }
     public MarcheAction(MarcheAction a){
-    super(BaseAction.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste,null);
+    super(OrdreAction.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste,null);
     
     }
 
@@ -47,7 +48,7 @@ public class MarcheAction extends BaseAction{
     }
     
     @Override
-    public List<BaseAction> spreadAction() {
+    public List<BaseAction> spreadAction()throws Exception {
         MarcheAction derivedAct=new MarcheAction(this);
         List<BaseAction> list=new ArrayList<>();
         int i1=protagoniste.getI();
@@ -63,7 +64,7 @@ public class MarcheAction extends BaseAction{
                 MarcheAction b= new MarcheAction(i1, j1, i2, j2, protagoniste);
                 b.setDerivedAction(derivedAct);
                 b.setMapTile(new PointCarte[]{mapTile[k]});
-                b.calculeActionPointDesActions();
+                b.calculeActionPointDesAction();
                 list.add(b); 
             
             System.out.println("spread action marche k="+k+"--"+protagoniste.toStringSimple()+"--->(i1,j1)----(i2,j2)");
@@ -77,11 +78,10 @@ public class MarcheAction extends BaseAction{
     }
     
     @Override   
-    public void calculeActionPointDesActions() {
-            int apbase= BaseAction.ACTIONPOINTVALOR[type];
+    public void calculeActionPointDesAction()throws Exception {
+            
             Soldat s=(Soldat)protagoniste;
-            if(s.getStatu()==Lesion.Statu.GRAVE|| s.getStatu()==Lesion.Statu.GRAVE_BRASE)
-                apbase=apbase*2;
+            int apbase=s.tempNecessarieDesActionBase(OrdreAction.MARCHE);
             if(mapTile==null){
                 mapTile =Carte.getLigne(i0, j0, i1, j1);
             }

@@ -45,6 +45,11 @@ public class Lesion {
     public void setStatu(Statu statu) {
         this.statu = statu;
     }
+
+    @Override
+    public String toString() {
+        return "Lesion{" + "location=" + location + ", gravite=" + gravite + ", blessure=" + blessure + ", statu=" + statu + '}';
+    }
     
     
 }

@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point2D;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
-import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
 
 
 /**
@@ -50,14 +49,14 @@ public abstract class Piece  {
     return boss.getJeur()==GeneriqueJoeurs.JOEUR_US;
     
     }
-    private void transformActionPool() {
+    private void transformActionPool() throws Exception {
         List<BaseAction> newActionPool=new ArrayList<>();
         System.out.println("*******SRPEAD START*******>");
         
         for(BaseAction b:actionsPool){
-            int type=b.getType();
+            OrdreAction type=b.getType();
             System.out.println("----TD COST--------->"+b.getTempActivite());
-            if(type==BaseAction.MARCHE){
+            if(type==OrdreAction.MARCHE){
                 List<BaseAction> l=b.spreadAction(); 
                 System.out.println(" list spread ->"+l.size());
                 newActionPool.addAll(l);
@@ -69,7 +68,7 @@ public abstract class Piece  {
         System.out.println("******SRPEAD END*****>");
      
     }
-    public List<BaseAction> getBaseActionSum(int td){
+    public List<BaseAction> getBaseActionSum(int td) throws Exception{
         //System.out.println("----GET ACTION SUM START--------->"+spreadDone);
         if(!spreadDone) {
 
@@ -97,10 +96,10 @@ public abstract class Piece  {
     }
     
     
-    public int getActionPoint() {
+    public int getTempDisponible() {
         return tempDesponible;
     }
-    public void setActionPoint(int n) {
+    public void setTempDesponible(int n) {
          tempDesponible=n;
     }    
     public boolean isZeroActionPoint(){
@@ -142,12 +141,14 @@ public abstract class Piece  {
    
     
     public void  addAction(BaseAction act)throws Exception{
-        act.calculeActionPointDesActions();
+        act.calculeActionPointDesAction();
         actionsPool.add(act);
         tempDesponible=tempDesponible-act.getTempActivite();
         System.out.println("--TD RIMANENTE----->"+tempDesponible);
     }    
      
+    
+    public abstract int tempNecessarieDesActionBase(OrdreAction actionType)throws Exception;
     public BaseAction nextAction(int i){
         
         return this.actionsPool.get(i);

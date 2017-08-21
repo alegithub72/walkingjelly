@@ -5,26 +5,22 @@
  */
 package jeu.patrouille.fx.menu.eventhandler;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.enums.OrdreAction;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.MenuItem;
-import jeu.patrouille.fx.menu.WalkItem;
 
 /**
  *
  * @author appleale
  */
-public class ItemMenuConfirmMarcheEventHandler  implements EventHandler<MouseEvent>{
+public class ItemMenuConfirmActionEventHandler  implements EventHandler<MouseEvent>{
     FXCarte fxcarte;
     MenuItem item;
-    public ItemMenuConfirmMarcheEventHandler(MenuItem item,FXCarte fxcarte) {
+    public ItemMenuConfirmActionEventHandler(MenuItem item,FXCarte fxcarte) {
         this.fxcarte=fxcarte;
         this.item=item;
     }
@@ -36,10 +32,10 @@ public class ItemMenuConfirmMarcheEventHandler  implements EventHandler<MouseEve
         if (event.getButton() == MouseButton.PRIMARY) {
             
             try {
-                if(item.getActionType()==BaseAction.MARCHE)
+                if(item.getActionType()==OrdreAction.MARCHE)
                     fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
-                else if(item.getActionType()==BaseAction.FEU){
-                    //TODO something
+                else if(item.getActionType()==OrdreAction.FEU){
+                    fxcarte.confirmFEUAction(item, event.getSceneX(), event.getSceneY());
                 }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
