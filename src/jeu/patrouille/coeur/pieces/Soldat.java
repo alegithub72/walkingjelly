@@ -40,6 +40,8 @@ public class Soldat extends Piece {
     public static final int FULL_SANTE=6;
     ActionType actionActuel=ActionType.PA_ACTION;
     Corp blindage;
+    Lesion lesion[];
+    int lesionN;
     Direction face;
     String nom=null;
     String nomDeFamilie=null;
@@ -101,7 +103,8 @@ public class Soldat extends Piece {
         immobilize=false;
         active=false;
         choc=false;
-       
+        lesion=new Lesion[10];
+        lesionN=0;
         
     
     }
@@ -497,5 +500,26 @@ public class Soldat extends Piece {
        System.out.println("distance "+d+" >="+dlonge+"");
        return d>=(dlonge*2);
        
+   }
+   
+   public void addLesion(Lesion l){
+       lesionN++;
+       if(lesionN>=lesion.length) {
+       Lesion listNew[]=new Lesion[lesion.length*2];
+           for (int k = 0; k < lesion.length; k++) {
+               listNew[k]=lesion[k];
+           }
+           lesion=listNew;
+       }
+     
+       lesion[lesionN]=l;
+   
+   }
+   
+   public Lesion getLastLesion(){
+       return lesion[lesionN];
+   }
+   public Lesion[] getAllLesion(){
+       return lesion;
    }
 }

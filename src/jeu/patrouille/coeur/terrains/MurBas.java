@@ -16,7 +16,7 @@ public class MurBas extends Terrain {
         this.j=j;
         this.type=PointCarte.MURBAS;
         this.v=0.7;
-        this.c=Terrain.Consistance.DUR;                ;
+        this.c=Terrain.Consistance.DUR;               
     }
    
     

@@ -18,9 +18,10 @@ public class Lesion {
     int gravite;
     int blessure;
     Statu statu;
+    int turn;
     public static int  SHELL_SHOCK=1000,NOTVALUE=2000;
     public static int  CRITIQUE=0,GRAVE=1,LEGER=2,MANQUE=3;    
-    public Lesion(Corp.CorpParts location,int gravite,int blessure,Statu statu){
+    public Lesion(Corp.CorpParts location,int gravite,int blessure,Statu statu,int turn){
         this.location=location;
         this.gravite=gravite;
         this.blessure=blessure;

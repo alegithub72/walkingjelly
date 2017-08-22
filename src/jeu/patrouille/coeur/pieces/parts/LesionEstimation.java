@@ -25,7 +25,7 @@ public class LesionEstimation {
         estimation[CorpParts.BrasGauche.ordinal()] = new int[]{-3, -2, -1, Lesion.SHELL_SHOCK};
 
     }
-      public Lesion getLesion(int n,int m){
+      public Lesion getLesion(int n,int m,int turn){
          CorpParts position=null;
          int blessure=Lesion.NOTVALUE;
          int gravite=Lesion.NOTVALUE;
@@ -67,7 +67,7 @@ public class LesionEstimation {
                  && gravite==Lesion.GRAVE)st=Statu.GRAVE_BRASE;
 
         
-       return new Lesion(position, gravite,blessure,st);
+       return new Lesion(position, gravite,blessure,st,turn);
       }
       
                           

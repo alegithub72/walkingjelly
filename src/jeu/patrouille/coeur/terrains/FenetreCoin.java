@@ -17,7 +17,7 @@ public class FenetreCoin extends Terrain{
         super(i,j,rot,"fenetre.png");
         this.type=PointCarte.FENETRE;
         this.v=0.5;
-        this.c=Consistance.DUR;        
+        this.c=Consistance.LEGER;        
 
     }
     
@@ -25,7 +25,7 @@ public class FenetreCoin extends Terrain{
         super(i,j,"fenetre.png");
         this.type=PointCarte.FENETRE;
         this.v=0.5;
-        this.c=Consistance.DUR;        
+        this.c=Consistance.LEGER;        
 
     }    
     public char graficRaprestation(){
