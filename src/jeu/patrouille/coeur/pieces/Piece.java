@@ -9,9 +9,8 @@ package jeu.patrouille.coeur.pieces;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.geometry.Point2D;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 
 
@@ -54,9 +53,9 @@ public abstract class Piece  {
         System.out.println("*******SRPEAD START*******>");
         
         for(BaseAction b:actionsPool){
-            OrdreAction type=b.getType();
+            ActionType type=b.getType();
             System.out.println("----TD COST--------->"+b.getTempActivite());
-            if(type==OrdreAction.MARCHE){
+            if(type==ActionType.MARCHE){
                 List<BaseAction> l=b.spreadAction(); 
                 System.out.println(" list spread ->"+l.size());
                 newActionPool.addAll(l);
@@ -148,7 +147,7 @@ public abstract class Piece  {
     }    
      
     
-    public abstract int tempNecessarieDesActionBase(OrdreAction actionType)throws Exception;
+    public abstract int tempNecessarieDesActionBase(ActionType actionType)throws Exception;
     public BaseAction nextAction(int i){
         
         return this.actionsPool.get(i);
@@ -163,24 +162,7 @@ public abstract class Piece  {
         if(actionsPool!=null) return actionsPool.size();
         else return 0;
     }   
-    public static double getDirection(double x0,double y0,double x1,double y1){
-        Point2D pv=new Point2D(x0, y0);
-        Point2D p0=new Point2D(0, y0);
-        Point2D p1=new Point2D(x1, y1);
-        if((y1-y0)<0 && (x1-x0)<0) 
-            return pv.angle(p0, p1)-90;
-        else if((y1-y0)<0 && (x1-x0)>0)
-            return pv.angle(p0, p1)-90;        
-        else  if((y1-y0)>0 && (x1-x0)>0 ) return (180-pv.angle(p0, p1))+90;
-        else if((y1-y0)>0 && (x1-x0)<0) return -pv.angle(p0,p1)-90;
-        else if((x1-x0)==0 && (y1-y0)<0) return pv.angle(p0,p1)-90;
-        else if((x1-x0)==0 && (y1-y0)>0) return -pv.angle(p0,p1)-90;
-        else if((y1-y0)==0 && (x1-x0)>0) return pv.angle(p0,p1)-90;
-        else if((y1-y0)==0 && (x1-x0)<0)return pv.angle(p0,p1)-90;
-        return pv.angle(p0,p1);
-      
-            
-    }
+
 
     public GeneriqueJoeurs getBoss() {
         return boss;

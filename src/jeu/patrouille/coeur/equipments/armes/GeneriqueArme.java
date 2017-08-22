@@ -9,6 +9,7 @@ import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
+import jeu.patrouille.coeur.terrains.Terrain;
 
 /**
  *
@@ -23,12 +24,12 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
     int porte[] = new int[3];
     int shotNumMF[] = new int[4];
-    int[] TDfireWeapon = new int[4];
+    int[] TDfireWeapon = new int[FeuMode.values().length];
     //Map shotNumMFMed;
     //Map shotNumMFLonge;
     FeuMode modefeu;
-    int doux = NOTVALUE;
-    int fort = NOTVALUE;
+    int coverPenetration[];
+
     Magazine[] magazine;
     int armeFeuModel;
     int finalCartouch;
@@ -38,6 +39,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     Magazine load;
     int TDrecharge = NOTVALUE;
     int magazineUsed;
+
 
     public int getArmeFeuModel() {
         return armeFeuModel;
@@ -49,10 +51,15 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         porte[Porte.COURT.ordinal()] = court;
         porte[Porte.LONGE.ordinal()] = medium;
         porte[Porte.LONGE.ordinal()] = longe;
-        
-
-
-
+        for (FeuMode f : FeuMode.values()) {
+            shotNumMF[f.ordinal()]=NOTVALUE;
+        }
+        for(FeuMode f:FeuMode.values()){
+            TDfireWeapon[f.ordinal()]=NOTVALUE;
+        }
+        this.coverPenetration=new int[2];
+        this.coverPenetration[Terrain.Consistance.LEGER.ordinal()] =NOTVALUE;
+        this.coverPenetration[Terrain.Consistance.DUR.ordinal()] =NOTVALUE;
     }
 
 
@@ -70,12 +77,15 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     }
 
     //TODO vedere per avere AP e shot
-    public int feuArme() throws ModeDeFeuException,LoadMagazineFiniException {
-        finalCartouch = load.depot(modefeu);
+    public int feuArme(double dist) throws ModeDeFeuException,LoadMagazineFiniException {
         int ap = TDfireWeapon[modefeu.ordinal()];
         if (ap == NOTVALUE) {
             throw new ModeDeFeuException("Mode de feu not avaiable");
-        }
+        }        
+        int n=hitsNumMF(dist);
+        finalCartouch = load.depot(n);
+
+
         return ap;
     }
     public int fireTempNecessarie()throws ModeDeFeuException{
@@ -107,13 +117,9 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
     }
 
-    public int getDoux() {
-        return doux;
-    }
-
-    public int getFort() {
-        return fort;
-    }
+public int getCoverPenetration(Terrain.Consistance c){
+    return this.coverPenetration[c.ordinal()];
+}
 
     Porte getTypePorte(double dist) {
         if (dist <= porte[Porte.COURT.ordinal()]) {

@@ -47,6 +47,10 @@ public class Terrain extends PointCarte {
     
     }
 
+    public Consistance getConsistance() {
+        return c;
+    }
+
     
     @Override
     public char rapresentation() {

@@ -44,38 +44,14 @@ public class Magazine extends GeneriqueEquipment {
     }
     
     
-    public int depot(FeuMode modFeu) throws LoadMagazineFiniException{
-    int n=-1;
+    public int depot(int n) throws LoadMagazineFiniException{
+
     if(quantity<=0) throw new LoadMagazineFiniException();
-        switch (modFeu) {
-            case SC:
-                n=1;
-                quantity--;
-                break;
-        //TODO capite
-            case SA:
-                n=1;
-                quantity--;
-                break;
-            case RA:
-                n=5;
-                if(quantity<5) {
+    if(quantity<n) {
                     n=quantity;
                     quantity=0;
                 }
-                else n=quantity-5;
-                break;
-            case PA:
-                n=10;
-                if(quantity<10) {
-                    n=quantity;
-                    quantity=0;
-                }
-                else  quantity=quantity-10;
-                break;
-            default:
-                break;
-        }
+                else  quantity=quantity-n;
     return n;
     }
     

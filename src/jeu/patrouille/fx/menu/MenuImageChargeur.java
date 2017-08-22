@@ -6,7 +6,7 @@
 package jeu.patrouille.fx.menu;
 
 import javafx.scene.image.Image;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 
 /**
  *
@@ -21,18 +21,18 @@ public class MenuImageChargeur {
      
     
     MenuImageChargeur() {
-        menuImages=new Image[OrdreAction.values().length];
-        menuImages[OrdreAction.MARCHE.ordinal()]=new Image("walkButton.png");
-        menuImages[OrdreAction.OCCASION_DE_FEU.ordinal()]=new Image("opFireButton.png");
-        menuImages[OrdreAction.COURS.ordinal()]=new Image("runButton.png");
-        menuImages[OrdreAction.FEU.ordinal()]=new Image("fireButton.png");
-        menuImages[OrdreAction.PA_ACTION.ordinal()]=new Image("arrowPng.png");
+        menuImages=new Image[ActionType.values().length];
+        menuImages[ActionType.MARCHE.ordinal()]=new Image("walkButton.png");
+        menuImages[ActionType.OCCASION_DE_FEU.ordinal()]=new Image("opFireButton.png");
+        menuImages[ActionType.COURS.ordinal()]=new Image("runButton.png");
+        menuImages[ActionType.FEU.ordinal()]=new Image("fireButton.png");
+        menuImages[ActionType.PA_ACTION.ordinal()]=new Image("arrowPng.png");
         
     }
     
     
     
-    public  Image getImage(OrdreAction type){
+    public  Image getImage(ActionType type){
 
         return  menuImages[type.ordinal()];
     }

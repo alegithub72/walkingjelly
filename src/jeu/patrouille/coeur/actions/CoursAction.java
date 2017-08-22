@@ -5,7 +5,7 @@
  */
 package jeu.patrouille.coeur.actions;
 
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.pieces.Piece;
 
@@ -15,7 +15,7 @@ import jeu.patrouille.coeur.pieces.Piece;
  */
 public class CoursAction extends BaseAction {
     public CoursAction( int i0, int j0, int i1, int j1, Piece protagoniste){
-    super(OrdreAction.COURS, i0, j0, i1, j1, protagoniste, null);
+    super(ActionType.COURS, i0, j0, i1, j1, protagoniste, null);
     } 
 
     @Override

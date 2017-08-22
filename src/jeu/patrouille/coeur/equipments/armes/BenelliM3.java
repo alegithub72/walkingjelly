@@ -7,6 +7,7 @@ package jeu.patrouille.coeur.equipments.armes;
 
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.equipments.armes.Magazine.*;
+import jeu.patrouille.coeur.terrains.Terrain;
 
 /**
  *
@@ -20,21 +21,16 @@ public class BenelliM3 extends GeneriqueArme{
             magazine[i]=new Magazine(Model.BENELLI_M3,SubType.SLUG);
         }
         armeFeuModel=TEMP_RIFLE;
-        shotNumMF[FeuMode.SC.ordinal()]=1;
-        shotNumMF[FeuMode.SA.ordinal()]=NOTVALUE;
-        shotNumMF[FeuMode.RA.ordinal()]=NOTVALUE;
-        shotNumMF[FeuMode.PA.ordinal()]=NOTVALUE;
 
- 
+
+        shotNumMF[FeuMode.SC.ordinal()]=1;
         TDfireWeapon[FeuMode.SC.ordinal()]= 3;
-        TDfireWeapon[FeuMode.SA.ordinal()]= NOTVALUE;
-        TDfireWeapon[FeuMode.RA.ordinal()]= NOTVALUE;
-        TDfireWeapon[FeuMode.PA.ordinal()]= NOTVALUE;
+
 
         this.evaluateDamagePotentiel=4;
         this.evaluateDificulte=3;
         this.evaluateModifierBlindee=-1;
-        this.doux=9;
+        this.coverPenetration[Terrain.Consistance.LEGER.ordinal()]=9;
 
         
         this.TDrecharge=6;

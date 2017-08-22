@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 public class SoldatCLone {
     Piece s;
     public SoldatCLone() {
-        s=new Soldat("ROSSI", "Mario",1, 2,3, 4, 5, 6, 7, 8, 9, Piece.Direction.S,null);
+        s=new Soldat("ROSSI", "Mario",1, 2,3, 4, 5, 6, null, 8, 9, Piece.Direction.S,null);
     }
     
     @BeforeClass

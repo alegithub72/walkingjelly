@@ -9,7 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.menu.MenuItem;
 
@@ -32,9 +32,9 @@ public class ItemMenuConfirmActionEventHandler  implements EventHandler<MouseEve
         if (event.getButton() == MouseButton.PRIMARY) {
             
             try {
-                if(item.getActionType()==OrdreAction.MARCHE)
+                if(item.getActionType()==ActionType.MARCHE)
                     fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
-                else if(item.getActionType()==OrdreAction.FEU){
+                else if(item.getActionType()==ActionType.FEU){
                     fxcarte.confirmFEUAction(item, event.getSceneX(), event.getSceneY());
                 }
             } catch (Exception ex) {

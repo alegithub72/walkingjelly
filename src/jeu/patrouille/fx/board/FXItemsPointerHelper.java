@@ -8,7 +8,7 @@ package jeu.patrouille.fx.board;
 
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -58,11 +58,11 @@ public class FXItemsPointerHelper {
     }
     
     public void resetCursorHelper(){
-        if(act.getType()==OrdreAction.MARCHE 
+        if(act.getType()==ActionType.MARCHE 
                 &&  this.seletctionee.getSoldat().
                         getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST) 
         this.rangeCursorHelper=ImageChargeur.CURSOR_HOST_RANGE;
-        else if(act.getType()==OrdreAction.MARCHE 
+        else if(act.getType()==ActionType.MARCHE 
                 && this.seletctionee.
                         getSoldat().getBoss().getJeur()== GeneriqueJoeurs.JOEUR_US) 
             this.rangeCursorHelper=ImageChargeur.CURSOR_US_RANGE;     
@@ -122,7 +122,7 @@ public class FXItemsPointerHelper {
             lastAct = s.lastAction();
             System.out.println("last action =" + lastAct);
             if (lastAct.getJ1() >= 0 &&
-                    lastAct.getType()!=OrdreAction.FEU) {
+                    lastAct.getType()!=ActionType.FEU) {
                 j = lastAct.getJ1();//TODO le azione che non muovono
             } else {
                 j = lastAct.getJ0();
@@ -145,7 +145,7 @@ public class FXItemsPointerHelper {
         if (actionsize > 0) {
             lastAct = s.nextAction(actionsize - 1);
             if (lastAct.getI1() >= 0 && 
-                    lastAct.getType()!=OrdreAction.FEU) {
+                    lastAct.getType()!=ActionType.FEU) {
                 i = lastAct.getI1();//TODO le azione che non muovono
             } else {
                 i = s.getI();

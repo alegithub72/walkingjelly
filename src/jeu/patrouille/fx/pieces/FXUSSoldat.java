@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.pieces;
 
 import javafx.scene.image.ImageView;
+import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
@@ -32,6 +33,11 @@ public class FXUSSoldat extends FXSoldat {
 
     }    
 
+    @Override
+    protected void buildFramesFeuAnim() {
+        this.frameAnimTimer[0]=new FrameAnimationTimer(7, 8, this, 0, true, 100, null);
+    }
+
 
     
 
@@ -46,7 +52,11 @@ public class FXUSSoldat extends FXSoldat {
     
 
         
+    @Override 
+    public void feuFrame(){
+        if(s.getPose()==Piece.Pose.DROIT) setFrame(7);
     
+    }
     
 
     

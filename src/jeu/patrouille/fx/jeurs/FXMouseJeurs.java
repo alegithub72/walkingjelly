@@ -42,7 +42,7 @@ public class FXMouseJeurs extends KeyboardJoeur{
             fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
             fxequipe[i].setVisible(false);           
             fxequipe[i].createFXSoldat();
-            fxequipe[i].setFrame(0);            
+            fxequipe[i].defaultFrame();
             fxcarte.addSprite(fxequipe[i]);
            // fxequipeUS[i].setOnMouseClicked(new ActionMenuCloseEventHandler(rootGroup, actionMenu));
         }    

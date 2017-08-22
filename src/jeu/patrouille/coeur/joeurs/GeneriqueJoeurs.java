@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 
@@ -131,7 +131,7 @@ public abstract class GeneriqueJoeurs {
             
         } else if (c == 'f') {
             
-            act = new BaseAction(OrdreAction.FEU, x0, y0, x1, y1, selectionee, null);
+            act = new BaseAction(ActionType.FEU, x0, y0, x1, y1, selectionee, null);
             
         }  
         return act;

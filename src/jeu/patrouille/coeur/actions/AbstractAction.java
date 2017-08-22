@@ -5,7 +5,7 @@
  */
 package jeu.patrouille.coeur.actions;
 
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import java.util.List;
 import jeu.patrouille.coeur.actions.AbstractAction.*;
 /**
@@ -17,7 +17,7 @@ public abstract class AbstractAction implements Comparable<BaseAction>{
 
 public static final int BANDAGE = 14;
 
-    OrdreAction type;
+    ActionType type;
     int j0;
     int i0;
     int i1;
@@ -33,7 +33,7 @@ public static final int BANDAGE = 14;
     }
     
 
-    public OrdreAction getType() {
+    public ActionType getType() {
         return type;
     }
 

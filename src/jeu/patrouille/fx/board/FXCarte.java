@@ -21,10 +21,10 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.pieces.Lesion;
+import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -265,7 +265,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
     private void playHostile(BaseAction b){
         FXHostile sfx = (FXHostile) findFXHostile((Soldat) b.getProtagoniste());
         fxIMHelper.setFXSeletctionee(sfx);
-        if (sfx.isVisible() &&  b.getType() == OrdreAction.MARCHE) {
+        if (sfx.isVisible() &&  b.getType() == ActionType.MARCHE) {
             sfx.playMarche((MarcheAction) b);
         } else {
             System.out.println("$$$$NON animation$$$$");
@@ -280,7 +280,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
         FXSoldat sfx = findFXUSSoldat((Soldat) b.getProtagoniste());
         fxIMHelper.setFXSeletctionee(sfx);
-        if (sfx.isVisible() && b.getType() == OrdreAction.MARCHE) {
+        if (sfx.isVisible() && b.getType() == ActionType.MARCHE) {
             sfx.playMarche((MarcheAction) b);
         } else {
             System.out.println("$$$$NON animation$$$$");
@@ -427,7 +427,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         item.setFrame(1);
         BaseAction act = item.buildMenuItemAction();
 
-        if (act.getType() == OrdreAction.MARCHE) {
+        if (act.getType() == ActionType.MARCHE) {
             
             addHelperInstance(act);
             fxIMHelper.setActionSeletione(true);
@@ -438,7 +438,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             fxpl.sendMessageToPlayer("Choisir un emplacement");
             closeFXCarteMenuItems();
 
-        } else if (act.getType() == OrdreAction.FEU) {
+        } else if (act.getType() == ActionType.FEU) {
             addHelperInstance(act);
             fxIMHelper.setActionSeletione(true);
             setOnMouseClicked(null);
@@ -657,13 +657,13 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 (scrollMousej * FXCarte.TILE_SIZE) + 25,
                 (scrollMousei * FXCarte.TILE_SIZE) + 25);
         
-        double angle =Piece.getDirection(
+        double angle =FXCarte.angleRotation(
                 relativex, 
                 relativey, 
                 (scrollMousej * FXCarte.TILE_SIZE) + 25, 
                 (scrollMousei * FXCarte.TILE_SIZE) + 25);
         
-
+        fxIMHelper.getFXSoldatSelectionee().setFXSoldatOrientation(angle);
        //TODO mettere una variabile per debug
         PointCarte obst=fxIMHelper.carteValiderRoute();
         if (fxIMHelper.isDistanceLessMarcheMax(r)
@@ -674,7 +674,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             resetCursorHelper();
             fxpl.sendMessageToPlayer("");
             visualizeRangePointers(mousex, mousey);
-           
+            
             System.out.println("raggio---->" + r);
             System.out.println("angle------------------------------------------>"+angle);
         } else {
@@ -689,7 +689,24 @@ private boolean isScrollAreaChanged(int i1,int j1){
     }
     
     
-    
+    public static double angleRotation(double x0,double y0,double x1,double y1){
+        Point2D pv=new Point2D(x0, y0);
+        Point2D p0=new Point2D(0, y0);
+        Point2D p1=new Point2D(x1, y1);
+        if((y1-y0)<0 && (x1-x0)<0) 
+            return pv.angle(p0, p1)-90;
+        else if((y1-y0)<0 && (x1-x0)>0)
+            return pv.angle(p0, p1)-90;        
+        else  if((y1-y0)>0 && (x1-x0)>0 ) return (180-pv.angle(p0, p1))+90;
+        else if((y1-y0)>0 && (x1-x0)<0) return -pv.angle(p0,p1)-90;
+        else if((x1-x0)==0 && (y1-y0)<0) return pv.angle(p0,p1)-90;
+        else if((x1-x0)==0 && (y1-y0)>0) return -pv.angle(p0,p1)-90;
+        else if((y1-y0)==0 && (x1-x0)>0) return pv.angle(p0,p1)-90;
+        else if((y1-y0)==0 && (x1-x0)<0)return pv.angle(p0,p1)-90;
+        return pv.angle(p0,p1);
+      
+            
+    }
     public synchronized void displayFeuRangeAction(double mousex, double mousey) {
         int i=(int)(mousey/FXCarte.TILE_SIZE);
         int j=(int)(mousex/FXCarte.TILE_SIZE);
@@ -707,6 +724,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
         gc.strokeLine(protx, proty, xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
         Point2D p0=new Point2D(protx, proty);
         double dpixel= p0.distance(xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
+        double angle=FXCarte.angleRotation(protx, proty, xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
+        fxIMHelper.getFXSoldatSelectionee().setFXSoldatOrientation(angle);
+        
         double inch=(dpixel*0.02);
         System.out.println("distance"+(inch*1.8280)+" metri o inches:"+inch);
         if(s.isFeuArmePaPorte(inch)){            
@@ -1147,10 +1167,10 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
     
     public  void visualizeMiniIconAction(BaseAction act){
         removeMiniIcon();
-        if(act.getType()==OrdreAction.MARCHE){
+        if(act.getType()==ActionType.MARCHE){
             actionIcon =new FXPatrouilleSprite(FXCarte.TILE_SIZE,
                 FXCarte.TILE_SIZE, "actionWalk.png", this);
-        }if(act.getType()==OrdreAction.FEU){
+        }if(act.getType()==ActionType.FEU){
             actionIcon =new FXPatrouilleSprite(FXCarte.TILE_SIZE,
                 FXCarte.TILE_SIZE, "crossHairSign.png", this);        
         }
@@ -1292,7 +1312,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             m.setTranslateX(menuItemx);
             m.setTranslateY(menuItemy);
             rootGroup.getChildren().add(m);   
-            if(s.isTempDisponiblePour(OrdreAction.MARCHE)) {
+            if(s.isTempDisponiblePour(ActionType.MARCHE)) {
             m.setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(m,  this));
             m.setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(m));
             m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));
@@ -1337,7 +1357,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
                 m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
             actionMenu[2] = m;    
             Soldat s=sfx.getSoldat();
-            if(!s.isTempDisponiblePour(OrdreAction.FEU)){
+            if(!s.isTempDisponiblePour(ActionType.FEU)){
                 m.setEffect(new GaussianBlur());
                 m.setOnMouseClicked(null);
             }

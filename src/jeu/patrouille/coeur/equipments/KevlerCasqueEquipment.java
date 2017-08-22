@@ -5,9 +5,6 @@
  */
 package jeu.patrouille.coeur.equipments;
 
-import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
-import jeu.patrouille.coeur.pieces.Lesion;
-
 /**
  *
  * @author appleale
@@ -15,7 +12,6 @@ import jeu.patrouille.coeur.pieces.Lesion;
 public class KevlerCasqueEquipment extends GeneriqueBlindageEquipment{
     public KevlerCasqueEquipment() {
         super("Casque Blinde", EquipmentType.CASQUE_BLINDE, null);
-        position=Lesion.TETE;
         scoreBlindage=5;
     }
 

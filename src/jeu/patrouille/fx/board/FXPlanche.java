@@ -27,7 +27,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.menu.FeuItem;
 import jeu.patrouille.fx.menu.WalkItem;
@@ -220,10 +220,10 @@ public class FXPlanche extends Application {
     void visualizeActionBar(BaseAction act, int k) {
         //TODO compliche trought scroll panel !!!!!!!
         Sprite spAct=null;
-        if (act.getType() == OrdreAction.MARCHE) {
+        if (act.getType() == ActionType.MARCHE) {
             spAct = new WalkItem(null);
 
-        }if(act.getType()==OrdreAction.FEU){
+        }if(act.getType()==ActionType.FEU){
             spAct=new FeuItem(null);
         }
         boolean add = rootBarGroup.getChildren().add(spAct);

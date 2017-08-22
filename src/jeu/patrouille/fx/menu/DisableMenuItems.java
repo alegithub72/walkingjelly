@@ -6,7 +6,7 @@
 package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 import jeu.patrouille.fx.pieces.FXUSSoldat;
@@ -17,7 +17,7 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  */
 public class DisableMenuItems extends SoldatMenuItem{
     public DisableMenuItems(FXSoldat fxs){
-        super(OrdreAction.PA_ACTION,fxs);
+        super(ActionType.PA_ACTION,fxs);
         setFrame(1);
         
     }
@@ -25,7 +25,7 @@ public class DisableMenuItems extends SoldatMenuItem{
     @Override
     public BaseAction buildMenuItemAction() {
        BaseAction lstact= fxs.getSoldat().lastAction();
-       BaseAction act=new BaseAction(OrdreAction.PA_ACTION,-1, -1, -1, -1, fxs.getSoldat(), null);
+       BaseAction act=new BaseAction(ActionType.PA_ACTION,-1, -1, -1, -1, fxs.getSoldat(), null);
        return act;
     }
     

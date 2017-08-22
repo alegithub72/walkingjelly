@@ -7,21 +7,26 @@ package jeu.patrouille.coeur.pieces;
 
 
 
-import com.sun.jmx.remote.util.OrderClassLoaders;
+
+import jeu.patrouille.coeur.pieces.parts.Lesion;
+import jeu.patrouille.coeur.pieces.parts.CorpPart;
+import jeu.patrouille.coeur.pieces.parts.Corp;
 import java.util.ArrayList;
+import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
-import jeu.patrouille.coeur.pieces.Lesion.*;
+import jeu.patrouille.coeur.pieces.parts.Lesion.*;
 import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
 import jeu.patrouille.coeur.pieces.exceptions.NotSautOrCourseSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
+import jeu.patrouille.fx.board.FXCarte;
 
 /**
  *
@@ -33,7 +38,8 @@ public class Soldat extends Piece {
 
     public static final int CLASS_SGT=8,CLASS_TEN=20,CLASS_SGT_MJR=15,CLASS_SOLDAT=7;
     public static final int FULL_SANTE=6;
-    OrdreAction actionActuel=OrdreAction.PA_ACTION;
+    ActionType actionActuel=ActionType.PA_ACTION;
+    Corp blindage;
     Direction face;
     String nom=null;
     String nomDeFamilie=null;
@@ -43,7 +49,6 @@ public class Soldat extends Piece {
     int force=-1;
     int courage=-1;
     int sante=-1;
-    int blindage=-1;
     int moral=-1;
     int commandControler=-1;
     int classement=-1;
@@ -71,7 +76,7 @@ public class Soldat extends Piece {
             int force,
             int courage,
             int sante,
-            int blindage,
+            Corp blindage,
             int moral,
             int commandControler,
             Direction d,
@@ -120,15 +125,15 @@ public class Soldat extends Piece {
 
 
     public void blessure(Lesion l){
-        if(l.statu==Lesion.Statu.CRITIQUE 
-                && l.location==Lesion.TETE) {
+        if(l.getStatu()==Lesion.Statu.CRITIQUE 
+                && l.getLocation()==Corp.CorpParts.Tete) {
             sante=-10;
             st=Statu.CRITIQUE;
             
         }
         else {
-            this.sante=sante-l.blessure;
-            if(null!=l.statu) switch (l.statu) {
+            this.sante=sante-l.getBlessure();
+            if(null!=l.getStatu()) switch (l.getStatu()) {
                 case CRITIQUE:
                     this.moral=moral-2;
                     tempDesponible=tempDesponible-boss.dice(10);
@@ -144,8 +149,8 @@ public class Soldat extends Piece {
                 case GRAVE:
                     moral=moral-1;
                     tempDesponible=tempDesponible-boss.dice(6);
-                    if(l.location==Lesion.BRAS_DROITE ||
-                            l.location==Lesion.BRAS_GAUCHE)
+                    if(l.getLocation()==Corp.CorpParts.BrasDroite ||
+                            l.getLocation()==Corp.CorpParts.BrasGauche)
                         armeUtilise=null;
                     
                     //TODO one action per turn
@@ -248,10 +253,10 @@ public class Soldat extends Piece {
         return sante;
     }
 
-    public int getB() {
-        return blindage;
+   public int getBlindage(Corp.CorpParts part){
+      CorpPart p=  blindage.getCorpPart(part);
+      return p.getBlindage().getAr();
     }
-
     public int getM() {
         return moral;
     }
@@ -262,10 +267,10 @@ public class Soldat extends Piece {
    public ActeurType getType() {
         return type;
     }
-   public void setAction(OrdreAction a){
+   public void setAction(ActionType a){
     actionActuel=a;
    }
-   public OrdreAction getAction(){
+   public ActionType getAction(){
     return actionActuel;
    }
 
@@ -311,10 +316,45 @@ public class Soldat extends Piece {
 
         return s;
     }
-    public int fire(double dist) throws ModeDeFeuException,LoadMagazineFiniException{
-      int  n=armeUtilise.hitsNumMF(dist);
-      this.tempDesponible=tempDesponible-armeUtilise.feuArme();
-      return n;
+    public int fire(Soldat target,ActionType t) throws ModeDeFeuException,LoadMagazineFiniException{
+ 
+        double dist=Carte.distance(i, j, target.getI(), target.getJ(),FXCarte.TILE_SIZE);        
+        int  shotN=armeUtilise.hitsNumMF(dist);
+
+      int cDM=comabtDistanceModifier(target,t);
+      int score=0;
+            for(int hits=0;hits<shotN;hits++){
+                int dice=boss.dice(10);
+                int tg=armeUtilise.porteModifier(dist)+competenceArme+cDM;
+                if(dice<=tg) score++;
+            }
+   
+      this.tempDesponible=tempDesponible-armeUtilise.feuArme(dist);
+      return score;
+    
+    }
+    int comabtDistanceModifier(Soldat target,ActionType t){
+            int cDM=-isWounded();
+
+            if(armeUtilise.getMF()==FeuMode.RA ) 
+                cDM=cDM-1;
+            else if(armeUtilise.getMF()==FeuMode.PA)
+                cDM=cDM-3;
+            
+            if(actionActuel==ActionType.MARCHE)cDM=cDM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
+            else if(actionActuel==ActionType.COURS)cDM=cDM-4;
+            
+            if(t==ActionType.FEU_VISER)cDM=cDM+1;
+
+
+
+            if(pose==Piece.Pose.PRONE) cDM=cDM+1;
+            
+            
+            if(target.getAction()==ActionType.COURS) cDM=cDM-2;
+            else if(target.getAction()==ActionType.MARCHE)cDM=cDM-1;
+            if(target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;     
+            return cDM;
     
     }
     @Override
@@ -345,7 +385,7 @@ public class Soldat extends Piece {
                 + "" + nom +" "+ nomDeFamilie +"";
                 
     }
-    public boolean isTempDisponiblePour(OrdreAction actiontype)throws Exception{
+    public boolean isTempDisponiblePour(ActionType actiontype)throws Exception{
         int baseTempDisponible=tempNecessarieDesActionBase(actiontype);
         return (tempDesponible>=baseTempDisponible);
         
@@ -374,8 +414,8 @@ public class Soldat extends Piece {
         }else if(st==Statu.GRAVE_TETE  ){
             throw new ImmobilzedSodlatException();
         }else if(st==Statu.GRAVE){
-            if(act.getType()==OrdreAction.COURS ||
-                    act.getType()==OrdreAction.SAUT)
+            if(act.getType()==ActionType.COURS ||
+                    act.getType()==ActionType.SAUT)
                 throw new NotSautOrCourseSoldatException();
             super.addAction(act);
         }else if(st==Statu.LEGER_BLESSE){
@@ -419,10 +459,10 @@ public class Soldat extends Piece {
     }
 
 @Override
-    public int tempNecessarieDesActionBase(OrdreAction actionType)throws Exception{
+    public int tempNecessarieDesActionBase(ActionType actionType)throws Exception{
         int apbase=-1;
-        if(actionType==OrdreAction.FEU  ||
-                actionType==OrdreAction.OCCASION_DE_FEU ) 
+        if(actionType==ActionType.FEU  ||
+                actionType==ActionType.OCCASION_DE_FEU ) 
             apbase=this.armeUtilise.fireTempNecessarie(); 
         else apbase=actionType.TN();
         if(isDoubled())apbase=apbase*2;
@@ -444,9 +484,9 @@ public class Soldat extends Piece {
    
    public boolean isDistanceLessMarcheMax(double dist){
       try{
-            int apbase=this.tempNecessarieDesActionBase(OrdreAction.MARCHE);
+            int apbase=this.tempNecessarieDesActionBase(ActionType.MARCHE);
             double value=dist*apbase;
-            return tempDesponible<=value ;
+            return value<=tempDesponible ;
       }catch(Exception ex){
           ex.printStackTrace();
       }

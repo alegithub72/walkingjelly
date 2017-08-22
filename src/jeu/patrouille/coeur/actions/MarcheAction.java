@@ -5,11 +5,11 @@
  */
 package jeu.patrouille.coeur.actions;
 
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import java.util.ArrayList;
 import java.util.List;
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.pieces.Lesion;
+import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -23,11 +23,11 @@ public class MarcheAction extends BaseAction{
     MarcheAction derivedAction;
     
     public MarcheAction( int i0, int j0, int i1, int j1, Piece protagoniste){
-    super(OrdreAction.MARCHE, i0 ,j0, i1, j1, protagoniste, null);
+    super(ActionType.MARCHE, i0 ,j0, i1, j1, protagoniste, null);
     
     }
     public MarcheAction(MarcheAction a){
-    super(OrdreAction.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste,null);
+    super(ActionType.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste,null);
     
     }
 
@@ -81,7 +81,7 @@ public class MarcheAction extends BaseAction{
     public void calculeActionPointDesAction()throws Exception {
             
             Soldat s=(Soldat)protagoniste;
-            int apbase=s.tempNecessarieDesActionBase(OrdreAction.MARCHE);
+            int apbase=s.tempNecessarieDesActionBase(ActionType.MARCHE);
             if(mapTile==null){
                 mapTile =Carte.getLigne(i0, j0, i1, j1);
             }

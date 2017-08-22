@@ -58,7 +58,7 @@ public class Sprite extends Parent
         if(img!=null) this.frameImages=new Image(img);
 
         ptList=new Animation[5];
-
+        
         frameAnimTimer=new FrameAnimationTimer[2];
         
     }

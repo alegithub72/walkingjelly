@@ -6,7 +6,8 @@
 package jeu.patrouille.coeur.equipments;
 
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
-import jeu.patrouille.coeur.pieces.Lesion;
+import jeu.patrouille.coeur.pieces.parts.Corp;
+import jeu.patrouille.coeur.pieces.parts.Lesion;
 
 /**
  *
@@ -16,7 +17,6 @@ public class CoverJaquetteEquipment extends GeneriqueBlindageEquipment{
 
     public CoverJaquetteEquipment() {
         super("Jaquette Blinde", EquipmentType.JAQUETTE_BLINDE, null);
-       position=Lesion.THORAX;
        scoreBlindage=5;//TODO vedere i valori
     }
 

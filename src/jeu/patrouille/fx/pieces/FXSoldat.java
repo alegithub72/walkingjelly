@@ -10,12 +10,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
+import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -40,12 +42,15 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         this.s=s;
         blessureImg=new ImageView("wound.png");
         flagImg=new ImageView("americanFlag.png");
-        if(s.getClassement()==Soldat.CLASS_SGT)  classmentImg=new ImageView("sgtGrade.png");
-        else if(s.getClassement()==Soldat.CLASS_SOLDAT)classmentImg=new ImageView("scelto.png");
+        if(s.getClassement()==Soldat.CLASS_SGT)  
+            classmentImg=new ImageView("sgtGrade.png");
+        else if(s.getClassement()==Soldat.CLASS_SOLDAT)
+            classmentImg=new ImageView("scelto.png");
         selectionneImg=new ImageView("selectUS.png");       
         //defaultFrame=s.getClassement();
         orientation=0;
         this.pos=pos;
+        setDeafultFrame(0);
     }
 
     protected void buildGroupSigns() {
@@ -82,7 +87,11 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         }
     }
 
-
+    public void pronePostion(){
+        this.setW(100);
+        this.buildFrameImages(new Image("proneUS.png"));
+        
+    }
 
     protected void getAngle(Point2D p0, Point2D p2) {
     }
@@ -236,7 +245,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
         System.out.println(" p1="+p1+" move to p2="+p2);
 
-        double angle=Piece.getDirection(p1.getX(),p1.getY(),p2.getX(),p2.getY());
+        double angle=FXCarte.angleRotation(p1.getX(),p1.getY(),p2.getX(),p2.getY());
         setFXSoldatOrientation(angle);
                 
         System.out.println("rotate "+angle);
@@ -280,7 +289,18 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         }
         System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->--------><---------");
     } 
+   
+   
+   public void PlayFeu(FeuAction act){
+   
+   
+   
+   }
     protected abstract void buildFramesMarcheAnim();    
+    protected abstract void buildFramesFeuAnim();
+    public abstract void feuFrame();
+
+    
 
     @Override
     public String toString() {

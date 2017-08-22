@@ -5,7 +5,7 @@
  */
 package jeu.patrouille.coeur.pieces;
 
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.fx.sprite.Sprite;
 
@@ -20,7 +20,7 @@ public class Vehicule extends Piece  {
     }
 
     @Override
-    public int tempNecessarieDesActionBase(OrdreAction actionType) throws Exception {
+    public int tempNecessarieDesActionBase(ActionType actionType) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -11,18 +11,21 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.pieces.LesionEstimation;
+import jeu.patrouille.coeur.pieces.parts.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.coeur.pieces.Lesion;
+import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
+import jeu.patrouille.coeur.pieces.parts.Corp;
+import jeu.patrouille.coeur.terrains.PointCarte;
+import jeu.patrouille.coeur.terrains.Terrain;
 /**
  *
  * @author Alessio Sardaro
@@ -269,9 +272,9 @@ public class MoteurDeJoeur implements Runnable{
     
     }
    private void makeAction(Soldat s,BaseAction a)throws Exception{
-       if(a.getType()==OrdreAction.MARCHE){
+       if(a.getType()==ActionType.MARCHE){
            makeMarcheAction(s, a);
-       }else if(a.getType()==OrdreAction.FEU){
+       }else if(a.getType()==ActionType.FEU){
            makeFeuAction(a);
        }
     
@@ -374,7 +377,7 @@ public class MoteurDeJoeur implements Runnable{
         else c.terrain[i1][j1].addExtraPiece(s);
         //TODO if enemy do a close fight...!!!!
         
-        s.setAction(OrdreAction.MARCHE);
+        s.setAction(ActionType.MARCHE);
         System.out.println("updated terrain --soldat-"+s.toStringSimple()+"---->"+a.getI1()+"--->"+a.getJ1());
         s.setI(i1);
         s.setJ(j1);
@@ -387,50 +390,48 @@ public class MoteurDeJoeur implements Runnable{
             System.out.println("--------------FEUUUU MAKE---------------------");
             Soldat s=(Soldat)act.getProtagoniste();
             Soldat target=(Soldat)act.getAntagoniste();
-            GeneriqueArme arme=s.getArmeUtilise();
+
             //TODO generalizzare in FXcarte....
-            double dist=Carte.distance(act.getI0(), act.getJ0(), act.getI1(), act.getJ1(),FXCarte.TILE_SIZE);
-            int shotN=s.fire(dist);
-            int dCM=-s.isWounded();
-
-            if(arme.getMF()==FeuMode.RA) 
-                dCM=dCM-1;
-            else if(arme.getMF()==FeuMode.PA)
-                dCM=dCM-3;
-            
-            if(s.getAction()==OrdreAction.MARCHE)dCM=dCM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
-            else if(s.getAction()==OrdreAction.COURS)dCM=dCM-4;
-            
-            if(act.getType()==OrdreAction.FEU_VISER)dCM=dCM+1;
-
-
-
-            if(s.getPose()==Piece.Pose.PRONE) dCM=dCM+1;
-            
-            
-            if(target.getAction()==OrdreAction.COURS) dCM=dCM-2;
-            else if(target.getAction()==OrdreAction.MARCHE)dCM=dCM-1;
-            if(target.getPose()==Piece.Pose.PRONE) dCM=dCM-1; 
-            
-
-
-            int score=0;
-            for(int hits=0;hits<shotN;hits++){
-                int dice=s.getBoss().dice(10);
-                int tg=s.getArmeUtilise().porteModifier(dist)+s.getCA()+dCM;
-                if(dice<=tg) score++;
-            }
-            //TODO choose other target.........if full automatic in the line of sight
+            int score=s.fire(target,act.getType());
+            Lesion[] llist=new Lesion[score];
+            PointCarte line[]= Carte.getLigne(s.getI(), s.getJ(), target.getI(),target.getJ());
+            Terrain cover= c.getPointCarte(line[line.length-1].getI(),line[line.length-1].getJ());
+            GeneriqueArme arm=s.getArmeUtilise();
             for (int sc=0;sc<score;sc++){
                 int location=s.getBoss().dice(10);
-                int blessure=s.getBoss().dice(10)-arme.getEDP();
-
+                int blessure=s.getBoss().dice(10)-arm.getEDP();
                 Lesion l= lesionEsti.getLesion(location, blessure);   
-                //TODO blindage check and cover check
-                target.blessure(l);
-                System.out.println(l.toString());
-            }
+                //TODO is not enough the last cover
+                //TODO for each cove r on the los of the target
+                boolean coverBool=coverRoll(line, s);
+                int armorCheck=s.getBlindage(l.getLocation())+arm.getEMB();
+                int armorRoll=target.getBoss().dice(10);
+                if((armorRoll==1 && armorRoll<=armorCheck )&& coverBool
+                        ) llist[sc]=l;
+                
+
+            }   
+            
+
+
+
+            //TODO choose other target.........if full automatic in the line of sight
+
         System.out.println("--------------FEUUUU MAKE---------------------");            
     }
-     
+     boolean coverRoll(PointCarte line[],Soldat s){
+         for (PointCarte pointCarte : line) {
+             Terrain t=c.getPointCarte(pointCarte.getI(), pointCarte.getJ());
+             GeneriqueArme arm=s.getArmeUtilise();
+             Terrain.Consistance con=t. getConsistance();
+             if(con!=Terrain.Consistance.NO){
+                 int coverNum=arm.getCoverPenetration(t. getConsistance());
+                 int rollCover=s.getBoss().dice(10);
+                 if(rollCover>coverNum && rollCover!=1) return false;                 
+             }
+
+             }
+             
+         return true;
+     }
 }

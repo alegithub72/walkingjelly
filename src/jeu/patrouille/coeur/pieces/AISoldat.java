@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.coeur.pieces;
 
+import jeu.patrouille.coeur.pieces.parts.Corp;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
@@ -23,7 +24,7 @@ public class AISoldat extends Soldat {
     int force,
     int courage,
     int sante,
-    int blindage,
+    Corp blindage,
     int moral,
     int commandControler,Direction d,GeneriqueJoeurs boss){
         //super(ActeurType.SOLDAT);

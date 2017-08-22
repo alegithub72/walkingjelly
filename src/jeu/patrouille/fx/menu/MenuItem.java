@@ -8,7 +8,7 @@ package jeu.patrouille.fx.menu;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 
 /**
@@ -18,9 +18,9 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 public abstract class MenuItem extends FXPatrouilleSprite{
     public static int  MENU_H=100;
     public static int MENU_W=100;
-    OrdreAction actionType;
+    ActionType actionType;
     MenuImageChargeur menuImgChgr;
-    public MenuItem(OrdreAction type){
+    public MenuItem(ActionType type){
     super(MENU_W,MENU_H,null,null);
     menuImgChgr=MenuImageChargeur.geInstance();
     buildFrameImages(menuImgChgr.getImage(type));
@@ -34,11 +34,11 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     
     }
 
-    public OrdreAction getActionType() {
+    public ActionType getActionType() {
         return actionType;
     }
 
-    public void setActionType(OrdreAction actionType) {
+    public void setActionType(ActionType actionType) {
         this.actionType = actionType;
     }
     

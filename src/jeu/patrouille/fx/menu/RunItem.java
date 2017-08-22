@@ -6,7 +6,7 @@
 package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
@@ -18,7 +18,7 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
 public class RunItem extends SoldatMenuItem{
     
     public RunItem(FXSoldat fxs){
-        super(OrdreAction.COURS, fxs);
+        super(ActionType.COURS, fxs);
     }
 
     @Override

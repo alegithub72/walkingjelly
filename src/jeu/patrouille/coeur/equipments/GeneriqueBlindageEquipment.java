@@ -13,7 +13,6 @@ import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
  */
 public abstract class GeneriqueBlindageEquipment extends GeneriqueEquipment {
     
-    int position;
     int scoreBlindage;
 
     public GeneriqueBlindageEquipment(String nom, EquipmentType type, Model model) {
@@ -25,9 +24,7 @@ public abstract class GeneriqueBlindageEquipment extends GeneriqueEquipment {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public int getPosition() {
-        return position;
-    }
+
 
     public int getAr() {
         return scoreBlindage;

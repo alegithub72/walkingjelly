@@ -6,7 +6,7 @@
 package jeu.patrouille.coeur.actions;
 
 import jeu.patrouille.coeur.actions.enums.BaseActionComparatorImpl;
-import jeu.patrouille.coeur.actions.enums.OrdreAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -20,7 +20,7 @@ import jeu.patrouille.coeur.pieces.Piece;
 public   class BaseAction extends AbstractAction {
     
     
-    public static  BaseAction QUIT=new BaseAction(OrdreAction.PA_ACTION, -1, -1, -1,-1, null, null);
+    public static  BaseAction QUIT=new BaseAction(ActionType.PA_ACTION, -1, -1, -1,-1, null, null);
     public static  Comparator baseActionCompratorImpl=new BaseActionComparatorImpl();
     Piece protagoniste;
     Piece antagoniste;
@@ -66,7 +66,7 @@ public int compareTo(BaseAction b) {
         return protagoniste;
     }
     
-    public BaseAction(OrdreAction type, int i0, int j0, int i1, int j1, Piece protagoniste, Piece antagoniste) {
+    public BaseAction(ActionType type, int i0, int j0, int i1, int j1, Piece protagoniste, Piece antagoniste) {
         this.type = type;
         this.j0 = j0;
         this.i0 = i0;
@@ -103,8 +103,8 @@ public int compareTo(BaseAction b) {
     @Override
     public String toString() {
         char c=' ';
-        if(type==OrdreAction.FEU) c='f';
-        else if(type==OrdreAction.MARCHE) c='m';
+        if(type==ActionType.FEU) c='f';
+        else if(type==ActionType.MARCHE) c='m';
         
         
         String txt=c+""+i0+","+j0+";"+i1+","+j1;

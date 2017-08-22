@@ -4,8 +4,7 @@
  * 
  */
 
-import javafx.geometry.Point2D;
-import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.fx.board.FXCarte;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,12 +39,12 @@ public class Point2DJUnitTest {
     @Test
     public void point2DTes(){
     
-    System.out.println(""+Piece.getDirection(250, 300, 550, 250));
-        System.out.println(""+Piece.getDirection(250, 300, 550, 300));
-        System.out.println(""+Piece.getDirection(250, 300, 450, 450));
-         System.out.println(""+Piece.getDirection(250, 300, 250, 450));
-           System.out.println(""+Piece.getDirection(250, 300, 200, 500));
-    System.out.println(""+Piece.getDirection(250, 300, 0, 450));
+    System.out.println(""+FXCarte.angleRotation(250, 300, 550, 250));
+        System.out.println(""+FXCarte.angleRotation(250, 300, 550, 300));
+        System.out.println(""+FXCarte.angleRotation(250, 300, 450, 450));
+         System.out.println(""+FXCarte.angleRotation(250, 300, 250, 450));
+           System.out.println(""+FXCarte.angleRotation(250, 300, 200, 500));
+    System.out.println(""+FXCarte.angleRotation(250, 300, 0, 450));
 
     }
     // TODO add test methods here.
