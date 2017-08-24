@@ -41,6 +41,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     ImageView flagImg;
     ImageView classmentImg;
     ImageView selectionneImg;
+    ImageView schokOrImmodilzer;
     double orientation;
 
     int pos;
@@ -122,8 +123,8 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         int scrollJ = j - posj;
         double x0 = scrollJ * FXCarte.TILE_SIZE;
         double y0 = scrollI * FXCarte.TILE_SIZE;
-        y0 = esteticCorrectionY0(scrollI, y0);
-        x0 = esteticCorrectionX0(scrollJ, x0);
+        //y0 = esteticCorrectionY0(scrollI, y0);
+        //x0 = esteticCorrectionX0(scrollJ, x0);
         Point2D p = new Point2D(x0, y0);
         return p;
     }
@@ -165,8 +166,8 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         int scrollJ = j0 - fxcarte.getPosJ();
         int scrollI = i0 - fxcarte.getPosI();
         //System.out.println(" enable node--->" + s.getNom() + "x0,y0=" + x0 + "," + y0);
-        x0 = esteticCorrectionX0(scrollJ, x0);
-        y0 = esteticCorrectionY0(scrollI, y0);
+        //x0 = esteticCorrectionX0(scrollJ, x0);
+        //y0 = esteticCorrectionY0(scrollI, y0);
         setTranslateX(x0);
         setTranslateY(y0);
         toFront();
@@ -303,6 +304,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     public void signOff(){
        flagImg.setVisible(false);
        classmentImg.setVisible(false);
+       if(this.schokOrImmodilzer!=null) schokOrImmodilzer.setVisible(true);
        getChildren().removeAll(blessureImg);
     }
     public void signON(){
@@ -311,14 +313,17 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        getChildren().removeAll(blessureImg);
        if(s.getSante()<blessureImg.length)   {
            int blN=s.getNumLesion();
-       for(int n=0;n<blN;n++){
-           blessureImg[n] = new ImageView("wound.png");
-           blessureImg[n].setTranslateY(n*10);
-           blessureImg[n].setTranslateX(FXCarte.TILE_SIZE - 10);
-           getChildren().add(blessureImg[n]);
+        for(int n=0;n<blN;n++){
+            blessureImg[n] = new ImageView("wound.png");
+            blessureImg[n].setTranslateY(n*10);
+            blessureImg[n].setTranslateX(FXCarte.TILE_SIZE - 10);
+            getChildren().add(blessureImg[n]);
 
+        }
        }
-       }
+       if(s.isChoc()||
+               s.isImmobilize()||
+               s.isImmobilize()) schokOrImmodilzer=new ImageView("shocked.png");
     }
     public void playFeu(FeuAction act){
        buildFramesFeuAnim();
@@ -382,12 +387,13 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         System.out.println("last blesse in run blesse "+l);
         if(l==null) return ;
       
-       setW(100);
-       Image img=new Image("feritoUS.png");
+
                
 
            switch (l.getStatu()) {
             case CRITIQUE:
+                setW(100);
+                Image img=new Image("feritoUS.png");
                 buildFrameImages(img);
                 if(!s.isUS()) setFrame(5);
                 else setFrame(3);
@@ -395,6 +401,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                 playBlessedAnim();
                 break;
             case GRAVE:
+                img=new Image("feritoUS.png");
                 buildFrameImages(img);
                 if(!s.isUS()) setFrame(2);
                 else setFrame(4);
@@ -402,13 +409,19 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                  playBlessedAnim();
                 break;
             case GRAVE_BRASE_DROITE:
-                buildFrameImages(img);
-                if(!s.isUS()) setFrame(0);
-                else setFrame(6);
+                if(!s.isUS()){
+                    img=new Image("frameHostileBlessed.png");
+                    buildFrameImages(img);
+                    setFrame(3);
+                }
+                else {
+                    setFrame(1);
+                }//TODO con uS Soldier
                 System.out.println("%%%%%%% GRAVE_BRASE_DROITE");    
                 playBlessedAnim();
                 break;
             case GRAVE_BRASE_GAUCHE:
+                img=new Image("frameHostileBlessed.png");
                 buildFrameImages(img);
                 if(!s.isUS()) setFrame(0);
                 else setFrame(6);
@@ -416,6 +429,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                 playBlessedAnim();
                 break;
             case GRAVE_TETE:
+                img=new Image("feritoUS.png");
                 buildFrameImages(img);
                 if(!s.isUS()) setFrame(5);
                 else setFrame(3);
@@ -424,11 +438,11 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                 break;
             case LEGER_BLESSE:
                 System.out.println("%%%%%%% LEGER_BLESSE");    
-                //TODO nothing bandage
+                //TODO nothing bandage ,sound grunt leggero
                 break;
             case MANQUE:
              System.out.println("%%%%%%% MANQUE");
-                //TODO nothing
+                //TODO nothing,  colpi vicono 
                 break;
             default:
 

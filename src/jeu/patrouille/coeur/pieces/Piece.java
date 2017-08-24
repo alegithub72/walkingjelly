@@ -171,6 +171,7 @@ public abstract class Piece  {
         actionsPool=new ArrayList<>();
         this.tempDesponible=10;
         spreadDone=false;
+        
     }
     
 }

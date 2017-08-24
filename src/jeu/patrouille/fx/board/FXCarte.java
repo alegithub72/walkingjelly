@@ -1421,6 +1421,7 @@ protected void buildDisableMenu(FXSoldat s){
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
            // m.setOnMouseClicked(new SoldatClickOnActionItemsEventHandler(m, actionMenu, fxpl));
             actionMenu[0] = m;
+            m.setEffect(new GaussianBlur());
             m.setTranslateX(menuItemx);
             m.setTranslateY(menuItemy);
             rootGroup.getChildren().add(m);

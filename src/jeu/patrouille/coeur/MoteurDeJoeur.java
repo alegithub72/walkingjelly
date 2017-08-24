@@ -200,10 +200,14 @@ public class MoteurDeJoeur implements Runnable{
 
   
    void resetAllSoldatActionPool(){
-   for(int k=0;k<this.patrouille.length;k++)
-       patrouille[k].resetActionPoool();
-   for(int k=0;k<hostile.length;k++)
-       hostile[k].resetActionPoool();
+       for (Piece patrouille1 : this.patrouille) {
+           patrouille1.resetActionPoool();
+           ((Soldat)patrouille1).resetRondCheck();
+       }
+       for (Piece hostile1 : hostile) {
+           hostile1.resetActionPoool();
+           ((Soldat)hostile1).resetRondCheck();
+       }
    
    
    }
@@ -243,7 +247,7 @@ public class MoteurDeJoeur implements Runnable{
                 boolean ch=s.shellShockTest();
                 BaseAction fugitivAct=null;
                 if(ch) act=fugitivAct;//TODO   fugitiv action
-                if(!s.isIncoscient()||!s.isImmobilize()||!s.isKIA()){
+                if(!s.isIncoscient()||!s.isImmobilize()||!s.isKIA()|| !s.isChoc()){
                     
                    // System.out.println("--MJ PLAY GRAFIC--->"+act+"<----->"+((act.getProtagoniste()!=null)?act.getProtagoniste().toStringSimple():" no protagoniste")+"<----------");
                     //cosi sono valide le posizioni di tutti.....
@@ -397,6 +401,7 @@ public class MoteurDeJoeur implements Runnable{
             Lesion[] llist=new Lesion[score];
             if(target!=null ){
                 i1=target.getI();j1=target.getJ();
+                
             }
             PointCarte line[]= Carte.getLigne(s.getI(), s.getJ(), i1,j1);
             //Terrain cover= c.getPointCarte(line[line.length-1].getI(),line[line.length-1].getJ());
@@ -409,6 +414,7 @@ public class MoteurDeJoeur implements Runnable{
                 //TODO for each cove r on the los of the target
                 System.out.println(l);
                 boolean coverBool=coverRoll(line, s);
+                if(coverBool && target!=null) target.setObjective(true);
                 int bli=0;
                 if(target!=null)bli=target.getBlindage(l.getLocation());
                 

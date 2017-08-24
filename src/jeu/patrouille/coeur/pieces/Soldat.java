@@ -136,14 +136,15 @@ public class Soldat extends Piece {
                 && l.getLocation()==Corp.CorpParts.Tete) {
             sante=-10;
             st=Statut.CRITIQUE;
-            
+            resetAction();
         }
         else { 
             this.sante=sante+l.getBlessure();
             switch (l.getStatu()) {
                 case CRITIQUE:
                     this.moral=moral-2;
-                    tempDesponible=tempDesponible-boss.dice(10);
+                    int tdActionRemove=boss.dice(10);
+                    removeActionUpTo(tdActionRemove);
                     this.pose=Pose.PRONE;
                     this.immobilize=true;
                     break;
@@ -151,40 +152,43 @@ public class Soldat extends Piece {
                     moral=moral-1;
                     incoscient=true;
                     immobilize=true;
-                    tempDesponible=tempDesponible-boss.dice(6);//TODO levere se action fro the pool                    
+                     tdActionRemove=boss.dice(6);//TODO levere se action fro the pool 
+                     removeActionUpTo(tdActionRemove);
                     break;
                 case GRAVE:
                     moral=moral-1;
-                    tempDesponible=tempDesponible-boss.dice(6);
-
+                     tdActionRemove=boss.dice(6);
+                     removeActionUpTo(tdActionRemove);
                     
                     //TODO one action per turn
                     break;
                 case GRAVE_BRASE_DROITE:
                     moral=moral-1;
-                    tempDesponible=tempDesponible-boss.dice(6);
-                     armeUtilise=null;//todo drop items
+                    tdActionRemove=boss.dice(6);
+                    removeActionUpTo(tdActionRemove);
+                    armeUtilise=null;//todo drop items
                     
                     //TODO one action per turn
                     break;     
                 case GRAVE_BRASE_GAUCHE:
                     moral=moral-1;
-                    tempDesponible=tempDesponible-boss.dice(6);
+                    tdActionRemove=boss.dice(6);
+                    removeActionUpTo(tdActionRemove);
                     armeUtilise.setDegat(true);
-                    
                     //TODO one action per turn
                     break;                    
                 case LEGER_BLESSE:
-                    tempDesponible=tempDesponible-4;
+                    tdActionRemove=4;
+                    removeActionUpTo(tdActionRemove);
                     break;
                 case MANQUE:
-                    tempDesponible=tempDesponible-2;
-                    
+                    tdActionRemove=2;
+                    removeActionUpTo(tdActionRemove);
                 default:
                     break;
             }
-            if(sante<=0);//TODO uncoinscious 
-            if(sante<=-10);//TODO kia
+            if(sante<=0) incoscient=true;//TODO uncoinscious 
+            
            
         }
         
@@ -360,7 +364,7 @@ public int getNumLesion(){
         double dist = Carte.distance(i, j, i1,j1, FXCarte.TILE_SIZE);
         int shotN = armeUtilise.hitsNumMF(dist);
         System.out.println("hits " + shotN);
-        int cDM = comabtDistanceModifier(target, act.getType());
+        int cDM = combatDistanceModifier(target, act.getType());
         System.out.println("combat modifier " + cDM);
             for(int hits=0;hits<shotN;hits++){
                 int dice=boss.dice(10);
@@ -375,7 +379,7 @@ public int getNumLesion(){
       return score;
     
     }
-    int comabtDistanceModifier(Soldat target,ActionType t){
+    int combatDistanceModifier(Soldat target,ActionType t){
             int cDM=-isWounded();
 
             if(armeUtilise.getMF()==FeuMode.RA ) 
@@ -395,7 +399,8 @@ public int getNumLesion(){
             
             if(target!=null && target.getAction()==ActionType.COURS) cDM=cDM-2;
             else if(target!=null && target.getAction()==ActionType.MARCHE)cDM=cDM-1;
-            if(target!=null && target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;     
+            if(target!=null && target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;    
+            System.out.println("combat distance modifier "+cDM);
             return cDM;
     
     }
@@ -412,8 +417,11 @@ public int getNumLesion(){
 
 
     public boolean isPossileDesplacer(){
-        return tempDesponible>0 && st!=Statut.GRAVE_TETE &&
-                   st!=Statut.CRITIQUE && sante>=-10 && !choc;
+        return tempDesponible>0 &&
+                !isChoc() &&
+                !isImmobilize() &&
+                !isIncoscient() &&
+                !isKIA();
         
     }
     public boolean isPossibleCourse(){
@@ -514,7 +522,7 @@ public int getNumLesion(){
     }
 
 
-
+    //TODO ????????? boohhh
    public void resetRondCheck(){
        this.objective=false;
        this.active=false;
@@ -556,6 +564,10 @@ public int getNumLesion(){
        lesion[lesionN]=l;
    
    }
+
+public void setObjective(boolean objective) {
+        this.objective = objective;
+    }
    
    public Lesion getLastLesion(){
        return lesion[lesionN];
@@ -563,4 +575,19 @@ public int getNumLesion(){
    public Lesion[] getAllLesion(){
        return lesion;
    }
+   
+   void removeActionUpTo(int td){
+    int tdMax=td,tdAction=0;
+    for (BaseAction baseAction : actionsPool) {
+        tdAction=tdAction+baseAction.getTempActivite();
+        if(tdAction<=tdMax) {
+            actionsPool.remove(baseAction);
+            System.out.println("removed:"+baseAction);
+        }
+        
+    }
+
+}   
+   
+   
 }

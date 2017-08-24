@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -52,9 +53,8 @@ public class FXPlanche extends Application {
     BorderPane borderPan;
     Canvas topPan;
     Canvas canvasBar;
-    Group rootBarGroup;
-    Group rootDroitBarGroup;
-    Canvas droitCanvasBar;
+    Group root;
+    Canvas droitCanvasBar; 
     boolean scroolEnd = true;
     FXCarte fxCarte;
     Label message;
@@ -74,12 +74,17 @@ public class FXPlanche extends Application {
         fxCarte.initFXCarte();
         borderPan.setCenter(fxCarte);
                
-        buildBar();
-        buildDroitBar();
-        //ImageView test = new ImageView(new Image("menuItem.png"));
 
+        //ImageView test = new ImageView(new Image("menuItem.png"));
+        root=new Group();
         primaryStage.setResizable(false);
-        Scene sc = new Scene(borderPan);
+                buildBar();
+        buildDroitBar();
+        //Scene sc = new Scene(borderPan);
+        root.getChildren().add(fxCarte);
+        
+        Scene sc = new Scene(root,(FXCarte.PIXEL_SCROLL_AREA_W+FXCarte.DROIT_BAR_W),
+       (FXCarte.PIXEL_SCROLL_AREA_H+FXCarte.BAR_H));
         //primaryStage.setFullScreen(true);
         primaryStage.setScene(sc);
         primaryStage.sizeToScene();
@@ -100,11 +105,11 @@ public class FXPlanche extends Application {
     }
 
     public void buildFXSoldatEquipement(Soldat s){
-        rootDroitBarGroup.getChildren().remove(fxequip);
+        root.getChildren().remove(fxequip);
        // fxequip=new FXSoldatEquipement(this);
         fxequip=new FXSoldatEquipement(this);        
-        rootDroitBarGroup.getChildren().add(fxequip);
-        fxequip.setTranslateX(16);
+        root.getChildren().add(fxequip);
+        fxequip.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W+16);
         fxequip.setTranslateY(325);
         fxequip.toFront();
         fxequip.buildFXEquipment(s);
@@ -113,12 +118,15 @@ public class FXPlanche extends Application {
     }
     void buildBar() throws IOException {
         
-        canvasBar = new Canvas(FXCarte.PIXEL_SCROLL_AREA_W + FXCarte.DROIT_BAR_W, FXCarte.BAR_H);
-        rootBarGroup = new Group();
-        rootBarGroup.getChildren().add(canvasBar);
+        canvasBar = new Canvas( FXCarte.PIXEL_SCROLL_AREA_W+FXCarte.DROIT_BAR_W, FXCarte.BAR_H);
+        //rootBarGroup = new Group();
+        //rootBarGroup.getChildren().add(canvasBar);
+        root.getChildren().add(canvasBar);
+        canvasBar.setTranslateX(0 );
+        canvasBar.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H);
         GraphicsContext gc = canvasBar.getGraphicsContext2D();
-        gc.setFill(Color.TRANSPARENT);
-        gc.fillRect(0, 0, FXCarte.PIXEL_SCROLL_AREA_W + FXCarte.DROIT_BAR_W, FXCarte.BAR_H);
+        //gc.setFill(Color.TRANSPARENT);
+        //gc.fillRect(FXCarte.PIXEL_SCROLL_AREA_W , FXCarte.PIXEL_SCROLL_AREA_H,FXCarte.PIXEL_SCROLL_AREA_W+ FXCarte.DROIT_BAR_W,FXCarte.PIXEL_SCROLL_AREA_H+ FXCarte.BAR_H);
         gc.drawImage(new Image("barConsole.png"), 0, 0);
         
         
@@ -133,19 +141,21 @@ public class FXPlanche extends Application {
         message.setStyle("");
 
 
-        borderPan.setBottom(rootBarGroup);
+        //borderPan.setBottom(rootBarGroup);
 
         FXPatrouilleSprite endButton = new FXPatrouilleSprite(120, 50, null, null);
         endButton.buildFrameImages(new Image( "endturn.png"));
-        endButton.setLayoutX(880);
-        endButton.setLayoutY(0);
+        //endButton.setLayoutX(880);
+        //endButton.setLayoutY(0);
         EventHandler e=new EndTurnButtonEventHandler(fxCarte, endButton);
         endButton.setOnMousePressed(e);
         endButton.setOnMouseReleased(e);
         endButton.setOnMouseClicked(new EndTurnEventHandler(this));
-
-        rootBarGroup.getChildren().add(endButton);
-        rootBarGroup.getChildren().add(message);
+        endButton.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W);
+        endButton.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H);
+        endButton.toFront();
+        root.getChildren().add(endButton);
+        root.getChildren().add(message);
     }
     public void endTurn(){
         suprimerActionVisualization(); 
@@ -168,10 +178,12 @@ public class FXPlanche extends Application {
         dropShadow.setOffsetY(1.0);
         dropShadow.setSpread(1);
         dropShadow.setColor(Color.BLACK);
-        rootDroitBarGroup = new Group();
+        //rootDroitBarGroup = new Group();
                    
         droitCanvasBar = new Canvas(FXCarte.DROIT_BAR_W, FXCarte.PIXEL_SCROLL_AREA_H);
         GraphicsContext gc = droitCanvasBar.getGraphicsContext2D();
+        droitCanvasBar.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W);
+        droitCanvasBar.setTranslateY(0);
         Image img = new Image("rightBar.png");
         //gc.setFill(Color.rgb(64, 128, 0, 1));
         gc.setFill(Color.TRANSPARENT);
@@ -185,7 +197,7 @@ public class FXPlanche extends Application {
         gc.setFill(Color.FLORALWHITE); 
         gc.setFont(fontTitle);
         gc.setEffect(dropShadow);
-        borderPan.setRight(rootDroitBarGroup);
+       // borderPan.setRight(rootDroitBarGroup);
         
         gc.fillText("Nom:", 2, 26);
         gc.fillText("Classment:", 2, 78+10);
@@ -193,18 +205,18 @@ public class FXPlanche extends Application {
         gc.fillText("EQUIPMENT:", 11, 315);
         gc.fillText("Sante:",2,130+30);
         gc.setEffect(null);
-        infPl=new FXInfoPanel(this, 10, 40);
+        infPl=new FXInfoPanel(this, FXCarte.PIXEL_SCROLL_AREA_W+10, 40);
         infPl.buildInfoPanel();
 
-        rootDroitBarGroup.getChildren().add(droitCanvasBar);
-        rootDroitBarGroup.getChildren().add(infPl);
+        root.getChildren().add(droitCanvasBar);
+        root.getChildren().add(infPl);
 
       
-        BorderWidths bw = new BorderWidths(3);
+        //BorderWidths bw = new BorderWidths(3);
 
     }
     public void addDoritBarGroup(Node n){
-        rootDroitBarGroup.getChildren().add(n);
+        root.getChildren().add(n);
     } 
     void sendMessageToPlayer(String text) {
         message.setText(text);
@@ -227,7 +239,7 @@ public class FXPlanche extends Application {
         }if(act.getType()==ActionType.FEU){
             spAct=new FeuItem(null);
         }
-        boolean add = rootBarGroup.getChildren().add(spAct);
+        boolean add = root.getChildren().add(spAct);
         spAct.setScaleX(0.5);
         spAct.setScaleY(0.5);
         spAct.setFrame(0);
@@ -241,11 +253,11 @@ public class FXPlanche extends Application {
         dropShadow.setOffsetX(3.0);
         dropShadow.setOffsetY(3.0);
         spAct.setEffect(dropShadow);
-        spAct.setLayoutX(500 + (k * (spAct.getW() / 2)));
+        spAct.setTranslateX(500 + (k * (spAct.getW() / 2)));
         if (k < 10) {
-            spAct.setLayoutY(-23);
+            spAct.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H -23);
         } else {
-            spAct.setLayoutY((spAct.getH() / 2));
+            spAct.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H +(spAct.getH() / 2));
         }
         this.fxActionsPoolSelectionee.add(spAct);        
 
@@ -256,7 +268,7 @@ public class FXPlanche extends Application {
     void suprimerActionVisualization() {
 
         for (int k = 0; k < fxActionsPoolSelectionee.size(); k++) {
-            rootBarGroup.getChildren().remove(fxActionsPoolSelectionee.get(k));
+            root.getChildren().remove(fxActionsPoolSelectionee.get(k));
         }
     }
 
