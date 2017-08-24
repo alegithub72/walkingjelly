@@ -15,13 +15,14 @@ import java.util.ArrayList;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.equipments.GeneriqueBlindageEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.exceptions.KilledSoldatException;
-import jeu.patrouille.coeur.pieces.parts.Lesion.*;
+
 import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
 import jeu.patrouille.coeur.pieces.exceptions.NotSautOrCourseSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
@@ -35,9 +36,11 @@ import jeu.patrouille.fx.board.FXCarte;
 public class Soldat extends Piece {
     
 
+    public enum Classment{SERGENT,TENENT,SERGENT_MAJOR,SOLDAT};
 
-    public static final int CLASS_SGT=8,CLASS_TEN=20,CLASS_SGT_MJR=15,CLASS_SOLDAT=7;
     public static final int FULL_SANTE=6;
+    public enum Statut{CRITIQUE,GRAVE,GRAVE_TETE,LEGER_BLESSE
+    ,MANQUE,NORMAL,GRAVE_BRASE_DROITE,GRAVE_BRASE_GAUCHE}    
     ActionType actionActuel=ActionType.PA_ACTION;
     Corp blindage;
     Lesion lesion[];
@@ -53,7 +56,7 @@ public class Soldat extends Piece {
     int sante=-1;
     int moral=-1;
     int commandControler=-1;
-    int classement=-1;
+    Classment classement;
     GeneriqueArme armeUtilise;
     Pose pose=Pose.DROIT;
     GeneriqueEquipment[] equipmentGen;
@@ -63,7 +66,7 @@ public class Soldat extends Piece {
     boolean active;
     boolean choc;
     boolean immobilize;
-    Statu st;
+    Statut st;
 
 
  
@@ -97,7 +100,7 @@ public class Soldat extends Piece {
         this.moral=moral;
         this.commandControler=commandControler;
         this.equipePorte=false;
-        st=Statu.NORMAL;
+        st=Statut.NORMAL;
         incoscient=false;
         objective=false;
         immobilize=false;
@@ -105,12 +108,13 @@ public class Soldat extends Piece {
         choc=false;
         lesion=new Lesion[10];
         lesionN=0;
+        this.blindage=blindage;
         
     
     }
 
     public boolean isDoubled() {
-        return st==Statu.GRAVE;
+        return st==Statut.GRAVE;
     }
 
     public int isWounded(){
@@ -128,15 +132,15 @@ public class Soldat extends Piece {
 
 
     public void blessure(Lesion l){
-        if(l.getStatu()==Lesion.Statu.CRITIQUE 
+        if(l.getStatu()==Statut.CRITIQUE 
                 && l.getLocation()==Corp.CorpParts.Tete) {
             sante=-10;
-            st=Statu.CRITIQUE;
+            st=Statut.CRITIQUE;
             
         }
-        else {
-            this.sante=sante-l.getBlessure();
-            if(null!=l.getStatu()) switch (l.getStatu()) {
+        else { 
+            this.sante=sante+l.getBlessure();
+            switch (l.getStatu()) {
                 case CRITIQUE:
                     this.moral=moral-2;
                     tempDesponible=tempDesponible-boss.dice(10);
@@ -147,17 +151,29 @@ public class Soldat extends Piece {
                     moral=moral-1;
                     incoscient=true;
                     immobilize=true;
-                    tempDesponible=tempDesponible-boss.dice(6);                    
+                    tempDesponible=tempDesponible-boss.dice(6);//TODO levere se action fro the pool                    
                     break;
                 case GRAVE:
                     moral=moral-1;
                     tempDesponible=tempDesponible-boss.dice(6);
-                    if(l.getLocation()==Corp.CorpParts.BrasDroite ||
-                            l.getLocation()==Corp.CorpParts.BrasGauche)
-                        armeUtilise=null;
+
                     
                     //TODO one action per turn
                     break;
+                case GRAVE_BRASE_DROITE:
+                    moral=moral-1;
+                    tempDesponible=tempDesponible-boss.dice(6);
+                     armeUtilise=null;//todo drop items
+                    
+                    //TODO one action per turn
+                    break;     
+                case GRAVE_BRASE_GAUCHE:
+                    moral=moral-1;
+                    tempDesponible=tempDesponible-boss.dice(6);
+                    armeUtilise.setDegat(true);
+                    
+                    //TODO one action per turn
+                    break;                    
                 case LEGER_BLESSE:
                     tempDesponible=tempDesponible-4;
                     break;
@@ -167,6 +183,8 @@ public class Soldat extends Piece {
                 default:
                     break;
             }
+            if(sante<=0);//TODO uncoinscious 
+            if(sante<=-10);//TODO kia
            
         }
         
@@ -175,7 +193,7 @@ public class Soldat extends Piece {
         
     }
 
-    public Statu getStatu() {
+    public Statut getStatu() {
         return st;
     }
 
@@ -215,11 +233,11 @@ public class Soldat extends Piece {
 
     
     
-    public void setClassement(int classement) {
+    public void setClassement(Classment classement) {
         this.classement = classement;
     }
 
-    public int getClassement() {
+    public Classment getClassement() {
         return classement;
     }
     
@@ -255,10 +273,23 @@ public class Soldat extends Piece {
     public int getSante() {
         return sante;
     }
-
+public int getNumLesion(){
+    int n=0;
+    for (int k = 0; k < lesion.length; k++) {
+        if(lesion[k]!=null && lesion[k].getGravite()!=Lesion.Degre.MANQUE &&
+                lesion[k].getGravite()!=Lesion.Degre.NODEGRE)n++;
+    }
+    return n;
+}
    public int getBlindage(Corp.CorpParts part){
-      CorpPart p=  blindage.getCorpPart(part);
-      return p.getBlindage().getAr();
+       if(blindage!=null){
+        CorpPart p=  blindage.getCorpPart(part);
+        System.out.println("part "+p);
+        GeneriqueBlindageEquipment bli=p.getBlindage();
+        System.out.println("part bli"+p.getBlindage());
+        if(bli!=null)return bli.getAr();
+       } 
+       return 0;
     }
     public int getM() {
         return moral;
@@ -319,19 +350,27 @@ public class Soldat extends Piece {
 
         return s;
     }
-    public int fire(Soldat target,ActionType t) throws ModeDeFeuException,LoadMagazineFiniException{
- 
-        double dist=Carte.distance(i, j, target.getI(), target.getJ(),FXCarte.TILE_SIZE);        
-        int  shotN=armeUtilise.hitsNumMF(dist);
-
-      int cDM=comabtDistanceModifier(target,t);
-      int score=0;
+    public int fire(BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException{
+        int score = 0;int i1=act.getI1(),j1=act.getJ1();
+        Soldat target=(Soldat)act.getAntagoniste();
+        if(target!=null) {
+            i1=target.getI();
+            j1=target.getJ();
+        }
+        double dist = Carte.distance(i, j, i1,j1, FXCarte.TILE_SIZE);
+        int shotN = armeUtilise.hitsNumMF(dist);
+        System.out.println("hits " + shotN);
+        int cDM = comabtDistanceModifier(target, act.getType());
+        System.out.println("combat modifier " + cDM);
             for(int hits=0;hits<shotN;hits++){
                 int dice=boss.dice(10);
-                int tg=armeUtilise.porteModifier(dist)+competenceArme+cDM;
+                int porteMod=armeUtilise.porteModifier(dist);
+                System.out.println(" porte modifie="+porteMod);
+                int tg=porteMod+competenceArme+cDM;
+                System.out.println("dice "+dice+"<=target number "+tg);
                 if(dice<=tg) score++;
             }
-   
+        
       this.tempDesponible=tempDesponible-armeUtilise.feuArme(dist);
       return score;
     
@@ -354,9 +393,9 @@ public class Soldat extends Piece {
             if(pose==Piece.Pose.PRONE) cDM=cDM+1;
             
             
-            if(target.getAction()==ActionType.COURS) cDM=cDM-2;
-            else if(target.getAction()==ActionType.MARCHE)cDM=cDM-1;
-            if(target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;     
+            if(target!=null && target.getAction()==ActionType.COURS) cDM=cDM-2;
+            else if(target!=null && target.getAction()==ActionType.MARCHE)cDM=cDM-1;
+            if(target!=null && target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;     
             return cDM;
     
     }
@@ -373,12 +412,12 @@ public class Soldat extends Piece {
 
 
     public boolean isPossileDesplacer(){
-        return tempDesponible>0 && st!=Statu.GRAVE_TETE &&
-                   st!=Statu.CRITIQUE && sante>=-10 && !choc;
+        return tempDesponible>0 && st!=Statut.GRAVE_TETE &&
+                   st!=Statut.CRITIQUE && sante>=-10 && !choc;
         
     }
     public boolean isPossibleCourse(){
-        return st!=Statu.GRAVE;
+        return st!=Statut.GRAVE;
        
     }
 
@@ -409,25 +448,27 @@ public class Soldat extends Piece {
     @Override
     public void addAction(BaseAction act) throws Exception{
         if(sante==FULL_SANTE) super.addAction(act);
-        else if(st==Statu.CRITIQUE && sante<=-10){
+        else if(st==Statut.CRITIQUE && sante<=-10){
             throw new KilledSoldatException();
         }
-        else if(st==Statu.CRITIQUE ){
+        else if(st==Statut.CRITIQUE ){
            throw new ImmobilzedSodlatException();
-        }else if(st==Statu.GRAVE_TETE  ){
+        }else if(st==Statut.GRAVE_TETE  ){
             throw new ImmobilzedSodlatException();
-        }else if(st==Statu.GRAVE){
+        }else if(st==Statut.GRAVE){
             if(act.getType()==ActionType.COURS ||
                     act.getType()==ActionType.SAUT)
                 throw new NotSautOrCourseSoldatException();
             super.addAction(act);
-        }else if(st==Statu.LEGER_BLESSE){
+        }else if(st==Statut.LEGER_BLESSE){
             super.addAction(act);
-        }else if(st==Statu.GRAVE_BRASE){
+        }else if(st==Statut.GRAVE_BRASE_GAUCHE){
             if (this.actionsPool.size() > 1) 
                 throw new UnActionSoldatException();
             super.addAction(act);
             
+        }else if(st==Statut.GRAVE_BRASE_GAUCHE){
+            super.addAction(act);
         }
         
         
@@ -504,14 +545,14 @@ public class Soldat extends Piece {
    
    public void addLesion(Lesion l){
        lesionN++;
-       if(lesionN>=lesion.length) {
+       if(lesionN==lesion.length) {
        Lesion listNew[]=new Lesion[lesion.length*2];
            for (int k = 0; k < lesion.length; k++) {
                listNew[k]=lesion[k];
            }
            lesion=listNew;
+           
        }
-     
        lesion[lesionN]=l;
    
    }

@@ -13,7 +13,7 @@ import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
  */
 public abstract class GeneriqueEquipment {
     public static enum EquipmentType{FIRE_WEAPON,GRENADE,MAGAZINE,JAQUETTE_BLINDE,CASQUE_BLINDE};
-    public enum Model {BENELLI_M3, AK74, M16};
+    public enum Model {BENELLI_M3, AK74, M16,MP5};
     public static final int NOTVALUE = -111;
      String nom;
      EquipmentType equipmentType;

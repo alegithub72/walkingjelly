@@ -28,10 +28,11 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     //Map shotNumMFMed;
     //Map shotNumMFLonge;
     FeuMode modefeu;
+    int tempModel;
     int coverPenetration[];
 
     Magazine[] magazine;
-    int armeFeuModel;
+
     int finalCartouch;
     int evaluateDamagePotentiel = NOTVALUE;
     int evaluateModifierBlindee = NOTVALUE;
@@ -39,10 +40,20 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     Magazine load;
     int TDrecharge = NOTVALUE;
     int magazineUsed;
+    boolean degat=false;
+
+    public boolean isDegat() {
+        return degat;
+    }
+
+    public void setDegat(boolean degat) {
+        this.degat = degat;
+    }
 
 
-    public int getArmeFeuModel() {
-        return armeFeuModel;
+
+    public FeuMode getArmeFeuModel() {
+        return this.modefeu;
     }
 
     public GeneriqueArme(String nom,Model model,EquipmentType type ,int court, int medium, int longe) {

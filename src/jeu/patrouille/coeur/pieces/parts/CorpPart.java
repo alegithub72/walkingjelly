@@ -24,6 +24,11 @@ public class CorpPart {
     public GeneriqueBlindageEquipment getBlindage() {
         return blindage;
     }
+
+    @Override
+    public String toString() {
+        return "CorpPart{" + "blindage=" + blindage + ", l=" + l + '}';
+    }
     
     
     

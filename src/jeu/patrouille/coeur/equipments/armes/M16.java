@@ -16,7 +16,7 @@ public class M16 extends GeneriqueArme{
     
     public M16(){
         super("M16 A2", Model.M16, EquipmentType.FIRE_WEAPON, 20, 40, 260);
-        this.armeFeuModel=TEMP_RIFLE;
+        this.tempModel=TEMP_RIFLE;
     
         this.shotNumMF[FeuMode.SA.ordinal()]=1;
         this.shotNumMF[FeuMode.RA.ordinal()]=3;

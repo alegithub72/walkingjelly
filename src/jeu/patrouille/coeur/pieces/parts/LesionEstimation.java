@@ -6,6 +6,7 @@
 package jeu.patrouille.coeur.pieces.parts;
 import jeu.patrouille.coeur.pieces.parts.Lesion.*;
 import jeu.patrouille.coeur.pieces.parts.Corp.CorpParts;
+import jeu.patrouille.coeur.pieces.Soldat.Statut;
 /**
  *
  * @author appleale
@@ -26,10 +27,11 @@ public class LesionEstimation {
 
     }
       public Lesion getLesion(int n,int m,int turn){
+          System.out.println(" position "+n+" , gravie"+m);
          CorpParts position=null;
-         int blessure=Lesion.NOTVALUE;
-         int gravite=Lesion.NOTVALUE;
-          Statu st=Statu.NORMAL;
+         int blessure=0;
+         Degre gravite=Degre.NODEGRE;
+          Statut st=Statut.NORMAL;
         if(n==1 ) position=CorpParts.Tete;
             else if(n>=2 && n<=3) position=CorpParts.Thorax;
             else if(n>=4 && n<=5) position=CorpParts.Ventre;
@@ -38,34 +40,35 @@ public class LesionEstimation {
             else if(n==8) position=CorpParts.JambeGauche;
             else if(n==9) position=CorpParts.BrasDroite;
             else if(n==10) position=CorpParts.BrasGauche;
-         if(m<0)   {
-             blessure= estimation[position.ordinal()][Lesion.CRITIQUE];
-             gravite=Lesion.CRITIQUE;
-             st=Statu.CRITIQUE;
+         if(m<=0)   {
+             blessure= estimation[position.ordinal()][Degre.CRITIQUE.ordinal()];
+             gravite=Degre.CRITIQUE;
+             st=Statut.CRITIQUE;
           
          }
             else if(m>=1 && m<=2) {
-                blessure= estimation[position.ordinal()][Lesion.GRAVE];
-                gravite=Lesion.GRAVE;
-                st=Statu.GRAVE;
+                blessure= estimation[position.ordinal()][Degre.GRAVE.ordinal()];
+                gravite=Degre.GRAVE;
+                st=Statut.GRAVE;
 
             }
             else if(m>=3 && m<=5){
-                blessure= estimation[position.ordinal()][Lesion.LEGER];
-                gravite=Lesion.LEGER;
-                st=Statu.LEGER_BLESSE;
+                blessure= estimation[position.ordinal()][Degre.LEGER.ordinal()];
+                gravite=Degre.LEGER;
+                st=Statut.LEGER_BLESSE;
             }
             else if(m>6) {
-                blessure= estimation[position.ordinal()][Lesion.MANQUE];
-                gravite=Lesion.MANQUE;
-                st=Statu.MANQUE;
+                blessure= 0;
+                gravite=Degre.MANQUE;
+                st=Statut.MANQUE;
                 
             }
-         if(position==CorpParts.Tete && gravite==Lesion.GRAVE)
-             st=Statu.GRAVE_TETE;
-         if((position==CorpParts.BrasDroite || position==CorpParts.BrasGauche)
-                 && gravite==Lesion.GRAVE)st=Statu.GRAVE_BRASE;
-
+         if(position==CorpParts.Tete && gravite==Degre.GRAVE)
+             st=Statut.GRAVE_TETE;
+         if((position==CorpParts.BrasDroite )
+                 && gravite==Degre.GRAVE)st=Statut.GRAVE_BRASE_DROITE;
+        if(gravite==Degre.LEGER && position==CorpParts.BrasGauche)
+            st=Statut.GRAVE_BRASE_GAUCHE;
         
        return new Lesion(position, gravite,blessure,st,turn);
       }

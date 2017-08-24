@@ -6,10 +6,8 @@
 package jeu.patrouille.fx.menu.eventhandler;
 
 import javafx.event.EventHandler;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.sprite.Sprite;
 
 /**

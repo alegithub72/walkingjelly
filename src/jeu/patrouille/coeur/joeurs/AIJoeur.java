@@ -12,6 +12,7 @@ import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.Soldat.Classment;
 
 /**
  *
@@ -45,7 +46,7 @@ public class AIJoeur extends GeneriqueJoeurs{
                 4, Soldat.FULL_SANTE, null, 7, 8,Piece.Direction.S,this);
             GeneriqueArme a[] = {new AK74()};
             s.setArmeEquip(a);
-            s.setClassement(Soldat.CLASS_SGT);
+            s.setClassement(Classment.SERGENT);
             s.setLeaderComportement(0, 0, 0, 0);
             s.setArraN(0);
             s.setArmeUtilise(a[0]);
@@ -55,7 +56,7 @@ public class AIJoeur extends GeneriqueJoeurs{
                 4, Soldat.FULL_SANTE, null, 7, 6,Piece.Direction.S,this);
             GeneriqueArme a1[] = {new AK74()};
             s.setArmeEquip(a1);
-            s.setClassement(Soldat.CLASS_SOLDAT);
+            s.setClassement(Classment.SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
             s.setArraN(1);
             s.setArmeUtilise(a1[0]);
@@ -66,7 +67,7 @@ public class AIJoeur extends GeneriqueJoeurs{
                 4, Soldat.FULL_SANTE, null, 7, 6,Piece.Direction.S,this);
             GeneriqueArme a2[] = {new AK74()};
             s.setArmeEquip(a2);
-            s.setClassement(Soldat.CLASS_SOLDAT);
+            s.setClassement(Classment.SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
             s.setArraN(2);
             s.setArmeUtilise(a2[0]);
@@ -76,7 +77,7 @@ public class AIJoeur extends GeneriqueJoeurs{
                 4, Soldat.FULL_SANTE, null, 7, 6,Piece.Direction.S,this);
             GeneriqueArme a3[] = {new AK74()};
             s.setArmeEquip(a3);
-            s.setClassement(Soldat.CLASS_SOLDAT);
+            s.setClassement(Classment.SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
             s.setArraN(3);
             s.setArmeUtilise(a3[0]);            

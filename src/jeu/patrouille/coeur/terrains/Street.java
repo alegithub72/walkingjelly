@@ -19,10 +19,12 @@ public class Street extends Terrain {
         this.type=PointCarte.PORTE;
 
 
+
     }
         public Street(int i,int j){
         super(i,j,"street.png");
         this.type=PointCarte.PORTE;
+     
 
 
     }        

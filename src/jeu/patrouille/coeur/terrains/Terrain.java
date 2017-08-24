@@ -43,6 +43,7 @@ public class Terrain extends PointCarte {
         this.type=PointCarte.TERRAIN;
         this.imgFile=f;
         rot=0;
+        this.c=Terrain.Consistance.NO;
         
     
     }

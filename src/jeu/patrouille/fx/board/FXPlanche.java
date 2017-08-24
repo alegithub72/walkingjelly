@@ -189,8 +189,9 @@ public class FXPlanche extends Application {
         
         gc.fillText("Nom:", 2, 26);
         gc.fillText("Classment:", 2, 78+10);
-        gc.fillText("TD:", 2, 130+30);
+        gc.fillText("TEMP:", 2, 130+60);
         gc.fillText("EQUIPMENT:", 11, 315);
+        gc.fillText("Sante:",2,130+30);
         gc.setEffect(null);
         infPl=new FXInfoPanel(this, 10, 40);
         infPl.buildInfoPanel();

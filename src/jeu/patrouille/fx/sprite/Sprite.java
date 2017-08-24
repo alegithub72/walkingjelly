@@ -40,7 +40,7 @@ public class Sprite extends Parent
     int h;
     int wSquare;
     int hSquare;
-    int defaultFrame;
+   protected int defaultFrame;
     protected FrameAnimationTimer frameAnimTimer[];
     int k;
     protected Animation[] ptList;
@@ -64,7 +64,7 @@ public class Sprite extends Parent
     }
 
     public void buildFrameImages(Image frameImages) {
-
+        if(imgView!=null) getChildren().remove(imgView);
         this.frameImages = frameImages;
         createShapeFrame();        
         imgView = new ImageView(frameImages);
@@ -143,14 +143,20 @@ public class Sprite extends Parent
         this.h = h;
     }
 
-    public boolean isAnimMoveFini() {
+    public boolean isMoveFini() {
         if(ptList==null || ptList[0]==null) return true;
         else{
            // System.out.println("STATUS"+ptList[0].getStatus()+" time");
             return ptList[0].getStatus() == Animation.Status.STOPPED;
         }
     }
-
+    
+    public boolean isAnimEnd(){
+        return frameAnimTimer[0].isStopped();
+    }
+    public boolean isAnimSetted(){
+        return frameAnimTimer[0]!=null;
+    }
     public void removeAnimationSetting() {
         for (int i = 0; i < ptList.length; i++) {
             ptList[i] = null;

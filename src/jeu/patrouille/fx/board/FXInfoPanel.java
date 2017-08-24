@@ -5,12 +5,8 @@
  */
 package jeu.patrouille.fx.board;
 
-import javafx.event.EventType;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -22,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import jeu.patrouille.coeur.pieces.Soldat;
 import javafx.scene.layout.Border;
+import jeu.patrouille.coeur.pieces.Soldat.Classment;
 
 /**
  *
@@ -31,6 +28,7 @@ public class FXInfoPanel extends Parent{
     Label nom;
     Label tdLabel;
     Label classment;
+    Label sante;
     Font font;    
     double x,y;
     Border bo;
@@ -41,6 +39,7 @@ public class FXInfoPanel extends Parent{
         nom=new Label();
         tdLabel=new Label();
         classment=new Label();
+        sante=new Label();
         this.x=x;
         this.y=y;
         font=Font.font(fxpl.getFontTitle().getName(), 12);
@@ -68,11 +67,16 @@ public class FXInfoPanel extends Parent{
         
         tdLabel.setTextFill(textColor);
         tdLabel.setFont(font);
-        tdLabel.relocate(x+40, y+105);
+        tdLabel.relocate(x+80, y+130);
         tdLabel.setBorder(bo);
         tdLabel.setBackground(bk);
         
-
+        sante.setTextFill(textColor);
+        sante.setFont(font);
+        sante.setBorder(bo);
+        sante.setBorder(bo);
+        sante.relocate(x+80, y+105);
+        this.getChildren().add(sante);
         this.getChildren().add(nom);
         this.getChildren().add(tdLabel);
         this.getChildren().add(classment);
@@ -102,22 +106,9 @@ public class FXInfoPanel extends Parent{
     public void imprimerInfo(Soldat  s){
         nom.setText(s.toStringSimple());
         tdLabel.setText (s.getTempDisponible()+"");
-        String clText="Soldat";
-        switch (s.getClassement()) {
-            case Soldat.CLASS_SGT:
-                clText="Sergent";
-                break;
-            case Soldat.CLASS_SGT_MJR:
-                clText="Sergent-major";
-                break;
-            case Soldat.CLASS_TEN:
-                clText="Liutenant";
-                break;
-            default:
-                break;
-        }
-             
+        String clText=s.getClassement().name();
         classment.setText(clText);
+        sante.setText(s.getSante()+"");
     
     }
     

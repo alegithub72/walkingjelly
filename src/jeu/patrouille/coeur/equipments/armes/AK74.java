@@ -24,7 +24,7 @@ public class AK74 extends GeneriqueArme{
             new Magazine(Model.AK74,SubType.STANDARD),new Magazine(Model.AK74,SubType.STANDARD),new Magazine(Model.AK74,SubType.STANDARD)};
         this.evaluateDificulte=3;
 
-        armeFeuModel=TEMP_RIFLE;
+        tempModel=TEMP_RIFLE;
 
         this.shotNumMF[FeuMode.SA.ordinal()]=1;
         this.shotNumMF[FeuMode.RA.ordinal()]=5;

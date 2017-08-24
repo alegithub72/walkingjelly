@@ -5,7 +5,10 @@
  */
 package jeu.patrouille.fx.pieces;
 
+
 import javafx.animation.PathTransition;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -23,7 +26,10 @@ import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
-
+import jeu.patrouille.coeur.pieces.Soldat.Classment;
+import jeu.patrouille.coeur.pieces.parts.Lesion;
+import jeu.patrouille.fx.menu.eventhandler.EndAnimPauseHandler;
+import jeu.patrouille.fx.menu.eventhandler.StartDeamonThreadEventHandler;
 /**
  *
  * @author appleale
@@ -31,20 +37,22 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 public abstract class FXSoldat extends FXPatrouilleSprite {
 
     Soldat s;
-    ImageView blessureImg;
+    ImageView blessureImg[];
     ImageView flagImg;
     ImageView classmentImg;
     ImageView selectionneImg;
     double orientation;
+
     int pos;
     public FXSoldat(int w, int h, int pos,Soldat s, String img,FXCarte fxcarte) {
         super(w, h, img, fxcarte);
         this.s=s;
-        blessureImg=new ImageView("wound.png");
+        blessureImg=new ImageView[6];
+                
         flagImg=new ImageView("americanFlag.png");
-        if(s.getClassement()==Soldat.CLASS_SGT)  
+        if(s.getClassement()==Classment.SERGENT)  
             classmentImg=new ImageView("sgtGrade.png");
-        else if(s.getClassement()==Soldat.CLASS_SOLDAT)
+        else if(s.getClassement()==Classment.SOLDAT)
             classmentImg=new ImageView("scelto.png");
         selectionneImg=new ImageView("selectUS.png");       
         //defaultFrame=s.getClassement();
@@ -56,9 +64,9 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     protected void buildGroupSigns() {
         classmentImg.setTranslateX(FXCarte.TILE_SIZE - 20);
         classmentImg.setTranslateY(0);
-
-        blessureImg.setTranslateX(0);
-        blessureImg.setTranslateY(FXCarte.TILE_SIZE - 10);
+        
+      //  blessureImg.setTranslateX(0);
+     //   blessureImg.setTranslateY(FXCarte.TILE_SIZE - 10);
     }
     protected void buildShadow(){
     
@@ -78,6 +86,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
             selectionneImg.toBack();
         }
         selectionneImg.setVisible(true);
+        //setFrame(0);
         //setFrame(3);
     }
 
@@ -162,6 +171,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         setTranslateY(y0);
         toFront();
         setVisible(true);
+        signON();
     }
     
     void updateSodlatOrientation(double angle){
@@ -187,8 +197,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     }
     public void createFXSoldat(){
         buildFrameImages();
-        if(!getChildren().contains(blessureImg))
-            getChildren().add(blessureImg);
+
         if(!getChildren().contains(flagImg))
             getChildren().add(flagImg);
         if(!getChildren().contains(classmentImg))
@@ -262,6 +271,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         buildFramesMarcheAnim();
 
         ptList[0]=path;
+
         frameAnimTimer[0].start();
         ptList[0].play();     
         
@@ -290,18 +300,161 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         System.out.println("------------- FXSOLDAT CREATE-ANIM ---------FINE------->--------><---------");
     } 
    
-   
-   public void PlayFeu(FeuAction act){
-   
+    public void signOff(){
+       flagImg.setVisible(false);
+       classmentImg.setVisible(false);
+       getChildren().removeAll(blessureImg);
+    }
+    public void signON(){
+       flagImg.setVisible(true);
+       classmentImg.setVisible(true);
+       getChildren().removeAll(blessureImg);
+       if(s.getSante()<blessureImg.length)   {
+           int blN=s.getNumLesion();
+       for(int n=0;n<blN;n++){
+           blessureImg[n] = new ImageView("wound.png");
+           blessureImg[n].setTranslateY(n*10);
+           blessureImg[n].setTranslateX(FXCarte.TILE_SIZE - 10);
+           getChildren().add(blessureImg[n]);
+
+       }
+       }
+    }
+    public void playFeu(FeuAction act){
+       buildFramesFeuAnim();
+       this.fxcarte.centerScrollArea(s.getI(), s.getJ());
+       fxcarte.refreshCarte();
+       fxcarte.refreshCarteAllFXSoldatViewPosition();
+       signOff();
+       this.frameAnimTimer[0].start();
+       
+       Soldat target=(Soldat)act.getAntagoniste();
+       
+       Thread t=new Thread(new Runnable() {
+           @Override
+           public void run() {
+               System.out.println("new thread");
+               
+               while(!frameAnimTimer[0].isStopped()) 
+                   System.out.print("");
+               Platform.runLater(new Runnable() {
+                   @Override
+                   public void run() {
+                        System.out.println("run blessed");
+                        int i1=act.getI1(),j1=act.getJ1();
+                        if(target!=null){
+                            i1=target.getI();j1=target.getJ();
+                        }
+                        fxcarte.centerScrollArea(i1, j1);
+                        fxcarte.refreshCarte();
+                        fxcarte.refreshCarteAllFXSoldatViewPosition();
+                        if(target!=null){                       
+                        FXSoldat fxtarget=null;
+                        if( !target.isUS()) fxtarget=  fxcarte.findFXHostile(target);
+                        else fxtarget=fxcarte.findFXUSSoldat(target);
+                            fxtarget.fxPlayBlesse();
+                            fxtarget.toBack();
+                            fxcarte.refreshCarteAllFXSoldatViewPosition();                            
+                        }
+                        PauseTransition pause=new PauseTransition(Duration.seconds(0.5));
+                        pause.setOnFinished(new EndAnimPauseHandler(fxcarte));
+                        pause.play();
+                        
+                   }
+               });
+           }
+       });
+        PauseTransition pause=new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(new StartDeamonThreadEventHandler(t));
+        pause.play();
+        
+       
    
    
    }
     protected abstract void buildFramesMarcheAnim();    
-    protected abstract void buildFramesFeuAnim();
+    public abstract void buildFramesFeuAnim();
+    public abstract void buildBlessAnim();
     public abstract void feuFrame();
+     
+    public void fxPlayBlesse(){
+        Lesion l=s.getLastLesion();
+        System.out.println("last blesse in run blesse "+l);
+        if(l==null) return ;
+      
+       setW(100);
+       Image img=new Image("feritoUS.png");
+               
 
+           switch (l.getStatu()) {
+            case CRITIQUE:
+                buildFrameImages(img);
+                if(!s.isUS()) setFrame(5);
+                else setFrame(3);
+                System.out.println("%%%%%%% CRITIQUE");
+                playBlessedAnim();
+                break;
+            case GRAVE:
+                buildFrameImages(img);
+                if(!s.isUS()) setFrame(2);
+                else setFrame(4);
+                 System.out.println("%%%%%%% GRAVE");
+                 playBlessedAnim();
+                break;
+            case GRAVE_BRASE_DROITE:
+                buildFrameImages(img);
+                if(!s.isUS()) setFrame(0);
+                else setFrame(6);
+                System.out.println("%%%%%%% GRAVE_BRASE_DROITE");    
+                playBlessedAnim();
+                break;
+            case GRAVE_BRASE_GAUCHE:
+                buildFrameImages(img);
+                if(!s.isUS()) setFrame(0);
+                else setFrame(6);
+                System.out.println("%%%%%%% GRAVE_BRASE_GAUCHE"); 
+                playBlessedAnim();
+                break;
+            case GRAVE_TETE:
+                buildFrameImages(img);
+                if(!s.isUS()) setFrame(5);
+                else setFrame(3);
+                System.out.println("%%%%%%% GRAVE_TETE");   
+                playBlessedAnim();
+                break;
+            case LEGER_BLESSE:
+                System.out.println("%%%%%%% LEGER_BLESSE");    
+                //TODO nothing bandage
+                break;
+            case MANQUE:
+             System.out.println("%%%%%%% MANQUE");
+                //TODO nothing
+                break;
+            default:
+
+                break;
+                
+        }
+       // setW(100);
+       // Image img = new Image("feritoUS.png");
+       // buildFrameImages(img);
+        //if (!s.isUS()) 
+         //   setFrame(1);
+       
+     
+    }
     
-
+  void playBlessedAnim(){
+      buildBlessAnim();
+      setTranslateX(+25);
+      setTranslateY(+50);
+      setFXSoldatOrientation(Math.random() * 360);
+      frameAnimTimer[0].start();
+      signOff();
+      buildShadow();
+  
+  
+  }
     @Override
     public String toString() {
         return super.toString(); //To change body of generated methods, choose Tools | Templates.

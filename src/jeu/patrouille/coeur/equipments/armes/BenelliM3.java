@@ -20,7 +20,7 @@ public class BenelliM3 extends GeneriqueArme{
         for(int i=0;i<14;i++){
             magazine[i]=new Magazine(Model.BENELLI_M3,SubType.SLUG);
         }
-        armeFeuModel=TEMP_RIFLE;
+        tempModel=TEMP_RIFLE;
 
 
         shotNumMF[FeuMode.SC.ordinal()]=1;

@@ -20,11 +20,12 @@ import javafx.scene.shape.StrokeLineJoin;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.pieces.parts.Lesion;
+import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -222,7 +223,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
 
         System.out.println("---------------FXCARTE (NEW THREAD " + Thread.currentThread().getName() + ")----------CREATE ANIM  ----FINE------"
                 + "-----------------------------------------><------");
-
+        
     }
     
 private boolean isNeedeCenterScrollAreaUpdate(int centerI,int centerJ){
@@ -234,7 +235,7 @@ private boolean isNeedeCenterScrollAreaUpdate(int centerI,int centerJ){
 
 
 }
-private void centerScrollArea(int i,int j){
+public void centerScrollArea(int i,int j){
         int h2=(FXCarte.AREA_SCROLL_I_H/2);
         int w2=(FXCarte.AREA_SCROLL_J_W/2);
         if((i+h2)>(Carte.CARTE_SIZE_I) )
@@ -263,10 +264,12 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
 
     private void playHostile(BaseAction b){
-        FXHostile sfx = (FXHostile) findFXHostile((Soldat) b.getProtagoniste());
+        FXHostile sfx = (FXHostile) findFXHostile((AISoldat) b.getProtagoniste());
         fxIMHelper.setFXSeletctionee(sfx);
         if (sfx.isVisible() &&  b.getType() == ActionType.MARCHE) {
             sfx.playMarche((MarcheAction) b);
+        }else if(b.getType()==ActionType.FEU){
+            sfx.playFeu((FeuAction)b);
         } else {
             System.out.println("$$$$NON animation$$$$");
             setAnimOn(false);
@@ -276,15 +279,20 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     }
     
-    private void playUSSoldat(BaseAction b){
+    private void playUSSoldat(BaseAction act){
 
-        FXSoldat sfx = findFXUSSoldat((Soldat) b.getProtagoniste());
+        FXSoldat sfx = findFXUSSoldat((Soldat) act.getProtagoniste());
         fxIMHelper.setFXSeletctionee(sfx);
-        if (sfx.isVisible() && b.getType() == ActionType.MARCHE) {
-            sfx.playMarche((MarcheAction) b);
-        } else {
-            System.out.println("$$$$NON animation$$$$");
-            setAnimOn(false);
+        if (sfx.isVisible() && act.getType() == ActionType.MARCHE) {
+            sfx.playMarche((MarcheAction) act);
+        } else if(act.getType()==ActionType.FEU){
+            sfx.playFeu((FeuAction)act);
+
+            
+
+
+        }else {
+        System.out.println("$$$$non animation$$$");
         }
   
     }
@@ -293,18 +301,18 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
 
     
-    private FXSoldat findFXUSSoldat(Soldat s){
+    public FXSoldat findFXUSSoldat(Soldat s){
         FXSoldat searchedFX=null;
         for(FXSoldat sfx:  this.fxequipeUS){
             if(sfx.getSoldat()==s)searchedFX=sfx;
         }
         return searchedFX;
     }
-    private FXSoldat findFXHostile(Soldat s){
+    public FXHostile findFXHostile(Soldat  s){
         
-        FXSoldat searchedFX=null;
+        FXHostile searchedFX=null;
         for(FXSoldat sfx:  this.fxequipeHost){
-            if(sfx.getSoldat()==s)searchedFX=sfx;
+            if(sfx.getSoldat()==s)searchedFX=(FXHostile)sfx;
         }
         return searchedFX;
     }    
@@ -712,7 +720,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         int j=(int)(mousex/FXCarte.TILE_SIZE);
         double xgrid=(j*FXCarte.TILE_SIZE);
         double ygrid=(i*FXCarte.TILE_SIZE);
-        fxIMHelper.getFXSoldatSelectionee().setFrame(7);
+        fxIMHelper.getFXSoldatSelectionee().feuFrame();
         Soldat s=fxIMHelper.getSeletctionee();
         int lasti=mapLastI();
         int lastj=mapLastJ();
@@ -862,7 +870,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
 
    
-   private void refreshCarteAllFXSoldatViewPosition() {
+   public void refreshCarteAllFXSoldatViewPosition() {
  
             refreshCarteHostFXSoldatPosition();
             refreshCarteUSFXSoldatPosition();
@@ -1159,7 +1167,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             defaceMenuItems();
             buildDisableMenu(sfx);
             String mes="";
-            if(s.getStatu()!=Lesion.Statu.NORMAL) mes=s.getStatu().name();
+            if(s.getStatu()!=Soldat.Statut.NORMAL) mes=s.getStatu().name();
             fxpl.sendMessageToPlayer("Il ne peut pas agir "+mes);
         }
     
@@ -1234,7 +1242,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             fxpl.buildFXSoldatEquipement(sfx.getSoldat());
             fxpl.sendMessageToPlayer("Choisir une action from ("+i+","+j+")");
         }catch(Exception ex){
-            throw new RuntimeException(ex);
+            throw new RuntimeException(ex.getCause());
         }
 
     }    

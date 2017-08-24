@@ -8,8 +8,9 @@ package jeu.patrouille.fx.pieces;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.fx.animation.FrameAnimationTimer;
+import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
+import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer.Sound;
 
 /**
  *
@@ -34,11 +35,17 @@ public class FXUSSoldat extends FXSoldat {
     }    
 
     @Override
-    protected void buildFramesFeuAnim() {
-        this.frameAnimTimer[0]=new FrameAnimationTimer(7, 8, this, 0, true, 100, null);
+    public void buildFramesFeuAnim() {
+        
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(7, 8, this, 0, 2, 200,s.getArmeUtilise(),null);
+        frameAnimTimer[0].buildMedia();
     }
 
-
+    @Override
+    public void buildBlessAnim() {
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 10, 100, null,Sound.GRUNT5);
+        frameAnimTimer[0].buildMedia();        
+    }
     
 
 
@@ -54,14 +61,15 @@ public class FXUSSoldat extends FXSoldat {
         
     @Override 
     public void feuFrame(){
-        if(s.getPose()==Piece.Pose.DROIT) setFrame(7);
+        if(s.getPose()==Piece.Pose.DROIT) setFrame(8);
     
     }
     
 
     
     protected void buildFramesMarcheAnim(){
-        frameAnimTimer[0]=new FrameAnimationTimer(1, 3, this, 0, true, 300, FrameAnimationTimer.MARCHE);
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(1, 3, this, 0, -1, 400,null,Sound.MARCHE);
+        frameAnimTimer[0].buildMedia();        
         
     }
      

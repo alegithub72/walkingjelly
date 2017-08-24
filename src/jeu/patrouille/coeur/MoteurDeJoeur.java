@@ -21,10 +21,7 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.parts.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
-import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
-import jeu.patrouille.coeur.pieces.parts.Corp;
 import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.coeur.terrains.Terrain;
 /**
@@ -136,13 +133,13 @@ public class MoteurDeJoeur implements Runnable{
     public void debutRond(){
         System.out.println("start thraed mj");
         if(threadTurn==null ){
-         threadTurn=new Thread(this);
-        threadTurn.setDaemon(true);
-        threadTurn.start();
+           threadTurn=new Thread(this);
+           threadTurn.setDaemon(true);
+           threadTurn.start();
         }else if(!threadTurn.isAlive()){
-        threadTurn=new Thread(this);
-        threadTurn.setDaemon(true);
-        threadTurn.start();
+            threadTurn=new Thread(this);
+            threadTurn.setDaemon(true);
+            threadTurn.start();
         }
      
         //    run();
@@ -233,7 +230,7 @@ public class MoteurDeJoeur implements Runnable{
        // }
         
         
-        if(arrayOrderd!=null && arrayOrderd.length>0){
+        if( arrayOrderd.length>0){
         int k=0;
        
             while(k<arrayOrderd.length) {
@@ -248,7 +245,7 @@ public class MoteurDeJoeur implements Runnable{
                 if(ch) act=fugitivAct;//TODO   fugitiv action
                 if(!s.isIncoscient()||!s.isImmobilize()||!s.isKIA()){
                     
-                    System.out.println("--MJ PLAY GRAFIC--->"+act+"<----->"+act.getProtagoniste().toStringSimple()+"<----------");
+                   // System.out.println("--MJ PLAY GRAFIC--->"+act+"<----->"+((act.getProtagoniste()!=null)?act.getProtagoniste().toStringSimple():" no protagoniste")+"<----------");
                     //cosi sono valide le posizioni di tutti.....
                     if(act.getType()==ActionType.FEU) makeFeuAction(act);
                     playAllGraficInterface(act);
@@ -393,12 +390,16 @@ public class MoteurDeJoeur implements Runnable{
             System.out.println("--------------FEUUUU MAKE---------------------");
             Soldat s=(Soldat)act.getProtagoniste();
             Soldat target=(Soldat)act.getAntagoniste();
-
+            int i1=act.getI1(),j1=act.getJ1();
             //TODO generalizzare in FXcarte....
-            int score=s.fire(target,act.getType());
+            int score=s.fire(act);
+            System.out.println("score ="+score);
             Lesion[] llist=new Lesion[score];
-            PointCarte line[]= Carte.getLigne(s.getI(), s.getJ(), target.getI(),target.getJ());
-            Terrain cover= c.getPointCarte(line[line.length-1].getI(),line[line.length-1].getJ());
+            if(target!=null ){
+                i1=target.getI();j1=target.getJ();
+            }
+            PointCarte line[]= Carte.getLigne(s.getI(), s.getJ(), i1,j1);
+            //Terrain cover= c.getPointCarte(line[line.length-1].getI(),line[line.length-1].getJ());
             GeneriqueArme arm=s.getArmeUtilise();
             for (int sc=0;sc<score;sc++){
                 int location=s.getBoss().dice(10);
@@ -406,18 +407,29 @@ public class MoteurDeJoeur implements Runnable{
                 Lesion l= lesionEsti.getLesion(location, blessure,turn);   
                 //TODO is not enough the last cover
                 //TODO for each cove r on the los of the target
+                System.out.println(l);
                 boolean coverBool=coverRoll(line, s);
-                int armorCheck=s.getBlindage(l.getLocation())+arm.getEMB();
-                int armorRoll=target.getBoss().dice(10);
-                if((armorRoll==1 && armorRoll<=armorCheck )&& coverBool
-                        ) llist[sc]=l;
+                int bli=0;
+                if(target!=null)bli=target.getBlindage(l.getLocation());
+                
+                int armorCheck=bli+arm.getEMB();
+                int armorRoll=s.getBoss().dice(10);
+                System.out.println("cover passed="+coverBool +" armorROLL<=armorCheck "
+                        +armorRoll+"<="+armorCheck+" armor check= "+(bli>0 ));
+                if(((armorRoll==1 && armorRoll<=armorCheck )|| bli==0)&& coverBool
+                        ) {
+                    System.out.println("--PASSED--->"+l);
+                    llist[sc]=l;
+                }else System.out.println("---->NOT PASSED");
                 
 
             }   
+            System.out.println("--length--->"+llist.length);
             for (Lesion ln : llist) {
-                if(!target.isKIA()){
-                    target.addLesion(ln);
-                    target.blessure(ln);
+                if(target!=null && !target.isKIA() && ln!=null){
+                   target.addLesion(ln);
+                   target.blessure(ln);
+
                 }
                 
             }
@@ -433,10 +445,13 @@ public class MoteurDeJoeur implements Runnable{
              Terrain t=c.getPointCarte(pointCarte.getI(), pointCarte.getJ());
              GeneriqueArme arm=s.getArmeUtilise();
              Terrain.Consistance con=t. getConsistance();
+             System.out.println(t+" consitstence="+con);
              if(con!=Terrain.Consistance.NO){
-                 int coverNum=arm.getCoverPenetration(t. getConsistance())+arm.getEDP();
+                 
+                 int coverNum=arm.getCoverPenetration(con)+arm.getEDP();
                  if(coverNum==GeneriqueEquipment.NOTVALUE) return false;
                  int rollCover=s.getBoss().dice(10);
+                 System.out.println("rollCove "+rollCover+" coverNum="+coverNum);
                  if(rollCover>coverNum ) return false;                 
              }
 

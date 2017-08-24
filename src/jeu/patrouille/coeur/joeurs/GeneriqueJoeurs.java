@@ -76,8 +76,8 @@ public abstract class GeneriqueJoeurs {
             Soldat tmp = (Soldat) p;
             if ( leader==null ) 
                 leader = tmp;
-            if(tmp.getClassement()
-                    > leader.getClassement()) leader=tmp;
+            if(tmp.getClassement().ordinal()
+                    > leader.getClassement().ordinal()) leader=tmp;
         }
         return leader;
     }
