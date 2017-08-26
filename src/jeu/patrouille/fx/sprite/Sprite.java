@@ -11,7 +11,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -40,7 +39,7 @@ public class Sprite extends Parent
     int h;
     int wSquare;
     int hSquare;
-   protected int defaultFrame;
+    protected int defaultFrame;
     protected FrameAnimationTimer frameAnimTimer[];
     int k;
     protected Animation[] ptList;

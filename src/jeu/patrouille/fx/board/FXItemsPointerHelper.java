@@ -87,6 +87,7 @@ public class FXItemsPointerHelper {
 
     public void setFXSeletctionee(FXSoldat seletctionee) {
         this.seletctionee = seletctionee;
+        this.lastVisualizationRond=seletctionee.getSoldat().getBoss().getJeur();
     }
     
 
@@ -172,7 +173,7 @@ public FXSoldat getFXSoldatSelectionee(){
             this.rangeCursorHelper=ImageChargeur.CURSOR_FORBIDDEN;
         this.commanNotvalid = commanNotvalid;
     }
-    
+
     public boolean isLastUSVisualizationTurn(Soldat s){
         Soldat slast=seletctionee.getSoldat();
                

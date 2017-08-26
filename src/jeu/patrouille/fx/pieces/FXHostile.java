@@ -32,7 +32,7 @@ public class FXHostile extends FXSoldat{
     
     @Override
     public void buildBlessAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 10, 100, null,Sound.GRUNT5);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 1, 300, null,Sound.GRUNT5);
         this.frameAnimTimer[0].buildMedia();
     }    
     @Override

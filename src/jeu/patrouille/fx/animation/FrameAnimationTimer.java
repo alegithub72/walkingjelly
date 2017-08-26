@@ -99,8 +99,11 @@ public class FrameAnimationTimer extends AnimationTimer{
             source.setFrame(i);
             i++;
             if(loop<this.ciclyc){
-                if(i>f2) i=f1;
-                loop++;
+                if(i>f2) {
+                    i=f1;
+                    loop++;
+                }
+                
             }else if(loop>=this.ciclyc && (i>f2) ) {
                 source.removeThis();
                 this.stop();

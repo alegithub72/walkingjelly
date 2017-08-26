@@ -14,18 +14,15 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -102,6 +99,8 @@ public class FXPlanche extends Application {
 
     public void imprimerFXPLInfo(Soldat s) {
         infPl.imprimerInfo(s);
+
+        
     }
 
     public void buildFXSoldatEquipement(Soldat s){
@@ -113,7 +112,7 @@ public class FXPlanche extends Application {
         fxequip.setTranslateY(325);
         fxequip.toFront();
         fxequip.buildFXEquipment(s);
-       // rootDroitBarGroup.getChildren().add(fxequip);
+               // rootDroitBarGroup.getChildren().add(fxequip);
 
     }
     void buildBar() throws IOException {
@@ -137,7 +136,7 @@ public class FXPlanche extends Application {
         message = new Label("");
         message.setTextFill(Color.WHITE);
         message.setFont(fontTitle);
-        message.relocate(10, 5);
+        message.relocate(5,FXCarte.PIXEL_SCROLL_AREA_H);
         message.setStyle("");
 
 
@@ -158,7 +157,8 @@ public class FXPlanche extends Application {
         root.getChildren().add(message);
     }
     public void endTurn(){
-        suprimerActionVisualization(); 
+        suprimerActionVisualization();
+        
         fxCarte.playTurn();
     }
     void buildTop() {
@@ -201,7 +201,7 @@ public class FXPlanche extends Application {
         
         gc.fillText("Nom:", 2, 26);
         gc.fillText("Classment:", 2, 78+10);
-        gc.fillText("TEMP:", 2, 130+60);
+        gc.fillText("TEMP:", 2, 130+85);
         gc.fillText("EQUIPMENT:", 11, 315);
         gc.fillText("Sante:",2,130+30);
         gc.setEffect(null);

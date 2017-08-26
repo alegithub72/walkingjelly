@@ -12,6 +12,7 @@ import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.pieces.parts.CorpPart;
 import jeu.patrouille.coeur.pieces.parts.Corp;
 import java.util.ArrayList;
+import java.util.List;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -39,8 +40,12 @@ public class Soldat extends Piece {
     public enum Classment{SERGENT,TENENT,SERGENT_MAJOR,SOLDAT};
 
     public static final int FULL_SANTE=6;
-    public enum Statut{CRITIQUE,GRAVE,GRAVE_TETE,LEGER_BLESSE
-    ,MANQUE,NORMAL,GRAVE_BRASE_DROITE,GRAVE_BRASE_GAUCHE}    
+    public enum Statut{NORMAL("Saine"),MANQUE("Manque"),LEGER_BLESSE("Legger blesse"),GRAVE("Grave"),GRAVE_TETE("Grave alla tete"),
+    GRAVE_BRASE_DROITE("grave a brase droite"),GRAVE_BRASE_GAUCHE("Grave a base gauche"),CRITIQUE("Critique"),MORT("Mort");
+    public String mes;
+    Statut(String mes){
+    this.mes=mes;
+    }}    
     ActionType actionActuel=ActionType.PA_ACTION;
     Corp blindage;
     Lesion lesion[];
@@ -114,7 +119,9 @@ public class Soldat extends Piece {
     }
 
     public boolean isDoubled() {
-        return st==Statut.GRAVE;
+        return st==Statut.GRAVE||
+               st==Statut.GRAVE_BRASE_DROITE||
+               st==Statut.GRAVE_BRASE_GAUCHE;
     }
 
     public int isWounded(){
@@ -132,21 +139,26 @@ public class Soldat extends Piece {
 
 
     public void blessure(Lesion l){
-        if(l.getStatu()==Statut.CRITIQUE 
+        Statut statutNow=l.getStatu();
+        if(statutNow==Statut.CRITIQUE 
                 && l.getLocation()==Corp.CorpParts.Tete) {
             sante=-10;
-            st=Statut.CRITIQUE;
+            st=Statut.MORT;
+            immobilize=true;
             resetAction();
         }
         else { 
             this.sante=sante+l.getBlessure();
-            switch (l.getStatu()) {
+            
+            switch (statutNow) { 
                 case CRITIQUE:
                     this.moral=moral-2;
                     int tdActionRemove=boss.dice(10);
                     removeActionUpTo(tdActionRemove);
                     this.pose=Pose.PRONE;
                     this.immobilize=true;
+                    setStatut(statutNow);
+                    
                     break;
                 case GRAVE_TETE:
                     moral=moral-1;
@@ -154,20 +166,25 @@ public class Soldat extends Piece {
                     immobilize=true;
                      tdActionRemove=boss.dice(6);//TODO levere se action fro the pool 
                      removeActionUpTo(tdActionRemove);
+                     setStatut(statutNow);  
+                
                     break;
                 case GRAVE:
                     moral=moral-1;
                      tdActionRemove=boss.dice(6);
                      removeActionUpTo(tdActionRemove);
-                    
-                    //TODO one action per turn
+                     
+                    //TODO not jumping and runnnig but all the others...
+                    //TODO remove all action except one
+                     setStatut(statutNow);
                     break;
                 case GRAVE_BRASE_DROITE:
                     moral=moral-1;
                     tdActionRemove=boss.dice(6);
                     removeActionUpTo(tdActionRemove);
+                    setStatut(statutNow);
                     armeUtilise=null;//todo drop items
-                    
+                    //TODO remove all action except one
                     //TODO one action per turn
                     break;     
                 case GRAVE_BRASE_GAUCHE:
@@ -175,11 +192,14 @@ public class Soldat extends Piece {
                     tdActionRemove=boss.dice(6);
                     removeActionUpTo(tdActionRemove);
                     armeUtilise.setDegat(true);
+                    setStatut(statutNow);                    
                     //TODO one action per turn
                     break;                    
                 case LEGER_BLESSE:
                     tdActionRemove=4;
                     removeActionUpTo(tdActionRemove);
+                    setStatut(statutNow);                
+                    //TODO se al braccio drop arme
                     break;
                 case MANQUE:
                     tdActionRemove=2;
@@ -199,6 +219,11 @@ public class Soldat extends Piece {
 
     public Statut getStatu() {
         return st;
+    }
+
+    public void setStatut(Statut statut) {
+        if(statut.ordinal()>st.ordinal() )st=statut;
+        
     }
 
  
@@ -490,7 +515,10 @@ public int getNumLesion(){
        boolean b=false;
        if(isObjective()) 
            b= boss.dice(10)<=moral;//TODO vedere i modificatori di morale
-       if(b) choc=true ;//TODO add an action run away nel pool di action
+       else System.out.println("nessun test di morale da fare");
+       choc=b ;//TODO add an action run away nel pool di action
+       if(b && isObjective()) System.out.println("^^^^^^ non deve muoversi per tutto il ???turno sucessivo");;
+                
        return choc;
    }
    public void notBandage(){
@@ -499,7 +527,7 @@ public int getNumLesion(){
       if(!b) sante=-10;//TODO at ending activqtion
    }
    public boolean isKIA(){
-   return sante<=-10;
+   return sante<=-10|| st==Statut.MORT;
    
    }
     public boolean isActive() {
@@ -553,15 +581,15 @@ public int getNumLesion(){
    
    public void addLesion(Lesion l){
        lesionN++;
-       if(lesionN==lesion.length) {
-       Lesion listNew[]=new Lesion[lesion.length*2];
-           for (int k = 0; k < lesion.length; k++) {
-               listNew[k]=lesion[k];
-           }
-           lesion=listNew;
+//       if(lesionN==lesion.length) {
+//       Lesion listNew[]=new Lesion[lesion.length*2];
+//           for (int k = 0; k < lesion.length; k++) {
+//               listNew[k]=lesion[k];
+//           }
+//           lesion=listNew;
            
-       }
-       lesion[lesionN]=l;
+       
+       this.lesion[lesionN]=l;
    
    }
 
@@ -576,15 +604,19 @@ public void setObjective(boolean objective) {
        return lesion;
    }
    
-   void removeActionUpTo(int td){
-    int tdMax=td,tdAction=0;
-    for (BaseAction baseAction : actionsPool) {
-        tdAction=tdAction+baseAction.getTempActivite();
-        if(tdAction<=tdMax) {
-            actionsPool.remove(baseAction);
-            System.out.println("removed:"+baseAction);
+  void removeActionUpTo(int td){
+    int tdMax=td-tempDesponible;
+    if(tempDesponible>0) tempDesponible=tempDesponible-td;
+      System.out.println("remove action"+td);
+    if(tdMax>0){
+        while(tdMax<=0){
+            BaseAction act=  actionsPool.get(actionsPool.size()-1);
+            tdMax=tdMax-act.getTempActivite();
+            actionsPool.remove(act);
+            System.out.println("removed "+act);
         }
         
+    
     }
 
 }   

@@ -172,6 +172,7 @@ public class MoteurDeJoeur implements Runnable{
          System.out.println("--------------------------->TD--CONSIDERED--START-->"+td+"<------------");
             for(int k=0;k<patrouille.length;k++){
                 List<BaseAction> l=patrouille[k].getBaseActionSum(td);
+               
                // System.out.println("---Action sum--->"+l.size());
                 listAllActionUS.addAll(l);
             }
@@ -179,7 +180,7 @@ public class MoteurDeJoeur implements Runnable{
             for(int k=0;k<hostile.length;k++){
                 List<BaseAction> l=hostile[k].getBaseActionSum(td);
                 //System.out.println("--Action sum---->"+l.size());
-                listAllActionHost.addAll(l);
+                 listAllActionHost.addAll(l);
             }            
            // System.out.println("-----------TD CONSIDEREDED "+td+"---------------------");
             //System.out.println("-listAllHost-->"+listAllActionHost.size());
@@ -202,10 +203,13 @@ public class MoteurDeJoeur implements Runnable{
    void resetAllSoldatActionPool(){
        for (Piece patrouille1 : this.patrouille) {
            patrouille1.resetActionPoool();
+           ((Soldat)patrouille1).shellShockTest();
            ((Soldat)patrouille1).resetRondCheck();
+           
        }
        for (Piece hostile1 : hostile) {
            hostile1.resetActionPoool();
+           ((Soldat)hostile1).shellShockTest();
            ((Soldat)hostile1).resetRondCheck();
        }
    
@@ -244,25 +248,24 @@ public class MoteurDeJoeur implements Runnable{
                 //BaseAction clone=act.clone();
                 Soldat s=(Soldat)act.getProtagoniste();
                 //s.resetAction();
-                boolean ch=s.shellShockTest();
                 BaseAction fugitivAct=null;
-                if(ch) act=fugitivAct;//TODO   fugitiv action
-                if(!s.isIncoscient()||!s.isImmobilize()||!s.isKIA()|| !s.isChoc()){
+                //if(ch) act=fugitivAct;//TODO   fugitiv action
+                if(!s.isIncoscient()&&!s.isImmobilize()&&!s.isKIA()&& !s.isChoc()){
                     
                    // System.out.println("--MJ PLAY GRAFIC--->"+act+"<----->"+((act.getProtagoniste()!=null)?act.getProtagoniste().toStringSimple():" no protagoniste")+"<----------");
                     //cosi sono valide le posizioni di tutti.....
-                    if(act.getType()==ActionType.FEU) makeFeuAction(act);
+                    if( act.getType()==ActionType.FEU) makeFeuAction(act);
                     playAllGraficInterface(act);
     
-                    System.out.println("--MJ PLAY GRAFIC------------------------------END----><-----");
+
                     int zz=0;
                     System.out.println("------------Zzzzzzzzzzzzz="+allAnimOn());
                     while(allAnimOn());
                     System.out.println("------------Svegliaaaaaaaa="+allAnimOn());
 
-                    if(act.getType()!=ActionType.FEU) makeAction((Soldat)act.getProtagoniste(), act);   
+                    if( act.getType()!=ActionType.FEU) makeAction((Soldat)act.getProtagoniste(), act);   
                     refreshAllGraficInterface();
-                }
+                }else System.out.println("--------->KIA OR CHOKET NOTA ANIM");
                  //TODO vedere per aggiorantre la mappa quando!!!!
                  k++;
                 
@@ -366,7 +369,7 @@ public class MoteurDeJoeur implements Runnable{
      */
     public void makeMarcheAction(Soldat s, BaseAction a) {
         //TODO rendere effettive le modifiche .....
-        System.out.println("--------------MARCHE MAKE---------------------");
+        System.out.println("*************************MARCHE MAKE*************************");
         int i0=a.getI0(),j0=a.getJ0();
         int i1=a.getI1(),j1=a.getJ1();
         if(c.terrain[i0][j0].getPiece()==s)
@@ -386,12 +389,12 @@ public class MoteurDeJoeur implements Runnable{
         s.setI(i1);
         s.setJ(j1);
         System.out.println("updated position -soldat--->"+s.toStringSimple()+"--->"+a.getI1()+","+a.getJ1());
-        System.out.println("--------------MARCHE MAKE---------------------");        
+        System.out.println("**************************MARCHE MAKE**************************");        
     }    
 
 
         public void makeFeuAction(BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException{
-            System.out.println("--------------FEUUUU MAKE---------------------");
+            System.out.println("*************************FEUUUU MAKE*****************************");
             Soldat s=(Soldat)act.getProtagoniste();
             Soldat target=(Soldat)act.getAntagoniste();
             int i1=act.getI1(),j1=act.getJ1();
@@ -430,12 +433,12 @@ public class MoteurDeJoeur implements Runnable{
                 
 
             }   
-            System.out.println("--length--->"+llist.length);
+            
             for (Lesion ln : llist) {
                 if(target!=null && !target.isKIA() && ln!=null){
                    target.addLesion(ln);
                    target.blessure(ln);
-
+                   System.out.println("--add--->"+ln);
                 }
                 
             }
@@ -444,7 +447,7 @@ public class MoteurDeJoeur implements Runnable{
 
             //TODO choose other target.........if full automatic in the line of sight
 
-        System.out.println("--------------FEUUUU MAKE---------------------");            
+        System.out.println("**************************FEUUUU MAKE----FINE*****************************");            
     }
      boolean coverRoll(PointCarte line[],Soldat s){
          for (PointCarte pointCarte : line) {

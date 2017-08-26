@@ -57,7 +57,7 @@ public class LesionEstimation {
                 gravite=Degre.LEGER;
                 st=Statut.LEGER_BLESSE;
             }
-            else if(m>6) {
+            else if(m>=6) {
                 blessure= 0;
                 gravite=Degre.MANQUE;
                 st=Statut.MANQUE;
@@ -67,7 +67,7 @@ public class LesionEstimation {
              st=Statut.GRAVE_TETE;
          if((position==CorpParts.BrasDroite )
                  && gravite==Degre.GRAVE)st=Statut.GRAVE_BRASE_DROITE;
-        if(gravite==Degre.LEGER && position==CorpParts.BrasGauche)
+        if(gravite==Degre.GRAVE && position==CorpParts.BrasGauche)
             st=Statut.GRAVE_BRASE_GAUCHE;
         
        return new Lesion(position, gravite,blessure,st,turn);

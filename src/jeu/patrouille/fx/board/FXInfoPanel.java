@@ -67,15 +67,16 @@ public class FXInfoPanel extends Parent{
         
         tdLabel.setTextFill(textColor);
         tdLabel.setFont(font);
-        tdLabel.relocate(x+80, y+130);
+        tdLabel.relocate(x+80, y+155);
         tdLabel.setBorder(bo);
         tdLabel.setBackground(bk);
         
         sante.setTextFill(textColor);
         sante.setFont(font);
         sante.setBorder(bo);
-        sante.setBorder(bo);
-        sante.relocate(x+80, y+105);
+        sante.setBackground(bk);
+        sante.relocate(x, y+130);
+        
         this.getChildren().add(sante);
         this.getChildren().add(nom);
         this.getChildren().add(tdLabel);
@@ -108,7 +109,7 @@ public class FXInfoPanel extends Parent{
         tdLabel.setText (s.getTempDisponible()+"");
         String clText=s.getClassement().name();
         classment.setText(clText);
-        sante.setText(s.getSante()+"");
+        sante.setText(s.getStatu().mes+" "+s.getSante());
     
     }
     

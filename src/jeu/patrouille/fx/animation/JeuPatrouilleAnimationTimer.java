@@ -30,7 +30,7 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
         }
     }    
     public JeuPatrouilleAnimationTimer(int f1,int f2,Sprite sp,double frac,int cyclic,int interval,GeneriqueArme arme,Sound sound) {
-        super(f1, f2, sp, frac, cyclic, interval, (sound!=null)?sound.file():null);
+        super(f1, f2, sp, frac, cyclic, interval, null);
         this.arme=arme;
         this.type=sound;
         if(arme!=null){
@@ -39,6 +39,9 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
             if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file();
             if(arme.getModel()==GeneriqueEquipment.Model.BENELLI_M3) this.sound=Sound.BENELLI_M3.file();
             if(arme.getModel()==GeneriqueEquipment.Model.MP5) this.sound=Sound.MP5.file();        
+        }else {
+            this.sound=type.file;
+        
         }
         
     }
