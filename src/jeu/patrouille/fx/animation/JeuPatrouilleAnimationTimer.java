@@ -78,7 +78,7 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
                        break;
                }
                if (arme.getArmeFeuModel() == FeuMode.SA) {
-                   mediaPlayer.setCycleCount(3);
+                   mediaPlayer.setCycleCount(1);
                } else {
                    mediaPlayer.setCycleCount(1);
                }

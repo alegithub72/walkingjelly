@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.menu.eventhandler;
 
 
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.fx.board.FXCarte;
@@ -32,7 +33,7 @@ public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandl
     @Override
     public void handle(MouseEvent event) {
         
-        
+        fxcarte.setCursor(Cursor.HAND);
         if(event.getButton()==MouseButton.PRIMARY) {
                fxcarte.openSoldatMenuItems(s);
                

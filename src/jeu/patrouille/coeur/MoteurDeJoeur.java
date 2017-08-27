@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
@@ -172,14 +173,15 @@ public class MoteurDeJoeur implements Runnable{
          System.out.println("--------------------------->TD--CONSIDERED--START-->"+td+"<------------");
             for(int k=0;k<patrouille.length;k++){
                 List<BaseAction> l=patrouille[k].getBaseActionSum(td);
-               
+
                // System.out.println("---Action sum--->"+l.size());
                 listAllActionUS.addAll(l);
             }
             
             for(int k=0;k<hostile.length;k++){
                 List<BaseAction> l=hostile[k].getBaseActionSum(td);
-                //System.out.println("--Action sum---->"+l.size());
+
+
                  listAllActionHost.addAll(l);
             }            
            // System.out.println("-----------TD CONSIDEREDED "+td+"---------------------");
@@ -203,14 +205,16 @@ public class MoteurDeJoeur implements Runnable{
    void resetAllSoldatActionPool(){
        for (Piece patrouille1 : this.patrouille) {
            patrouille1.resetActionPoool();
-           ((Soldat)patrouille1).shellShockTest();
            ((Soldat)patrouille1).resetRondCheck();
+           ((Soldat)patrouille1).bleedingTache();
+           ((Soldat)patrouille1).inconscentTache();
            
        }
        for (Piece hostile1 : hostile) {
            hostile1.resetActionPoool();
-           ((Soldat)hostile1).shellShockTest();
            ((Soldat)hostile1).resetRondCheck();
+           ((Soldat)hostile1).bleedingTache();
+           ((Soldat)hostile1).inconscentTache();           
        }
    
    
@@ -250,7 +254,7 @@ public class MoteurDeJoeur implements Runnable{
                 //s.resetAction();
                 BaseAction fugitivAct=null;
                 //if(ch) act=fugitivAct;//TODO   fugitiv action
-                if(!s.isIncoscient()&&!s.isImmobilize()&&!s.isKIA()&& !s.isChoc()){
+                if(!s.isIncoscient()&&!s.isImmobilize()&&!s.isKIA()){
                     
                    // System.out.println("--MJ PLAY GRAFIC--->"+act+"<----->"+((act.getProtagoniste()!=null)?act.getProtagoniste().toStringSimple():" no protagoniste")+"<----------");
                     //cosi sono valide le posizioni di tutti.....
@@ -438,7 +442,7 @@ public class MoteurDeJoeur implements Runnable{
                 if(target!=null && !target.isKIA() && ln!=null){
                    target.addLesion(ln);
                    target.blessure(ln);
-                   System.out.println("--add--->"+ln);
+                   System.out.println(target.toStringSimple()+":--add--->"+ln);
                 }
                 
             }

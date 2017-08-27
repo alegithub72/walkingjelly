@@ -42,8 +42,9 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     ImageView flagImg;
     ImageView classmentImg;
     ImageView selectionneImg;
-    ImageView schokOrImmodilzer;
+    ImageView incoscientAuImmobilizer;
     ImageView deathIcon;
+    ImageView scared;
     double orientation;
 
     int pos;
@@ -59,8 +60,9 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
             classmentImg=new ImageView("scelto.png");
         selectionneImg=new ImageView("selectUS.png");       
         //defaultFrame=s.getClassement();
-        schokOrImmodilzer=new ImageView("shocked.png");
+        incoscientAuImmobilizer=new ImageView("shocked.png");
         deathIcon=new ImageView("detah.png");
+        scared=new ImageView("scared.png");
         orientation=0;
         this.pos=pos;
         setDeafultFrame(0);
@@ -310,9 +312,10 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     public void signOff(){
        flagImg.setVisible(false);
        classmentImg.setVisible(false);
-       schokOrImmodilzer.setVisible(false);
+       incoscientAuImmobilizer.setVisible(false);
        deathIcon.setVisible(false);
        getChildren().removeAll(blessureImg);
+       scared.setVisible(false);
     }
     public void signON(){
        flagImg.setVisible(true);
@@ -321,7 +324,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        classmentImg.toFront();
        getChildren().removeAll(blessureImg);
        if(s.getSante()<blessureImg.length)   {
-           int blN=s.getNumLesion();
+           int blN=s.isLesion();
         for(int n=0;n<blN;n++){
             blessureImg[n] = new ImageView("wound.png");
             blessureImg[n].setTranslateX(n*10);
@@ -331,14 +334,14 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
         }
        }
-       getChildren().remove(schokOrImmodilzer);
-       if((s.isChoc()||
-               s.isImmobilize()||
+       getChildren().remove(incoscientAuImmobilizer);
+       getChildren().remove(scared);
+       if((s.isImmobilize()||
                s.isIncoscient())&& !s.isKIA()) {
-               schokOrImmodilzer.toFront();
-               schokOrImmodilzer.relocate(FXCarte.TILE_SIZE-16, 0);
-               schokOrImmodilzer.setVisible(true);
-            if(!getChildren().contains(schokOrImmodilzer)) getChildren().add(schokOrImmodilzer);
+               incoscientAuImmobilizer.toFront();
+               incoscientAuImmobilizer.relocate(FXCarte.TILE_SIZE-16, FXCarte.TILE_SIZE-32);
+               incoscientAuImmobilizer.setVisible(true);
+            if(!getChildren().contains(incoscientAuImmobilizer)) getChildren().add(incoscientAuImmobilizer);
        }else if(s.isKIA()){
            if(!getChildren().contains(deathIcon)) {
                getChildren().add(deathIcon);
@@ -346,6 +349,11 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
            }
            deathIcon.setVisible(true);
            
+       }
+       if(s.isChoc()){
+           if(!getChildren().contains(scared))getChildren().add(scared);
+           scared.relocate(FXCarte.TILE_SIZE-16, FXCarte.TILE_SIZE-16);
+           scared.setVisible(true);
        }
       
     }
@@ -365,7 +373,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                System.out.println("new thread");
                
                while(!frameAnimTimer[0].isStopped()) 
-                   System.out.print("");
+               System.out.print("");
                Platform.runLater(new Runnable() {
                    @Override
                    public void run() {
@@ -386,7 +394,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                             fxcarte.refreshCarte();
                             fxcarte.refreshCarteAllFXSoldatViewPosition();                            
                         }
-                        PauseTransition pause=new PauseTransition(Duration.seconds(0.5));
+                        PauseTransition pause=new PauseTransition(Duration.seconds(1));
                         pause.setOnFinished(new EndAnimPauseHandler(fxcarte));
                         pause.play();
                         System.out.println("$$$$$$$$$$$$$$$$$$$$ RUN TARGETPLAY BLESSED $$$$$$------FINE--------$$$$$$$$$$$$$");
@@ -415,6 +423,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         if(l==null) return ;
         System.out.println("ordinal s.getStatut"+s.getStatu().ordinal()+" ordinal blessed "+l.getStatu().ordinal());        
            switch (s.getStatu()) {
+            case MORT: 
             case CRITIQUE:
 
                     setW(100);

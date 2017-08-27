@@ -36,6 +36,7 @@ public class ImageChargeur {
         arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
         arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
         arrowCRDown=new ImageCursor(new Image("cursorScrollDOWN.png")); 
+        forbidden=new ImageCursor(new Image("cursorForbidden.png"));
         cursoHostRange.buildFrameImages(array[CURSOR_HOST_RANGE]);
         cursorForbidenRange.buildFrameImages(array[CURSOR_FORBIDDEN]);
         cursorUSRange.buildFrameImages(array[CURSOR_US_RANGE]);
@@ -47,6 +48,7 @@ public class ImageChargeur {
     ImageCursor arrowCRLeft;
     ImageCursor arrowCRUp;
     ImageCursor arrowCRDown;  
+    ImageCursor forbidden;
     
    static ImageChargeur singleton;
      public static ImageChargeur getInstance(){
@@ -83,6 +85,9 @@ public class ImageChargeur {
         return arrowCRDown;
     }
     
+    public ImageCursor getForbidden() {
+        return forbidden;
+    }
     public static void decodeImage()
             throws FileNotFoundException,IOException{
         InputStream in=new FileInputStream("/Users/appleale/rangeArrow.png");

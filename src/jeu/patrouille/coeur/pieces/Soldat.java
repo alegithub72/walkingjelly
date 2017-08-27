@@ -12,9 +12,9 @@ import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.pieces.parts.CorpPart;
 import jeu.patrouille.coeur.pieces.parts.Corp;
 import java.util.ArrayList;
-import java.util.List;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.GeneriqueBlindageEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
@@ -71,11 +71,19 @@ public class Soldat extends Piece {
     boolean active;
     boolean choc;
     boolean immobilize;
+    boolean bandage;
     Statut st;
 
 
  
-   
+    boolean isBleading(){
+        return (st==Statut.CRITIQUE||
+        st==Statut.GRAVE ||
+        st==Statut.GRAVE_BRASE_DROITE ||
+        st==Statut.GRAVE_TETE
+                );
+    
+    }
     
     public Soldat(
             String nom,
@@ -114,6 +122,7 @@ public class Soldat extends Piece {
         lesion=new Lesion[10];
         lesionN=0;
         this.blindage=blindage;
+        bandage=false;
         
     
     }
@@ -124,10 +133,7 @@ public class Soldat extends Piece {
                st==Statut.GRAVE_BRASE_GAUCHE;
     }
 
-    public int isWounded(){
-        return 6-sante;
-        
-    }
+
 
     public boolean isEquipePorte() {
         return equipePorte;
@@ -152,33 +158,41 @@ public class Soldat extends Piece {
             
             switch (statutNow) { 
                 case CRITIQUE:
+                    objective=true;
                     this.moral=moral-2;
                     int tdActionRemove=boss.dice(10);
                     removeActionUpTo(tdActionRemove);
                     this.pose=Pose.PRONE;
                     this.immobilize=true;
                     setStatut(statutNow);
-                    
+                    bandage=false;                 
                     break;
                 case GRAVE_TETE:
+                    objective=true;
                     moral=moral-1;
                     incoscient=true;
                     immobilize=true;
-                     tdActionRemove=boss.dice(6);//TODO levere se action fro the pool 
-                     removeActionUpTo(tdActionRemove);
-                     setStatut(statutNow);  
-                
+                    tdActionRemove=boss.dice(6);//TODO levere se action fro the pool 
+                    removeActionUpTo(tdActionRemove);
+                    setStatut(statutNow);                       
+                    this.pose=Pose.PRONE;
+                    bandage=false;                   
                     break;
                 case GRAVE:
+                    objective=true;
                     moral=moral-1;
                      tdActionRemove=boss.dice(6);
                      removeActionUpTo(tdActionRemove);
-                     
+                     bandage=false;                    
                     //TODO not jumping and runnnig but all the others...
                     //TODO remove all action except one
-                     setStatut(statutNow);
+                    setStatut(statutNow);
+                    if(!choc)shellShockTest();
+                    if(choc)System.out.println("--- choced ---");
+                    else System.out.println(" coch test passed");                     
                     break;
                 case GRAVE_BRASE_DROITE:
+                    objective=true;
                     moral=moral-1;
                     tdActionRemove=boss.dice(6);
                     removeActionUpTo(tdActionRemove);
@@ -186,37 +200,71 @@ public class Soldat extends Piece {
                     armeUtilise=null;//todo drop items
                     //TODO remove all action except one
                     //TODO one action per turn
+                    bandage=false;
+                    if(!choc)shellShockTest();
+                    if(choc)System.out.println("--- choced ---"); 
+                    else System.out.println(" coch test passed");                     
                     break;     
                 case GRAVE_BRASE_GAUCHE:
+                    objective=true;
                     moral=moral-1;
                     tdActionRemove=boss.dice(6);
                     removeActionUpTo(tdActionRemove);
                     armeUtilise.setDegat(true);
-                    setStatut(statutNow);                    
+                    setStatut(statutNow);                       
+                    bandage=false;
                     //TODO one action per turn
+                    if(!choc)shellShockTest();
+                    if(choc)System.out.println("--- choced ---"); 
+                    else System.out.println(" coch test passed");
                     break;                    
                 case LEGER_BLESSE:
+                    objective=true;
                     tdActionRemove=4;
                     removeActionUpTo(tdActionRemove);
-                    setStatut(statutNow);                
-                    //TODO se al braccio drop arme
+                    setStatut(statutNow);      
+                    if(!choc)shellShockTest();
+                    if(choc)System.out.println("--- choced ---");
+                    else System.out.println(" coch test passed");                    
+
                     break;
                 case MANQUE:
+                    objective=false;//is happy
                     tdActionRemove=2;
                     removeActionUpTo(tdActionRemove);
                 default:
                     break;
             }
-            if(sante<=0) incoscient=true;//TODO uncoinscious 
-            
+            if(sante<=0) {
+                incoscient=true;
+                st=Statut.GRAVE_TETE;
+            }//TODO uncoinscious 
+            if(sante<=-10) st=Statut.MORT;
            
         }
         
-        objective=true;
+        
 
         
     }
+    //TODO rivedere perche fa un de casino
+    public void addFuirLontain(){
+        try{
+        resetTempDispoleNotUse();
+        BaseAction act=MarcheAction.marcheLointain(this);
+        if(act!=null){
+            addAction(act);
+            this.spreadDone=false;
+        }
+        else System.out.println("Non c'e' tempo.....");
+        System.out.println(" action "+act);
+        }catch(Exception ex){
+            System.err.println("Non e' possibile aggiungere una azione runaaway");
+            ex.printStackTrace();
+            
+        }
 
+    }
     public Statut getStatu() {
         return st;
     }
@@ -302,11 +350,13 @@ public class Soldat extends Piece {
     public int getSante() {
         return sante;
     }
-public int getNumLesion(){
+public int isLesion(){
     int n=0;
     for (int k = 0; k < lesion.length; k++) {
         if(lesion[k]!=null && lesion[k].getGravite()!=Lesion.Degre.MANQUE &&
-                lesion[k].getGravite()!=Lesion.Degre.NODEGRE)n++;
+                lesion[k].getGravite()!=Lesion.Degre.NODEGRE &&
+                lesion[k].getGravite()!=Lesion.Degre.CRITIQUE &&
+                lesion[k].getStatu()!=Statut.GRAVE_TETE)n++;
     }
     return n;
 }
@@ -405,7 +455,7 @@ public int getNumLesion(){
     
     }
     int combatDistanceModifier(Soldat target,ActionType t){
-            int cDM=-isWounded();
+            int cDM=-isLesion();
 
             if(armeUtilise.getMF()==FeuMode.RA ) 
                 cDM=cDM-1;
@@ -443,7 +493,6 @@ public int getNumLesion(){
 
     public boolean isPossileDesplacer(){
         return tempDesponible>0 &&
-                !isChoc() &&
                 !isImmobilize() &&
                 !isIncoscient() &&
                 !isKIA();
@@ -495,37 +544,35 @@ public int getNumLesion(){
             super.addAction(act);
         }else if(st==Statut.LEGER_BLESSE){
             super.addAction(act);
-        }else if(st==Statut.GRAVE_BRASE_GAUCHE){
+        }else if(st==Statut.GRAVE_BRASE_DROITE){
             if (this.actionsPool.size() > 1) 
                 throw new UnActionSoldatException();
             super.addAction(act);
             
         }else if(st==Statut.GRAVE_BRASE_GAUCHE){
             super.addAction(act);
-        }
+        }else super.addAction(act);
         
         
         
     }
+    
+  
    public boolean isObjective(){
        return this.objective;
    }
    //TODO riguardare le regole
-   public boolean shellShockTest(){
-       boolean b=false;
-       if(isObjective()) 
-           b= boss.dice(10)<=moral;//TODO vedere i modificatori di morale
-       else System.out.println("nessun test di morale da fare");
+   public void shellShockTest(){
+       boolean b=false; 
+       b= boss.dice(10)<=moral;//TODO vedere i modificatori di morale
        choc=b ;//TODO add an action run away nel pool di action
-       if(b && isObjective()) System.out.println("^^^^^^ non deve muoversi per tutto il ???turno sucessivo");;
-                
-       return choc;
+       if(b && isObjective()){
+           System.out.println(this.toStringSimple()+"^^^^^^ deve correre al riparo");
+           addFuirLontain();
+       }
+
    }
-   public void notBandage(){
-      
-      boolean b= boss.dice(10)<=10+sante;
-      if(!b) sante=-10;//TODO at ending activqtion
-   }
+
    public boolean isKIA(){
    return sante<=-10|| st==Statut.MORT;
    
@@ -554,10 +601,37 @@ public int getNumLesion(){
    public void resetRondCheck(){
        this.objective=false;
        this.active=false;
+       this.choc=false;
+       this.actionActuel=ActionType.PA_ACTION;
        
 
    }
-
+   public void inconscentTache(){
+    int roll=boss.dice(10);
+    int n=sante;
+    if(roll<=sante) incoscient=false;
+    if(incoscient && !survrivetest()) {
+         sante=sante-1;
+         System.out.println(toStringSimple()+"-1 sante per test inconscient");
+    }else if(incoscient )System.out.println(toStringSimple()+"  test incoscient passed");
+    
+    
+   }
+   public void bleedingTache(){
+       if(isBleading() && !bandage && !survrivetest()){
+           sante=-10;
+           st=Statut.MORT;
+           System.out.println(toStringSimple()+"MORTO PER TEST DI SOPRAVVIVENZA");
+       }else if(isBleading())System.out.println(toStringSimple()+" bleding test passed");
+      
+   
+   }
+   public boolean survrivetest(){
+       int roll=boss.dice(10);
+       int targetN=10+sante;
+       return roll<=targetN;
+    
+   }
     public boolean isImmobilize() {
         return immobilize;
     }
@@ -605,19 +679,30 @@ public void setObjective(boolean objective) {
    }
    
   void removeActionUpTo(int td){
-    int tdMax=td-tempDesponible;
-    if(tempDesponible>0) tempDesponible=tempDesponible-td;
-      System.out.println("remove action"+td);
-    if(tdMax>0){
-        while(tdMax<=0){
-            BaseAction act=  actionsPool.get(actionsPool.size()-1);
-            tdMax=tdMax-act.getTempActivite();
-            actionsPool.remove(act);
-            System.out.println("removed "+act);
-        }
-        
+    int tdMax=0;
     
-    }
+    if(tempDesponible>td) {
+        tempDesponible=tempDesponible-td;
+        tdMax=0;
+    }else tdMax=td-tempDesponible;
+    System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    System.out.println("richiesta originale :"+td+",levare td="+tdMax+",temp disponible rimasto "+tempDesponible);
+    while(tdMax<0){
+            BaseAction act=  actionsPool.get(actionsPool.size()-1);
+            if(!act.isUsed())
+            {
+                tdMax=tdMax-act.getTempActivite();            
+                actionsPool.remove(act);
+                System.out.println("removed "+act.toString());
+            }else {
+                tdMax=0;
+                System.out.println(" fine remove action ");
+            }
+
+        }
+    System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");    
+    
+    
 
 }   
    

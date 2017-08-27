@@ -27,7 +27,7 @@ public class ItemMenuRangeDisplayHandler implements EventHandler<MouseEvent>{
     @Override
     public void handle(MouseEvent event) {
          count++;
-         if (!fxcarte.scrollCanvas(event.getSceneX(), event.getSceneY())) {
+         if (!fxcarte.scrollCanvasBorder(event.getSceneX(), event.getSceneY())) {
              
            if(actionType==ActionType.MARCHE) 
                fxcarte.displayMarcheRangeAction(event.getSceneX(),event.getSceneY());

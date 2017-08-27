@@ -37,13 +37,13 @@ public class FXUSSoldat extends FXSoldat {
     @Override
     public void buildFramesFeuAnim() {
         
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(7, 8, this, 0, 2, 200,s.getArmeUtilise(),null);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(7, 8, this, 0,1 , 200,s.getArmeUtilise(),null);
         frameAnimTimer[0].buildMedia();
     }
 
     @Override
     public void buildBlessAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 1, 300, null,Sound.GRUNT5);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 1,500, null,Sound.GRUNT5);
         frameAnimTimer[0].buildMedia();        
     }
     
@@ -66,7 +66,7 @@ public class FXUSSoldat extends FXSoldat {
     }
     
 
-    
+    @Override
     protected void buildFramesMarcheAnim(){
         frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(1, 3, this, 0, -1, 400,null,Sound.MARCHE);
         frameAnimTimer[0].buildMedia();        

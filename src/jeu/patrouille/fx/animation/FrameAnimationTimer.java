@@ -115,7 +115,7 @@ public class FrameAnimationTimer extends AnimationTimer{
      @Override
      public void stop() {
        super.stop();
-       if(mediaPlayer!=null)  {
+       if(mediaPlayer!=null && this.ciclyc==-1)  {
          mediaPlayer.stop();
        }
        System.out.println("stopped animation........");

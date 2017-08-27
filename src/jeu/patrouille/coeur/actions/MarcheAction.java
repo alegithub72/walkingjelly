@@ -9,7 +9,6 @@ import jeu.patrouille.coeur.actions.enums.ActionType;
 import java.util.ArrayList;
 import java.util.List;
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -100,7 +99,25 @@ public class MarcheAction extends BaseAction{
        m.setDerivedAction(this.derivedAction);
        return m;
     }
-    
+    public static MarcheAction marcheLointain(Soldat s) {
+        MarcheAction act=null;
+        try{
+        int tbase=s.tempNecessarieDesActionBase(ActionType.MARCHE);
+        if(s.getTempDisponible()>=tbase){
+            int delta=(int)s.getTempDisponible()/tbase;
+            if ((s.getI() + delta) >= Carte.CARTE_SIZE_I) 
+                delta=0;
+            if((s.getJ()+delta)>=Carte.CARTE_SIZE_J) 
+                delta=0;
+            System.out.println("tbase:"+tbase+" delta:"+delta);
+            act = new MarcheAction(s.getI(), s.getJ(), s.getI()+delta, s.getJ()+delta, s);        
+        }else System.out.println("TD:"+s.getTempDisponible());
+        
+        }catch(Exception ex){
+            throw new  RuntimeException("non deve succedere");
+        }
+        return act;
+    }
     
 
 

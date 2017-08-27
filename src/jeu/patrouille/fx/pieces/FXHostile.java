@@ -8,7 +8,6 @@ package jeu.patrouille.fx.pieces;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer.Sound;
@@ -32,12 +31,12 @@ public class FXHostile extends FXSoldat{
     
     @Override
     public void buildBlessAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 1, 300, null,Sound.GRUNT5);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 1, 500, null,Sound.GRUNT5);
         this.frameAnimTimer[0].buildMedia();
     }    
     @Override
     public void buildFramesFeuAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(0, 1, this, 0, 5, 100, s.getArmeUtilise(),null);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(0, 1, this, 0, 1, 100, s.getArmeUtilise(),null);
         this.frameAnimTimer[0].buildMedia();        
     }
 

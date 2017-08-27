@@ -36,7 +36,7 @@ public abstract class Piece  {
         this.i=-1;
         this.j=-1;
         this.tempDesponible=10;
-        actionsPool=new ArrayList();
+        actionsPool=new ArrayList(10);
         this.boss=boss;
         spreadDone=false;
     }
@@ -49,7 +49,7 @@ public abstract class Piece  {
     
     }
     private void transformActionPool() throws Exception {
-        List<BaseAction> newActionPool=new ArrayList<>();
+        List<BaseAction> newActionPool=new ArrayList<>(10);
         System.out.println("*******SRPEAD START*******>");
         
         for(BaseAction b:actionsPool){
@@ -101,6 +101,18 @@ public abstract class Piece  {
     public void setTempDesponible(int n) {
          tempDesponible=n;
     }    
+    public void resetTempDispoleNotUse(){
+        int l=0;
+        
+        while(l<actionsPool.size())
+        {   
+            System.out.println(" actioPool size "+actionsPool.size());
+            BaseAction base=actionsPool.get(l);
+            if(!base.isUsed()) tempDesponible=tempDesponible+base.getTempActivite();
+            l++;
+        }
+        actionsPool=new ArrayList<>(10);
+    }
     public boolean isZeroActionPoint(){
     return tempDesponible==0;
     }
@@ -168,7 +180,7 @@ public abstract class Piece  {
         return boss;
     }
     public void resetActionPoool(){
-        actionsPool=new ArrayList<>();
+        actionsPool=new ArrayList<>(10);
         this.tempDesponible=10;
         spreadDone=false;
         

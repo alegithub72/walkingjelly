@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.menu.eventhandler;
 
 
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -24,7 +25,7 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
  
     FXCarte fxcarte;
     public SoldatOpenMenuItemsFXCarteEventHandler(FXCarte fxcarte) {
-
+    
     this.fxcarte=fxcarte;
     }
 
@@ -33,7 +34,7 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
      
 
           
- 
+           fxcarte.setCursor(Cursor.HAND);
            if (event.getButton() == MouseButton.SECONDARY
                    && event.getClickCount()<=1 ) {
                 

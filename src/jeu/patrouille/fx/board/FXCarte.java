@@ -25,7 +25,6 @@ import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -122,7 +121,8 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         rootGroup.getChildren().add(c1);
         c2 = new Canvas(PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
         rootGroup.getChildren().add(c2);
-
+        setCursor(Cursor.HAND);
+    
                     
         //ImageView test = new ImageView(new Image("menuItem.png"));
 
@@ -154,7 +154,8 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
             }
 
         });
-        this.setOnMouseMoved(new ScrollEventHandler(this));
+        this.setOnScroll(new ScrollEventHandler(this));
+
         this.setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
         animOn=false;
     }
@@ -186,24 +187,6 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("*****************FXCARTE PLAY****INIZIO****************");
 
-      //  Soldat sl
-        //        = b.getProtagoniste().getBoss().findSquadLeader();
-        
-        // System.out.println("squad leader "+sl);
-        //System.out.println("posi=" + posI + "posj=" + posJ + " leader --->" + sl);
-        // suprimmerSoldatsNotEnView();
-
-        //int centerI = sl.getI(), centerJ = sl.getJ();
-
-        //if (isNeedeCenterScrollAreaUpdate(centerI, centerJ)
-         //     || fxIMHelper.isLastUSVisualizationTurn(sl) 
-         //       ){
-          //  centerScrollArea(centerI, centerJ);
-
-       // }
-
-       // refreshCarte();
-       // refreshCarteAllFXSoldatViewPosition();
         initFXHelperInstance(null);
         if (b.isProtagonisteTypeSoldat()
                 && b.isProtagonisteHostile()) 
@@ -343,13 +326,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
     }
     
     private void addHelperInstance(BaseAction act){
-
             fxIMHelper.setAct(act);
-
-
-
-
-        
     }    
     
 
@@ -365,7 +342,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         fxIMHelper.setCommanNotvalid(true);
         setOnMouseMoved(null);
         setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
-        setOnMouseMoved(new ScrollEventHandler(this));
+        setOnScroll(new ScrollEventHandler(this));
         setCursor(Cursor.DEFAULT);
         fxpl.sendMessageToPlayer("Action effacer");
 
@@ -386,8 +363,8 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
         removeDisplayRange();
 
-        setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
-        setCursor(Cursor.DEFAULT);
+       
+        setCursor(Cursor.HAND);
         if (!fxIMHelper.isCommanNotvalid()) {
             
             
@@ -410,8 +387,10 @@ private boolean isScrollAreaChanged(int i1,int j1){
             BaseAction act=  item.buildMenuItemAction();
             addHelperInstance(act);
             fxpl.sendMessageToPlayer("Action non valide");
+                     
         }
-            setOnMouseMoved(new ScrollEventHandler(this));
+            reMountFXCarteMenuItemsAndScroll();   
+            setOnMouseMoved(null);
             fxIMHelper.setActionSeletione(false);
     }
 
@@ -422,7 +401,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     @Override
     public void reMountFXCarteMenuItemsAndScroll(){
-        this.setOnMouseMoved(new ScrollEventHandler(this));
+        this.setOnScroll(new ScrollEventHandler(this));
         this.setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(this));
         mountMenuItemsOnFXHostileEquipe();
         mountMenuItemsOnFXUSEquipe();
@@ -445,7 +424,8 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
         item.setFrame(1);
         BaseAction act = item.buildMenuItemAction();
-
+        setCursor(Cursor.HAND);
+        setOnScroll(null);
         if (act.getType() == ActionType.MARCHE) {
             
             addHelperInstance(act);
@@ -458,24 +438,26 @@ private boolean isScrollAreaChanged(int i1,int j1){
             closeFXCarteMenuItems();
 
         } else if (act.getType() == ActionType.FEU) {
+            if(fxIMHelper.getSeletctionee().isUS()) this.removeMenuItemsonFXHostileEquipe();
+            else this.removeMenuItemsMenuOnFXUSEquipe();
+           
             addHelperInstance(act);
             fxIMHelper.setActionSeletione(true);
             setOnMouseClicked(null);
             setOnMouseClicked(new ItemMenuConfirmActionEventHandler(item,this));
             setOnMouseMoved(new ItemMenuRangeDisplayHandler(this, item.getActionType()));
             setFXCarteCursor(Cursor.HAND);
-            
             fxpl.sendMessageToPlayer("Choisir an Ojective");
             closeFXCarteMenuItems();
         }
 
     }
     
-
+    @Deprecated
     private MoteurDeJoeur getMj() {
-        return mj;
+  
+      return mj;
     }
-
    private  GeneriqueJoeurs getActiveJeur() {
         return mj.getActiveJeur();
     }
@@ -569,35 +551,16 @@ private boolean isScrollAreaChanged(int i1,int j1){
         fxIMHelper.resetCursorHelper();
 
     }
-    
-    
-    
-    
-
-
-
-
-
-
 
     private void addSoldataSelectioneeAction() throws Exception{
         fxIMHelper.addActionToSoldat();
     }
-    
-    
-    
 
-
-  
-    
-   
    private BaseAction getMJActualAction(){
        
       return getActiveJeur().getActual();
 
    } 
-   
-
 
     private void setMJActualAction(BaseAction act){
         getActiveJeur().setActual(act);
@@ -952,8 +915,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
    private void mountMenuItemsOnFXHostileEquipe(){
        jHOST.mountMenuItemOnFXEquipe();
    }
-
-    public synchronized boolean scrollCanvas(double x, double y) {
+    public synchronized boolean scrollCanvasBorder(double x, double y) {
 
          boolean updateScroll=false;
         if (y < (PIXEL_SCROLL_AREA_H + TOP_H) && y > ((PIXEL_SCROLL_AREA_H - 10) + TOP_H)) {
@@ -995,6 +957,45 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
         }
         return updateScroll;
     }
+    public synchronized boolean scrollCanvas(double deltax, double deltay) {
+
+         boolean updateScroll=false;
+        if (deltay<0) {
+            //rootGroup.getChildren().add(arrow);
+            setCursor(ImageChargeur.getInstance().getArrowCRDown());
+            //arrow.setVisible(true);
+            //arrow.setRotate(90);
+            //arrow.setX(PIXEL_SCROLL_AREA_W / 2);
+            //arrow.setY(PIXEL_SCROLL_AREA_H - 100);
+
+           updateScroll= scrollDown();
+        } else if (deltay>0) {
+            setCursor(ImageChargeur.getInstance().getArrowCRUp());
+//            arrow.setVisible(true);
+//            arrow.setRotate(-90);
+//            arrow.setX(PIXEL_SCROLL_AREA_W / 2);
+//            arrow.setY(0);
+          
+            updateScroll=scrollUp();
+        } else if (deltax<0) {
+            setCursor(ImageChargeur.getInstance().getArrowCRRight());
+//            arrow.setVisible(true);
+//            arrow.setX(PIXEL_SCROLL_AREA_W  - 100);
+//            arrow.setY(PIXEL_SCROLL_AREA_H / 2);
+//            arrow.setRotate(0);
+          
+            updateScroll= scrollRight();
+        } else if (deltax>0) {
+            setCursor(ImageChargeur.getInstance().getArrowCRLeft());
+//            arrow.setVisible(true);
+//            arrow.setRotate(-180);
+//            arrow.setX(0);
+//            arrow.setY(PIXEL_SCROLL_AREA_H / 2);
+          
+           updateScroll= scrollLeft();
+        } 
+        return updateScroll;
+    }
 
      private boolean scrollDown() {
          boolean updateScroll=false;
@@ -1015,7 +1016,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             }
             switchsCanvas = !switchsCanvas;
         } else {
-
+            setCursor(ImageChargeur.getInstance().getForbidden());
             //arrow.setFrame(1);
             posI = posI;
         }
@@ -1041,7 +1042,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             }
             switchsCanvas = !switchsCanvas;
         } else {
-            
+           setCursor(ImageChargeur.getInstance().getForbidden());
            // arrow.setFrame(1);
         }
         return updateScroll;
@@ -1066,7 +1067,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             }
             switchsCanvas = !switchsCanvas;
         } else {
-            
+            setCursor(ImageChargeur.getInstance().getForbidden());
             //arrow.setFrame(1);
             posJ = posJ;
         }
@@ -1092,7 +1093,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             }
             switchsCanvas = !switchsCanvas;
         } else {
-                  
+           setCursor(ImageChargeur.getInstance().getForbidden());
            // arrow.setFrame(1);
         }
         return updateScroll;
@@ -1182,7 +1183,6 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             if(s.isKIA())fxpl.sendMessageToPlayer("Le soldat est mort.");
             else if(s.isImmobilize()) fxpl.sendMessageToPlayer("Le soldat est immobilize , pa de movement.");
             else if(s.isIncoscient())fxpl.sendMessageToPlayer("Le soldat est incoscient , pa de movement.");
-            else if(s.isChoc()) fxpl.sendMessageToPlayer("Le soldat est chocke , pa de movement cette rond. ");            
             else if(s.getStatu()!=Soldat.Statut.NORMAL) mes=s.getStatu().name();
 
         }
@@ -1495,22 +1495,25 @@ protected void buildDisableMenu(FXSoldat s){
         int i=(int)(y/TILE_SIZE);
         int j=(int)(x/TILE_SIZE);
         BaseAction act=item.buildMenuItemAction();
+       
         if(!fxIMHelper.isCommanNotvalid()){
             i=posI+i;
             j=posJ+j;
             fxIMHelper.buildFeuAction(act, i, j);
             fxIMHelper.addActionToSoldat();
-            removeDisplayRange();
+            
             fxpl.imprimerFXPLInfo(fxIMHelper.getSeletctionee());
             fxpl.sendMessageToPlayer(act.toString());
-            reMountFXCarteMenuItemsAndScroll();
+         
             visualizeBarSoldatAction();
         }else{
             fxpl.sendMessageToPlayer("Objective pa valide");
-            closeFXCarteMenuItems();
-            removeDisplayRange();
+           
+            
         }
-   
+        setOnMouseMoved(null);
+        removeDisplayRange();
+        reMountFXCarteMenuItemsAndScroll();
         
     }
 
