@@ -114,50 +114,31 @@ public class FXItemsPointerHelper {
    }     
    
    public int  mapLastJ(){
-        Soldat s=seletctionee.getSoldat();
-        int actionsize = s.actionSize();
-
-        BaseAction lastAct = null;
-        int j = -1;
-        if (actionsize >0) {
-            lastAct = s.lastAction();
-            System.out.println("last action =" + lastAct);
-            if (lastAct.getJ1() >= 0 &&
-                    lastAct.getType()!=ActionType.FEU) {
-                j = lastAct.getJ1();//TODO le azione che non muovono
-            } else {
-                j = lastAct.getJ0();
-            }
-        } else {
-            j = s.getJ();
-        }
-   
-
-
-        return j;
+     Soldat s=seletctionee.getSoldat();
+     int size=s.actionSize();
+     BaseAction last=null;
+      for (int h=0;h<size;h++){
+          BaseAction act=s.nextAction(h);
+          if(act.getType()==ActionType.MARCHE) last=act;
+      }
+          
+      if(last!=null) return last.getJ1();
+      else return s.getJ();
     }
 
     public int mapLastI() {
      Soldat s=seletctionee.getSoldat();
-        int actionsize = s.actionSize();
+     int size=s.actionSize();
+     BaseAction last=null;
+      for (int h=0;h<size;h++){
+          BaseAction act1=s.nextAction(h);
+          if(act1.getType()==ActionType.MARCHE) last=act1;
+      }
+          
+      if(last!=null) return last.getI1();
+      else return s.getI();
 
-        BaseAction lastAct = null;
-        int i = -1;
-        if (actionsize > 0) {
-            lastAct = s.nextAction(actionsize - 1);
-            if (lastAct.getI1() >= 0 && 
-                    lastAct.getType()!=ActionType.FEU) {
-                i = lastAct.getI1();//TODO le azione che non muovono
-            } else {
-                i = s.getI();
-            }
-        } else {
-            i = s.getI();
-        }
-
-       
-
-        return i;
+ 
    }      
     
 public FXSoldat getFXSoldatSelectionee(){

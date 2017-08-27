@@ -367,7 +367,8 @@ private boolean isScrollAreaChanged(int i1,int j1){
         setCursor(Cursor.HAND);
         if (!fxIMHelper.isCommanNotvalid()) {
             
-            
+            BaseAction act=  item.buildMenuItemAction();
+            addHelperInstance(act);
             fxIMHelper.setArrivalCarteCoord(i1, j1);
             fxIMHelper.addActionToSoldat();
 
@@ -378,8 +379,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             //fxcarte.buildMenuItem((FXSoldat)item.getFXSoldat());
             fxpl.sendMessageToPlayer(fxIMHelper.toString());
             //resetFXCarteHelperAction();
-            BaseAction act=  item.buildMenuItemAction();
-            addHelperInstance(act);
+         
 
         } else {
        
@@ -1494,19 +1494,25 @@ protected void buildDisableMenu(FXSoldat s){
     public void confirmFEUAction(MenuItem item,double x,double y)throws Exception{
         int i=(int)(y/TILE_SIZE);
         int j=(int)(x/TILE_SIZE);
-        BaseAction act=item.buildMenuItemAction();
+       
        
         if(!fxIMHelper.isCommanNotvalid()){
             i=posI+i;
             j=posJ+j;
+            BaseAction act=item.buildMenuItemAction();
             fxIMHelper.buildFeuAction(act, i, j);
             fxIMHelper.addActionToSoldat();
             
             fxpl.imprimerFXPLInfo(fxIMHelper.getSeletctionee());
             fxpl.sendMessageToPlayer(act.toString());
-         
+             
+       
             visualizeBarSoldatAction();
+            
         }else{
+          
+            BaseAction act=  item.buildMenuItemAction();
+            addHelperInstance(act);            
             fxpl.sendMessageToPlayer("Objective pa valide");
            
             

@@ -126,7 +126,7 @@ public int compareTo(BaseAction b) {
 
     @Override
     public void calculeActionPointDesAction()throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return;
     }
 
     

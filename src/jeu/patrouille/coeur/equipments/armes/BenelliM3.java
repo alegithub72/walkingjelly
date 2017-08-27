@@ -16,8 +16,8 @@ import jeu.patrouille.coeur.terrains.Terrain;
 public class BenelliM3 extends GeneriqueArme{
     public BenelliM3(){
         super("Benelli M3",Model.BENELLI_M3,EquipmentType.FIRE_WEAPON,5,15,65);
-        magazine=new Magazine[14];
-        for(int i=0;i<14;i++){
+        magazine=new Magazine[7];
+        for(int i=0;i<7;i++){
             magazine[i]=new Magazine(Model.BENELLI_M3,SubType.SLUG);
         }
         tempModel=TEMP_RIFLE;

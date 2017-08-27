@@ -27,7 +27,6 @@ import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 import jeu.patrouille.coeur.pieces.Soldat.Classment;
-import jeu.patrouille.coeur.pieces.Soldat.Statut;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.fx.menu.eventhandler.EndAnimPauseHandler;
 import jeu.patrouille.fx.menu.eventhandler.StartDeamonThreadEventHandler;
@@ -455,7 +454,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
             case GRAVE_BRASE_DROITE:
                if(!s.isUS() ){
   
-                     img=new Image("frameHostileBlessed.png");
+                     img=new Image("frameHostileGraveBraseDroite.png");
                     buildFrameImages(img);
                     setFrame(0);
                 }
@@ -470,7 +469,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
             case GRAVE_BRASE_GAUCHE:
                if(!s.isUS() ){
   
-                     img=new Image("frameHostileBlessed.png");
+                    img=new Image("frameHostileGraveBrasGaucheBlessed.png");
                     buildFrameImages(img);
                     setFrame(0);
                 }

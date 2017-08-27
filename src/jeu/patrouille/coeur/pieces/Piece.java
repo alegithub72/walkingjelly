@@ -48,51 +48,8 @@ public abstract class Piece  {
     return boss.getJeur()==GeneriqueJoeurs.JOEUR_US;
     
     }
-    private void transformActionPool() throws Exception {
-        List<BaseAction> newActionPool=new ArrayList<>(10);
-        System.out.println("*******SRPEAD START*******>");
-        
-        for(BaseAction b:actionsPool){
-            ActionType type=b.getType();
-            System.out.println("----TD COST--------->"+b.getTempActivite());
-            if(type==ActionType.MARCHE){
-                List<BaseAction> l=b.spreadAction(); 
-                System.out.println(" list spread ->"+l.size());
-                newActionPool.addAll(l);
-            }
-        }
-        
-        spreadDone=true;
-        if(newActionPool.size()>0) this.actionsPool=newActionPool;
-        System.out.println("******SRPEAD END*****>");
-     
-    }
-    public List<BaseAction> getBaseActionSum(int td) throws Exception{
-        //System.out.println("----GET ACTION SUM START--------->"+spreadDone);
-        if(!spreadDone) {
 
-            transformActionPool();
-        }
-        int sum=0;
-        List<BaseAction> list =new ArrayList<>();
-        for (BaseAction b : actionsPool) {
-             sum=sum+b.getTempActivite();
-             if(sum<=td) {
-                 if(!b.isUsed()){
-                        list.add(b);
-                        Soldat s=(Soldat)b.getProtagoniste();
-                        int rollDice=boss.dice(10);
-                        b.setOrdreInitiative( rollDice -s.getCC());
-                        b.setUsed(true);                     
-                 }
 
-                 
-             }
-                 
-        }
-       // System.out.println("----GET ACTION SUM END--------->");
-        return list;
-    }
     
     
     public int getTempDisponible() {
@@ -110,7 +67,9 @@ public abstract class Piece  {
             BaseAction base=actionsPool.get(l);
             if(!base.isUsed()) tempDesponible=tempDesponible+base.getTempActivite();
             l++;
+            
         }
+        System.out.println(" TD reset to :"+tempDesponible);
         actionsPool=new ArrayList<>(10);
     }
     public boolean isZeroActionPoint(){

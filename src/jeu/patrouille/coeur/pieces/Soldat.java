@@ -12,6 +12,7 @@ import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.pieces.parts.CorpPart;
 import jeu.patrouille.coeur.pieces.parts.Corp;
 import java.util.ArrayList;
+import java.util.List;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
@@ -41,7 +42,7 @@ public class Soldat extends Piece {
 
     public static final int FULL_SANTE=6;
     public enum Statut{NORMAL("Saine"),MANQUE("Manque"),LEGER_BLESSE("Legger blesse"),GRAVE("Grave"),GRAVE_TETE("Grave alla tete"),
-    GRAVE_BRASE_DROITE("grave a brase droite"),GRAVE_BRASE_GAUCHE("Grave a base gauche"),CRITIQUE("Critique"),MORT("Mort");
+    GRAVE_BRASE_DROITE("Grave brase droite"),GRAVE_BRASE_GAUCHE("Grave base gauche"),CRITIQUE("Critique"),MORT("Mort");
     public String mes;
     Statut(String mes){
     this.mes=mes;
@@ -72,6 +73,7 @@ public class Soldat extends Piece {
     boolean choc;
     boolean immobilize;
     boolean bandage;
+    boolean stepScared;
     Statut st;
 
 
@@ -123,8 +125,39 @@ public class Soldat extends Piece {
         lesionN=0;
         this.blindage=blindage;
         bandage=false;
+        stepScared=false;
         
     
+    }
+
+    public void setSpreadDone(boolean spreadDone) {
+        this.spreadDone = spreadDone;
+    }
+
+    public void setActionsPool(List<BaseAction> actionsPool) {
+        this.actionsPool = actionsPool;
+    }
+    
+    
+    public BaseAction lastAction(ActionType atype) {
+     int size=actionsPool.size();
+     BaseAction last=null;
+      for (int h=0;h<size;h++){
+          BaseAction act1=actionsPool.get(h);
+          if(act1.getType()==atype) last=act1;
+      }
+          
+    return last;
+
+ 
+   }   
+
+    public boolean isSpreadDone() {
+        return spreadDone;
+    }
+    
+    public boolean isStepScared() {
+        return stepScared;
     }
 
     public boolean isDoubled() {
@@ -187,9 +220,7 @@ public class Soldat extends Piece {
                     //TODO not jumping and runnnig but all the others...
                     //TODO remove all action except one
                     setStatut(statutNow);
-                    if(!choc)shellShockTest();
-                    if(choc)System.out.println("--- choced ---");
-                    else System.out.println(" coch test passed");                     
+                   
                     break;
                 case GRAVE_BRASE_DROITE:
                     objective=true;
@@ -201,9 +232,7 @@ public class Soldat extends Piece {
                     //TODO remove all action except one
                     //TODO one action per turn
                     bandage=false;
-                    if(!choc)shellShockTest();
-                    if(choc)System.out.println("--- choced ---"); 
-                    else System.out.println(" coch test passed");                     
+                
                     break;     
                 case GRAVE_BRASE_GAUCHE:
                     objective=true;
@@ -214,18 +243,14 @@ public class Soldat extends Piece {
                     setStatut(statutNow);                       
                     bandage=false;
                     //TODO one action per turn
-                    if(!choc)shellShockTest();
-                    if(choc)System.out.println("--- choced ---"); 
-                    else System.out.println(" coch test passed");
+
                     break;                    
                 case LEGER_BLESSE:
                     objective=true;
                     tdActionRemove=4;
                     removeActionUpTo(tdActionRemove);
                     setStatut(statutNow);      
-                    if(!choc)shellShockTest();
-                    if(choc)System.out.println("--- choced ---");
-                    else System.out.println(" coch test passed");                    
+             
 
                     break;
                 case MANQUE:
@@ -247,24 +272,7 @@ public class Soldat extends Piece {
 
         
     }
-    //TODO rivedere perche fa un de casino
-    public void addFuirLontain(){
-        try{
-        resetTempDispoleNotUse();
-        BaseAction act=MarcheAction.marcheLointain(this);
-        if(act!=null){
-            addAction(act);
-            this.spreadDone=false;
-        }
-        else System.out.println("Non c'e' tempo.....");
-        System.out.println(" action "+act);
-        }catch(Exception ex){
-            System.err.println("Non e' possibile aggiungere una azione runaaway");
-            ex.printStackTrace();
-            
-        }
 
-    }
     public Statut getStatu() {
         return st;
     }
@@ -556,6 +564,10 @@ public int isLesion(){
         
         
     }
+
+    public void setStepScared(boolean stepScared) {
+        this.stepScared = stepScared;
+    }
     
   
    public boolean isObjective(){
@@ -563,14 +575,7 @@ public int isLesion(){
    }
    //TODO riguardare le regole
    public void shellShockTest(){
-       boolean b=false; 
-       b= boss.dice(10)<=moral;//TODO vedere i modificatori di morale
-       choc=b ;//TODO add an action run away nel pool di action
-       if(b && isObjective()){
-           System.out.println(this.toStringSimple()+"^^^^^^ deve correre al riparo");
-           addFuirLontain();
-       }
-
+       choc= boss.dice(10)<=moral;//TODO vedere i modificatori di morale
    }
 
    public boolean isKIA(){
@@ -686,14 +691,14 @@ public void setObjective(boolean objective) {
         tdMax=0;
     }else tdMax=td-tempDesponible;
     System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    System.out.println("richiesta originale :"+td+",levare td="+tdMax+",temp disponible rimasto "+tempDesponible);
-    while(tdMax<0){
+    System.out.println("richiesta originale :"+td+",levare tdMax="+tdMax+",temp disponible rimasto "+tempDesponible);
+    while(tdMax<0 && actionsPool.size()>0){
             BaseAction act=  actionsPool.get(actionsPool.size()-1);
             if(!act.isUsed())
             {
                 tdMax=tdMax-act.getTempActivite();            
                 actionsPool.remove(act);
-                System.out.println("removed "+act.toString());
+                System.out.println("removed "+act);
             }else {
                 tdMax=0;
                 System.out.println(" fine remove action ");
