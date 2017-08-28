@@ -700,7 +700,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         else if(x$==0 && y$<0)  angle=(270);
         else if(x$==0 && y$>0) angle =0;
         else if(x$>0  && y$>=0) angle=Math.toDegrees( Math.atan(y$/x$));
-        else if(x$>0 && y$<0)  angle=(90-Math.abs( Math.toDegrees(Math.atan(y$/x$))))+270;
+        else if(x$>0 && y$<0)  angle= Math.toDegrees(Math.atan(y$/x$));
         else if(x$<0 && y$>0) angle= (90-Math.abs(Math.toDegrees(Math.atan(y$/x$))))+90;
         else if(x$<0 && y$<=0) angle= Math.toDegrees(  Math.atan(y$/x$)+(Math.PI));
             return angle+90;
@@ -713,12 +713,14 @@ private boolean isScrollAreaChanged(int i1,int j1){
         double ygrid=(i*FXCarte.TILE_SIZE);//y1 monitor
         fxIMHelper.getFXSoldatSelectionee().feuFrame();
         Soldat s=fxIMHelper.getSeletctionee();
+        
         int lasti=mapLastI();
         int lastj=mapLastJ();
-        double protx=(relativeJ(lastj)*TILE_SIZE)+(TILE_SIZE/2);//x0 monitor
-        double proty=(relativeI(lasti)*TILE_SIZE)+(TILE_SIZE/2);//y0 monitor
+
         double x0=(lastj*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y0=(lasti*FXCarte.TILE_SIZE)+(TILE_SIZE/2);
         double x1=((j+posJ)*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y1=(FXCarte.TILE_SIZE*(i+posI))+(TILE_SIZE/2);
+        double protx=(relativeJ(lastj)*TILE_SIZE)+(TILE_SIZE/2);//x0 monitor
+        double proty=(relativeI(lasti)*TILE_SIZE)+(TILE_SIZE/2);//y0 monitor        
         GraphicsContext gc =activeCanvas().getGraphicsContext2D();
         gc.setStroke(Color.RED);
         gc.strokeLine(protx, proty, xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
@@ -733,6 +735,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             removeDisplayRange();
             fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             fxIMHelper.setCommanNotvalid(true);
+           
             if(s.getArmeUtilise()==null) fxpl.sendMessageToPlayer("Arme tombe ");
             else fxpl.sendMessageToPlayer("Arme pa de porte");            
 
@@ -1520,7 +1523,14 @@ protected void buildDisableMenu(FXSoldat s){
             i=posI+i;
             j=posJ+j;
             BaseAction act=item.buildMenuItemAction();
-            fxIMHelper.buildFeuAction(act, i, j);
+            int lasti=mapLastI();
+            int lastj=mapLastJ();
+
+            double x0=(lastj*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y0=(lasti*FXCarte.TILE_SIZE)+(TILE_SIZE/2);
+            double x1=((j+posJ)*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y1=(FXCarte.TILE_SIZE*(i+posI))+(TILE_SIZE/2);            
+            double angle=FXCarte.angleRotation(x0, y0, x1, y1);
+            
+            fxIMHelper.buildFeuAction((FeuAction)act, i, j,angle);
             fxIMHelper.addActionToSoldat();
             
             fxpl.imprimerFXPLInfo(fxIMHelper.getSeletctionee());

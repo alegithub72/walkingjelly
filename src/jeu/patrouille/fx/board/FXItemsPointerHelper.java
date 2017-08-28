@@ -8,6 +8,7 @@ package jeu.patrouille.fx.board;
 
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.Piece;
@@ -118,8 +119,8 @@ public class FXItemsPointerHelper {
      int size=s.actionSize();
      BaseAction last=null;
       for (int h=0;h<size;h++){
-          BaseAction act=s.nextAction(h);
-          if(act.getType()==ActionType.MARCHE) last=act;
+          BaseAction act1=s.nextAction(h);
+          if(act.getType()==ActionType.MARCHE) last=act1;
       }
           
       if(last!=null) return last.getJ1();
@@ -160,7 +161,7 @@ public FXSoldat getFXSoldatSelectionee(){
                
         return  lastVisualizationRond!=slast.getBoss().getJeur();
     }
-    public void buildFeuAction(BaseAction act,int i1,int j1){
+    public void buildFeuAction(FeuAction act,int i1,int j1,double angle){
         Terrain t= carte.getPointCarte(i1, j1);
         Piece p=t.getPiece();
         Soldat s=null;
@@ -173,7 +174,8 @@ public FXSoldat getFXSoldatSelectionee(){
         act.setJ1(j1);
         act.setAntagoniste(s);
         Soldat s0=(Soldat)act.getProtagoniste();
-        
+        act.setAngle(angle);
+                
         act.setI0(s0.getI());
         act.setJ0(s0.getJ());
         this.act=act;

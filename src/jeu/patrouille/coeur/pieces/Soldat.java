@@ -438,8 +438,9 @@ public int isLesion(){
         }
         s.lesion=new Lesion[10];
         int k=0;
+        s.lesionN=0;
         for (Lesion l : lesion) {
-            if(l!=null)s.lesion[k]=l.clone();
+            if(l!=null)s.addLesion(l.clone());
             
             k++;
         }

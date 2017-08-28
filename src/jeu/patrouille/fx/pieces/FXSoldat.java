@@ -112,7 +112,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     }
 
     public void setFXSoldatOrientation(double angle) {
-        imgView.setRotate(-orientation);
+        imgView.setRotate(0);
         updateSodlatOrientation(angle);
         orientation = angle;
         imgView.setRotate(angle);
@@ -361,6 +361,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        this.fxcarte.centerScrollArea(s.getI(), s.getJ());
        fxcarte.refreshCarte();
        fxcarte.refreshCarteAllFXSoldatViewPosition();
+       setFXSoldatOrientation(act.getAngle());
        signOff();
        this.frameAnimTimer[0].start();
        
@@ -388,7 +389,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                         FXSoldat fxtarget=null;
                         if( !target.isUS()) fxtarget=  fxcarte.findFXHostile(target);
                         else fxtarget=fxcarte.findFXUSSoldat(target);
-                            fxtarget.fxPlayBlesse();
+                            fxtarget.fxPlayBlesse((Soldat)act.getAntagoniste());
                             fxtarget.toBack();
                             fxcarte.refreshCarte();
                             fxcarte.refreshCarteAllFXSoldatViewPosition();                            
@@ -414,21 +415,21 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     public abstract void buildBlessAnim();
     public abstract void feuFrame();
      
-    public void fxPlayBlesse(){
-        Lesion l=s.getLastLesion();
-        System.out.println("load new image blessed of "+s.getStatu()+", last blessed "+l);
+    public void fxPlayBlesse(Soldat target){
+        Lesion l=target.getLastLesion();
+        System.out.println("load new image blessed of "+target.getStatu()+", last blessed "+l);
         
         
         if(l==null) return ;
         System.out.println("ordinal s.getStatut"+s.getStatu().ordinal()+" ordinal blessed "+l.getStatu().ordinal());        
-           switch (s.getStatu()) {
+           switch (target.getStatu()) {
             case MORT: 
             case CRITIQUE:
 
                     setW(100);
                     Image img=new Image("feritoUS.png");
                     buildFrameImages(img);
-                    if(!s.isUS()) setFrame(5);
+                    if(!target.isUS()) setFrame(5);
                     else setFrame(3);
                     System.out.println("%%%%%%% CRITIQUE");
                     playBlessedAnim(); 
@@ -437,7 +438,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                 break;
             case GRAVE:
  
-              if(!s.isUS() ){
+              if(!target.isUS() ){
   
                      img=new Image("frameHostileBlessed.png");
                     buildFrameImages(img);
@@ -452,7 +453,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
                 break;
             case GRAVE_BRASE_DROITE:
-               if(!s.isUS() ){
+               if(!target.isUS() ){
   
                      img=new Image("frameHostileGraveBraseDroite.png");
                     buildFrameImages(img);
@@ -467,7 +468,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
                 break;
             case GRAVE_BRASE_GAUCHE:
-               if(!s.isUS() ){
+               if(!target.isUS() ){
   
                     img=new Image("frameHostileGraveBrasGaucheBlessed.png");
                     buildFrameImages(img);
@@ -486,7 +487,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                     setW(100);
                     img=new Image("feritoUS.png");
                     buildFrameImages(img);
-                    if(!s.isUS() ) setFrame(5);
+                    if(!target.isUS() ) setFrame(5);
                     else setFrame(3);
                     System.out.println("%%%%%%% GRAVE_TETE");   
                     playBlessedAnim();        
@@ -494,7 +495,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
                 break;
             case LEGER_BLESSE:
-                if(!s.isUS() ){
+                if(!target.isUS() ){
   
                      img=new Image("frameHostileBlessed.png");
                     buildFrameImages(img);

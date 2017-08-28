@@ -323,6 +323,8 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
                        refreshAllGraficInterface();
                    } catch (MakeActionFailException e) {
                        e.printStackTrace();
+                       //TODO personal reactio  to a ecczption....new ACTION INSERT
+                       
                    }
                } else {
                    System.out.println("--------->KIA OR CHOKET NOTA ANIM");
