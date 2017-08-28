@@ -54,8 +54,7 @@ public class FXHostile extends FXSoldat{
     
     @Override
     public void feuFrame(){
-        if(s.getPose()==Piece.Pose.DROIT)
-            setFrame(0);
+            setFrame(1);
     }
     
 }

@@ -6,7 +6,6 @@
 package jeu.patrouille.coeur.pieces.parts;
 
 import jeu.patrouille.coeur.equipments.GeneriqueBlindageEquipment;
-import jeu.patrouille.coeur.equipments.KevlerCasqueEquipment;
 
 /**
  *

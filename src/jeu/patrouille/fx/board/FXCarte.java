@@ -183,19 +183,19 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
    
 
     @Override
-    public  void play(BaseAction b) {
+    public  void play(BaseAction act1,BaseAction act2) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         System.out.println("*****************FXCARTE PLAY****INIZIO****************");
 
         initFXHelperInstance(null);
-        if (b.isProtagonisteTypeSoldat()
-                && b.isProtagonisteHostile()) 
-            playHostile(b);
+        if (act1.isProtagonisteTypeSoldat()
+                && act1.isProtagonisteHostile()) 
+            playHostile(act1,act2);
         
-        else if (b.isProtagonisteTypeSoldat() 
-                && !b.isProtagonisteHostile()) 
+        else if (act1.isProtagonisteTypeSoldat() 
+                && !act1.isProtagonisteHostile()) 
             
-            playUSSoldat(b);
+            playUSSoldat(act1,act2);
         
         else {
             
@@ -245,20 +245,20 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
 
 
-    private void playHostile(BaseAction b){
-        Soldat sold=(Soldat)b.getProtagoniste();
+    private void playHostile(BaseAction act1,BaseAction act2){
+        Soldat sold=(Soldat)act1.getProtagoniste();
         FXHostile sfx = (FXHostile) findFXHostile(sold);
         fxIMHelper.setFXSeletctionee(sfx);
         centerScrollArea(sold.getI(), sold.getJ());
         refreshCarte();
         refreshCarteAllFXSoldatViewPosition();
-        ActionType type=b.getType();
+        ActionType type=act1.getType();
         switch (type) {
             case MARCHE:
-                sfx.playMarche((MarcheAction) b);
+                sfx.playMarche((MarcheAction) act1);
                 break;
             case FEU:
-                sfx.playFeu((FeuAction)b);
+                sfx.playFeu((FeuAction)act2);
                 break;
             default:
                 System.out.println("$$$$NON animation$$$$");
@@ -270,17 +270,17 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     }
     
-    private void playUSSoldat(BaseAction act){
-        Soldat sold=(Soldat) act.getProtagoniste();
-        FXSoldat sfx = findFXUSSoldat(sold);
+    private void playUSSoldat(BaseAction act1,BaseAction act2){
+        Soldat sold=(Soldat) act1.getProtagoniste();
+        FXSoldat sfx = findFXUSSoldat(sold);//TODO cercare by name or id
         centerScrollArea(sold.getI(), sold.getJ());
         refreshCarte();
         refreshCarteAllFXSoldatViewPosition();
         fxIMHelper.setFXSeletctionee(sfx);
-        if (sfx.isVisible() && act.getType() == ActionType.MARCHE) {
-            sfx.playMarche((MarcheAction) act);
-        } else if(act.getType()==ActionType.FEU){
-            sfx.playFeu((FeuAction)act);
+        if (sfx.isVisible() && act1.getType() == ActionType.MARCHE) {
+            sfx.playMarche((MarcheAction) act1);
+        } else if(act1.getType()==ActionType.FEU){
+            sfx.playFeu((FeuAction)act2);
 
             
 
@@ -298,7 +298,8 @@ private boolean isScrollAreaChanged(int i1,int j1){
     public FXSoldat findFXUSSoldat(Soldat s){
         FXSoldat searchedFX=null;
         for(FXSoldat sfx:  this.fxequipeUS){
-            if(sfx.getSoldat()==s)searchedFX=sfx;
+            if(sfx.getSoldat().getNomDeFamilie().equals(s.getNomDeFamilie())&&
+                    sfx.getSoldat().getNom().equals(s.getNom()))searchedFX=sfx;
         }
         return searchedFX;
     }
@@ -306,7 +307,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
         
         FXHostile searchedFX=null;
         for(FXSoldat sfx:  this.fxequipeHost){
-            if(sfx.getSoldat()==s)searchedFX=(FXHostile)sfx;
+            if(sfx.getSoldat().getNomDeFamilie().equals(s.getNomDeFamilie())&&
+                    sfx.getSoldat().getNom().equals(s.getNom()))
+                searchedFX=(FXHostile)sfx;
         }
         return searchedFX;
     }    
@@ -644,11 +647,11 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 relativey, 
                 (scrollMousej * FXCarte.TILE_SIZE) + 25, 
                 (scrollMousei * FXCarte.TILE_SIZE) + 25);
-        
+        Soldat sold=fxIMHelper.getSeletctionee();
         fxIMHelper.getFXSoldatSelectionee().setFXSoldatOrientation(angle);
        //TODO mettere una variabile per debug
         PointCarte obst=fxIMHelper.carteValiderRoute();
-        if (fxIMHelper.isDistanceLessMarcheMax(r)
+        if (  fxIMHelper.isDistanceLessMarcheMax(r)
                 && obst==null ) {
             fxIMHelper.setCommanNotvalid(false);
             setFXCarteCursor(Cursor.HAND);
@@ -670,8 +673,8 @@ private boolean isScrollAreaChanged(int i1,int j1){
         
     }
     
-    
-    public static double angleRotation(double x0,double y0,double x1,double y1){
+    @Deprecated
+    public static double angleRotation2(double x0,double y0,double x1,double y1){
         Point2D pv=new Point2D(x0, y0);
         Point2D p0=new Point2D(0, y0);
         Point2D p1=new Point2D(x1, y1);
@@ -689,32 +692,49 @@ private boolean isScrollAreaChanged(int i1,int j1){
       
             
     }
+    public static double  angleRotation(double x0,double y0,double x1,double y1){
+        System.out.println("x0,y0="+x0+","+y0+" x1,y1="+x1+","+y1);
+        double x$=x1-x0,y$=y1-y0;
+        double angle=0;
+        if(x$==0 && y$>0)  angle=90; 
+        else if(x$==0 && y$<0)  angle=(270);
+        else if(x$==0 && y$>0) angle =0;
+        else if(x$>0  && y$>=0) angle=Math.toDegrees( Math.atan(y$/x$));
+        else if(x$>0 && y$<0)  angle=(90-Math.abs( Math.toDegrees(Math.atan(y$/x$))))+270;
+        else if(x$<0 && y$>0) angle= (90-Math.abs(Math.toDegrees(Math.atan(y$/x$))))+90;
+        else if(x$<0 && y$<=0) angle= Math.toDegrees(  Math.atan(y$/x$)+(Math.PI));
+            return angle+90;
+    
+    }
     public synchronized void displayFeuRangeAction(double mousex, double mousey) {
         int i=(int)(mousey/FXCarte.TILE_SIZE);
         int j=(int)(mousex/FXCarte.TILE_SIZE);
-        double xgrid=(j*FXCarte.TILE_SIZE);
-        double ygrid=(i*FXCarte.TILE_SIZE);
+        double xgrid=(j*FXCarte.TILE_SIZE);//x1 monitor
+        double ygrid=(i*FXCarte.TILE_SIZE);//y1 monitor
         fxIMHelper.getFXSoldatSelectionee().feuFrame();
         Soldat s=fxIMHelper.getSeletctionee();
         int lasti=mapLastI();
         int lastj=mapLastJ();
-        double protx=(relativeJ(lastj)*TILE_SIZE)+(TILE_SIZE/2);
-        double proty=(relativeI(lasti)*TILE_SIZE)+(TILE_SIZE/2);
-
+        double protx=(relativeJ(lastj)*TILE_SIZE)+(TILE_SIZE/2);//x0 monitor
+        double proty=(relativeI(lasti)*TILE_SIZE)+(TILE_SIZE/2);//y0 monitor
+        double x0=(lastj*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y0=(lasti*FXCarte.TILE_SIZE)+(TILE_SIZE/2);
+        double x1=((j+posJ)*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y1=(FXCarte.TILE_SIZE*(i+posI))+(TILE_SIZE/2);
         GraphicsContext gc =activeCanvas().getGraphicsContext2D();
         gc.setStroke(Color.RED);
         gc.strokeLine(protx, proty, xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
         Point2D p0=new Point2D(protx, proty);
         double dpixel= p0.distance(xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
-        double angle=FXCarte.angleRotation(protx, proty, xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
+        double angle=FXCarte.angleRotation(x0, y0, x1,y1);
         fxIMHelper.getFXSoldatSelectionee().setFXSoldatOrientation(angle);
         
         double inch=(dpixel*0.02);
         System.out.println("distance"+(inch*1.8280)+" metri o inches:"+inch+" angle"+angle);
-        if(s.isFeuArmePaPorte(inch)){            
+        if(s.getArmeUtilise()==null || s.isFeuArmePaPorte(inch)){            
             removeDisplayRange();
             fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             fxIMHelper.setCommanNotvalid(true);
+            if(s.getArmeUtilise()==null) fxpl.sendMessageToPlayer("Arme tombe ");
+            else fxpl.sendMessageToPlayer("Arme pa de porte");            
 
         }else{
             removeDisplayRange();

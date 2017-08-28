@@ -13,7 +13,7 @@ import jeu.patrouille.coeur.actions.BaseAction;
  * @author Alessio Sardaro
  */
 public interface GraficCarteInterface  {
-   public  void  play(BaseAction  b);
+   public  void  play(BaseAction  act1,BaseAction act2);
     public boolean isAnimOn() ;
     public void setAnimOn(boolean value);
     public void refreshGraficCarte();

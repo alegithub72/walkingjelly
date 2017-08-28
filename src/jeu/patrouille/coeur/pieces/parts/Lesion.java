@@ -28,6 +28,11 @@ public class Lesion {
         this.statu=statu;
     }
 
+    @Override
+    public Lesion clone() {
+        return new Lesion(location, gravite, blessure, statu, turn);
+    }
+    
     public Corp.CorpParts getLocation() {
         return location;
     }

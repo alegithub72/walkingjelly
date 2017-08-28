@@ -32,7 +32,7 @@ public abstract class GeneriqueEquipment {
     public String getNom() {
         return nom;
     }
-    abstract public GeneriqueArme cloneEquipmentGenerique();    
+    abstract public GeneriqueEquipment cloneEquipmentGenerique();    
     
     
     public Model getModel() {

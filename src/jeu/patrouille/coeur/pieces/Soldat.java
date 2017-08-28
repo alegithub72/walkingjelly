@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.GeneriqueBlindageEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
@@ -29,6 +28,7 @@ import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
 import jeu.patrouille.coeur.pieces.exceptions.NotSautOrCourseSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
+import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.fx.board.FXCarte;
 
 /**
@@ -425,19 +425,28 @@ public int isLesion(){
         s.setI(this.getI());
         s.setJ(this.getJ());
         s.arrayN = this.arrayN;
-        GeneriqueArme armeClone[] = null;
+        s.setStatut(st);
+        GeneriqueEquipment armeClone[] = null;
         if (equipmentGen != null) {
             armeClone = new GeneriqueArme[equipmentGen.length];
             for (int a = 0; a < equipmentGen.length; a++) {
                 armeClone[a] = equipmentGen[a].cloneEquipmentGenerique();
+                if(armeUtilise.getModel()==equipmentGen[a].getModel()) s.setArmeUtilise((GeneriqueArme)equipmentGen[a]);
             }
             s.setArmeEquip(armeClone);
-            s.setArmeUtilise(this.armeUtilise);
+          
         }
-
+        s.lesion=new Lesion[10];
+        int k=0;
+        for (Lesion l : lesion) {
+            if(l!=null)s.lesion[k]=l.clone();
+            
+            k++;
+        }
         return s;
     }
-    public int fire(BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException{
+    public int fire(BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException,TomberArmeException{
+        if(armeUtilise==null) throw  new TomberArmeException();
         int score = 0;int i1=act.getI1(),j1=act.getJ1();
         Soldat target=(Soldat)act.getAntagoniste();
         if(target!=null) {

@@ -178,7 +178,11 @@ public int getCoverPenetration(Terrain.Consistance c){
     return load.quantity;
     
     }
-    abstract public GeneriqueArme cloneEquipmentGenerique();
+   @Override
+    public GeneriqueEquipment cloneEquipmentGenerique() {
+        return this;
+        
+    }
 
 
    

@@ -15,7 +15,7 @@ import jeu.patrouille.coeur.actions.AbstractAction.*;
 public abstract class AbstractAction implements Comparable<BaseAction>{
     
 
-public static final int BANDAGE = 14;
+
 
     ActionType type;
     int j0;

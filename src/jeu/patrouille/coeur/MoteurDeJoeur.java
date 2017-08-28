@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.actions.exceptions.MakeActionFailException;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
@@ -22,6 +23,7 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.parts.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.coeur.terrains.Terrain;
@@ -184,11 +186,9 @@ public class MoteurDeJoeur implements Runnable{
 
                  listAllActionHost.addAll(l);
             }            
-           // System.out.println("-----------TD CONSIDEREDED "+td+"---------------------");
-            //System.out.println("-listAllHost-->"+listAllActionHost.size());
-           // System.out.println("-listAllUS-->"+listAllActionUS.size()); 
-            
-            resolveTempPas(td,listAllActionUS,listAllActionHost );  
+
+            BaseAction[] arrayOrderd = sequenqueActionMake(listAllActionUS, listAllActionHost);
+            resolveTempPas(td,arrayOrderd );  
 
             listAllActionUS=new ArrayList<>();
             listAllActionHost=new ArrayList<>();   
@@ -247,7 +247,7 @@ public class MoteurDeJoeur implements Runnable{
     }
       
       
-   void resetAllSoldatActionPool(){
+   private void resetAllSoldatActionPool(){
        for (Piece patrouille1 : this.patrouille) {
            Soldat p=(Soldat)patrouille1;
            p.resetRondCheck();
@@ -272,7 +272,7 @@ public class MoteurDeJoeur implements Runnable{
    
    
    }
-   void resetAllSoldatStep(){
+private   void resetAllSoldatStep(){
    for(Piece p:this.patrouille)
        ((Soldat)p).setStepScared(false);
    for(Piece h:this.hostile)
@@ -280,75 +280,72 @@ public class MoteurDeJoeur implements Runnable{
    
    
    }
-   void resolveTempPas(int td,List<BaseAction> listUSAll,List<BaseAction> listHostAll)throws Exception{
-        BaseAction[] arrayOrderd=null;
-       if(iniativeWinner==JEUR_US) 
-       {
+private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAction> listHostAll){
+       BaseAction[] arrayOrderd = null;
+       if (iniativeWinner == JEUR_US) {
            listUSAll.addAll(listHostAll);
-           arrayOrderd=new BaseAction[listUSAll.size()];
-           Arrays.sort(listUSAll.toArray( arrayOrderd), BaseAction.baseActionCompratorImpl);
-           System.out.println("-----------JEUR US WIN INITIATIVE---SIZE=--->"+arrayOrderd.length+"<--------SORTED--------------------------");
-       }
-       else{
+           arrayOrderd = new BaseAction[listUSAll.size()];
+           Arrays.sort(listUSAll.toArray(arrayOrderd), BaseAction.baseActionCompratorImpl);
+           System.out.println("-----------JEUR US WIN INITIATIVE---SIZE=--->" + arrayOrderd.length + "<--------SORTED--------------------------");
+       } else {
            listHostAll.addAll(listUSAll);
-           arrayOrderd=new BaseAction[listHostAll.size()];
-            Arrays.sort(listHostAll.toArray(arrayOrderd),BaseAction.baseActionCompratorImpl);
-            System.out.println("-----------JEUR HOSTILE WIN INITIATIVE-SIZE=--->"+arrayOrderd.length+"<--------SORTED--------------------------");            
-       }    
-        
-        
- 
-       // for(BaseAction b:arrayOrderd){
-       //     System.out.println(b);
-       // }
-        
-        
-        if( arrayOrderd.length>0){
-        int k=0;
-       
-            while(k<arrayOrderd.length) {
+           arrayOrderd = new BaseAction[listHostAll.size()];
+           Arrays.sort(listHostAll.toArray(arrayOrderd), BaseAction.baseActionCompratorImpl);
+           System.out.println("-----------JEUR HOSTILE WIN INITIATIVE-SIZE=--->" + arrayOrderd.length + "<--------SORTED--------------------------");
+       }
+       return arrayOrderd;
+
+}
+   private void resolveTempPas(int td,BaseAction[] arrayOrderd){
 
 
-                BaseAction act=arrayOrderd[k];
-                //BaseAction clone=act.clone();
-                Soldat s=(Soldat)act.getProtagoniste();
-                //s.resetAction();
-                BaseAction fugitivAct=null;
-                //if(ch) act=fugitivAct;//TODO   fugitiv action
-                if(!s.isIncoscient()&&!s.isImmobilize()&&!s.isKIA() && !s.isStepScared()){
-                    
-                   // System.out.println("--MJ PLAY GRAFIC--->"+act+"<----->"+((act.getProtagoniste()!=null)?act.getProtagoniste().toStringSimple():" no protagoniste")+"<----------");
-                    //cosi sono valide le posizioni di tutti.....
-                    if( act.getType()==ActionType.FEU) makeFeuAction(td,act);
-                    playAllGraficInterface(act);
-    
+       if (arrayOrderd.length > 0) {
+           int k = 0;
 
-                    int zz=0;
-                    System.out.println("------------Zzzzzzzzzzzzz="+allAnimOn());
-                    while(allAnimOn());
-                    System.out.println("------------Svegliaaaaaaaa="+allAnimOn());
+           while (k < arrayOrderd.length) {
 
-                    if( act.getType()!=ActionType.FEU) makeAction((Soldat)act.getProtagoniste(), act);   
-                    refreshAllGraficInterface();
-                }else System.out.println("--------->KIA OR CHOKET NOTA ANIM");
-                 //TODO vedere per aggiorantre la mappa quando!!!!
-                 k++;
-                
-                
-                //break;
-            }
-            System.out.println("fine TD pas "+td);
-            
-        }
-        
-        resetAllSoldatStep();
-        
+               BaseAction act = arrayOrderd[k];
+               //BaseAction clone=act.clone();
+               Soldat s = (Soldat) act.getProtagoniste();
+
+               if (!s.isIncoscient() && !s.isImmobilize() && !s.isKIA() && !s.isStepScared()) {
+                   try {
+                       
+                       BaseAction cloneAction1=act.clone();
+                       makeAction(td,(Soldat) act.getProtagoniste(), act);
+                       BaseAction cloneAction2=act.clone();
+                       playAllGraficInterface(cloneAction1,cloneAction2);
+
+                       System.out.println("------------Zzzzzzzzzzzzz=" + allAnimOn());
+                       while (allAnimOn());
+                       System.out.println("------------Svegliaaaaaaaa=" + allAnimOn());
+                        
+                       refreshAllGraficInterface();
+                   } catch (MakeActionFailException e) {
+                       e.printStackTrace();
+                   }
+               } else {
+                   System.out.println("--------->KIA OR CHOKET NOTA ANIM");
+               }
+               //TODO vedere per aggiorantre la mappa quando!!!!
+               k++;
+
+               //break;
+           }
+
+           System.out.println("fine TD pas " + td);
+
+       }
+
+       resetAllSoldatStep();
+
     
     }
-   private void makeAction(Soldat s,BaseAction a)throws Exception{
+   private void makeAction(int td,Soldat s,BaseAction a) throws MakeActionFailException{
        if(a.getType()==ActionType.MARCHE){
            makeMarcheAction(s, a);
-       }
+       }else if (a.getType() == ActionType.FEU) 
+                           makeFeuAction(td, a);
     
    }
     private boolean allAnimOn(){
@@ -389,21 +386,21 @@ public class MoteurDeJoeur implements Runnable{
         this.activeJeur = activeJeur;
     }
     
-       void   playAllGraficInterface(BaseAction b){
+   private    void   playAllGraficInterface(BaseAction act1,BaseAction act2){
          
         for (GraficCarteInterface g : listgrafic) {
             g.setAnimOn(true);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    g.play(b);
+                    g.play(act1,act2);
                 }
             } );
             return;
         }
     }
 
-     void   refreshAllGraficInterface(){
+private     void   refreshAllGraficInterface(){
          
         for (GraficCarteInterface g : listgrafic) {
             g.setAnimOn(true);
@@ -416,7 +413,7 @@ public class MoteurDeJoeur implements Runnable{
             return;
         }
     }
-    void reMountMenuItemsAndScroll(){
+private    void reMountMenuItemsAndScroll(){
        for(GraficCarteInterface g:listgrafic){
            Platform.runLater(new Runnable() {
                @Override
@@ -458,12 +455,13 @@ public class MoteurDeJoeur implements Runnable{
     }    
 
 
-        public void makeFeuAction(int td,BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException{
+        public void makeFeuAction(int td,BaseAction act)throws MakeActionFailException {
+            try{
             System.out.println("*************************FEUUUU MAKE*****************************");
             Soldat s=(Soldat)act.getProtagoniste();
             Soldat target=(Soldat)act.getAntagoniste();
             int i1=act.getI1(),j1=act.getJ1();
-           
+          
             //TODO generalizzare in FXcarte....
             int score=s.fire(act);
             System.out.println("score ="+score);
@@ -506,9 +504,11 @@ public class MoteurDeJoeur implements Runnable{
                    target.blessure(ln);
                    if(target.isObjective())target.shellShockTest();
                        
-                   if(target.isChoc()&& !target.isImmobilize()) {
+                   if(target.isChoc()) {
                        target.setStepScared(true);                       
-                       addFuirLontain(target, td);
+                       if(!target.isImmobilize() &&
+                          !target.isIncoscient() &&
+                          !target.isKIA()     ) addFuirLontain(target, td);
                        System.out.println(s+"  -->schoked ");
                    }
                    System.out.println(target.toStringSimple()+":--add--->"+ln);
@@ -517,7 +517,10 @@ public class MoteurDeJoeur implements Runnable{
             }
             
 
-
+            }catch(LoadMagazineFiniException|ModeDeFeuException|TomberArmeException e){
+                throw new MakeActionFailException(e.getClass().getName());
+            
+            }
             //TODO choose other target.........if full automatic in the line of sight
 
         System.out.println("**************************FEUUUU MAKE----FINE*****************************");            
@@ -525,13 +528,14 @@ public class MoteurDeJoeur implements Runnable{
         
         
     //TODO rivedere perche fa un de casino
-    public void addFuirLontain(Soldat s,int td){
+    private void addFuirLontain(Soldat s,int td){
         try{
         s.resetTempDispoleNotUse();
         BaseAction act=MarcheAction.marcheLointain(s);
         if(act!=null){
             BaseAction noact=new BaseAction(ActionType.PA_ACTION, -1, -1, -1, -1, s, null);
             noact.setTempActivite(td);
+            noact.setUsed(true);
             s.addAction(noact);
             s.addAction(act);
             s.setSpreadDone(false);

@@ -84,7 +84,7 @@ public class Carte implements GraficCarteInterface{
     }
 
     @Override
-    public void play(BaseAction b) {
+    public void play(BaseAction act1, BaseAction act2) {
        System.out.println("play garafic text");
     }
     

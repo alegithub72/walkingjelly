@@ -5,7 +5,6 @@
  */
 package jeu.patrouille.coeur.equipments.armes;
 
-import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.FeuMode;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 /**
@@ -66,8 +65,8 @@ public class Magazine extends GeneriqueEquipment {
     }
 
     @Override
-    public GeneriqueArme cloneEquipmentGenerique() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public GeneriqueEquipment cloneEquipmentGenerique() {
+        return this;
     }
 
 

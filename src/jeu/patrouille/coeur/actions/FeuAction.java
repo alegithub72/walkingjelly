@@ -20,6 +20,11 @@ public class FeuAction extends BaseAction{
       // dist= Carte.distance(protagoniste.getI(), this.protagoniste.getJ(), i1, j1, FXCarte.TILE_SIZE);
     }
 
+     FeuAction(FeuAction act) {
+        super(act.type, act.i0, act.j0, act.i1, act.j1, act.protagoniste.clonerPiece(), act.antagoniste.clonerPiece());
+     
+    }
+
     @Override
     public void calculeActionPointDesAction() throws Exception{
         Soldat s=(Soldat)protagoniste;
@@ -27,6 +32,12 @@ public class FeuAction extends BaseAction{
 
        // super.calculeActionPointDesActions(); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public BaseAction clone() {
+        return new FeuAction(this);
+    }
+    
      
     
 }

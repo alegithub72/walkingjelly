@@ -25,8 +25,8 @@ public class MarcheAction extends BaseAction{
     super(ActionType.MARCHE, i0 ,j0, i1, j1, protagoniste, null);
     
     }
-    public MarcheAction(MarcheAction a){
-    super(ActionType.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste,null);
+    MarcheAction(MarcheAction a){
+    super(ActionType.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste.clonerPiece(),null);
     
     }
 
@@ -96,7 +96,7 @@ public class MarcheAction extends BaseAction{
        m.setMapTile(this.mapTile);//TODO afre clone di questa operazione
        m.setOrdreInitiative(ordreInitiative);
        m.setTempActivite(tempActivite);
-       m.setDerivedAction(this.derivedAction);
+       //m.setDerivedAction(this.derivedAction.clone());
        return m;
     }
     public static MarcheAction marcheLointain(Soldat s) {
@@ -105,7 +105,7 @@ public class MarcheAction extends BaseAction{
         int tbase=s.tempNecessarieDesActionBase(ActionType.MARCHE);
         if(s.getTempDisponible()>=tbase){
             int delta=(int)s.getTempDisponible()/tbase;
-            if ((s.getI() + delta) >= Carte.CARTE_SIZE_I) 
+            if ((s.getI() + delta) >= Carte.CARTE_SIZE_I ) 
                 delta=0;
             if((s.getJ()+delta)>=Carte.CARTE_SIZE_J) 
                 delta=0;

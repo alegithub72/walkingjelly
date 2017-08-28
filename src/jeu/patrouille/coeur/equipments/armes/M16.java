@@ -40,10 +40,7 @@ public class M16 extends GeneriqueArme{
     
     }
 
-    @Override
-    public GeneriqueArme cloneEquipmentGenerique() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
     
 
 }
