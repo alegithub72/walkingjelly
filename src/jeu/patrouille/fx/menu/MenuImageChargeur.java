@@ -27,6 +27,7 @@ public class MenuImageChargeur {
         menuImages[ActionType.COURS.ordinal()]=new Image("runButton.png");
         menuImages[ActionType.FEU.ordinal()]=new Image("fireButton.png");
         menuImages[ActionType.PA_ACTION.ordinal()]=new Image("arrowPng.png");
+        menuImages[ActionType.BANDAGE.ordinal()]=new Image("bandageButton2.png");
         
     }
     

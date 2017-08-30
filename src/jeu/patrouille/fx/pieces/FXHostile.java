@@ -22,7 +22,8 @@ public class FXHostile extends FXSoldat{
         super( FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s ,"frameHostile.png", fxcarte);
         this.flagImg=new ImageView("hosFlag.png");
         
-     
+        feu1=0;
+        feu2=1;
         
         
         
@@ -36,7 +37,7 @@ public class FXHostile extends FXSoldat{
     }    
     @Override
     public void buildFramesFeuAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(0, 1, this, 0, 1, 100, s.getArmeUtilise(),null);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0, 1, 100, s.getArmeUtilise(),null);
         this.frameAnimTimer[0].buildMedia();        
     }
 

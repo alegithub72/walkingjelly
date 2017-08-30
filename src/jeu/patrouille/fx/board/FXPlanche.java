@@ -14,6 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -47,11 +48,13 @@ public class FXPlanche extends Application {
 
 
     Path p;
-    BorderPane borderPan;
+
     Canvas topPan;
     Canvas canvasBar;
-    Group root;
+    Group rootSubScene;
+    Group rootScene;
     Canvas droitCanvasBar; 
+    SubScene subScene;
     boolean scroolEnd = true;
     FXCarte fxCarte;
     Label message;
@@ -62,25 +65,27 @@ public class FXPlanche extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        borderPan = new BorderPane();
+       
         InputStream i = ClassLoader.getSystemResourceAsStream("Lintsec Regular.ttf");
         fontTitle =Font.loadFont(i, 18);
         fxActionsPoolSelectionee = new ArrayList<>();
        
         fxCarte = new FXCarte(this);
         fxCarte.initFXCarte();
-        borderPan.setCenter(fxCarte);
+       
                
 
         //ImageView test = new ImageView(new Image("menuItem.png"));
-        root=new Group();
+        rootSubScene=new Group();
+        rootScene=new Group();
         primaryStage.setResizable(false);
                 buildBar();
         buildDroitBar();
         //Scene sc = new Scene(borderPan);
-        root.getChildren().add(fxCarte);
-        
-        Scene sc = new Scene(root,(FXCarte.PIXEL_SCROLL_AREA_W+FXCarte.DROIT_BAR_W),
+        rootSubScene.getChildren().add(fxCarte);
+        subScene=new SubScene(rootSubScene, FXCarte.PIXEL_SCROLL_AREA_W, FXCarte.PIXEL_SCROLL_AREA_H);
+        rootScene.getChildren().add(subScene);
+        Scene sc = new Scene(rootScene,(FXCarte.PIXEL_SCROLL_AREA_W+FXCarte.DROIT_BAR_W),
        (FXCarte.PIXEL_SCROLL_AREA_H+FXCarte.BAR_H));
         //primaryStage.setFullScreen(true);
         primaryStage.setScene(sc);
@@ -104,10 +109,10 @@ public class FXPlanche extends Application {
     }
 
     public void buildFXSoldatEquipement(Soldat s){
-        root.getChildren().remove(fxequip);
+        rootScene.getChildren().remove(fxequip);
        // fxequip=new FXSoldatEquipement(this);
         fxequip=new FXSoldatEquipement(this);        
-        root.getChildren().add(fxequip);
+        rootScene.getChildren().add(fxequip);
         fxequip.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W+16);
         fxequip.setTranslateY(325);
         fxequip.toFront();
@@ -120,7 +125,7 @@ public class FXPlanche extends Application {
         canvasBar = new Canvas( FXCarte.PIXEL_SCROLL_AREA_W+FXCarte.DROIT_BAR_W, FXCarte.BAR_H);
         //rootBarGroup = new Group();
         //rootBarGroup.getChildren().add(canvasBar);
-        root.getChildren().add(canvasBar);
+        rootScene.getChildren().add(canvasBar);
         canvasBar.setTranslateX(0 );
         canvasBar.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H);
         GraphicsContext gc = canvasBar.getGraphicsContext2D();
@@ -153,8 +158,8 @@ public class FXPlanche extends Application {
         endButton.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W);
         endButton.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H);
         endButton.toFront();
-        root.getChildren().add(endButton);
-        root.getChildren().add(message);
+        rootScene.getChildren().add(endButton);
+        rootScene.getChildren().add(message);
     }
     public void endTurn(){
         suprimerActionVisualization();
@@ -208,15 +213,15 @@ public class FXPlanche extends Application {
         infPl=new FXInfoPanel(this, FXCarte.PIXEL_SCROLL_AREA_W+10, 40);
         infPl.buildInfoPanel();
 
-        root.getChildren().add(droitCanvasBar);
-        root.getChildren().add(infPl);
+        rootScene.getChildren().add(droitCanvasBar);
+        rootScene.getChildren().add(infPl);
 
       
         //BorderWidths bw = new BorderWidths(3);
 
     }
     public void addDoritBarGroup(Node n){
-        root.getChildren().add(n);
+        rootScene.getChildren().add(n);
     } 
     void sendMessageToPlayer(String text) {
         message.setText(text);
@@ -239,7 +244,7 @@ public class FXPlanche extends Application {
         }if(act.getType()==ActionType.FEU){
             spAct=new FeuItem(null);
         }
-        boolean add = root.getChildren().add(spAct);
+        boolean add = rootScene.getChildren().add(spAct);
         spAct.setScaleX(0.5);
         spAct.setScaleY(0.5);
         spAct.setFrame(0);
@@ -266,9 +271,8 @@ public class FXPlanche extends Application {
 
 
     void suprimerActionVisualization() {
-
         for (int k = 0; k < fxActionsPoolSelectionee.size(); k++) {
-            root.getChildren().remove(fxActionsPoolSelectionee.get(k));
+            rootScene.getChildren().remove(fxActionsPoolSelectionee.get(k));
         }
     }
 

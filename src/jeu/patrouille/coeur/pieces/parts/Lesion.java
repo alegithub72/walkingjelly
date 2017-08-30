@@ -18,6 +18,7 @@ public class Lesion {
     int blessure;
     Soldat.Statut statu;
     int turn;
+    boolean bandage;
     public static int  SHELL_SHOCK=1000,NOTVALUE=2000;
     public enum Degre{CRITIQUE,GRAVE,LEGER,MANQUE,NODEGRE};
 
@@ -26,6 +27,7 @@ public class Lesion {
         this.gravite=gravite;
         this.blessure=blessure;
         this.statu=statu;
+        bandage=true;
     }
 
     @Override
@@ -52,10 +54,22 @@ public class Lesion {
     public void setStatu(Soldat.Statut statu) {
         this.statu = statu;
     }
-
+ public boolean isNecessaireDropItem(){
+  return statu==Soldat.Statut.GRAVE_BRASE_DROITE ||
+          statu==Soldat.Statut.GRAVE_BRASE_GAUCHE;
+          
+ }
     @Override
     public String toString() {
         return "Lesion{" + "location=" + location + ", gravite=" + gravite + ", blessure=" + blessure + ", statu=" + statu + '}';
+    }
+
+    public boolean isBandage() {
+        return bandage;
+    }
+
+    public void setBandage(boolean bandage) {
+        this.bandage = bandage;
     }
     
     

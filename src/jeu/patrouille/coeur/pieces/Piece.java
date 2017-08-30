@@ -18,26 +18,24 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
  *
  * @author Alessio Sardaro
  */
-public abstract class Piece  {
+public abstract class Piece extends GeneriquePiece  {
     public enum ActeurType{SOLDAT,JEEP,HELICOPTER,ARMOR }
     public enum Direction{S,N,E,W,NW,NE,SE,SW}
     public enum Pose{PRONE,GENOUCS,DROIT}
     public abstract String toStringSimple() ;    
-    public  static final int NOACTION=-1;
-    ActeurType type;
+
     int tempDesponible;
     List<BaseAction> actionsPool;   
     boolean spreadDone=false;
-    GeneriqueJoeurs boss;
-    int i,j;
     int arrayN;
     public Piece(ActeurType type,GeneriqueJoeurs boss){
+        super(boss);
         this.type=type;
         this.i=-1;
         this.j=-1;
         this.tempDesponible=10;
         actionsPool=new ArrayList(10);
-        this.boss=boss;
+
         spreadDone=false;
     }
     public boolean isHostile(){
@@ -79,25 +77,9 @@ public abstract class Piece  {
         this.tempDesponible = tempDesponible-menus;
     }
 
-    public ActeurType getPieceType() {
-        return type;
-    }
     public abstract Piece[] losView();
 
 
-    public void setI(int i){
-        this.i=i;
-    }
-    public void setJ(int j){
-     this.j=j;
-    }
-    
-    public int getI(){
-    return i;
-    }
-    public int getJ(){
-    return j;
-    }
     
     
     public void setArraN(int n){
@@ -107,7 +89,6 @@ public abstract class Piece  {
         return arrayN;
     }    
     
-    public abstract Piece clonerPiece();
    
     
     public void  addAction(BaseAction act)throws Exception{
@@ -135,9 +116,6 @@ public abstract class Piece  {
     }   
 
 
-    public GeneriqueJoeurs getBoss() {
-        return boss;
-    }
     public void resetActionPoool(){
         actionsPool=new ArrayList<>(10);
         this.tempDesponible=10;

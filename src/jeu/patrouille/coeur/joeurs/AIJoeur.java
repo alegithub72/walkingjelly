@@ -38,7 +38,7 @@ public class AIJoeur extends GeneriqueJoeurs{
                 best=a;
             }
         }
-        selectionee=best.getProtagoniste();
+        selectionee=(Piece)best.getProtagoniste();
         actual=best;
     }
      void costruireHostile() {

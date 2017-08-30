@@ -163,27 +163,38 @@ public class MoteurDeJoeur implements Runnable{
         
 
     }
+public void rondStartTest(){
+   for(Piece p1: patrouille){
+       Soldat s1=(Soldat) p1;
+       if(s1.isChoc() && !s1.isKIA()) s1.shellShockTest();
+   }
+   for(Piece p1:hostile){
+       Soldat h1=(Soldat) p1;
+       if(h1.isChoc() && !h1.isKIA()) h1.shellShockTest();
+   }
 
+}
 
     
    public  void resolveAllRondeActions()throws Exception{        
         turn++;
+        rondStartTest();
         List<BaseAction> listAllActionUS=new ArrayList<>();
         List<BaseAction> listAllActionHost=new ArrayList<>();
         System.out.println("----------------------------- RESOLVE TURN START-----------"+turn+"---------------------------------");
         for(int td=1;td<=10;td++){
          System.out.println("--------------------------->TD--CONSIDERED--START-->"+td+"<------------");
             for(int k=0;k<patrouille.length;k++){
-                List<BaseAction> l=getBaseActionSum(td,(Soldat)patrouille[k]);
-
-               // System.out.println("---Action sum--->"+l.size());
+                Soldat s1=(Soldat)patrouille[k];
+                List<BaseAction> l=getBaseActionSum(td,s1);
+                
                 listAllActionUS.addAll(l);
             }
             
             for(int k=0;k<hostile.length;k++){
-                List<BaseAction> l=getBaseActionSum(td,(Soldat)hostile[k]);
-
-
+                Soldat h1=(Soldat)hostile[k];
+              
+                List<BaseAction> l=getBaseActionSum(td,h1);
                  listAllActionHost.addAll(l);
             }            
 
@@ -195,8 +206,9 @@ public class MoteurDeJoeur implements Runnable{
             System.out.println("--------------------------->TD--CONSIDERED--END-->"+td+"<------------");
            //break;
         }
-        System.out.println("reset action pool");
-        resetAllSoldatActionPool();
+        System.out.println("end Rond All Soldat Tache, reset action pool");
+        endRondAllSoldatTache();
+        refreshAllGraficInterface();
         System.out.println("-----------------------------RESOLVE TURN  END-----------"+turn+"---------------------------------");
         reMountMenuItemsAndScroll();
     }   
@@ -247,25 +259,27 @@ public class MoteurDeJoeur implements Runnable{
     }
       
       
-   private void resetAllSoldatActionPool(){
+   private void endRondAllSoldatTache(){
        for (Piece patrouille1 : this.patrouille) {
-           Soldat p=(Soldat)patrouille1;
-           p.resetRondCheck();
-           if(!p.isKIA()){
-               p.resetActionPoool();
-               p.bleedingTache();
-               p.inconscentTache();
+           Soldat s1=(Soldat)patrouille1;
+           s1.resetRondCheck();
+           s1.resetActionPoool();
+           if(!s1.isKIA()){
+
+               if(s1.isBleeding()) s1.bleedingTest();
+               if(s1.isIncoscient() && s1.getSante()>0 )s1.inconscentTetst();
+               if(s1.getSante()<=0) s1.incoscientBleedingTest();
            }
            
        }
        for (Piece hostile1 : hostile) {
            Soldat host=(Soldat)hostile1;
-          
            host.resetRondCheck();
+           host.resetActionPoool();
           if(!host.isKIA()){
-            host.resetActionPoool();              
-            host.bleedingTache();
-            host.inconscentTache(); 
+            if(host.isBleeding()) host.bleedingTest();
+            if(host.isIncoscient() && host.getSante()>0 )host.inconscentTetst();
+            if(host.getSante()<=0) host.incoscientBleedingTest();
           }
           
        }
@@ -308,12 +322,12 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
                //BaseAction clone=act.clone();
                Soldat s = (Soldat) act.getProtagoniste();
 
-               if (!s.isIncoscient() && !s.isImmobilize() && !s.isKIA() && !s.isStepScared()) {
+               if (!s.isIncoscient() &&  !s.isKIA() && !s.isStepScared()) {
                    try {
                        
                        BaseAction cloneAction1=act.clone();
-                       makeAction(td,(Soldat) act.getProtagoniste(), act);
-                       BaseAction cloneAction2=act.clone();
+                       BaseAction cloneAction2=makeAction(td,(Soldat) act.getProtagoniste(),
+                               act);
                        playAllGraficInterface(cloneAction1,cloneAction2);
 
                        System.out.println("------------Zzzzzzzzzzzzz=" + allAnimOn());
@@ -343,12 +357,12 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
 
     
     }
-   private void makeAction(int td,Soldat s,BaseAction a) throws MakeActionFailException{
-       if(a.getType()==ActionType.MARCHE){
+   private BaseAction makeAction(int td,Soldat s,BaseAction a) throws MakeActionFailException{
+       if(!s.isImmobilize() && a.getType()==ActionType.MARCHE ){
            makeMarcheAction(s, a);
        }else if (a.getType() == ActionType.FEU) 
                            makeFeuAction(td, a);
-    
+       return a.clone();
    }
     private boolean allAnimOn(){
         boolean b=false;
@@ -463,7 +477,7 @@ private    void reMountMenuItemsAndScroll(){
             Soldat s=(Soldat)act.getProtagoniste();
             Soldat target=(Soldat)act.getAntagoniste();
             int i1=act.getI1(),j1=act.getJ1();
-          
+            
             //TODO generalizzare in FXcarte....
             int score=s.fire(act);
             System.out.println("score ="+score);
@@ -502,17 +516,21 @@ private    void reMountMenuItemsAndScroll(){
             
             for (Lesion ln : llist) {
                 if(target!=null && !target.isKIA() && ln!=null){
-                   target.addLesion(ln);
-                   target.blessure(ln);
-                   if(target.isObjective())target.shellShockTest();
-                       
-                   if(target.isChoc()) {
-                       target.setStepScared(true);                       
-                       if(!target.isImmobilize() &&
-                          !target.isIncoscient() &&
-                          !target.isKIA()     ) addFuirLontain(target, td);
-                       System.out.println(s+"  -->schoked ");
+                    target.addLesion(ln);
+                    target.blessure(ln);
+                    if(ln.isNecessaireDropItem()) tomberArmeUtilise(target);
+                    if(!target.isKIA() && target.isObjective() && !target.isChoc()){
+                        target.shellShockTest();
+                    if(target.isChoc()) {
+                        target.setStepScared(true);                       
+                        if(!target.isImmobilize() &&
+                           !target.isIncoscient() &&
+                           !target.isKIA()     ) addFuirLontain(target, td);
+                        System.out.println(s+"  -->schoked ");
+                    }                       
                    }
+                       
+
                    System.out.println(target.toStringSimple()+":--add--->"+ln);
                 }
                 
@@ -528,10 +546,17 @@ private    void reMountMenuItemsAndScroll(){
         System.out.println("**************************FEUUUU MAKE----FINE*****************************");            
     }
         
-        
+    void tomberArmeUtilise(Soldat s1){
+        //TODO da aggiungere all'ultimo usati.....
+        c.getPointCarte(s1.getI(), s1.getJ()).addExtraPiece(s1.getArmeUtilise());
+        s1.setArmeUtilise(null);
+        System.out.println(s1.toStringSimple()+" : drop arme");
+        //TODO play anim senza arma nella mano.....da aggingere a blessed
+    }
     //TODO rivedere perche fa un de casino
     private void addFuirLontain(Soldat s,int td){
         try{
+        
         s.resetTempDispoleNotUse();
         BaseAction act=MarcheAction.marcheLointain(s);
         if(act!=null){

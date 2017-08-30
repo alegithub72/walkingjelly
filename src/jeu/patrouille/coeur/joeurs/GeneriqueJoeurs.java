@@ -11,6 +11,7 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 
@@ -119,11 +120,11 @@ public abstract class GeneriqueJoeurs {
         BaseAction act=null;
         if (c == 's') {
             
-            Piece p = this.carte.getPointCarte(x0, y0).getPiece();
+            GeneriquePiece p = this.carte.getPointCarte(x0, y0).getPiece();
             if (p == null) ;//do something
             else if (p != null
                     && p.getPieceType() == Piece.ActeurType.SOLDAT) {
-                selectionee = p;
+                selectionee =(Soldat) p;
             }
         }else if (c == 'm') {
             

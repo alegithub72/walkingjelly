@@ -64,10 +64,8 @@ public class Magazine extends GeneriqueEquipment {
     return mod;
     }
 
-    @Override
-    public GeneriqueEquipment cloneEquipmentGenerique() {
-        return this;
-    }
+
+
 
 
     

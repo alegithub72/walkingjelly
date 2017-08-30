@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 
 /**
@@ -22,8 +23,8 @@ public   class BaseAction extends AbstractAction {
     
     public static  BaseAction QUIT=new BaseAction(ActionType.PA_ACTION, -1, -1, -1,-1, null, null);
     public static  Comparator baseActionCompratorImpl=new BaseActionComparatorImpl();
-    Piece protagoniste;
-    Piece antagoniste;
+    GeneriquePiece protagoniste;
+    GeneriquePiece antagoniste;
     boolean used;
     int ordreInitiative;
 
@@ -62,11 +63,11 @@ public int compareTo(BaseAction b) {
 //      return (this.getTempActivite()-o.getTempActivite());
 //    }
 
-    public Piece getProtagoniste() {
+    public GeneriquePiece getProtagoniste() {
         return protagoniste;
     }
     
-    public BaseAction(ActionType type, int i0, int j0, int i1, int j1, Piece protagoniste, Piece antagoniste) {
+    public BaseAction(ActionType type, int i0, int j0, int i1, int j1, GeneriquePiece protagoniste, GeneriquePiece antagoniste) {
         this.type = type;
         this.j0 = j0;
         this.i0 = i0;
@@ -116,11 +117,11 @@ public int compareTo(BaseAction b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Piece getAntagoniste() {
+    public GeneriquePiece getAntagoniste() {
         return antagoniste;
     }
 
-    public void setAntagoniste(Piece antagoniste) {
+    public void setAntagoniste(GeneriquePiece antagoniste) {
         this.antagoniste = antagoniste;
     }
 

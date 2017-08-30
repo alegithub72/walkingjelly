@@ -11,6 +11,7 @@ import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -33,8 +34,8 @@ public class FXItemsPointerHelper {
     private int lastVisualizationRond;
             
    
-    public FXItemsPointerHelper(FXSoldat s,Carte carte){
-        this.seletctionee=s;
+    public FXItemsPointerHelper(FXSoldat sfx,Carte carte){
+        this.seletctionee=sfx;
         this.carte=carte;
         this.commanNotvalid=false;
         this.act=null;
@@ -120,7 +121,7 @@ public class FXItemsPointerHelper {
      BaseAction last=null;
       for (int h=0;h<size;h++){
           BaseAction act1=s.nextAction(h);
-          if(act.getType()==ActionType.MARCHE) last=act1;
+          if(act.getType().isMovementAction()) last=act1;
       }
           
       if(last!=null) return last.getJ1();
@@ -133,10 +134,10 @@ public class FXItemsPointerHelper {
      BaseAction last=null;
       for (int h=0;h<size;h++){
           BaseAction act1=s.nextAction(h);
-          if(act1.getType()==ActionType.MARCHE) last=act1;
+          if(act1.getType().isMovementAction()) last=act1;
       }
           
-      if(last!=null) return last.getI1();
+      if(last!=null ) return last.getI1();
       else return s.getI();
 
  
@@ -163,7 +164,7 @@ public FXSoldat getFXSoldatSelectionee(){
     }
     public void buildFeuAction(FeuAction act,int i1,int j1,double angle){
         Terrain t= carte.getPointCarte(i1, j1);
-        Piece p=t.getPiece();
+        GeneriquePiece p=t.getPiece();
         Soldat s=null;
         if(p!=null  &&
                 p.getPieceType()==Piece.ActeurType.SOLDAT)

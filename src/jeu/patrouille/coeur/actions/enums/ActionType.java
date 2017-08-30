@@ -36,6 +36,13 @@ private int TN;
     public void TN(int value) {
         this.TN = value;
     }
-
+    public boolean isMovementAction(){
+     return this==MARCHE  || this==COURS|| 
+            this==MONTER  || this==SAUT ;
     
+    }
+ public boolean isFeuAction(){
+    return this==FEU|| this==FEU_VISER;
+ 
+ }   
 }

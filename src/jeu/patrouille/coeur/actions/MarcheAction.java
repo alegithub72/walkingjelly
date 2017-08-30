@@ -9,6 +9,7 @@ import jeu.patrouille.coeur.actions.enums.ActionType;
 import java.util.ArrayList;
 import java.util.List;
 import jeu.patrouille.coeur.Carte;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -21,7 +22,7 @@ public class MarcheAction extends BaseAction{
     
     MarcheAction derivedAction;
     
-    public MarcheAction( int i0, int j0, int i1, int j1, Piece protagoniste){
+    public MarcheAction( int i0, int j0, int i1, int j1, GeneriquePiece protagoniste){
     super(ActionType.MARCHE, i0 ,j0, i1, j1, protagoniste, null);
     
     }
@@ -116,6 +117,7 @@ public class MarcheAction extends BaseAction{
         }catch(Exception ex){
             throw new  RuntimeException("non deve succedere");
         }
+        System.out.println("fuggire action :"+act);
         return act;
     }
     

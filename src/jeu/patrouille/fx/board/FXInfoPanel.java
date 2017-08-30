@@ -109,7 +109,7 @@ public class FXInfoPanel extends Parent{
         tdLabel.setText (s.getTempDisponible()+"");
         String clText=s.getClassement().name();
         classment.setText(clText);
-        sante.setText(s.getStatu().mes+" "+s.getSante());
+        sante.setText(s.getSante()+" "+s.getStatu().mes+"");
     
     }
     

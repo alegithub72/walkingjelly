@@ -9,6 +9,7 @@ import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.terrains.Terrain;
 
 /**
@@ -178,11 +179,9 @@ public int getCoverPenetration(Terrain.Consistance c){
     return load.quantity;
     
     }
-   @Override
-    public GeneriqueEquipment cloneEquipmentGenerique() {
-        return this;
-        
-    }
+
+
+
 
 
    

@@ -22,16 +22,16 @@ public class BasicRond {
         equipeRondHost=new Piece[host.length];
         equipeRondeUS=new Piece[us.length];
         for(int k=0;k<host.length;k++)
-            equipeRondHost[k]=host[k].clonerPiece();
+            equipeRondHost[k]=(Piece)host[k].clonerPiece();
         for(int k=0;k<us.length;k++)
-            equipeRondeUS[k]=us[k].clonerPiece();        
+            equipeRondeUS[k]=(Piece)us[k].clonerPiece();        
         
     }
     
     public void playTurn(){
         
     //TODO do any action less or  equal to n each    
-        for(int n=1;n<=10;n++){
+        for(int td=1;td<=10;td++){
 
     }
     

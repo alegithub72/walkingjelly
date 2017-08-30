@@ -22,7 +22,8 @@ public class FXUSSoldat extends FXSoldat {
     
     public FXUSSoldat(Soldat s,int pos,FXCarte fxcarte){
         super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s,"frameSoldierUS2.png",fxcarte);
-        
+        feu1=7;
+        feu2=8;
     }
 
 
@@ -37,7 +38,7 @@ public class FXUSSoldat extends FXSoldat {
     @Override
     public void buildFramesFeuAnim() {
         
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(7, 8, this, 0,1 , 200,s.getArmeUtilise(),null);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0,1 , 200,s.getArmeUtilise(),null);
         frameAnimTimer[0].buildMedia();
     }
 

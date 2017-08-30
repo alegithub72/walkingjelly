@@ -19,10 +19,6 @@ public abstract class GeneriqueBlindageEquipment extends GeneriqueEquipment {
         super(nom, type, model);
     }
 
-    @Override
-    public GeneriqueArme cloneEquipmentGenerique() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 
 

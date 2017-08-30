@@ -28,6 +28,7 @@ import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
 import jeu.patrouille.coeur.pieces.exceptions.NotSautOrCourseSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
+import jeu.patrouille.coeur.pieces.exceptions.IncoscientSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.fx.board.FXCarte;
 
@@ -42,7 +43,7 @@ public class Soldat extends Piece {
 
     public static final int FULL_SANTE=6;
     public enum Statut{NORMAL("Saine"),MANQUE("Manque"),LEGER_BLESSE("Legger blesse"),GRAVE("Grave"),GRAVE_TETE("Grave alla tete"),
-    GRAVE_BRASE_DROITE("Grave brase droite"),GRAVE_BRASE_GAUCHE("Grave base gauche"),CRITIQUE("Critique"),MORT("Mort");
+    GRAVE_BRASE_DROITE("Grave brase droite"),GRAVE_BRASE_GAUCHE("Grave base gauche"),CRITIQUE("Critique"),INCONSCENT("Incoscient"),MORT("Mort");
     public String mes;
     Statut(String mes){
     this.mes=mes;
@@ -72,19 +73,20 @@ public class Soldat extends Piece {
     boolean active;
     boolean choc;
     boolean immobilize;
-    boolean bandage;
     boolean stepScared;
     Statut st;
 
 
  
-    boolean isBleading(){
-        return (st==Statut.CRITIQUE||
-        st==Statut.GRAVE ||
-        st==Statut.GRAVE_BRASE_DROITE ||
-        st==Statut.GRAVE_TETE
-                );
-    
+    public boolean isBleeding(){
+        boolean bleeding=false;
+        for (Lesion l1 : lesion) {
+           if(l1!=null && l1.getGravite()==Lesion.Degre.CRITIQUE && !l1.isBandage()) 
+               return true; 
+           if(l1!=null  && l1.getGravite()==Lesion.Degre.GRAVE && !l1.isBandage()) 
+               return true;
+        }
+    return bleeding;
     }
     
     public Soldat(
@@ -124,7 +126,6 @@ public class Soldat extends Piece {
         lesion=new Lesion[10];
         lesionN=0;
         this.blindage=blindage;
-        bandage=false;
         stepScared=false;
         
     
@@ -198,7 +199,7 @@ public class Soldat extends Piece {
                     this.pose=Pose.PRONE;
                     this.immobilize=true;
                     setStatut(statutNow);
-                    bandage=false;                 
+                                   
                     break;
                 case GRAVE_TETE:
                     objective=true;
@@ -209,14 +210,14 @@ public class Soldat extends Piece {
                     removeActionUpTo(tdActionRemove);
                     setStatut(statutNow);                       
                     this.pose=Pose.PRONE;
-                    bandage=false;                   
+                                
                     break;
                 case GRAVE:
                     objective=true;
                     moral=moral-1;
                      tdActionRemove=boss.dice(6);
                      removeActionUpTo(tdActionRemove);
-                     bandage=false;                    
+                                   
                     //TODO not jumping and runnnig but all the others...
                     //TODO remove all action except one
                     setStatut(statutNow);
@@ -228,10 +229,11 @@ public class Soldat extends Piece {
                     tdActionRemove=boss.dice(6);
                     removeActionUpTo(tdActionRemove);
                     setStatut(statutNow);
-                    armeUtilise=null;//todo drop items
+                   
+                                   //todo drop items
                     //TODO remove all action except one
                     //TODO one action per turn
-                    bandage=false;
+                
                 
                     break;     
                 case GRAVE_BRASE_GAUCHE:
@@ -239,9 +241,9 @@ public class Soldat extends Piece {
                     moral=moral-1;
                     tdActionRemove=boss.dice(6);
                     removeActionUpTo(tdActionRemove);
-                    armeUtilise.setDegat(true);
+                    if(armeUtilise!=null)armeUtilise.setDegat(true);
                     setStatut(statutNow);                       
-                    bandage=false;
+              
                     //TODO one action per turn
 
                     break;                    
@@ -262,7 +264,8 @@ public class Soldat extends Piece {
             }
             if(sante<=0) {
                 incoscient=true;
-                st=Statut.GRAVE_TETE;
+                st=Statut.INCONSCENT;
+                pose=Pose.PRONE;
             }//TODO uncoinscious 
             if(sante<=-10) st=Statut.MORT;
            
@@ -358,14 +361,11 @@ public class Soldat extends Piece {
     public int getSante() {
         return sante;
     }
-public int isLesion(){
-    int n=0;
-    for (int k = 0; k < lesion.length; k++) {
-        if(lesion[k]!=null && lesion[k].getGravite()!=Lesion.Degre.MANQUE &&
-                lesion[k].getGravite()!=Lesion.Degre.NODEGRE &&
-                lesion[k].getGravite()!=Lesion.Degre.CRITIQUE &&
-                lesion[k].getStatu()!=Statut.GRAVE_TETE)n++;
-    }
+public int isLesion(Lesion.Degre type){
+    int n=6-sante;
+    if(n>6) n=6;
+    
+    
     return n;
 }
    public int getBlindage(Corp.CorpParts part){
@@ -430,8 +430,10 @@ public int isLesion(){
         if (equipmentGen != null) {
             armeClone = new GeneriqueArme[equipmentGen.length];
             for (int a = 0; a < equipmentGen.length; a++) {
-                armeClone[a] = equipmentGen[a].cloneEquipmentGenerique();
-                if(armeUtilise.getModel()==equipmentGen[a].getModel()) s.setArmeUtilise((GeneriqueArme)equipmentGen[a]);
+                armeClone[a] = (GeneriqueEquipment)equipmentGen[a].clonerPiece();
+                if(armeUtilise!=null &&
+                   armeUtilise.getModel()==equipmentGen[a].getModel()) 
+                    s.setArmeUtilise((GeneriqueArme)equipmentGen[a]);
             }
             s.setArmeEquip(armeClone);
           
@@ -473,27 +475,32 @@ public int isLesion(){
     
     }
     int combatDistanceModifier(Soldat target,ActionType t){
-            int cDM=-isLesion();
-
+            int cDM=-isLesion(null);
+            System.out.println("1)combat distance modifier lesion:"+cDM);
             if(armeUtilise.getMF()==FeuMode.RA ) 
                 cDM=cDM-1;
             else if(armeUtilise.getMF()==FeuMode.PA)
                 cDM=cDM-3;
+            System.out.println("2)combat distance modifier arme utlise:"+cDM);
             
             if(actionActuel==ActionType.MARCHE)cDM=cDM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
             else if(actionActuel==ActionType.COURS)cDM=cDM-4;
-            
+            System.out.println("3)combat distance modifier soldat action:"+cDM);
             if(t==ActionType.FEU_VISER)cDM=cDM+1;
-
+            System.out.println("4)combat distance modifier soldat action op fire:"+cDM);
 
 
             if(pose==Piece.Pose.PRONE) cDM=cDM+1;
-            
+             System.out.println("5)combat distance modifier soldat prone:"+cDM);
             
             if(target!=null && target.getAction()==ActionType.COURS) cDM=cDM-2;
             else if(target!=null && target.getAction()==ActionType.MARCHE)cDM=cDM-1;
-            if(target!=null && target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;    
-            System.out.println("combat distance modifier "+cDM);
+            System.out.println("6)combat distance modifier targer action:"+cDM);
+            
+            if(target!=null && target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;   
+            System.out.println("7)finisce con combat distance modifier targer prone:"+cDM);
+            
+         
             return cDM;
     
     }
@@ -509,15 +516,15 @@ public int isLesion(){
 
 
 
-    public boolean isPossileDesplacer(){
+    public boolean isPossibleAction(){
         return tempDesponible>0 &&
-                !isImmobilize() &&
                 !isIncoscient() &&
-                !isKIA();
+                !isKIA() &&
+                !isChoc();
         
     }
     public boolean isPossibleCourse(){
-        return st!=Statut.GRAVE;
+        return st!=Statut.GRAVE || isImmobilize()||isKIA()||isChoc()||isIncoscient() ;
        
     }
 
@@ -527,7 +534,7 @@ public int isLesion(){
                 + "" + nom +" "+ nomDeFamilie +"";
                 
     }
-    public boolean isTempDisponiblePour(ActionType actiontype)throws Exception{
+    public boolean isTempDisponiblePour(ActionType actiontype)throws ModeDeFeuException{
         int baseTempDisponible=tempNecessarieDesActionBase(actiontype);
         return (tempDesponible>=baseTempDisponible);
         
@@ -552,9 +559,22 @@ public int isLesion(){
             throw new KilledSoldatException();
         }
         else if(st==Statut.CRITIQUE ){
-           throw new ImmobilzedSodlatException();
+            //Immobilized he cannot move he can fire ..bandage and ..boohhh
+            if(act.getType()==ActionType.MARCHE ||
+                act.getType()==ActionType.COURS ||
+                    act.getType()==ActionType.LEVER||
+                    act.getType()==ActionType.MONTER
+                    )throw new ImmobilzedSodlatException();
+            else super.addAction(act);
         }else if(st==Statut.GRAVE_TETE  ){
-            throw new ImmobilzedSodlatException();
+            if(incoscient) throw new IncoscientSoldatException();
+            else if(act.getType()==ActionType.MARCHE ||
+                act.getType()==ActionType.COURS ||
+                    act.getType()==ActionType.LEVER||
+                    act.getType()==ActionType.MONTER
+                    )
+                throw new ImmobilzedSodlatException();
+            else super.addAction(act);
         }else if(st==Statut.GRAVE){
             if(act.getType()==ActionType.COURS ||
                     act.getType()==ActionType.SAUT)
@@ -568,6 +588,8 @@ public int isLesion(){
             super.addAction(act);
             
         }else if(st==Statut.GRAVE_BRASE_GAUCHE){
+            if (this.actionsPool.size() > 1) 
+                throw new UnActionSoldatException();            
             super.addAction(act);
         }else super.addAction(act);
         
@@ -585,10 +607,13 @@ public int isLesion(){
    }
    //TODO riguardare le regole
    public void shellShockTest(){
-       choc= boss.dice(10)<=moral;//TODO vedere i modificatori di morale
+       choc= !(boss.dice(10)<=moral);//TODO vedere i modificatori di morale
+       if(!choc) System.out.println(this.toStringSimple()+" CHOC  passed");
+       else System.out.println(this.toStringSimple()+" CHOC not passed");
    }
 
    public boolean isKIA(){
+       
    return sante<=-10|| st==Statut.MORT;
    
    }
@@ -601,13 +626,12 @@ public int isLesion(){
     }
 
 @Override
-    public int tempNecessarieDesActionBase(ActionType actionType)throws Exception{
+    public int tempNecessarieDesActionBase(ActionType actionType)throws ModeDeFeuException{
         int apbase=-1;
-        if(actionType==ActionType.FEU  ||
-                actionType==ActionType.OCCASION_DE_FEU ) 
+        if(armeUtilise!=null && actionType.isFeuAction() ) 
             apbase=this.armeUtilise.fireTempNecessarie(); 
         else apbase=actionType.TN();
-        if(isDoubled())apbase=apbase*2;
+        if(isDoubled() && actionType.isMovementAction() )apbase=apbase*2;
         return apbase;
     }
 
@@ -616,32 +640,43 @@ public int isLesion(){
    public void resetRondCheck(){
        this.objective=false;
        this.active=false;
-       this.choc=false;
        this.actionActuel=ActionType.PA_ACTION;
        
 
    }
-   public void inconscentTache(){
+   public void inconscentTetst(){
     int roll=boss.dice(10);
-    int n=sante;
-    if(roll<=sante) incoscient=false;
-    if(incoscient && !survrivetest()) {
-         sante=sante-1;
-         System.out.println(toStringSimple()+"-1 sante per test inconscient");
-    }else if(incoscient )System.out.println(toStringSimple()+"  test incoscient passed");
-    
-    
+    if(roll<=sante) {
+        incoscient=false;
+        System.out.println(this.toStringSimple() +" INCOSCINET PASSED IS ALIVE");
+        return ;
+    }else System.out.println("Incosciente not passed");
    }
-   public void bleedingTache(){
-       if(isBleading() && !bandage && !survrivetest()){
+    public void incoscientBleedingTest(){
+          boolean surv=survriveTest();
+          if(!surv) sante=sante-1;
+  
+   }
+   
+   public boolean isBandage(){
+       boolean bandage=true;
+       for(int k=0;k<lesion.length;k++)
+          if(lesion[k]!=null) bandage=bandage && lesion[k].isBandage();
+       return bandage;
+   }
+   public void bleedingTest(){
+        boolean surv=survriveTest();
+        if(!surv){
            sante=-10;
            st=Statut.MORT;
-           System.out.println(toStringSimple()+"MORTO PER TEST DI SOPRAVVIVENZA");
-       }else if(isBleading())System.out.println(toStringSimple()+" bleding test passed");
-      
-   
+           System.out.println(toStringSimple()+" MORTO PER TEST DI SOPRAVVIVENZA");
+       }else{
+           sante--;
+           if(sante<=0) st=Statut.INCONSCENT;
+           System.out.println(toStringSimple()+" bleding test passed, not die but sante -1");
+       }
    }
-   public boolean survrivetest(){
+   public boolean survriveTest(){
        int roll=boss.dice(10);
        int targetN=10+sante;
        return roll<=targetN;

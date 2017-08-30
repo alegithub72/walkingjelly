@@ -30,6 +30,7 @@ public class LesionEstimation {
           System.out.println(" position "+n+" , gravie"+m);
          CorpParts position=null;
          int blessure=0;
+         boolean bandage=true;
          Degre gravite=Degre.NODEGRE;
           Statut st=Statut.NORMAL;
         if(n==1 ) position=CorpParts.Tete;
@@ -44,12 +45,14 @@ public class LesionEstimation {
              blessure= estimation[position.ordinal()][Degre.CRITIQUE.ordinal()];
              gravite=Degre.CRITIQUE;
              st=Statut.CRITIQUE;
+             bandage=false;
           
          }
             else if(m>=1 && m<=2) {
                 blessure= estimation[position.ordinal()][Degre.GRAVE.ordinal()];
                 gravite=Degre.GRAVE;
                 st=Statut.GRAVE;
+                bandage=false;
 
             }
             else if(m>=3 && m<=5){
@@ -70,7 +73,9 @@ public class LesionEstimation {
         if(gravite==Degre.GRAVE && position==CorpParts.BrasGauche)
             st=Statut.GRAVE_BRASE_GAUCHE;
         
-       return new Lesion(position, gravite,blessure,st,turn);
+       Lesion l =new Lesion(position, gravite,blessure,st,turn);
+       l.setBandage(bandage);
+       return l;
       }
       
                           
