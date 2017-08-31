@@ -19,12 +19,12 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     public static int  MENU_H=100;
     public static int MENU_W=100;
     ActionType actionType;
-    MenuImageChargeur menuImgChgr;
     public MenuItem(ActionType type){
-    super(MENU_W,MENU_H,null,null);
-    menuImgChgr=MenuImageChargeur.geInstance();
-    buildFrameImages(menuImgChgr.getImage(type));
-    actionType=type;
+        super(MENU_W,MENU_H,null,null);
+        if(type!=null){
+            buildFrameImages(MenuImageChargeur.getImageMenu(type));
+            actionType=type;
+        }
     }
     public void press(){
         setFrame(1);
@@ -48,4 +48,5 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     return this.getChildren();
     }
     public abstract  BaseAction buildMenuItemAction();
+    public abstract int changeStates(int n);
 }

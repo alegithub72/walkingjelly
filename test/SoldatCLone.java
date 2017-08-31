@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import org.junit.After;
@@ -40,8 +41,8 @@ public class SoldatCLone {
     }
 @Test
 public void testCloneSoldat(){
-    Piece p=s.clonerPiece();
-    assertEquals(s.toString(),p.toString());//TODO increase of  variable on the tostring method
+    GeneriquePiece p=s.clonerPiece();
+    assertEquals(s.toStringSimple(),p.toStringSimple());//TODO increase of  variable on the tostring method
 }
 
 

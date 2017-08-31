@@ -32,5 +32,10 @@ public class WalkItem extends SoldatMenuItem{
         
     }
         public static void main(String[] args) {}
+
+    @Override
+    public int changeStates(int n) {
+       return-1;
+    }
     
 }

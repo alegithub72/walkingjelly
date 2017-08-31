@@ -25,5 +25,10 @@ public class OpFeuItem extends SoldatMenuItem{
        BaseAction act=new BaseAction(ActionType.PA_ACTION, -1, -1, -1, -1, fxs.getSoldat(), null);
        return act;
     }
+
+    @Override
+    public int changeStates(int n) {
+        return-1;
+    }
     
 }

@@ -40,7 +40,7 @@ public class M16 extends GeneriqueArme{
     
     }
 
-
+    
     
 
 }

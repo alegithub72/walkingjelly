@@ -43,13 +43,13 @@ public class Soldat extends Piece {
 
     public static final int FULL_SANTE=6;
     public enum Statut{NORMAL("Saine"),MANQUE("Manque"),LEGER_BLESSE("Legger blesse"),GRAVE("Grave"),GRAVE_TETE("Grave alla tete"),
-    GRAVE_BRASE_DROITE("Grave brase droite"),GRAVE_BRASE_GAUCHE("Grave base gauche"),CRITIQUE("Critique"),INCONSCENT("Incoscient"),MORT("Mort");
-    public String mes;
-    Statut(String mes){
-    this.mes=mes;
+        GRAVE_BRASE_DROITE("Grave brase droite"),GRAVE_BRASE_GAUCHE("Grave base gauche"),CRITIQUE("Critique"),INCONSCENT("Incoscient"),MORT("Mort");
+        public String mes;
+        Statut(String mes){
+        this.mes=mes;
     }}    
     ActionType actionActuel=ActionType.PA_ACTION;
-    Corp blindage;
+    Corp corp;
     Lesion lesion[];
     int lesionN;
     Direction face;
@@ -98,7 +98,7 @@ public class Soldat extends Piece {
             int force,
             int courage,
             int sante,
-            Corp blindage,
+            Corp corps,
             int moral,
             int commandControler,
             Direction d,
@@ -125,7 +125,7 @@ public class Soldat extends Piece {
         choc=false;
         lesion=new Lesion[10];
         lesionN=0;
-        this.blindage=blindage;
+        this.corp=corps;
         stepScared=false;
         
     
@@ -180,6 +180,7 @@ public class Soldat extends Piece {
 
     public void blessure(Lesion l){
         Statut statutNow=l.getStatu();
+        corp.reciveBlessure(l);
         if(statutNow==Statut.CRITIQUE 
                 && l.getLocation()==Corp.CorpParts.Tete) {
             sante=-10;
@@ -230,7 +231,7 @@ public class Soldat extends Piece {
                     removeActionUpTo(tdActionRemove);
                     setStatut(statutNow);
                    
-                                   //todo drop items
+                    //todo drop items
                     //TODO remove all action except one
                     //TODO one action per turn
                 
@@ -369,8 +370,8 @@ public int isLesion(Lesion.Degre type){
     return n;
 }
    public int getBlindage(Corp.CorpParts part){
-       if(blindage!=null){
-        CorpPart p=  blindage.getCorpPart(part);
+       if(corp!=null){
+        CorpPart p=  corp.getCorpPart(part);
         System.out.println("part "+p);
         GeneriqueBlindageEquipment bli=p.getBlindage();
         System.out.println("part bli"+p.getBlindage());
@@ -419,7 +420,7 @@ public int isLesion(Lesion.Degre type){
                 this.nomDeFamilie, this.competenceArme,
                 this.connaissanceArme, this.combatRapproche,
                 this.force, this.courage, this.sante,
-                this.blindage, this.moral,
+                this.corp, this.moral,
                 this.commandControler, this.face,boss);
         s.setTempDesponible(this.tempDesponible);
         s.setI(this.getI());
@@ -477,9 +478,9 @@ public int isLesion(Lesion.Degre type){
     int combatDistanceModifier(Soldat target,ActionType t){
             int cDM=-isLesion(null);
             System.out.println("1)combat distance modifier lesion:"+cDM);
-            if(armeUtilise.getMF()==FeuMode.RA ) 
+            if(armeUtilise.getArmeFeuModel()==FeuMode.RA ) 
                 cDM=cDM-1;
-            else if(armeUtilise.getMF()==FeuMode.PA)
+            else if(armeUtilise.getArmeFeuModel()==FeuMode.PA)
                 cDM=cDM-3;
             System.out.println("2)combat distance modifier arme utlise:"+cDM);
             
@@ -522,10 +523,6 @@ public int isLesion(Lesion.Degre type){
                 !isKIA() &&
                 !isChoc();
         
-    }
-    public boolean isPossibleCourse(){
-        return st!=Statut.GRAVE || isImmobilize()||isKIA()||isChoc()||isIncoscient() ;
-       
     }
 
     @Override
@@ -648,9 +645,9 @@ public int isLesion(Lesion.Degre type){
     int roll=boss.dice(10);
     if(roll<=sante) {
         incoscient=false;
-        System.out.println(this.toStringSimple() +" INCOSCINET PASSED IS ALIVE");
+        System.out.println(this.toStringSimple() +"->INCOSCINET PASSED IS ALIVE");
         return ;
-    }else System.out.println("Incosciente not passed");
+    }else System.out.println(toStringSimple()+"->Incosciente not passed");
    }
     public void incoscientBleedingTest(){
           boolean surv=survriveTest();
@@ -755,6 +752,18 @@ public void setObjective(boolean objective) {
     
 
 }   
-   
-   
+
+    public boolean isBrasDroiteBlesse() {
+        return corp.isBrasDroiteBlesse();
+    }
+
+    public boolean isBraceGaucheBlesse() {
+        return corp.isBraceGaucheBlesse();
+    }
+
+  
+  
+  
+  
+  
 }

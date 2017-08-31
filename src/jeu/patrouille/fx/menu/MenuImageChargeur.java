@@ -14,30 +14,41 @@ import jeu.patrouille.coeur.actions.enums.ActionType;
  */
 public class MenuImageChargeur {
     
-    public static int MARCHE_IMG=0,OP_FIRE_IMG=1,RUN_IMG=2,FEU_IMG=3;
+
            ;
     Image[] menuImages;
     static MenuImageChargeur ss;
-     
+    Image[] menuImageSubType;
     
     MenuImageChargeur() {
         menuImages=new Image[ActionType.values().length];
+        menuImageSubType=new Image[2];
         menuImages[ActionType.MARCHE.ordinal()]=new Image("walkButton.png");
         menuImages[ActionType.OCCASION_DE_FEU.ordinal()]=new Image("opFireButton.png");
         menuImages[ActionType.COURS.ordinal()]=new Image("runButton.png");
         menuImages[ActionType.FEU.ordinal()]=new Image("fireButton.png");
         menuImages[ActionType.PA_ACTION.ordinal()]=new Image("arrowPng.png");
         menuImages[ActionType.BANDAGE.ordinal()]=new Image("bandageButton2.png");
-        
+        menuImageSubType[0]=new Image("BurstButton.png");
+        menuImageSubType[1]=new Image("FullAutomaticButton.png");
     }
     
     
-    
-    public  Image getImage(ActionType type){
-
+    private Image getSubTypeImage(int n){
+        return menuImageSubType[n];
+    }
+    private  Image getImage(ActionType type){
+        
         return  menuImages[type.ordinal()];
     }
-    public static MenuImageChargeur geInstance(){
+    public static Image getImageMenu(ActionType type){
+        return getInstance().getImage(type);
+    }
+    public static Image getImageMenuSubType(int n){
+        return getInstance().getSubTypeImage(n);
+    }
+    
+    private static  MenuImageChargeur getInstance(){
         if(ss==null) ss=new MenuImageChargeur();
         return ss;
         }

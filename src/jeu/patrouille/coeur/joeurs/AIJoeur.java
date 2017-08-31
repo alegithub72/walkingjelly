@@ -13,6 +13,7 @@ import jeu.patrouille.coeur.pieces.AISoldat;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.pieces.Soldat.Classment;
+import jeu.patrouille.coeur.pieces.parts.Corp;
 
 /**
  *
@@ -43,7 +44,7 @@ public class AIJoeur extends GeneriqueJoeurs{
     }
      void costruireHostile() {
         AISoldat s = new AISoldat("Leader", "Tribu ", 5, 5, 5, 4,
-                4, Soldat.FULL_SANTE, null, 7, 8,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, Corp.buildNoCorpBLindage(), 7, 8,Piece.Direction.S,this);
             GeneriqueArme a[] = {new AK74()};
             s.setArmeEquip(a);
             s.setClassement(Classment.SERGENT);
@@ -53,7 +54,7 @@ public class AIJoeur extends GeneriqueJoeurs{
         equipe[0] = s;
         
         s = new AISoldat("Militia", "Taleban A", 5, 5, 5, 4,
-                4, Soldat.FULL_SANTE, null, 7, 6,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, Corp.buildNoCorpBLindage(), 7, 6,Piece.Direction.S,this);
             GeneriqueArme a1[] = {new AK74()};
             s.setArmeEquip(a1);
             s.setClassement(Classment.SOLDAT);
@@ -64,7 +65,7 @@ public class AIJoeur extends GeneriqueJoeurs{
         equipe[1] = s;
         
         s = new AISoldat("Militia", "Taleban B", 5, 5, 5, 4,
-                4, Soldat.FULL_SANTE, null, 7, 6,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, Corp.buildNoCorpBLindage(), 7, 6,Piece.Direction.S,this);
             GeneriqueArme a2[] = {new AK74()};
             s.setArmeEquip(a2);
             s.setClassement(Classment.SOLDAT);
@@ -74,7 +75,7 @@ public class AIJoeur extends GeneriqueJoeurs{
         equipe[2] = s;
         
         s = new AISoldat("Militia", "Taleban C", 5, 5, 5, 4,
-                4, Soldat.FULL_SANTE, null, 7, 6,Piece.Direction.S,this);
+                4, Soldat.FULL_SANTE, Corp.buildNoCorpBLindage(), 7, 6,Piece.Direction.S,this);
             GeneriqueArme a3[] = {new AK74()};
             s.setArmeEquip(a3);
             s.setClassement(Classment.SOLDAT);

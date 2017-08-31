@@ -22,11 +22,12 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
     MenuItem item;  
     MenuItem mainMenu[];
     FXCarte fxcarte;
+    int n;
     public SoldatClickedOnMenuItemsEventHandler(MenuItem item,
             FXCarte fxcarte) {
     
     this.item=item;
-
+    n=0;
     this.fxcarte=fxcarte;
     }
     
@@ -41,6 +42,9 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
 
            if(!fxcarte.isFXHelperActionSeletiones()) fxcarte.clickOnButtonItems(item);
             
+        }else if(event.getButton()==MouseButton.SECONDARY){
+            n=item.changeStates(n);
+            n++;
         }
         
       

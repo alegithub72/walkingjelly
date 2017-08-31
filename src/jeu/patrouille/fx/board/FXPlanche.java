@@ -55,7 +55,6 @@ public class FXPlanche extends Application {
     Group rootScene;
     Canvas droitCanvasBar; 
     SubScene subScene;
-    boolean scroolEnd = true;
     FXCarte fxCarte;
     Label message;
     List<Sprite> fxActionsPoolSelectionee;
@@ -162,8 +161,8 @@ public class FXPlanche extends Application {
         rootScene.getChildren().add(message);
     }
     public void endTurn(){
+        fxCarte.setOnScroll(null);
         suprimerActionVisualization();
-        
         fxCarte.playTurn();
     }
     void buildTop() {
@@ -242,7 +241,7 @@ public class FXPlanche extends Application {
             spAct = new WalkItem(null);
 
         }if(act.getType()==ActionType.FEU){
-            spAct=new FeuItem(null);
+            spAct=new FeuItem(null,null);
         }
         boolean add = rootScene.getChildren().add(spAct);
         spAct.setScaleX(0.5);

@@ -16,7 +16,16 @@ import jeu.patrouille.coeur.equipments.KevlerCasqueEquipment;
 public class Corp {
     public enum CorpParts{Tete,JambeDroite,BrasGauche,BrasDroite,Ventre,Abdomen,Thorax,JambeGauche}
     CorpPart corps[]=new CorpPart[CorpParts.values().length];
-
+    public Corp(){
+        corps[CorpParts.Abdomen.ordinal()]=new CorpPart();
+        corps[CorpParts.BrasDroite.ordinal()]=new CorpPart();
+        corps[CorpParts.BrasGauche.ordinal()]=new CorpPart();
+        corps[CorpParts.JambeDroite.ordinal()]=new CorpPart();
+        corps[CorpParts.JambeGauche.ordinal()]=new CorpPart();
+        corps[CorpParts.Tete.ordinal()]=new CorpPart();
+        corps[CorpParts.Thorax.ordinal()]=new CorpPart();
+        corps[CorpParts.Ventre.ordinal()]=new CorpPart();
+    }
     public Corp(GeneriqueBlindageEquipment jambeGauche,
             GeneriqueBlindageEquipment jambeDroite,
             GeneriqueBlindageEquipment brasGauche,
@@ -46,5 +55,19 @@ public class Corp {
                 new CoverJaquetteEquipment(), new CoverJaquetteEquipment(),null);
         return c;
     } 
-            
+    public static Corp buildNoCorpBLindage(){
+        Corp c=new Corp();
+        return c;
+    }     
+    public void reciveBlessure(Lesion l){
+        //TODO aggiungere una lessione ad ogni parte del corpo
+        
+    }
+    public boolean isBrasDroiteBlesse(){
+        return this.corps[CorpParts.BrasDroite.ordinal()].isBlesse();
+    }
+    public boolean isBraceGaucheBlesse(){
+        return this.corps[CorpParts.BrasGauche.ordinal()].isBlesse();
+    
+    }
 }

@@ -328,12 +328,14 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        flagImg.toFront();
        classmentImg.toFront();
        getChildren().removeAll(blessureImg);
-       if(!s.isKIA() )   {
+       if(!s.isKIA() && s.getSante()>0 )   {
            int blN=s.isLesion(Lesion.Degre.LEGER);
         for(int n=0;n<blN;n++){
             blessureImg[n] = new ImageView("wound.png");
-            blessureImg[n].setTranslateX(n*10);
-            blessureImg[n].setTranslateY(FXCarte.TILE_SIZE - 10);
+            if(n>=3)blessureImg[n].setTranslateX((n-3)*10);
+            else blessureImg[n].setTranslateX(n*10);
+            if(n<3)blessureImg[n].setTranslateY(FXCarte.TILE_SIZE - 10);
+            else blessureImg[n].setTranslateY(FXCarte.TILE_SIZE - 20);
             blessureImg[n].toFront();
             getChildren().add(blessureImg[n]);
 
@@ -445,7 +447,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 setW(100);
                 Image img = new Image("feritoUS.png");
                 buildFrameImages(img);
-                setFrame(5);
+                setFrame(2);
             }
             this.stImage=Soldat.Statut.INCONSCENT;
             break;
@@ -471,7 +473,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 buildFrameImages(img);
                 setFrame(3);
                 feu1 = 4;
-                feu2 = 6;
+                feu2 = 5;
                 initialAngle=0;
             } else {
                 setW(100);
@@ -576,7 +578,9 @@ public void updateBlesseImage(Soldat.Statut statut){
     
   void playBlessedAnim(){
       buildBlessAnim();
-      imgView.setTranslateX(-25);
+      if(s.getStatu()!=Soldat.Statut.MORT &&
+              s.getStatu()!=Soldat.Statut.GRAVE_TETE) 
+          imgView.setTranslateX(-25);
       //imgView.setTranslateY(25);
       setFXSoldatOrientation(Math.random()*360 );
       frameAnimTimer[0].start();

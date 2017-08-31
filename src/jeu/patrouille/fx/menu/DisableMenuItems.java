@@ -28,5 +28,13 @@ public class DisableMenuItems extends SoldatMenuItem{
        BaseAction act=new BaseAction(ActionType.PA_ACTION,-1, -1, -1, -1, fxs.getSoldat(), null);
        return act;
     }
+
+    @Override
+    public int changeStates(int n) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return -1;
+    }
+
+
     
 }

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import javafx.application.Platform;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.actions.exceptions.MakeActionFailException;
@@ -361,7 +362,7 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
        if(!s.isImmobilize() && a.getType()==ActionType.MARCHE ){
            makeMarcheAction(s, a);
        }else if (a.getType() == ActionType.FEU) 
-                           makeFeuAction(td, a);
+                           makeFeuAction(td,(FeuAction) a);
        return a.clone();
    }
     private boolean allAnimOn(){
@@ -471,13 +472,15 @@ private    void reMountMenuItemsAndScroll(){
     }    
 
 
-        public void makeFeuAction(int td,BaseAction act)throws MakeActionFailException {
+        public void makeFeuAction(int td,FeuAction act)throws MakeActionFailException {
             try{
             System.out.println("*************************FEUUUU MAKE*****************************");
             Soldat s=(Soldat)act.getProtagoniste();
+       
+            if(s.getArmeUtilise()!=null)s.getArmeUtilise().changeModeFeu(act.getMode());
             Soldat target=(Soldat)act.getAntagoniste();
             int i1=act.getI1(),j1=act.getJ1();
-            
+            System.out.println(s.toStringSimple()+" soldat make feu---> "+((target!=null)?target.toStringSimple():""));
             //TODO generalizzare in FXcarte....
             int score=s.fire(act);
             System.out.println("score ="+score);
@@ -503,11 +506,13 @@ private    void reMountMenuItemsAndScroll(){
                 
                 int armorCheck=bli+arm.getEMB();
                 int armorRoll=s.getBoss().dice(10);
-                System.out.println("cover passed="+coverBool +" armorROLL<=armorCheck "
-                        +armorRoll+"<="+armorCheck+" armor check= "+(bli>0 ));
-                if(((armorRoll==1 && armorRoll<=armorCheck )|| bli==0)&& coverBool
-                        ) {
-                    System.out.println("--PASSED--->"+l);
+                boolean armorPassed=true;
+                if(bli>0) armorPassed=(armorRoll<=armorCheck)|| (armorRoll==1) ;
+                
+                System.out.println("Terrain cover is passed="+coverBool +" armorROLL<=armorCheck "
+                        +armorRoll+"<="+armorCheck+" boolean:"+armorPassed );
+                if( armorPassed && coverBool) {
+                    System.out.println(target.toStringSimple()+":-RECIVE--->"+l);
                     llist[sc]=l;
                 }else System.out.println("---->NOT PASSED");
                 

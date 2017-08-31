@@ -14,10 +14,14 @@ import jeu.patrouille.coeur.equipments.GeneriqueBlindageEquipment;
 public class CorpPart {
 
     private GeneriqueBlindageEquipment blindage;
-    Lesion l;
+    Lesion.Degre d;
+    public CorpPart(){
+        blindage=null;
+        d=null;
+    }
     public CorpPart(GeneriqueBlindageEquipment bl){
     this.blindage=bl;
-    l=null;
+    d=null;
     }
 
     public GeneriqueBlindageEquipment getBlindage() {
@@ -26,9 +30,11 @@ public class CorpPart {
 
     @Override
     public String toString() {
-        return "CorpPart{" + "blindage=" + blindage + ", l=" + l + '}';
+        return "CorpPart{" + "blindage=" + blindage + ", degreee=" + d + '}';
     }
-    
+    public boolean isBlesse(){
+        return d==Lesion.Degre.GRAVE || d==Lesion.Degre.CRITIQUE;
+    }
     
     
 }

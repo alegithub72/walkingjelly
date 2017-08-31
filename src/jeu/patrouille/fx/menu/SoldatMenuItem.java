@@ -20,7 +20,7 @@ public abstract class SoldatMenuItem extends MenuItem{
     public FXSoldat getFXSoldat() {
         return fxs;
     }
-    
-    
+     public abstract int changeStates(int n);
+       
     
 }

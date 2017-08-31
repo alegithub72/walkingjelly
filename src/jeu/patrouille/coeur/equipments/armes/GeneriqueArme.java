@@ -74,7 +74,18 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         this.coverPenetration[Terrain.Consistance.DUR.ordinal()] =NOTVALUE;
     }
 
-
+    public FeuMode[] armeFeuModeDisponible(){
+        int n=0;
+        for(int h:shotNumMF) if(h!=NOTVALUE) n++;
+        FeuMode[] list=new FeuMode[n];
+        for(int k=0 ;k<shotNumMF.length;k++) 
+            if(shotNumMF[k]!=NOTVALUE) 
+                list[--n]=FeuMode.values()[k];
+        
+        return list;
+    
+    }   
+    
     // public abstract void loadMagazine();
     public int getEDP() {
         return evaluateDamagePotentiel;
@@ -111,14 +122,13 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         modefeu = f;
     }
 
-    public FeuMode getMF() {
-        return modefeu;
-    }
+
     
 
 
     public int hitsNumMF(double dist) throws ModeDeFeuException {
         int sn = NOTVALUE;
+        System.out.println(" mode defeu:" +modefeu);
         sn = shotNumMF[modefeu.ordinal()];
         
         if (sn == NOTVALUE) {

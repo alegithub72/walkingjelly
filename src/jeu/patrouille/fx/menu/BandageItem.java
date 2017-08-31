@@ -26,5 +26,8 @@ public class BandageItem extends SoldatMenuItem{
         return act;//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    
+    @Override
+    public int changeStates(int n) {
+        return -1;
+    }    
 }

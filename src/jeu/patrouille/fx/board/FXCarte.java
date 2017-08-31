@@ -24,6 +24,7 @@ import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
@@ -1197,15 +1198,15 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             double r= (2 * Math.PI) / 8;
             sfx.selectioneFXSoldat();
             Soldat s=sfx.getSoldat();
-            if (s.isPossibleAction() ) {
             
-          
+            if (s.isPossibleAction() ) {
             
             buildMarcheMenuItem(sfx,spritecoord2D.getX(),spritecoord2D.getY());
             buildCoreurMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildOpFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildBandageMenuItem(sfx, spritecoord2D.getX(), spritecoord2D.getY(), r);
+          //  buildBurstFeuMenuItem(sfx, spritecoord2D.getX(), spritecoord2D.getY(), r);            
             //rootGroup.getChildren().add(l);
 
             visualizeBarSoldatAction();
@@ -1408,7 +1409,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
                 m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
                 actionMenu[1] = m;     
                 Soldat s=sfx.getSoldat();
-                if(!s.isPossibleCourse()   && s.isTempDisponiblePour(ActionType.COURS)){
+                if(s.isImmobilize() && !s.isTempDisponiblePour(ActionType.COURS)){
                     m.setEffect(new GaussianBlur());
                     m.setOnMouseClicked(null);
                 }
@@ -1433,18 +1434,23 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
                 m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
                 actionMenu[4] = m;     
                 Soldat s=sfx.getSoldat();
-                if(!s.isPossibleCourse()   && s.isTempDisponiblePour(ActionType.COURS)){
+                if( ( s.isBraceGaucheBlesse() &&
+                        s.isBrasDroiteBlesse() )
+                        || !s.isTempDisponiblePour(ActionType.BANDAGE)){
                     m.setEffect(new GaussianBlur());
                     m.setOnMouseClicked(null);
                 }
            }catch(ModeDeFeuException ex){
+               ex.printStackTrace();
                throw new RuntimeException(ex);
            }
     
     }   
+   
+     
     private void buildFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws ModeDeFeuException {
         
-            MenuItem m = new FeuItem(sfx);
+            MenuItem m = new FeuItem(sfx,GeneriqueArme.FeuMode.SC);
             double x = (100 * Math.cos(2 * grad));
             double y = (100 * Math.sin(2 * grad));
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
@@ -1459,7 +1465,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
                 m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
             actionMenu[2] = m;    
             Soldat s=sfx.getSoldat();
-            if(!s.isTempDisponiblePour(ActionType.FEU)){
+            if(!s.isTempDisponiblePour(ActionType.FEU) ){
                 m.setEffect(new GaussianBlur());
                 m.setOnMouseClicked(null);
             }

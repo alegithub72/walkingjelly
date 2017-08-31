@@ -25,6 +25,11 @@ public class RunItem extends SoldatMenuItem{
     public BaseAction buildMenuItemAction() {
     return null;
     }
+
+    @Override
+    public int changeStates(int n) {
+        return-1;
+    }
     
     
 }

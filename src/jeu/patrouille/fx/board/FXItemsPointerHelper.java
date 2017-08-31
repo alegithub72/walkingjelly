@@ -121,7 +121,7 @@ public class FXItemsPointerHelper {
      BaseAction last=null;
       for (int h=0;h<size;h++){
           BaseAction act1=s.nextAction(h);
-          if(act.getType().isMovementAction()) last=act1;
+          if(act1.getType().isMovementAction()) last=act1;
       }
           
       if(last!=null) return last.getJ1();
@@ -134,9 +134,10 @@ public class FXItemsPointerHelper {
      BaseAction last=null;
       for (int h=0;h<size;h++){
           BaseAction act1=s.nextAction(h);
+          //System.out.println(s.toStringSimple()+":the action action of -->"+ act1.toString());
           if(act1.getType().isMovementAction()) last=act1;
       }
-          
+      //System.out.println("last action -->"+ ((last!=null)?last.toString():"null"));
       if(last!=null ) return last.getI1();
       else return s.getI();
 

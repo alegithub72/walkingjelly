@@ -6,6 +6,7 @@
 package jeu.patrouille.coeur.actions;
 
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 
@@ -15,8 +16,11 @@ import jeu.patrouille.coeur.pieces.Soldat;
  */
 public class FeuAction extends BaseAction{
     double angle;
-    public FeuAction(Piece protagoniste,Piece antagonieste){
+    GeneriqueArme.FeuMode mode;
+    public FeuAction(Piece protagoniste,Piece antagonieste,GeneriqueArme.FeuMode mode){
         super(ActionType.FEU, -1, -1,-1, -1, protagoniste, antagonieste);
+        this.mode=mode;
+        
       // dist= Carte.distance(protagoniste.getI(), this.protagoniste.getJ(), i1, j1, FXCarte.TILE_SIZE);
     }
 
@@ -47,6 +51,10 @@ public class FeuAction extends BaseAction{
 
     public double getAngle() {
         return angle;
+    }
+
+    public GeneriqueArme.FeuMode getMode() {
+        return mode;
     }
     
      
