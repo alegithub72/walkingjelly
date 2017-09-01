@@ -169,8 +169,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         closeFXCarteMenuItems();
         setOnMouseMoved(null);
         setOnMouseClicked(null);
+        setOnScroll(null);
+        deselectionneAllSoldats();
         removeMenuItemsMenuOnFXUSEquipe();
         removeMenuItemsonFXHostileEquipe();
+        
         mj.debutRond();
         
     }
@@ -362,14 +365,8 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
  synchronized public void confirmMarcheActionCommand(MenuItem item, double mousex, double mousey)throws Exception {
 
-        double x = mousex;
-        double y = mousey;
-        double tmpI = (y / FXCarte.TILE_SIZE);
-        double tmpJ = (x / FXCarte.TILE_SIZE);
-        System.out.println(x + "," + y);
-        int i1 = ((int) tmpI) + posI;
-        int j1 = ((int) tmpJ) + posJ;
-        System.out.println(fxIMHelper.getSeletctionee()+" walk here i1=" + i1 + " j1=" + j1);
+        PointCarte p=getIJAbsoluteCoord(mousex, mousey);
+        //System.out.println(fxIMHelper.getSeletctionee()+" walk here i1=" + i1 + " j1=" + j1);
 
         removeDisplayRange();
 
@@ -379,15 +376,15 @@ private boolean isScrollAreaChanged(int i1,int j1){
             
             BaseAction act=  item.buildMenuItemAction();
             addHelperInstance(act);
-            fxIMHelper.setArrivalCarteCoord(i1, j1);
+            fxIMHelper.setArrivalCarteCoord(p.getI(),p.getJ());
             fxIMHelper.addActionToSoldat();
-
+            Soldat s=fxIMHelper.getSeletctionee();
             imprimerFXHelperSoldatProfile();
             fxpl.visualizeActionBarActual();
             closeFXCarteMenuItems();
             //buildFXCarteMenuItems();
             //fxcarte.buildMenuItem((FXSoldat)item.getFXSoldat());
-            fxpl.sendMessageToPlayer(fxIMHelper.toString());
+            fxpl.sendMessageToPlayer(s.toStringSimple()+" " +fxIMHelper.toString());
             //resetFXCarteHelperAction();
          
 
@@ -460,6 +457,14 @@ private boolean isScrollAreaChanged(int i1,int j1){
             setFXCarteCursor(Cursor.HAND);
             fxpl.sendMessageToPlayer("Choisir an Ojective");
             closeFXCarteMenuItems();
+        }else if(act.getType()==ActionType.BANDAGE){
+            addHelperInstance(act);
+            fxIMHelper.setActionSeletione(true);
+            setOnMouseClicked(null);
+            setOnMouseMoved(new ItemMenuRangeDisplayHandler(this, item.getActionType()));
+            closeFXCarteMenuItems();
+            setFXCarteCursor(Cursor.HAND);
+            fxpl.sendMessageToPlayer("Bandage yourself or a close teammate to you");
         }
 
     }
@@ -531,18 +536,13 @@ private boolean isScrollAreaChanged(int i1,int j1){
         CursorHelper c=fxIMHelper.getDisplayRange();
         if(!rootGroup.getChildren().contains(c))
             rootGroup.getChildren().add(c);          
-
         int i=(int)(mousey/FXCarte.TILE_SIZE);
         int j=(int)(mousex/FXCarte.TILE_SIZE);
         double xgrid=(j*FXCarte.TILE_SIZE);
         double ygrid=(i*FXCarte.TILE_SIZE);        
         c.setTranslateX(xgrid);
         c.setTranslateY(ygrid);
-        c.toFront();
-
-            
-        
-    
+        c.toFront();                        
     }
 
 
@@ -608,59 +608,21 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     public synchronized void displayMarcheRangeAction(double mousex, double mousey) {
 
-        
-       // visualizeFXCarteDisplayRange(mousex, mousey);
 
-        int mapLastActI = fxIMHelper.mapLastI();
-        int mapLastActJ = fxIMHelper.mapLastJ();
-        double mapLastActy = (mapLastActI * FXCarte.TILE_SIZE)+(TILE_SIZE/2);
-        double mapLastActx = (mapLastActJ * FXCarte.TILE_SIZE)+(TILE_SIZE/2);
-        System.out.println(" (mapLastActI,mapLastActJ)=" + mapLastActI + "," + mapLastActJ);
-        int posi = posI;
-        int posj = posJ;
+        Soldat s=fxIMHelper.getSeletctionee();
+        double dpixel=displayGraficRangeHelper(mousex, mousey,Color.WHITE);
         
-        System.out.println(" (posi,posj)=" + posI + "," + posJ);
+        double inch=(dpixel*INCHxPIXEL);
+        PointCarte p=getIJAbsoluteCoord(mousex, mousey);
+        fxIMHelper.setArrivalCarteCoord(p.getI(), p.getJ());
 
-        //TODO usare scrollmousej, and scrollMouei per verificare la validita del percorso
-        int scrollMousej = (int) (mousex / FXCarte.TILE_SIZE);
-        int scrollMousei = (int) (mousey / FXCarte.TILE_SIZE);
-        
-        fxIMHelper.setArrivalCarteCoord(scrollMousei+posI, scrollMousej+posJ);
-       
-
-        double mouseMapx = ((scrollMousej + posj) * FXCarte.TILE_SIZE)+(TILE_SIZE/2);
-        double mouseMapy = ((scrollMousei + posi) * FXCarte.TILE_SIZE)+(TILE_SIZE/2);
-
-        double circleX = Math.pow(mouseMapx - mapLastActx, 2);
-        double circleY = Math.pow(mouseMapy - mapLastActy, 2);
-        double r = Math.sqrt(circleX + circleY);
-
-        double relativex = relativeJ(mapLastActJ) * FXCarte.TILE_SIZE + (TILE_SIZE/2);
-        double relativey = relativeI(mapLastActI) * FXCarte.TILE_SIZE +(TILE_SIZE/2);
-        System.out.println("relativex,relativey " + relativex + "," + relativey);
-        GraphicsContext g=activeCanvas().getGraphicsContext2D();
-        //g.setLineWidth(10);
-        g.setStroke(Color.FLORALWHITE);
-        
-        g.setLineJoin(StrokeLineJoin.ROUND);
-        g.setLineDashes(null);
-      
-        g.strokeLine(
-                relativex,
-                relativey,
-                (scrollMousej * FXCarte.TILE_SIZE) + 25,
-                (scrollMousei * FXCarte.TILE_SIZE) + 25);
-        
-        double angle =FXCarte.angleRotation(
-                relativex, 
-                relativey, 
-                (scrollMousej * FXCarte.TILE_SIZE) + 25, 
-                (scrollMousei * FXCarte.TILE_SIZE) + 25);
-        Soldat sold=fxIMHelper.getSeletctionee();
+        double angle=angleDisplayRange(mousex, mousey);
         fxIMHelper.getFXSoldatSelectionee().setFXSoldatOrientation(angle);
-       //TODO mettere una variabile per debug
+
+        
         PointCarte obst=fxIMHelper.carteValiderRoute();
-        if (  fxIMHelper.isDistanceLessMarcheMax(r)
+        
+        if (  s.isDistanceLessMarcheMax(inch)
                 && obst==null ) {
             fxIMHelper.setCommanNotvalid(false);
             setFXCarteCursor(Cursor.HAND);
@@ -668,88 +630,129 @@ private boolean isScrollAreaChanged(int i1,int j1){
             resetCursorHelper();
             fxpl.sendMessageToPlayer("");
             visualizeRangePointers(mousex, mousey);
-            System.out.println("raggio---->" + r);
-            System.out.println("angle------------------------------------------>"+angle);
+
+           
         } else {
             removeDisplayRange();
             fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             fxIMHelper.setCommanNotvalid(true);
             if(obst!=null) fxpl.sendMessageToPlayer("Obstacole sur sentier: "+obst.getI()+","+obst.getJ());
             visualizeRangePointers(mousex, mousey);
-            System.out.println("Horse de Rayon---->" + r);
+            System.out.println("---->out of range<----");
         }
-        
+        System.out.println("distance"+(inch*1.8280)+" metri o inches:"+inch+" pixel"+dpixel );
+        System.out.println("angle------------------------------------------>"+angle);        
     }
     
-    @Deprecated
-    public static double angleRotation2(double x0,double y0,double x1,double y1){
-        Point2D pv=new Point2D(x0, y0);
-        Point2D p0=new Point2D(0, y0);
-        Point2D p1=new Point2D(x1, y1);
-        if((y1-y0)<0 && (x1-x0)<0) 
-            return pv.angle(p0, p1)-90;
-        else if((y1-y0)<0 && (x1-x0)>0)
-            return pv.angle(p0, p1)-90;        
-        else  if((y1-y0)>0 && (x1-x0)>0 ) return (180-pv.angle(p0, p1))+90;
-        else if((y1-y0)>0 && (x1-x0)<0) return -pv.angle(p0,p1)-90;
-        else if((x1-x0)==0 && (y1-y0)<0) return pv.angle(p0,p1)-90;
-        else if((x1-x0)==0 && (y1-y0)>0) return -pv.angle(p0,p1)-90;
-        else if((y1-y0)==0 && (x1-x0)>0) return pv.angle(p0,p1)-90;
-        else if((y1-y0)==0 && (x1-x0)<0)return pv.angle(p0,p1)-90;
-        return pv.angle(p0,p1);
-      
-            
-    }
+
     public static double  angleRotation(double x0,double y0,double x1,double y1){
-        System.out.println("x0,y0="+x0+","+y0+" x1,y1="+x1+","+y1);
+        
         double x$=x1-x0,y$=y1-y0;
         double angle=0;
         if(x$==0 && y$>0)  angle=90; 
-        else if(x$==0 && y$<0)  angle=(270);
-        else if(x$==0 && y$>0) angle =0;
-        else if(x$>0  && y$>=0) angle=Math.toDegrees( Math.atan(y$/x$));
-        else if(x$>0 && y$<0)  angle= Math.toDegrees(Math.atan(y$/x$));
+        else if(x$==0 && y$<=0)  angle=(270);
+        else if(y$==0 && x$<=0) angle=180;
+        else if(x$>0  && y$>0) angle=Math.toDegrees( Math.atan(y$/x$));
+        else if(x$>0 && y$<0)  angle= 90-Math.abs(Math.toDegrees(Math.atan(y$/x$)))+270;
         else if(x$<0 && y$>0) angle= (90-Math.abs(Math.toDegrees(Math.atan(y$/x$))))+90;
-        else if(x$<0 && y$<=0) angle= Math.toDegrees(  Math.atan(y$/x$)+(Math.PI));
+        else if(x$<0 && y$<0) angle= Math.toDegrees(  Math.atan(y$/x$))+180;
+        
+        System.out.println("x0,y0="+x0+","+y0+" x1,y1="+x1+","+y1);
+        System.out.println(" x$,y$ "+x$+","+y$ );
             return angle;
     
     }
-    public synchronized void displayFeuRangeAction(double mousex, double mousey) {
-        int i=(int)(mousey/FXCarte.TILE_SIZE);
-        int j=(int)(mousex/FXCarte.TILE_SIZE);
-        double xgrid=(j*FXCarte.TILE_SIZE);//x1 monitor
-        double ygrid=(i*FXCarte.TILE_SIZE);//y1 monitor
-        fxIMHelper.getFXSoldatSelectionee().feuFrame();
-        Soldat s=fxIMHelper.getSeletctionee();
+    
+    PointCarte getSceneIJCoord(double x,double y){
+            int i=(int)(y/TILE_SIZE);
+            int j=(int)(x/TILE_SIZE);
+            return new PointCarte(i, j);
+    }
+    Point2D getSceneGridCoord(double x,double y) {
+            PointCarte p=getSceneIJCoord(x, y);
+            double xgrid=(p.getJ()*TILE_SIZE)+(TILE_SIZE/2);//x1 monitor
+            double ygrid=(p.getI()*TILE_SIZE)+(TILE_SIZE/2);//y1 monitor
+            Point2D gridP=new Point2D(xgrid, ygrid);
+        return gridP;
         
-        int lasti=mapLastI();
-        int lastj=mapLastJ();
+    }
+    PointCarte getIJAbsoluteCoord(double x, double y){
+            PointCarte sceneIJ=getSceneIJCoord(x, y);
+            return new PointCarte(sceneIJ.getI()+posI,sceneIJ.getJ()+posJ);
 
-        double x0=(lastj*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y0=(lasti*FXCarte.TILE_SIZE)+(TILE_SIZE/2);
-        double x1=((j+posJ)*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y1=(FXCarte.TILE_SIZE*(i+posI))+(TILE_SIZE/2);
-        double protx=(relativeJ(lastj)*TILE_SIZE)+(TILE_SIZE/2);//x0 monitor
-        double proty=(relativeI(lasti)*TILE_SIZE)+(TILE_SIZE/2);//y0 monitor        
+    }
+    Point2D getXYCarteAbsoluteCoord(int i,int j){
+        double x=j*TILE_SIZE+TILE_SIZE/2;
+        double y=i*TILE_SIZE+TILE_SIZE/2;
+        return new Point2D(x, y);
+    
+    }
+    Point2D getXYSceneAbsoluteCoord(double x,double y){
+        PointCarte pAbs=  getIJAbsoluteCoord(x, y);
+        double absX=pAbs.getJ()*TILE_SIZE+TILE_SIZE/2;
+        double absY=pAbs.getI()*TILE_SIZE+TILE_SIZE/2;
+        Point2D p=new Point2D(absX,absY);
+        return p;
+    
+    }
+    Point2D getOutSceneGridCoord(int i,int j){
+        double transX=(relativeJ(j)*TILE_SIZE)+(TILE_SIZE/2);
+        double transY=(relativeI(i)*TILE_SIZE)+(TILE_SIZE/2);
+        return new Point2D(transX, transY);
+    
+    }
+    void drawRangeDisplayLine(int i ,int j,double x,double y,Color c){
+        Point2D outXY=getOutSceneGridCoord(i, j);
+        Point2D gridXY=getSceneGridCoord(x, y);
         GraphicsContext gc =activeCanvas().getGraphicsContext2D();
-        gc.setStroke(Color.RED);
+        gc.setStroke(c);
         gc.setLineJoin(StrokeLineJoin.BEVEL);
         gc.setLineDashes(4,4);
         gc.setLineCap(StrokeLineCap.ROUND);        
-       // gc.strokeLine(x0, y0, x1,y1);
-        gc.strokeLine(protx, proty, xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
-        //Point2D p0=new Point2D(protx, proty);
-        Point2D p0=new Point2D(x0, y0);
-        double dpixel= p0.distance(x1, y1);
+        gc.strokeLine(outXY.getX(), outXY.getY(), gridXY.getX(), gridXY.getY());
+    }
+    
+    double displayGraficRangeHelper(double x,double y,Color c){
+        
+        int lasti=mapLastI();
+        int lastj=mapLastJ();
+        Point2D absXY1=getXYSceneAbsoluteCoord(x, y);
+        Point2D absXY2=getXYCarteAbsoluteCoord(lasti, lastj);
+        
+        double dpixel= absXY1.distance(absXY2.getX(), absXY2.getY());
         //double dpixel= p0.distance(xgrid+(TILE_SIZE/2), ygrid+(TILE_SIZE/2));
-        double angle=FXCarte.angleRotation(x0, y0, x1,y1);
-        fxIMHelper.getFXSoldatSelectionee().setFXSoldatOrientation(angle);
+        drawRangeDisplayLine(lasti, lastj, x, y,c);
+        return dpixel;
+    
+    }
+    double angleDisplayRange(double x,double y){
+        Point2D  gridXY1=getXYCarteAbsoluteCoord(mapLastI(), mapLastJ());
+        Point2D gridXY2=getXYSceneAbsoluteCoord(x, y);
+        double angle=FXCarte.angleRotation(gridXY1.getX(),gridXY1.getY(), gridXY2.getX(),gridXY2.getY());
+        System.out.println(" angle "+angle);
+        return angle;
+    }
+    
+    public synchronized void displayFeuRangeAction(double mousex, double mousey) {
+
+
+        fxIMHelper.getFXSoldatSelectionee().feuFrame();
+        Soldat s=fxIMHelper.getSeletctionee();
+        double dpixel=displayGraficRangeHelper(mousex, mousey,Color.RED);
         
         double inch=(dpixel*0.02);
-        System.out.println("distance"+(inch*1.8280)+" metri o inches:"+inch+" angle"+angle);
+        
+        FXSoldat sfx=  fxIMHelper.getFXSoldatSelectionee();
+        double angle=angleDisplayRange(mousex, mousey);
+        if(!s.isImmobilize()) sfx.setFXSoldatOrientation(angle);
+     
+        
+        
         if(s.getArmeUtilise()==null || s.isFeuArmePaPorte(inch)){            
             removeDisplayRange();
             fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             fxIMHelper.setCommanNotvalid(true);
-           
+            
             if(s.getArmeUtilise()==null) fxpl.sendMessageToPlayer("Arme tombe ");
             else fxpl.sendMessageToPlayer("Arme pa de porte");            
             
@@ -760,9 +763,30 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
           
         }
+        
+        System.out.println("distance"+(inch*1.8280)+" metri o inches:"+inch+" pixel"+dpixel );
         visualizeRangePointers(mousex,mousey);        
     }    
+
+
+    public void displayRangeBandageAction(double mousex,double mousey){
+        
+        double range=displayGraficRangeHelper(mousex, mousey, Color.WHITE);
+        if(range>(TILE_SIZE+(TILE_SIZE/2))) {
+            removeDisplayRange();
+            fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
+        }
+        else {
+            removeDisplayRange();
+            fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSO_HELPER_BANDGAE);
+            
+        }
+        System.out.println(" range="+range);
+        visualizeRangePointers(mousex, mousey);
     
+
+
+    }    
     
     public  void refreshCarte(){
         if(this.switchsCanvas){
@@ -1409,10 +1433,12 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
                 m.setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(m));            
                 actionMenu[1] = m;     
                 Soldat s=sfx.getSoldat();
-                if(s.isImmobilize() && !s.isTempDisponiblePour(ActionType.COURS)){
+                if(s.isImmobilize() || !s.isTempDisponiblePour(ActionType.COURS)){
                     m.setEffect(new GaussianBlur());
                     m.setOnMouseClicked(null);
                 }
+                
+                
            }catch(ModeDeFeuException ex){
                throw new RuntimeException(ex);
            }
@@ -1577,26 +1603,20 @@ protected void buildDisableMenu(FXSoldat s){
     }
   
     public void confirmFEUAction(MenuItem item,double x,double y)throws Exception{
-        int i=(int)(y/TILE_SIZE);
-        int j=(int)(x/TILE_SIZE);
-       
-       
-        if(!fxIMHelper.isCommanNotvalid()){
-            i=posI+i;
-            j=posJ+j;
-            BaseAction act=item.buildMenuItemAction();
-            int lasti=mapLastI();
-            int lastj=mapLastJ();
 
-            double x0=(lastj*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y0=(lasti*FXCarte.TILE_SIZE)+(TILE_SIZE/2);
-            double x1=((j+posJ)*FXCarte.TILE_SIZE)+(TILE_SIZE/2),y1=(FXCarte.TILE_SIZE*(i+posI))+(TILE_SIZE/2);            
-            double angle=FXCarte.angleRotation(x0, y0, x1, y1);
+        PointCarte p=getIJAbsoluteCoord(x, y);
+        
+        if(!fxIMHelper.isCommanNotvalid()){
+
+            BaseAction act=item.buildMenuItemAction();
+
+            double angle=angleDisplayRange(x, y);
             
-            fxIMHelper.buildFeuAction((FeuAction)act, i, j,angle);
+            fxIMHelper.buildFeuAction((FeuAction)act, p.getI(), p.getJ(),angle);
             fxIMHelper.addActionToSoldat();
-            
+            Soldat s=fxIMHelper.getSeletctionee();
             fxpl.imprimerFXPLInfo(fxIMHelper.getSeletctionee());
-            fxpl.sendMessageToPlayer(act.toString());
+            fxpl.sendMessageToPlayer(s.toStringSimple()+" "+act.toString());
              
        
             visualizeBarSoldatAction();

@@ -20,18 +20,21 @@ import jeu.patrouille.fx.sprite.CursorHelper;
  * @author appleale
  */
 public class ImageChargeur {
-    public static int CURSOR_HOST_RANGE=0,CURSOR_US_RANGE=1,CURSOR_FORBIDDEN=2,CURSOR_CROSSHAIR=3;
+    public static int CURSOR_HOST_RANGE=0,CURSOR_US_RANGE=1,
+            CURSOR_FORBIDDEN=2,CURSOR_CROSSHAIR=3,CURSO_HELPER_BANDGAE=4;
     CursorHelper cursoHostRange = new CursorHelper(ImageChargeur.CURSOR_HOST_RANGE);
     CursorHelper cursorUSRange = new CursorHelper(ImageChargeur.CURSOR_US_RANGE);
     CursorHelper cursorForbidenRange=new CursorHelper(ImageChargeur.CURSOR_FORBIDDEN);  
     CursorHelper cursorCrooshair=new CursorHelper(ImageChargeur.CURSOR_CROSSHAIR);
+    CursorHelper cursorBandage=new CursorHelper(ImageChargeur.CURSO_HELPER_BANDGAE);
     Image[] array;
      ImageChargeur() {
-        array=new Image[5];
+        array=new Image[6];
         array[0]=new Image("rangeArrowHost.png");
         array[1]=new Image("rangeArrow2.png");
         array[2]=new Image("forbiddenCursor.png");
         array[3]=new Image("crosshair.png");
+        array[4]=new Image("cursorHelperBandage.png");
         arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
         arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
         arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
@@ -40,7 +43,7 @@ public class ImageChargeur {
         cursoHostRange.buildFrameImages(array[CURSOR_HOST_RANGE]);
         cursorForbidenRange.buildFrameImages(array[CURSOR_FORBIDDEN]);
         cursorUSRange.buildFrameImages(array[CURSOR_US_RANGE]);
-
+        cursorBandage.buildFrameImages(array[CURSO_HELPER_BANDGAE]);
         cursorCrooshair.buildFrameImages(array[CURSOR_CROSSHAIR]);
     }
      
@@ -66,6 +69,7 @@ public class ImageChargeur {
         else if(type==ImageChargeur.CURSOR_FORBIDDEN)
             return this.cursorForbidenRange;
         else if(type==CURSOR_CROSSHAIR) return this.cursorCrooshair;
+        else if(type==CURSO_HELPER_BANDGAE) return this.cursorBandage;
         return null;
     } 
 

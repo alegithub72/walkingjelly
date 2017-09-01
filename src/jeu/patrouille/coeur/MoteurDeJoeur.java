@@ -187,8 +187,7 @@ public void rondStartTest(){
          System.out.println("--------------------------->TD--CONSIDERED--START-->"+td+"<------------");
             for(int k=0;k<patrouille.length;k++){
                 Soldat s1=(Soldat)patrouille[k];
-                List<BaseAction> l=getBaseActionSum(td,s1);
-                
+                List<BaseAction> l=getBaseActionSum(td,s1);                
                 listAllActionUS.addAll(l);
             }
             
@@ -323,18 +322,12 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
                //BaseAction clone=act.clone();
                Soldat s = (Soldat) act.getProtagoniste();
 
-               if (!s.isIncoscient() &&  !s.isKIA() && !s.isStepScared()) {
-                   try {
-                       
-                       BaseAction cloneAction1=act.clone();
-                       BaseAction cloneAction2=makeAction(td,(Soldat) act.getProtagoniste(),
-                               act);
-                       playAllGraficInterface(cloneAction1,cloneAction2);
-
+               if (!s.isIncoscient() &&  !s.isKIA() && !s.isStepScared() ) {
+                   try {                                              
+                       makeActionAndPlay(td,(Soldat) act.getProtagoniste(),act);                    
                        System.out.println("------------Zzzzzzzzzzzzz=" + allAnimOn());
                        while (allAnimOn());
-                       System.out.println("------------Svegliaaaaaaaa=" + allAnimOn());
-                        
+                       System.out.println("------------Svegliaaaaaaaa=" + allAnimOn());                        
                        refreshAllGraficInterface();
                    } catch (MakeActionFailException e) {
                        e.printStackTrace();
@@ -342,7 +335,7 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
                        
                    }
                } else {
-                   System.out.println("--------->KIA OR CHOKET NOTA ANIM");
+                   System.out.println("--------->ACTION IS IMPOSSIBLE FOR THE STATU OF SOLDAT");
                }
                //TODO vedere per aggiorantre la mappa quando!!!!
                k++;
@@ -358,12 +351,21 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
 
     
     }
-   private BaseAction makeAction(int td,Soldat s,BaseAction a) throws MakeActionFailException{
-       if(!s.isImmobilize() && a.getType()==ActionType.MARCHE ){
+   private void makeActionAndPlay(int td,Soldat s,BaseAction a) throws MakeActionFailException{
+       BaseAction act1=a.clone();       
+       if(! s.isImmobilize() && a.getType()==ActionType.MARCHE ){
            makeMarcheAction(s, a);
-       }else if (a.getType() == ActionType.FEU) 
-                           makeFeuAction(td,(FeuAction) a);
-       return a.clone();
+           BaseAction act2=a.clone();
+           playAllGraficInterface(act1,act2);
+       }else if (   a.getType() == ActionType.FEU) {
+           makeFeuAction(td,(FeuAction) a);
+           BaseAction act2=a.clone();
+           playAllGraficInterface(act1,act2);           
+       }else {
+           System.out.println("ACTION NOT CONSIDERED :"+a.toString());
+           stopAllPendingAnimation();
+       }
+
    }
     private boolean allAnimOn(){
         boolean b=false;
@@ -430,6 +432,12 @@ private     void   refreshAllGraficInterface(){
             return;
         }
     }
+
+private void stopAllPendingAnimation(){
+    for(GraficCarteInterface g:listgrafic)
+        g.setAnimOn(false);
+
+}
 private    void reMountMenuItemsAndScroll(){
        for(GraficCarteInterface g:listgrafic){
            Platform.runLater(new Runnable() {
@@ -512,7 +520,7 @@ private    void reMountMenuItemsAndScroll(){
                 System.out.println("Terrain cover is passed="+coverBool +" armorROLL<=armorCheck "
                         +armorRoll+"<="+armorCheck+" boolean:"+armorPassed );
                 if( armorPassed && coverBool) {
-                    System.out.println(target.toStringSimple()+":-RECIVE--->"+l);
+                    if(target!=null)System.out.println(target.toStringSimple()+":-RECIVE--->"+l);
                     llist[sc]=l;
                 }else System.out.println("---->NOT PASSED");
                 

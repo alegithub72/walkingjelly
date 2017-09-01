@@ -161,7 +161,7 @@ public class FXPlanche extends Application {
         rootScene.getChildren().add(message);
     }
     public void endTurn(){
-        fxCarte.setOnScroll(null);
+
         suprimerActionVisualization();
         fxCarte.playTurn();
     }

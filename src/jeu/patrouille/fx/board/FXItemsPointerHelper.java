@@ -67,7 +67,8 @@ public class FXItemsPointerHelper {
         else if(act.getType()==ActionType.MARCHE 
                 && this.seletctionee.
                         getSoldat().getBoss().getJeur()== GeneriqueJoeurs.JOEUR_US) 
-            this.rangeCursorHelper=ImageChargeur.CURSOR_US_RANGE;     
+            this.rangeCursorHelper=ImageChargeur.CURSOR_US_RANGE; 
+        
     
     }
     public CursorHelper getDisplayRange(){

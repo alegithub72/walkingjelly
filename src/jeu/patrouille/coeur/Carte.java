@@ -482,9 +482,10 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
     public   PointCarte  validerLeRoute(BaseAction act){
         PointCarte ligne[]=getLigne(act.getI0(), act.getJ0(), act.getI1(), act.getJ1());
         PointCarte product=null;
+        Terrain t=null;
         for (int i = 0; i < ligne.length; i++) {
             PointCarte c = ligne[i];
-            Terrain t=terrain[c.getI()][c.getJ()];
+             t=terrain[c.getI()][c.getJ()];
             if(t.getType()==Terrain.FENETRE ||
                     t.getType()==Terrain.GROSMUR ||
                     t.getType()==Terrain.MURBAS)  {
@@ -494,6 +495,7 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
             }
 
         }  
+        System.out.println("Obstacle "+t);
         return product;   
     }
     @Override

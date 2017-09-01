@@ -64,10 +64,11 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         incoscientAuImmobilizer=new ImageView("shocked.png");
         deathIcon=new ImageView("detah.png");
         scared=new ImageView("scared.png");
-        orientation=0;
+        initialAngle=90;
+        orientation=270;
         this.pos=pos;
         stImage=Soldat.Statut.NORMAL;
-        initialAngle=90;
+
         setDeafultFrame(0);
     }
 
@@ -117,14 +118,26 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
 
     public void setFXSoldatOrientation(double angle) {
+        double angleStart=angle+initialAngle;
+        if(angleStart>=360) angleStart=angleStart-360;
         imgView.setRotate(0);
-        updateSodlatOrientation(angle+initialAngle);
-        orientation = angle;
-        imgView.setRotate(angle+initialAngle);
+        updateSodlatOrientation(angleStart);
+        orientation =angleStart+ angle;
+        imgView.setRotate(angleStart);
     }
 
 
-
+    public boolean limitAngleOrientation(double angleValue,double degrez){
+        double orietationTemp2=orientation+degrez/2;
+        if(orietationTemp2>=360) orietationTemp2=360-orietationTemp2;
+        double orietationTemp1=orientation-degrez/2;
+        if(orietationTemp2<0) orietationTemp2= 360+orietationTemp2;
+        boolean b=angleValue<orietationTemp2 && angleValue>=orietationTemp1;
+        System.out.println(orietationTemp1+ "<="+angleValue+" <="+orietationTemp2      );
+        return b;
+    }
+    
+    
     Point2D getSceneCoordMove(int i, int j) {
         int posj = fxcarte.getPosJ();
         int posi = fxcarte.getPosI();
@@ -185,26 +198,25 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         if(s.getStatu().ordinal()>stImage.ordinal()) updateBlesseImage(s.getStatu());
         signON();
     }
-    
+    //TODO Da rifare con unn angolo 360 gradi....
     void updateSodlatOrientation(double angle){
-        if(angle>=-30 && angle<=30 ) 
+        if(angle>=360-22.5 && angle<=360 ) 
             this.s.setFace(Piece.Direction.N);
-        else if(angle>30 && angle<60 )s.setFace(Piece.Direction.NW);        
-        else if(angle>=60 && angle<=120)s.setFace(Piece.Direction.W);
-        else if(angle>120 && angle<150) s.setFace(Piece.Direction.SW);        
-        else if((angle>=150 && 
-                angle <180 )|| (angle<=-150 && angle>=-180))  
-            s.setFace(Piece.Direction.S);
-        else if(angle<-120 && angle>-150) s.setFace(Piece.Direction.SW);
-        else if(angle<=-60 && angle>=-120) s.setFace(Piece.Direction.W);
-        else if(angle<-30 && angle >-60) s.setFace(Piece.Direction.NE);
+        else if(angle>=0 && angle<=22.5)this.s.setFace(Piece.Direction.N);
+        else if(angle>22.5 && angle<22.5+45 )s.setFace(Piece.Direction.NW);        
+        else if(angle>=22.5+45 && angle<=22.5+90)s.setFace(Piece.Direction.W);
+        else if(angle>22.5+90 && angle<22.5+125) s.setFace(Piece.Direction.SW);        
+        else if((angle>=22.5+125 && angle <=170+22.5 ))  s.setFace(Piece.Direction.S);
+        else if(angle>170+22.5 && angle<215+22.5) s.setFace(Piece.Direction.SE);
+        else if(angle>=215+22.5 && angle<=260+22.5) s.setFace(Piece.Direction.E);
+        else if(angle>260+22.5 && angle <305+22.5) s.setFace(Piece.Direction.NE);
         System.out.println("------>"+angle+"-----orientation updataed--->"+s.getFace());
         }    
 
     public boolean isDistanceLessMarcheMax(double dist){  
       return ( dist>0 
               && s.getTempDisponible()>0 
-              && s.isDistanceLessMarcheMax(dist*FXCarte.INCHxPIXEL));
+              && s.isDistanceLessMarcheMax(dist));
     
     }
     public void createFXSoldat(){
@@ -226,7 +238,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
    public  void playMarche(MarcheAction  act){
         
         System.out.println("------------- FXSOLDAT PLAY ANIM MARCHE---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
-        if(estFXSoldatView(act.getI1(), act.getJ1())){
+
         //System.out.println("soldato anim:"+act.getProtagoniste());
         System.out.println(" IN PLAY MARCHE");
         Path p=new Path();
@@ -306,11 +318,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
         System.out.println("FXSOLDAT ANIM------> PLAY");
 
-        }else{
-            fxcarte.setAnimOn(false);
-            this.setVisible(false);
-            System.out.println("--->not in view ");
-        }
+
         System.out.println("------------- FXSOLDAT PLAY ANIM MARCHE ---------FINE------->--------><---------");
     } 
    
@@ -450,6 +458,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 setFrame(2);
             }
             this.stImage=Soldat.Statut.INCONSCENT;
+            playBlessedAnim();
             break;
         case MORT:
             if (s.isUS()) {
@@ -464,6 +473,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 setFrame(5);
             }
             this.stImage=Soldat.Statut.MORT;
+            playBlessedAnim();            
             break;
         case CRITIQUE:
 
@@ -578,8 +588,12 @@ public void updateBlesseImage(Soldat.Statut statut){
     
   void playBlessedAnim(){
       buildBlessAnim();
-      if(s.getStatu()!=Soldat.Statut.MORT &&
-              s.getStatu()!=Soldat.Statut.GRAVE_TETE) 
+      if((s.getStatu()==Soldat.Statut.MORT ||
+         s.getStatu()==Soldat.Statut.INCONSCENT ||
+         s.getStatu()==Soldat.Statut.GRAVE_TETE  ) 
+         && !s.isUS() )
+          imgView.setTranslateX(-FXCarte.TILE_SIZE);
+      else     
           imgView.setTranslateX(-25);
       //imgView.setTranslateY(25);
       setFXSoldatOrientation(Math.random()*360 );

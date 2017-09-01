@@ -14,7 +14,7 @@ import jeu.patrouille.coeur.pieces.GeneriquePiece;
  */
 public class BandageAction extends BaseAction{
     GeneriquePiece item;    public BandageAction(GeneriquePiece protagoniste,GeneriquePiece antagoniste) {
-        super(ActionType.LACHER_OBJ, -1, -1, -1, -1,protagoniste , antagoniste);
+        super(ActionType.BANDAGE, -1, -1, -1, -1,protagoniste , antagoniste);
         tempActivite=0;
     }
     
