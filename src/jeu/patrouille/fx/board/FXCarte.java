@@ -39,8 +39,8 @@ import jeu.patrouille.fx.menu.BandageItem;
 import jeu.patrouille.fx.menu.DisableMenuItems;
 import jeu.patrouille.fx.menu.FeuItem;
 import jeu.patrouille.fx.menu.MenuItem;
-import jeu.patrouille.fx.menu.OpFeuItem;
 import jeu.patrouille.fx.menu.RunItem;
+import jeu.patrouille.fx.menu.ViserFeuItem;
 import jeu.patrouille.fx.menu.WalkItem;
 import jeu.patrouille.fx.menu.eventhandler.ItemMenuConfirmActionEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.ItemMenuRangeDisplayHandler;
@@ -430,7 +430,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     synchronized public void clickOnButtonItems(MenuItem item) {
 
-        item.setFrame(1);
+ 
         BaseAction act = item.buildMenuItemAction();
         setCursor(Cursor.HAND);
         setOnScroll(null);
@@ -1228,11 +1228,12 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             buildMarcheMenuItem(sfx,spritecoord2D.getX(),spritecoord2D.getY());
             buildCoreurMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
-            buildOpFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
+            buildViserFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildBandageMenuItem(sfx, spritecoord2D.getX(), spritecoord2D.getY(), r);
           //  buildBurstFeuMenuItem(sfx, spritecoord2D.getX(), spritecoord2D.getY(), r);            
             //rootGroup.getChildren().add(l);
-
+            actionMenu[2].addLink(actionMenu[3]);
+            actionMenu[3].addLink(actionMenu[2]);
             visualizeBarSoldatAction();
             fxpl.sendMessageToPlayer("Choisir une action from ("+i+","+j+")");
 
@@ -1476,7 +1477,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
      
     private void buildFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws ModeDeFeuException {
         
-            MenuItem m = new FeuItem(sfx,GeneriqueArme.FeuMode.SC);
+            MenuItem m = new FeuItem(sfx);
             double x = (100 * Math.cos(2 * grad));
             double y = (100 * Math.sin(2 * grad));
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
@@ -1498,8 +1499,8 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
     }
     
     
-    private void buildOpFeuMenuItem(FXSoldat s,double spritecenterx,double spritecentery,double grad){
-            MenuItem m = new OpFeuItem(s);
+    private void buildViserFeuMenuItem(FXSoldat s,double spritecenterx,double spritecentery,double grad){
+            MenuItem m = new ViserFeuItem(s);
             double x = (100 * Math.cos(3 * grad));
             double y = (100 * Math.sin(3 * grad));
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);

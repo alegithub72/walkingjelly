@@ -105,8 +105,9 @@ public int compareTo(BaseAction b) {
     public String toString() {
         char c=' ';
         if(type==ActionType.FEU) c='f';
+        else if(type==ActionType.FEU_VISER) c='v';
         else if(type==ActionType.MARCHE) c='m';
-        
+        else if(type==ActionType.BANDAGE) c='b';
         
         String txt=c+""+i0+","+j0+";"+i1+","+j1;
         return txt;
@@ -127,7 +128,7 @@ public int compareTo(BaseAction b) {
 
     @Override
     public void calculeActionPointDesAction()throws Exception {
-        return;
+        tempActivite= type.TN();
     }
 
     

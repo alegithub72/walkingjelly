@@ -6,9 +6,11 @@
 package jeu.patrouille.fx.menu.eventhandler;
 
 
+import java.net.URL;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.AudioClip;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
@@ -24,8 +26,12 @@ public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandl
 
     FXSoldat s;
     FXCarte fxcarte;
+    AudioClip media;
     public SoldatOpenMenuItemsEventHandler(FXSoldat s,FXCarte fxcarte) {
-     
+    ClassLoader classLoader = getClass().getClassLoader();
+     URL url=classLoader.getResource("clickSol.wav");
+     media=new AudioClip(url.toString());     
+     media.setVolume(0.4);
     this.s=s;
     this.fxcarte=fxcarte;
     }
@@ -36,7 +42,7 @@ public class SoldatOpenMenuItemsEventHandler  implements javafx.event.EventHandl
         fxcarte.setCursor(Cursor.HAND);
         if(event.getButton()==MouseButton.PRIMARY) {
                fxcarte.openSoldatMenuItems(s);
-               
+               media.play();
              
           
         }

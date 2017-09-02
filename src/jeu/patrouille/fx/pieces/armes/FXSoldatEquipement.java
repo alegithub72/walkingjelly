@@ -5,7 +5,11 @@
  */
 package jeu.patrouille.fx.pieces.armes;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -19,10 +23,14 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 public class FXSoldatEquipement extends Parent{
     FXPlanche fxpl;
     FXPatrouilleSprite fxarmes[];
+    Text numShot;
   public   FXSoldatEquipement(FXPlanche fxpl){
       super();      
       this.fxpl=fxpl;
-
+      numShot=new Text();
+      numShot.setFill(Color.GREENYELLOW);
+      numShot.setFont(Font.font(15));
+             
       
      
       
@@ -38,10 +46,21 @@ public class FXSoldatEquipement extends Parent{
       for (int i = 0; i < list.length; i++) {
               GeneriqueEquipment arm = list[i];
               fxarmes[n] = FXEquipment.createIstance(arm.getModel());
-              double y0=createFXEquipment(fxarmes[n], n);       
+              double y0=createFXEquipment(fxarmes[n], n);
+              
               GeneriqueArme a = ((GeneriqueArme) arm);
-              if(a==s.getArmeUtilise()) ((FXEquipment)fxarmes[n]).addUsed(fxarmes[n].getW());              
-              if(n>0) y0=y0-40;
+              if(a==s.getArmeUtilise()) {
+                  ((FXEquipment)fxarmes[n]).addUsed(fxarmes[n].getW());
+                  numShot.setX(fxarmes[n].getW()-30);
+                  numShot.setY(y0+fxarmes[n].getH()-12);
+                  numShot.setText(a.shotRemain()+"");
+                  getChildren().add(numShot);                  
+              }              
+              if(n>0){
+                  y0=y0-15;
+              }else {
+
+              }
               n++;
               n =n+ visualizeMagazin(a, n,y0);
 
@@ -51,14 +70,21 @@ public class FXSoldatEquipement extends Parent{
   
   int visualizeMagazin(GeneriqueArme a,int i,double y0){
       int k=0;
+      Point2D p=null;
       for (; k < a.getNumMagazine(); k++) {
                   fxarmes[i + k ] = FXMagazine.createInstance(a.getModel());
-                  createFXMagazine(fxarmes[i + k ], i + k,y0 );
+                 p= createFXMagazine(fxarmes[i + k ], i + k,y0 );
                   //System.out.println("arme----------------->" + arm);
               }
+  
+      
+
+      
+      
   return k;
   }
-  void createFXMagazine(FXPatrouilleSprite sp,int i,double y0){
+   Point2D createFXMagazine(FXPatrouilleSprite sp,int i,double y0){
+      Point2D p=null;
       if (sp != null) {
           sp.create();
           sp.setEffect(null);
@@ -70,10 +96,12 @@ public class FXSoldatEquipement extends Parent{
           if(k>0) x=sp.getW()*((i-(k*max)));
           sp.setTranslateY(y);
           sp.setTranslateX(x);
-
+          p=new Point2D(x, y);
           sp.toFront();
           sp.setVisible(true);
+          
       }
+      return p;
   }
   
   double createFXEquipment(FXPatrouilleSprite sp,double i){
@@ -82,7 +110,7 @@ public class FXSoldatEquipement extends Parent{
               sp.setEffect(null);
               this.getChildren().add(sp);
               double k=Math.nextDown((i/4)-0.1d);
-              double y=(k)*20;
+              double y=(k)*25;
               double x=10;
            
               sp.setTranslateY(y);
@@ -94,5 +122,7 @@ public class FXSoldatEquipement extends Parent{
             return y;
           }
   
-    
+    public void updateMagazine(int n){
+        numShot.setText(n+"");
+    }
 }

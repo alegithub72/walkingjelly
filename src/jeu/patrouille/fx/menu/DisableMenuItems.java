@@ -35,6 +35,11 @@ public class DisableMenuItems extends SoldatMenuItem{
         return -1;
     }
 
+    @Override
+    public void updateState() {
+       return;
+    }
+
 
     
 }

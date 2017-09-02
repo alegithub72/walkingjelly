@@ -30,4 +30,10 @@ public class BandageItem extends SoldatMenuItem{
     public int changeStates(int n) {
         return -1;
     }    
+
+    @Override
+    public void updateState() {
+       return;
+    }
+    
 }

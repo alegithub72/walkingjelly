@@ -241,7 +241,7 @@ public class FXPlanche extends Application {
             spAct = new WalkItem(null);
 
         }if(act.getType()==ActionType.FEU){
-            spAct=new FeuItem(null,null);
+            spAct=new FeuItem();
         }
         boolean add = rootScene.getChildren().add(spAct);
         spAct.setScaleX(0.5);

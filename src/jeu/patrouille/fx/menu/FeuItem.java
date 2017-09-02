@@ -10,6 +10,7 @@ import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
@@ -19,12 +20,22 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  */
 public class FeuItem extends SoldatMenuItem{
     GeneriqueArme.FeuMode mode;
-    GeneriqueArme.FeuMode modes[];
-    public FeuItem(FXSoldat fxs,GeneriqueArme.FeuMode mode){
+
+    
+    public FeuItem(FXSoldat fxs){
         super(ActionType.FEU,fxs);
-      if(fxs!=null && fxs.getSoldat().getArmeUtilise()!=null)  
-          this.mode=fxs.getSoldat().getArmeUtilise().getArmeFeuModel();
+        initButtonState();
     }
+    
+
+    public FeuItem(ActionType type,FXSoldat sfx) {
+        super(type, sfx);
+        initButtonState();
+    }
+    public FeuItem(){
+        super(ActionType.FEU, null);
+    }   
+    
 
     @Override
     public BaseAction buildMenuItemAction() {
@@ -33,24 +44,50 @@ public class FeuItem extends SoldatMenuItem{
     }
         @Override
     public int changeStates(int n) {
-            if(n>3) n=1;
-            Soldat s=fxs.getSoldat();
-            if(s.getArmeUtilise()!=null && 
-                    s.getArmeUtilise().getEquipmentType()==
-                    GeneriqueEquipment.EquipmentType.FIRE_WEAPON ){
-                GeneriqueArme arme=(GeneriqueArme)s.getArmeUtilise();
-                modes= arme.armeFeuModeDisponible();
-            }
+            try{
+                n++;
+                GeneriqueArme.FeuMode modes[]=null;
+                Soldat s=fxs.getSoldat();
+                if(s.getArmeUtilise()!=null && 
+                        s.getArmeUtilise().getEquipmentType()==
+                        GeneriqueEquipment.EquipmentType.FIRE_WEAPON ){
+                    GeneriqueArme arme=(GeneriqueArme)s.getArmeUtilise();
+                    modes= arme.armeFeuModeDisponible();
+                }
+                if(n>modes.length) n=1;
+                
+                if(n==1  ) mode=modes[0];
+                else if(n==2 && modes.length>1) mode=modes[1];
+                else if(n==3 && modes.length>2) mode=modes[2];
 
-            if(n==1  ) mode=modes[0];
-            else if(n==2 && modes.length>1) mode=modes[1];
-            else if(n==3 && modes.length>2) mode=modes[2];
-            if(mode==GeneriqueArme.FeuMode.SA || 
-                    mode==GeneriqueArme.FeuMode.SC)
-                buildFrameImages(MenuImageChargeur.getImageMenu(actionType));
-            else if(mode==GeneriqueArme.FeuMode.RA) buildFrameImages(MenuImageChargeur.getImageMenuSubType(0));
-            else if(mode==GeneriqueArme.FeuMode.PA)buildFrameImages(MenuImageChargeur.getImageMenuSubType(1));
+                s.getArmeUtilise().changeModeFeu(mode);
+                buildButtonState();
+
+            }catch(ModeDeFeuException m){
+                throw new RuntimeException(m);
+            }
             return n;
     }
+    void initButtonState(){
+      if(fxs!=null && fxs.getSoldat().getArmeUtilise()!=null)  
+          this.mode=fxs.getSoldat().getArmeUtilise().getArmeFeuModel();        
+     buildButtonState();
+    
+    }
+    
+    void buildButtonState(){
+    if(mode==GeneriqueArme.FeuMode.SA || 
+       mode==GeneriqueArme.FeuMode.SC)
+        buildFrameImages(MenuImageChargeur.getImageMenu(actionType));
+    else if(mode==GeneriqueArme.FeuMode.RA) buildFrameImages(MenuImageChargeur.getImageMenuSubType(0));
+    else if(mode==GeneriqueArme.FeuMode.PA)buildFrameImages(MenuImageChargeur.getImageMenuSubType(1));     
+    
+    }
+
+    @Override
+    public void updateState() {
+        initButtonState();
+    }
+    
     
 }

@@ -19,6 +19,7 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     public static int  MENU_H=100;
     public static int MENU_W=100;
     ActionType actionType;
+    MenuItem link;    
     public MenuItem(ActionType type){
         super(MENU_W,MENU_H,null,null);
         if(type!=null){
@@ -41,7 +42,12 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     public void setActionType(ActionType actionType) {
         this.actionType = actionType;
     }
-    
+    public void addLink(MenuItem link){
+        this.link=link;
+    }
+    public MenuItem getLink(){
+        return link;
+    }    
     
     
     public  ObservableList<Node>  getChildrens(){
@@ -49,4 +55,5 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     }
     public abstract  BaseAction buildMenuItemAction();
     public abstract int changeStates(int n);
+    public abstract void updateState();
 }

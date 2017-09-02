@@ -626,7 +626,7 @@ public int isLesion(Lesion.Degre type){
     public int tempNecessarieDesActionBase(ActionType actionType)throws ModeDeFeuException{
         int apbase=-1;
         if(armeUtilise!=null && actionType.isFeuAction() ) 
-            apbase=this.armeUtilise.fireTempNecessarie(); 
+            apbase=this.armeUtilise.fireTempNecessarie(actionType); 
         else apbase=actionType.TN();
         if(isDoubled() && actionType.isMovementAction() )apbase=apbase*2;
         return apbase;

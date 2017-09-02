@@ -38,6 +38,7 @@ public class ItemMenuConfirmActionEventHandler  implements EventHandler<MouseEve
                     fxcarte.confirmFEUAction(item, event.getSceneX(), event.getSceneY());
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 throw new RuntimeException(ex);
             }
             fxcarte.refreshCarte();

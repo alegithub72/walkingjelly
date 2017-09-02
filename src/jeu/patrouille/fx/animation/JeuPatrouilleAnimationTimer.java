@@ -19,13 +19,26 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
     GeneriqueArme arme;
     FXCarte fxcarte;    
     Sound type;
-    public enum Sound{MARCHE("goodStep.wav"),MP5("mp5.wav"),M16("m16.wav"),GRUNT5("grunt2.wav"), 
-    AK74("AK47.mp3"),BENELLI_M3("ShotGunFire.wav"); 
+    public enum Sound{MARCHE("goodStep.wav"),MP5("mp5.wav"),M16("m16.wav","m16.wav","fire.wav","fire5.wav"),GRUNT5("grunt2.wav"), 
+    AK74("AK47.mp3","AK47.mp3","fire.wav","fire5.wav"),BENELLI_M3("ShotGunFire.wav"); 
+        String files[]=new String[4];
         String file;
+        Sound(String file1,String file2,String file3,String file4){
+            this.files[FeuMode.SA.ordinal()]=file1;
+            this.files[FeuMode.SC.ordinal()]=file2;
+            this.files[FeuMode.RA.ordinal()]=file3; 
+            this.files[FeuMode.PA.ordinal()]=file4;
+            this.file=file1;
+        }
         Sound(String file){
-        this.file=file;
+         this.file=file;
+        }
+        public String file(FeuMode m){
+            if(files[m.ordinal()]==null) return file;
+        return files[m.ordinal()];
         }
         public String file(){
+        
         return file;
         }
     }    
@@ -34,11 +47,13 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
         this.arme=arme;
         this.type=sound;
         if(arme!=null){
+            if(arme.getArmeFeuModel()!=FeuMode.SA && arme.getArmeFeuModel()!=FeuMode.SC)
+               this.ciclyc=3;
             if(arme.getModel()==GeneriqueEquipment.Model.M16 
-                    ) this.sound=Sound.M16.file();
-            if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file();
-            if(arme.getModel()==GeneriqueEquipment.Model.BENELLI_M3) this.sound=Sound.BENELLI_M3.file();
-            if(arme.getModel()==GeneriqueEquipment.Model.MP5) this.sound=Sound.MP5.file();        
+                    ) this.sound=Sound.M16.file(arme.getArmeFeuModel());
+            if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file(arme.getArmeFeuModel());
+            if(arme.getModel()==GeneriqueEquipment.Model.BENELLI_M3) this.sound=Sound.BENELLI_M3.file(arme.getArmeFeuModel());
+            if(arme.getModel()==GeneriqueEquipment.Model.MP5) this.sound=Sound.MP5.file(arme.getArmeFeuModel());        
         }else {
             this.sound=type.file;
         

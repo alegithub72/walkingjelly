@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.coeur.equipments.armes;
 
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
@@ -78,9 +79,13 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         int n=0;
         for(int h:shotNumMF) if(h!=NOTVALUE) n++;
         FeuMode[] list=new FeuMode[n];
-        for(int k=0 ;k<shotNumMF.length;k++) 
-            if(shotNumMF[k]!=NOTVALUE) 
-                list[--n]=FeuMode.values()[k];
+        int h=0;
+        for(int k=0 ;k<shotNumMF.length;k++) {
+            if(shotNumMF[k]!=NOTVALUE) {
+                list[h]=FeuMode.values()[k];
+                h++;
+            }
+        }
         
         return list;
     
@@ -111,13 +116,15 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
         return ap;
     }
-    public int fireTempNecessarie()throws ModeDeFeuException{
+    public int fireTempNecessarie(ActionType type)throws ModeDeFeuException{
         int td= TDfireWeapon[modefeu.ordinal()];
         if (td == NOTVALUE) {
             throw new ModeDeFeuException("Mode de feu not avaiable");
         }
+        if(type==ActionType.FEU_VISER) td=td+(type.TN()*shotNumMF[modefeu.ordinal()]);
         return td;
     }
+ 
     public void changeModeFeu(FeuMode f) throws ModeDeFeuException {
         modefeu = f;
     }
