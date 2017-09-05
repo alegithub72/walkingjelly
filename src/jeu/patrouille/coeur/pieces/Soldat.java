@@ -28,6 +28,10 @@ import jeu.patrouille.coeur.pieces.exceptions.ImmobilzedSodlatException;
 import jeu.patrouille.coeur.pieces.exceptions.NotSautOrCourseSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.UnActionSoldatException;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.*;
+import jeu.patrouille.coeur.equipments.armes.Magazine;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ImpossibleRechargeArmeException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.IncompatibleMagazineException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
 import jeu.patrouille.coeur.pieces.exceptions.IncoscientSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.fx.board.FXCarte;
@@ -130,7 +134,11 @@ public class Soldat extends Piece {
         
     
     }
-
+    public void bandage(){
+        for(Lesion l:lesion){
+            if(l!=null)l.setBandage(true);
+        }
+    }
     public void setSpreadDone(boolean spreadDone) {
         this.spreadDone = spreadDone;
     }
@@ -177,10 +185,32 @@ public class Soldat extends Piece {
         this.equipePorte = equipePorte;
     }
 
-
+    public void rechargeArme() throws PaDeMagazineException,IncompatibleMagazineException,ImpossibleRechargeArmeException{
+        if(armeUtilise!=null  ){
+            armeUtilise.loadMagazine();
+           
+        }
+    
+    }
+    public void giveMagazine(Soldat s){
+        if(armeUtilise!=null){
+            Magazine m=armeUtilise.giveMagazine();
+            s.takeMagazine(m);
+                    
+        }
+            
+    }
+    
+    public boolean isFireWeaponUtilize(){
+        return armeUtilise.getEquipmentType()==GeneriqueEquipment.EquipmentType.FIRE_WEAPON;
+        
+    }
+    public void takeMagazine(Magazine m){
+        armeUtilise.addMagazine(m);
+    }
     public void blessure(Lesion l){
         Statut statutNow=l.getStatu();
-        corp.reciveBlessure(l);
+        corp.reciveBlessure(l); 
         if(statutNow==Statut.CRITIQUE 
                 && l.getLocation()==Corp.CorpParts.Tete) {
             sante=-10;
@@ -200,7 +230,7 @@ public class Soldat extends Piece {
                     this.pose=Pose.PRONE;
                     this.immobilize=true;
                     setStatut(statutNow);
-                                   
+                           
                     break;
                 case GRAVE_TETE:
                     objective=true;
@@ -279,6 +309,9 @@ public class Soldat extends Piece {
 
     public Statut getStatu() {
         return st;
+    }
+    public boolean isEnVie(){
+        return st==Statut.NORMAL || st==Statut.MANQUE  || st==Statut.LEGER_BLESSE;
     }
 
     public void setStatut(Statut statut) {
@@ -449,33 +482,19 @@ public int isLesion(Lesion.Degre type){
         }
         return s;
     }
-    public int fire(BaseAction act) throws ModeDeFeuException,LoadMagazineFiniException,TomberArmeException{
+    
+   
+    
+    public int feu(double dist) throws ModeDeFeuException,LoadMagazineFiniException,TomberArmeException{
         if(armeUtilise==null) throw  new TomberArmeException();
-        int score = 0;int i1=act.getI1(),j1=act.getJ1();
-        Soldat target=(Soldat)act.getAntagoniste();
-        if(target!=null) {
-            i1=target.getI();
-            j1=target.getJ();
-        }
-        double dist = Carte.distance(i, j, i1,j1, FXCarte.TILE_SIZE);
-        int shotN = armeUtilise.hitsNumMF(dist);
-        System.out.println("hits " + shotN);
-        int cDM = combatDistanceModifier(target, act.getType());
-        System.out.println("combat modifier " + cDM);
-            for(int hits=0;hits<shotN;hits++){
-                int dice=boss.dice(10);
-                int porteMod=armeUtilise.porteModifier(dist);
-                System.out.println(" porte modifie="+porteMod);
-                int tg=porteMod+competenceArme+cDM;
-                System.out.println("dice "+dice+"<=target number "+tg);
-                if(dice<=tg) score++;
-            }
-        
-      this.tempDesponible=tempDesponible-armeUtilise.feuArme(dist);
-      return score;
+        int shotN = armeUtilise.feuArme(dist);
+        this.tempDesponible=tempDesponible-armeUtilise.fireTempNecessarie(actionActuel);
+        return shotN;
     
     }
-    int combatDistanceModifier(Soldat target,ActionType t){
+    
+
+   public int combatFeuModifier(double dist){
             int cDM=-isLesion(null);
             System.out.println("1)combat distance modifier lesion:"+cDM);
             if(armeUtilise.getArmeFeuModel()==FeuMode.RA ) 
@@ -487,22 +506,32 @@ public int isLesion(Lesion.Degre type){
             if(actionActuel==ActionType.MARCHE)cDM=cDM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
             else if(actionActuel==ActionType.COURS)cDM=cDM-4;
             System.out.println("3)combat distance modifier soldat action:"+cDM);
-            if(t==ActionType.FEU_VISER)cDM=cDM+1;
+            if(actionActuel==ActionType.FEU_VISER)cDM=cDM+1;
             System.out.println("4)combat distance modifier soldat action op fire:"+cDM);
 
 
             if(pose==Piece.Pose.PRONE) cDM=cDM+1;
              System.out.println("5)combat distance modifier soldat prone:"+cDM);
-            
-            if(target!=null && target.getAction()==ActionType.COURS) cDM=cDM-2;
-            else if(target!=null && target.getAction()==ActionType.MARCHE)cDM=cDM-1;
-            System.out.println("6)combat distance modifier targer action:"+cDM);
-            
-            if(target!=null && target.getPose()==Piece.Pose.PRONE) cDM=cDM-1;   
-            System.out.println("7)finisce con combat distance modifier targer prone:"+cDM);
+            cDM=cDM+armeUtilise.porteModifier(dist);
+            System.out.println(" 5bis)porte modifie="+cDM);
             
          
             return cDM;
+    
+    }
+    
+    
+    public int combatModifierTarget(){
+            int cDM=0;
+            
+            if(actionActuel==ActionType.COURS) cDM=cDM-2;
+            else if(actionActuel==ActionType.MARCHE)cDM=cDM-1;
+            System.out.println("6)combat taraget movement modifier action:"+cDM);
+            
+            if(pose==Piece.Pose.PRONE) cDM=cDM-1;   
+            System.out.println("7)finisce con combat distance modifier targer prone:"+cDM);
+            
+    return cDM;
     
     }
     @Override
@@ -702,14 +731,14 @@ public int isLesion(Lesion.Degre type){
    
    public void addLesion(Lesion l){
        lesionN++;
-//       if(lesionN==lesion.length) {
-//       Lesion listNew[]=new Lesion[lesion.length*2];
-//           for (int k = 0; k < lesion.length; k++) {
-//               listNew[k]=lesion[k];
-//           }
-//           lesion=listNew;
+       if(lesionN==lesion.length) {
+       Lesion listNew[]=new Lesion[lesion.length*2];
+       for (int k = 0; k < lesion.length; k++) {
+               listNew[k]=lesion[k];
+          }
+           lesion=listNew;
            
-       
+       }
        this.lesion[lesionN]=l;
    
    }
@@ -761,7 +790,10 @@ public void setObjective(boolean objective) {
         return corp.isBraceGaucheBlesse();
     }
 
-  
+public boolean isFriend(GeneriquePiece p){
+    return p.getBoss().getJeur()==boss.getJeur();
+
+}
   
   
   

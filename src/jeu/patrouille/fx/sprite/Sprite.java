@@ -95,10 +95,10 @@ public class Sprite extends Parent
         }
     }    
     public Node getImgView(){
-    return imgView;
+        return imgView;
     }
-   public Image getImg(){
-    return frameImages;
+    public Image getImg(){
+        return frameImages;
     }
     protected Sprite() {
                 super();

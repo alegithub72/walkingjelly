@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import jeu.patrouille.coeur.pieces.Soldat;
 import javafx.scene.layout.Border;
-import jeu.patrouille.coeur.pieces.Soldat.Classment;
 
 /**
  *
@@ -112,5 +111,11 @@ public class FXInfoPanel extends Parent{
         sante.setText(s.getSante()+" "+s.getStatu().mes+"");
     
     }
+    public void resetInfo(){
+        nom.setText("");
+        tdLabel.setText("");
+        classment.setText("");
+        sante.setText("");
     
+    }
 }

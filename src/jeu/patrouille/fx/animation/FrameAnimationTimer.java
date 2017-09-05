@@ -106,7 +106,9 @@ public class FrameAnimationTimer extends AnimationTimer{
                 
             }else if(loop>=this.ciclyc && (i>f2) ) {
                 source.removeThis();
+                source.defaultFrame();
                 this.stop();
+              
                 i=f2;
             }
         } 
@@ -120,6 +122,7 @@ public class FrameAnimationTimer extends AnimationTimer{
        }
        System.out.println("stopped animation........");
        stopped=true;
+
     }
 
     @Override

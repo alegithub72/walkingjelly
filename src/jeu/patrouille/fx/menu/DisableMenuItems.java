@@ -15,7 +15,7 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  *
  * @author appleale
  */
-public class DisableMenuItems extends SoldatMenuItem{
+public class DisableMenuItems extends MenuItemButton{
     public DisableMenuItems(FXSoldat fxs){
         super(ActionType.PA_ACTION,fxs);
         setFrame(1);
@@ -30,9 +30,8 @@ public class DisableMenuItems extends SoldatMenuItem{
     }
 
     @Override
-    public int changeStates(int n) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        return -1;
+    public void changeStates() {
+
     }
 
     @Override

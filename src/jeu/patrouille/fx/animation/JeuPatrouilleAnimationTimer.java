@@ -19,8 +19,8 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
     GeneriqueArme arme;
     FXCarte fxcarte;    
     Sound type;
-    public enum Sound{MARCHE("goodStep.wav"),MP5("mp5.wav"),M16("m16.wav","m16.wav","fire.wav","fire5.wav"),GRUNT5("grunt2.wav"), 
-    AK74("AK47.mp3","AK47.mp3","fire.wav","fire5.wav"),BENELLI_M3("ShotGunFire.wav"); 
+    public enum Sound{MARCHE("goodStep.wav"),MP5("mp5.wav"),M16("m16.wav","m16.wav","M16A4Burst.mp3","fire5.wav"),GRUNT5("grunt2.wav"), 
+    AK74("AK47.mp3","AK47.mp3","ak47burst.wav","AK47Auto.mp3"),BENELLI_M3("ShotGunFire.wav"); 
         String files[]=new String[4];
         String file;
         Sound(String file1,String file2,String file3,String file4){
@@ -47,8 +47,10 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
         this.arme=arme;
         this.type=sound;
         if(arme!=null){
-            if(arme.getArmeFeuModel()!=FeuMode.SA && arme.getArmeFeuModel()!=FeuMode.SC)
-               this.ciclyc=3;
+            if(arme.getArmeFeuModel()==FeuMode.RA ) cyclic=5;
+            else 
+             if( arme.getArmeFeuModel()==FeuMode.PA)
+               this.ciclyc=10;
             if(arme.getModel()==GeneriqueEquipment.Model.M16 
                     ) this.sound=Sound.M16.file(arme.getArmeFeuModel());
             if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file(arme.getArmeFeuModel());

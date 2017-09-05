@@ -6,7 +6,7 @@
 package jeu.patrouille.fx.board;
 
 import jeu.patrouille.coeur.actions.BaseAction;
-import jeu.patrouille.fx.menu.MenuItem;
+import jeu.patrouille.fx.menu.AbstractMenuItemButton;
 import jeu.patrouille.fx.menu.WalkItem;
 
 /**
@@ -15,7 +15,7 @@ import jeu.patrouille.fx.menu.WalkItem;
  */
 public class FXMenuItemsDossier {
     
-    MenuItem[] items=new MenuItem[10];
+    AbstractMenuItemButton[] items=new AbstractMenuItemButton[10];
 
     public FXMenuItemsDossier() {
    // items[BaseAction.MARCHE]=new WalkItem()

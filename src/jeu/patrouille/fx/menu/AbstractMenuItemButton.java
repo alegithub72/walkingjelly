@@ -7,6 +7,7 @@ package jeu.patrouille.fx.menu;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.media.AudioClip;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
@@ -15,19 +16,26 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
  *
  * @author appleale
  */
-public abstract class MenuItem extends FXPatrouilleSprite{
+public abstract class AbstractMenuItemButton extends FXPatrouilleSprite{
     public static int  MENU_H=100;
     public static int MENU_W=100;
     ActionType actionType;
-    MenuItem link;    
-    public MenuItem(ActionType type){
+    AbstractMenuItemButton link;    
+    AudioClip media;
+    AudioClip media2;    
+    public AbstractMenuItemButton(ActionType type){
         super(MENU_W,MENU_H,null,null);
         if(type!=null){
             buildFrameImages(MenuImageChargeur.getImageMenu(type));
             actionType=type;
         }
     }
-    public void press(){
+    public void pressPrimary(){
+        media.play();
+        setFrame(1);
+    }
+    public void pressSecondary(){
+        media2.play();
         setFrame(1);
     }
     public void release(){
@@ -42,10 +50,10 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     public void setActionType(ActionType actionType) {
         this.actionType = actionType;
     }
-    public void addLink(MenuItem link){
+    public void addLink(AbstractMenuItemButton link){
         this.link=link;
     }
-    public MenuItem getLink(){
+    public AbstractMenuItemButton getLink(){
         return link;
     }    
     
@@ -54,6 +62,6 @@ public abstract class MenuItem extends FXPatrouilleSprite{
     return this.getChildren();
     }
     public abstract  BaseAction buildMenuItemAction();
-    public abstract int changeStates(int n);
+    public abstract void changeStates();
     public abstract void updateState();
 }

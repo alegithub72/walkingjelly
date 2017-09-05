@@ -6,6 +6,8 @@
 
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.BenelliM3;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ImpossibleRechargeArmeException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.IncompatibleMagazineException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
@@ -30,9 +32,9 @@ public class BenelliM3Test {
     @Rule
     public ExpectedException ex= ExpectedException.none();
     
-    public BenelliM3Test() throws PaDeMagazineException{
+    public BenelliM3Test() throws PaDeMagazineException,ImpossibleRechargeArmeException,IncompatibleMagazineException,ImpossibleRechargeArmeException{
            b=new BenelliM3();
-           b.loadMagazine();
+   
            
     }
     
@@ -61,11 +63,11 @@ public class BenelliM3Test {
     }
     @Test 
     public void testShotMFCourt() throws ModeDeFeuException{
-        assertEquals(3,b.hitsNumMF(1));
+        assertEquals(1,b.hitsNumMF(1));
     }
     @Test
     public void testShotNumMFMed() throws ModeDeFeuException{
-        assertEquals( 2,b.hitsNumMF(6));
+        assertEquals( 1,b.hitsNumMF(6));
     
     }
     
@@ -100,12 +102,9 @@ public class BenelliM3Test {
     b.feuArme(50);
     assertEquals(6,b.shotRemain());
     }
-    /**
-     * Ogni volta viene inizilizzata la classe di test ???
-     * @throws ModeDeFeuException 
-     */
+
     @Test 
-    public void testChargeArme() throws ModeDeFeuException,LoadMagazineFiniException,PaDeMagazineException{
+    public void testChargeArme() throws ModeDeFeuException,LoadMagazineFiniException,IncompatibleMagazineException,ImpossibleRechargeArmeException,PaDeMagazineException{
        b.feuArme(50);
       
     assertEquals(6,b.shotRemain());   

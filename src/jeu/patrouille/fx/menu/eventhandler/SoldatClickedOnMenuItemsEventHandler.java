@@ -10,7 +10,8 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.menu.MenuItem;
+import jeu.patrouille.fx.menu.AbstractMenuItemButton;
+import jeu.patrouille.fx.menu.MenuItemButton;
    
 /**
  *
@@ -18,11 +19,11 @@ import jeu.patrouille.fx.menu.MenuItem;
  */
 public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<MouseEvent>{
     
-    MenuItem item;  
-    MenuItem mainMenu[];
+    AbstractMenuItemButton item;  
+    AbstractMenuItemButton mainMenu[];
     FXCarte fxcarte;
     int n;
-    public SoldatClickedOnMenuItemsEventHandler(MenuItem item,FXCarte fxcarte) {
+    public SoldatClickedOnMenuItemsEventHandler(AbstractMenuItemButton item,FXCarte fxcarte) {
         this.item=item;
         n=1;
         this.fxcarte=fxcarte;
@@ -37,12 +38,15 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
 
         if(event.getButton()==MouseButton.PRIMARY  ){
 
-           if(!fxcarte.isFXHelperActionSeletiones()) fxcarte.clickOnButtonItems(item);
+           if(!fxcarte.isFXHelperActionSeletiones()) 
+               fxcarte.clickOnButtonItems(item);
             
         }else if(event.getButton()==MouseButton.SECONDARY){
-            n=item.changeStates(n);
+            item.changeStates();
             if(item.getLink()!=null) item.getLink().updateState();
-            
+            MenuItemButton sItem=(MenuItemButton)item;
+            fxcarte.openCurrentSoldatMenuItems(sItem.getFXSoldat().getTranslateX(),
+                    sItem.getTranslateY());
         }
         
       

@@ -7,6 +7,8 @@ package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BandageAction;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.FeuAction;
+import jeu.patrouille.coeur.actions.RechargeArmeAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
@@ -14,18 +16,18 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  *
  * @author appleale
  */
-public class BandageItem extends MenuItemButton{
-    public BandageItem(FXSoldat fxs){
-        super(ActionType.BANDAGE,fxs);
+public class LoadMagazineItem extends MenuItemButton{
+    public LoadMagazineItem(FXSoldat fxs){
+        super(ActionType.ARME_RECHARGE,fxs);
     }
 
-    public BandageItem() {
-        super(ActionType.BANDAGE, null);
+    public LoadMagazineItem() {
+        super(ActionType.ARME_RECHARGE, null);
     }
-
+ 
     @Override
     public BaseAction buildMenuItemAction() {
-        BaseAction act=new BandageAction(fxs.getSoldat(), null);
+        BaseAction act=new RechargeArmeAction(fxs.getSoldat(), null);
         return act;//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

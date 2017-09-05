@@ -11,10 +11,8 @@ import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
-import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.fx.board.FXCarte;
 
-import jeu.patrouille.fx.board.FXPlanche;
 
 
 
@@ -27,12 +25,14 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
  
     FXCarte fxcarte;
     AudioClip media;
+    boolean b;
     public SoldatOpenMenuItemsFXCarteEventHandler(FXCarte fxcarte) {
     ClassLoader classLoader = getClass().getClassLoader();
      URL url=classLoader.getResource("clickSol.wav");
      media=new AudioClip(url.toString());     
      media.setVolume(0.4);    
      this.fxcarte=fxcarte;
+     b=true;
     }
 
     @Override
@@ -42,12 +42,14 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
           
            fxcarte.setCursor(Cursor.HAND);
            if (event.getButton() == MouseButton.SECONDARY
-                   && event.getClickCount()<=1 ) {
+                   && event.getClickCount()<=1 && b) {
                 
                 fxcarte.openCurrentSoldatMenuItems(event.getSceneX(),event.getSceneY());
                 media.play();
-           }  else if(event.getButton()==MouseButton.PRIMARY
-                   && event.getClickCount()>1){
+                b=!b;
+           }  else if(event.getButton()==MouseButton.SECONDARY
+                   && !b ){
+               b=!b;
                 fxcarte.closeFXCarteMenuItems();
            }
        

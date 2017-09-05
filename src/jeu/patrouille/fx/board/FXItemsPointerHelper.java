@@ -7,11 +7,11 @@ package jeu.patrouille.fx.board;
 
 
 import jeu.patrouille.coeur.Carte;
+import jeu.patrouille.coeur.actions.AbstractAction;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
-import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -166,13 +166,12 @@ public FXSoldat getFXSoldatSelectionee(){
     }
     public void buildFeuAction(FeuAction act,int i1,int j1,double angle){
         Terrain t= carte.getPointCarte(i1, j1);
-        GeneriquePiece p=t.getPiece();
+        Soldat p=t.getFirstSoldat();
         Soldat s=null;
         if(p!=null  &&
                 p.getPieceType()==Piece.ActeurType.SOLDAT)
             s=(Soldat)p;
-        else if(t.getExtraPiece().size()>0) 
-            s=(Soldat)t.getExtraPiece().get(0);
+
         act.setI1(i1);
         act.setJ1(j1);
         act.setAntagoniste(s);
@@ -182,6 +181,16 @@ public FXSoldat getFXSoldatSelectionee(){
         act.setI0(s0.getI());
         act.setJ0(s0.getJ());
         this.act=act;
+    }
+    public void builtAction(ActionType type){
+    
+        Terrain t=carte.getPointCarte(act.getI1(), act.getJ1());
+        Soldat s=t.getFirstSoldat();
+        act.setAntagoniste(s);
+        if(s==act.getProtagoniste())
+            act.setVersus(AbstractAction.SubjectType.MYSELF);
+        else act.setVersus(AbstractAction.SubjectType.OTHER);
+    
     }
     
     public boolean isDistanceLessMarcheMax(double dist){

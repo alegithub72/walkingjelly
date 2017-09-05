@@ -19,7 +19,7 @@ public abstract class GeneriqueEquipment extends GeneriquePiece{
     public enum Model {BENELLI_M3, AK74, M16,MP5};
     public static final int NOTVALUE = -111;
      String nom;
-     EquipmentType equipmentType;
+    protected  EquipmentType equipmentType;
      Model model;
 
     public GeneriqueEquipment(String nom,EquipmentType type,Model model) {

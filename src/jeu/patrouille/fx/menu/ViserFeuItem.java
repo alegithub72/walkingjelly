@@ -28,10 +28,18 @@ public class ViserFeuItem extends FeuItem{
     @Override
     void buildButtonState(){
     if(mode==GeneriqueArme.FeuMode.SA || 
-       mode==GeneriqueArme.FeuMode.SC)
+       mode==GeneriqueArme.FeuMode.SC){
         buildFrameImages(MenuImageChargeur.getImageMenu(actionType));
-    else if(mode==GeneriqueArme.FeuMode.RA) buildFrameImages(MenuImageChargeur.getImageMenuSubType(2));
-    else if(mode==GeneriqueArme.FeuMode.PA)buildFrameImages(MenuImageChargeur.getImageMenuSubType(3));     
+        n=1;
+    }
+    else if(mode==GeneriqueArme.FeuMode.RA) {
+        buildFrameImages(MenuImageChargeur.getImageMenuSubType(2));
+        n=2;
+    }
+    else if(mode==GeneriqueArme.FeuMode.PA){
+        buildFrameImages(MenuImageChargeur.getImageMenuSubType(3));
+        n=3;
+    }     
     }
     @Override
     public BaseAction buildMenuItemAction() {

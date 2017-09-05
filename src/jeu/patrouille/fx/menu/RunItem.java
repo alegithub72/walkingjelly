@@ -15,7 +15,7 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  *
  * @author appleale
  */
-public class RunItem extends SoldatMenuItem{
+public class RunItem extends MenuItemButton{
     
     public RunItem(FXSoldat fxs){
         super(ActionType.COURS, fxs);
@@ -27,8 +27,8 @@ public class RunItem extends SoldatMenuItem{
     }
 
     @Override
-    public int changeStates(int n) {
-        return-1;
+    public void changeStates() {
+        return;
     }
 
     @Override

@@ -317,7 +317,7 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
         double y1y0=y1-y0;
        // x1x0=x1x0*x1x0;
        // y1y0=y1y0*y1y0;
-       double inch=1/tilesize;
+       double inch= 1.0d/tilesize;
         double dist=Math.sqrt(Math.pow(y1y0,2)+Math.pow(x1x0,2));
     return dist*inch;
     

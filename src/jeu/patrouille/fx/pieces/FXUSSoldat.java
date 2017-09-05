@@ -38,7 +38,7 @@ public class FXUSSoldat extends FXSoldat {
     @Override
     public void buildFramesFeuAnim() {
         
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0,1 , 200,s.getArmeUtilise(),null);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0,1 , 100,s.getArmeUtilise(),null);
         frameAnimTimer[0].buildMedia();
     }
 

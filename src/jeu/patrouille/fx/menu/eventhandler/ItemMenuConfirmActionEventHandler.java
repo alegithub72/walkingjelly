@@ -8,10 +8,9 @@ package jeu.patrouille.fx.menu.eventhandler;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.menu.MenuItem;
+import jeu.patrouille.fx.menu.AbstractMenuItemButton;
 
 /**
  *
@@ -19,8 +18,8 @@ import jeu.patrouille.fx.menu.MenuItem;
  */
 public class ItemMenuConfirmActionEventHandler  implements EventHandler<MouseEvent>{
     FXCarte fxcarte;
-    MenuItem item;
-    public ItemMenuConfirmActionEventHandler(MenuItem item,FXCarte fxcarte) {
+    AbstractMenuItemButton item;
+    public ItemMenuConfirmActionEventHandler(AbstractMenuItemButton item,FXCarte fxcarte) {
         this.fxcarte=fxcarte;
         this.item=item;
     }
@@ -36,6 +35,9 @@ public class ItemMenuConfirmActionEventHandler  implements EventHandler<MouseEve
                     fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
                 else if(item.getActionType()==ActionType.FEU){
                     fxcarte.confirmFEUAction(item, event.getSceneX(), event.getSceneY());
+                }else if(item.getActionType()==ActionType.ARME_RECHARGE ||
+                        item.getActionType()==ActionType.BANDAGE){
+                    fxcarte.confirmAction(item, event.getSceneX(), event.getSceneY());
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

@@ -30,6 +30,7 @@ public class MenuImageChargeur {
         menuImages[ActionType.PA_ACTION.ordinal()]=new Image("arrowPng.png");
         menuImages[ActionType.BANDAGE.ordinal()]=new Image("bandageButton2.png");
         menuImages[ActionType.FEU_VISER.ordinal()]=new Image("aimedShot.png");
+        menuImages[ActionType.ARME_RECHARGE.ordinal()]=new Image("loadMagazineButton.png");
         menuImageSubType[0]=new Image("BurstButton.png");
         menuImageSubType[1]=new Image("FullAutomaticButton.png");
         menuImageSubType[2]=new Image("aimedShotBURST.png");

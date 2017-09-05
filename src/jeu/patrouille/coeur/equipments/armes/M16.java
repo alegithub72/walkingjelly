@@ -36,7 +36,7 @@ public class M16 extends GeneriqueArme{
 
         TDfireWeapon[FeuMode.SA.ordinal()]=3;
         TDfireWeapon[FeuMode.RA.ordinal()]=5;
-
+        finalCartouch=load.capacity;
     
     }
 

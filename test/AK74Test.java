@@ -12,6 +12,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import jeu.patrouille.coeur.equipments.armes.AK74;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ImpossibleRechargeArmeException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.IncompatibleMagazineException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
@@ -27,9 +29,9 @@ public class AK74Test {
     @Rule
     public ExpectedException ex=ExpectedException.none();
     AK74 ak;
-    public AK74Test() throws PaDeMagazineException{
+    public AK74Test() throws PaDeMagazineException,ImpossibleRechargeArmeException,IncompatibleMagazineException,ImpossibleRechargeArmeException{
         ak=new AK74();
-        ak.loadMagazine();
+       
     }
     
     @BeforeClass
@@ -52,7 +54,7 @@ public class AK74Test {
    @Test
    public void testPorte() throws ModeDeFeuException,LoadMagazineFiniException{
        assertEquals(GeneriqueArme.FeuMode.SA ,  ak.getArmeFeuModel());
-       assertEquals( 3 ,ak.feuArme(50));
+       assertEquals( 1 ,ak.feuArme(50));
        assertEquals(29, ak.shotRemain());
    }
    
@@ -80,6 +82,17 @@ public class AK74Test {
         assertEquals(20, ak.shotRemain());
        
    }   
+   @Test
+   public void testReloadFA()throws ModeDeFeuException,LoadMagazineFiniException,ImpossibleRechargeArmeException,IncompatibleMagazineException,PaDeMagazineException{
+
+        ak.changeModeFeu(GeneriqueArme.FeuMode.PA);
+        ak.feuArme(50);
+        assertEquals(20, ak.shotRemain());
+        ak.rechargeArme();
+        assertEquals(30, ak.shotRemain());
+        
+       
+   }     
    
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:

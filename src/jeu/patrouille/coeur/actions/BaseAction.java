@@ -20,7 +20,7 @@ import jeu.patrouille.coeur.pieces.Piece;
  */
 public   class BaseAction extends AbstractAction {
     
-    
+   
     public static  BaseAction QUIT=new BaseAction(ActionType.PA_ACTION, -1, -1, -1,-1, null, null);
     public static  Comparator baseActionCompratorImpl=new BaseActionComparatorImpl();
     GeneriquePiece protagoniste;
@@ -108,6 +108,7 @@ public int compareTo(BaseAction b) {
         else if(type==ActionType.FEU_VISER) c='v';
         else if(type==ActionType.MARCHE) c='m';
         else if(type==ActionType.BANDAGE) c='b';
+        else if(type==ActionType.ARME_RECHARGE) c='r';
         
         String txt=c+""+i0+","+j0+";"+i1+","+j1;
         return txt;

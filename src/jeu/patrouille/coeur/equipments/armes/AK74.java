@@ -32,11 +32,11 @@ public class AK74 extends GeneriqueArme{
         
         this.TDfireWeapon[FeuMode.SA.ordinal()]=3;
         this.TDfireWeapon[FeuMode.RA.ordinal()]=5;
-        this.TDfireWeapon[FeuMode.PA.ordinal()]=10;
+        this.TDfireWeapon[FeuMode.PA.ordinal()]=6;
   
         load=magazine[0];
         modefeu=FeuMode.SA;
-        
+        finalCartouch=load.capacity;
         
     }
 

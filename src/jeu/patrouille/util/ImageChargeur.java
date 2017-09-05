@@ -21,12 +21,14 @@ import jeu.patrouille.fx.sprite.CursorHelper;
  */
 public class ImageChargeur {
     public static int CURSOR_HOST_RANGE=0,CURSOR_US_RANGE=1,
-            CURSOR_FORBIDDEN=2,CURSOR_CROSSHAIR=3,CURSO_HELPER_BANDGAE=4;
+            CURSOR_FORBIDDEN=2,CURSOR_CROSSHAIR=3,CURSO_HELPER_BANDGAE=4,
+            CURSO_HELPER_LOADMAG=5;
     CursorHelper cursoHostRange = new CursorHelper(ImageChargeur.CURSOR_HOST_RANGE);
     CursorHelper cursorUSRange = new CursorHelper(ImageChargeur.CURSOR_US_RANGE);
     CursorHelper cursorForbidenRange=new CursorHelper(ImageChargeur.CURSOR_FORBIDDEN);  
     CursorHelper cursorCrooshair=new CursorHelper(ImageChargeur.CURSOR_CROSSHAIR);
     CursorHelper cursorBandage=new CursorHelper(ImageChargeur.CURSO_HELPER_BANDGAE);
+    CursorHelper cursonLodaMag=new CursorHelper(ImageChargeur.CURSO_HELPER_LOADMAG);
     Image[] array;
      ImageChargeur() {
         array=new Image[6];
@@ -35,6 +37,7 @@ public class ImageChargeur {
         array[2]=new Image("forbiddenCursor.png");
         array[3]=new Image("crosshair.png");
         array[4]=new Image("cursorHelperBandage.png");
+         array[5]=new Image("cursorHelperLodaMag.png");
         arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
         arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
         arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
@@ -45,6 +48,7 @@ public class ImageChargeur {
         cursorUSRange.buildFrameImages(array[CURSOR_US_RANGE]);
         cursorBandage.buildFrameImages(array[CURSO_HELPER_BANDGAE]);
         cursorCrooshair.buildFrameImages(array[CURSOR_CROSSHAIR]);
+        cursonLodaMag.buildFrameImages(array[CURSO_HELPER_LOADMAG]);
     }
      
     ImageCursor arrowCRRight;
@@ -70,6 +74,7 @@ public class ImageChargeur {
             return this.cursorForbidenRange;
         else if(type==CURSOR_CROSSHAIR) return this.cursorCrooshair;
         else if(type==CURSO_HELPER_BANDGAE) return this.cursorBandage;
+        else if(type==CURSO_HELPER_LOADMAG) return this.cursonLodaMag;
         return null;
     } 
 

@@ -13,7 +13,7 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  *
  * @author appleale
  */
-public class OpFeuItem extends SoldatMenuItem{
+public class OpFeuItem extends MenuItemButton{
     
     public OpFeuItem(FXSoldat fxs){
         super(ActionType.OCCASION_DE_FEU,fxs);
@@ -26,8 +26,8 @@ public class OpFeuItem extends SoldatMenuItem{
     }
 
     @Override
-    public int changeStates(int n) {
-        return-1;
+    public void changeStates() {
+
     }
 
     @Override

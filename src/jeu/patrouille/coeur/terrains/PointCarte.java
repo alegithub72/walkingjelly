@@ -10,6 +10,7 @@ import java.util.List;
 import jeu.patrouille.coeur.grafic.TerrainTextRapresentation;
 import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Soldat;
 
 /**
  *
@@ -34,6 +35,21 @@ public  class PointCarte implements TerrainTextRapresentation{
     List<GeneriquePiece> extraPiece;
     public GeneriquePiece getPiece() {
         return piece;
+    }
+    public Soldat getFirstSoldat(){
+        Soldat s=null;
+        if(piece!=null && piece.getPieceType()==Piece.ActeurType.SOLDAT)
+            s=(Soldat) piece;
+        else {
+            for (GeneriquePiece p : extraPiece) {
+                if(p.getPieceType()==Piece.ActeurType.SOLDAT){
+                    s=(Soldat)p;
+                    break;
+                }     
+            }
+            
+        }
+        return s;
     }
     public void setPiece(GeneriquePiece p){
         piece=p;

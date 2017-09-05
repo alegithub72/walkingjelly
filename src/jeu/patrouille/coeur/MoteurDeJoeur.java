@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javafx.application.Platform;
+import jeu.patrouille.coeur.actions.AbstractAction;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
@@ -17,10 +18,14 @@ import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.actions.exceptions.MakeActionFailException;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ImpossibleRechargeArmeException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.IncompatibleMagazineException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.parts.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -28,6 +33,7 @@ import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.coeur.terrains.Terrain;
+import jeu.patrouille.fx.board.FXCarte;
 /**
  *
  * @author Alessio Sardaro
@@ -219,15 +225,16 @@ public void rondStartTest(){
             transformActionPool(sold);
         }
         int sum=0;
+        int rollDice=sold.getBoss().dice(10);
+        int initiativeNum=rollDice -sold.getCC();
+                        
         List<BaseAction> list =new ArrayList<>();
         for (int h=0;h<sold.actionSize();h++) {
              sum=sum+sold.nextAction(h).getTempActivite();
              if(sum<=td) {
                  if(!sold.nextAction(h).isUsed()){
                         list.add(sold.nextAction(h));
-                        Soldat s=(Soldat)sold.nextAction(h).getProtagoniste();
-                        int rollDice=sold.getBoss().dice(10);
-                        sold.nextAction(h).setOrdreInitiative( rollDice -s.getCC());
+                        sold.nextAction(h).setOrdreInitiative( initiativeNum);                        
                         sold.nextAction(h).setUsed(true);                     
                  }
 
@@ -352,20 +359,66 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
     
     }
    private void makeActionAndPlay(int td,Soldat s,BaseAction a) throws MakeActionFailException{
-       BaseAction act1=a.clone();       
+             
        if(! s.isImmobilize() && a.getType()==ActionType.MARCHE ){
+           BaseAction act1=a.clone(); 
            makeMarcheAction(s, a);
            BaseAction act2=a.clone();
            playAllGraficInterface(act1,act2);
        }else if (   a.getType() == ActionType.FEU) {
+           BaseAction act1=a.clone(); 
            makeFeuAction(td,(FeuAction) a);
            BaseAction act2=a.clone();
            playAllGraficInterface(act1,act2);           
+       }else if(a.getType()==ActionType.BANDAGE || 
+               a.getType()==ActionType.ARME_RECHARGE){
+           makeAction(a);
+           playAllGraficInterface(a, a);
+       
        }else {
            System.out.println("ACTION NOT CONSIDERED :"+a.toString());
            stopAllPendingAnimation();
        }
 
+   }
+   
+   void makeAction(BaseAction act)throws MakeActionFailException{
+       GeneriquePiece sp=act.getProtagoniste(),sa=act.getAntagoniste();
+       try{
+
+               Soldat s=(Soldat)sp;
+               switch (act.getType()){
+                   case ARME_RECHARGE:
+                      if(act.getVersus()==AbstractAction.SubjectType.MYSELF) 
+                          s.rechargeArme();
+                      else {
+                         Soldat s1=(Soldat)sa;
+                          s.giveMagazine(s1);
+                          s1.rechargeArme();
+                      }
+                       break;
+                   case BANDAGE:
+                       if(act.getVersus()==AbstractAction.SubjectType.MYSELF)
+                            s.bandage();
+                       else {
+                            s=(Soldat)sa;
+                            s.bandage();
+                      
+                       }
+                       break;
+               
+               
+               }
+
+           
+           
+ 
+       }catch(ImpossibleRechargeArmeException|PaDeMagazineException |IncompatibleMagazineException pa ){
+           MakeActionFailException m= new MakeActionFailException();
+           m.initCause(pa);
+           throw m;
+       }
+   
    }
     private boolean allAnimOn(){
         boolean b=false;
@@ -484,19 +537,26 @@ private    void reMountMenuItemsAndScroll(){
             try{
             System.out.println("*************************FEUUUU MAKE*****************************");
             Soldat s=(Soldat)act.getProtagoniste();
-       
-            if(s.getArmeUtilise()!=null)s.getArmeUtilise().changeModeFeu(act.getMode());
-            Soldat target=(Soldat)act.getAntagoniste();
+            s.setAction(act.getType());
+            if(s.getArmeUtilise()!=null)
+                s.getArmeUtilise().changeModeFeu(act.getMode());
+               Soldat target=null;
+            if(act.getAntagoniste()!=null && 
+                    act.getAntagoniste().getPieceType()==Piece.ActeurType.SOLDAT)
+                target=(Soldat)act.getAntagoniste();
+            
             int i1=act.getI1(),j1=act.getJ1();
+            if(target!=null ){
+                i1=target.getI();
+                j1=target.getJ();                
+            }            
             System.out.println(s.toStringSimple()+" soldat make feu---> "+((target!=null)?target.toStringSimple():""));
             //TODO generalizzare in FXcarte....
-            int score=s.fire(act);
+
+            int score=scoreSoldatFeu(s, target, i1,j1,act.getType());
             System.out.println("score ="+score);
             Lesion[] llist=new Lesion[score];
-            if(target!=null ){
-                i1=target.getI();j1=target.getJ();
-                
-            }
+
             PointCarte line[]= Carte.getLigne(s.getI(), s.getJ(), i1,j1);
             //Terrain cover= c.getPointCarte(line[line.length-1].getI(),line[line.length-1].getJ());
             GeneriqueArme arm=s.getArmeUtilise();
@@ -558,7 +618,31 @@ private    void reMountMenuItemsAndScroll(){
 
         System.out.println("**************************FEUUUU MAKE----FINE*****************************");            
     }
+    int scoreSoldatFeu(Soldat s,Soldat target,int i1,int j1,ActionType type) throws TomberArmeException,ModeDeFeuException,LoadMagazineFiniException{
+
+        int score = 0;
+        if(target!=null) {
+            i1=target.getI();
+            j1=target.getJ();
+        }
+        double dist = Carte.distance(s.getI(), s.getJ(), i1,j1, FXCarte.TILE_SIZE);
+        int shotN = s.feu(dist);
+        System.out.println("hits " + shotN);
+        GeneriqueJoeurs boss=s.getBoss();
         
+        int cDM = s.combatFeuModifier(dist);
+        if(target!=null) cDM=cDM+target.combatModifierTarget();
+        int tg=s.getCA()+cDM;
+        System.out.println("-->combat modifier " + cDM+ "competence d'arme :"+s.getCA());
+            for(int hits=0;hits<shotN;hits++){
+                int dice=boss.dice(10);
+                System.out.println("dice "+dice+"<=target number "+tg);
+                if(dice<=tg) score++;
+            }    
+    
+    return score;
+    
+    }
     void tomberArmeUtilise(Soldat s1){
         //TODO da aggiungere all'ultimo usati.....
         c.getPointCarte(s1.getI(), s1.getJ()).addExtraPiece(s1.getArmeUtilise());

@@ -35,6 +35,12 @@ public class CorpPart {
     public boolean isBlesse(){
         return d==Lesion.Degre.GRAVE || d==Lesion.Degre.CRITIQUE;
     }
-    
+    public void setDegre(Lesion.Degre d){
+        this.d=d;
+    }
+    public int degree(){
+        if(d!=null )return this.d.ordinal();
+        else return -1;
+    }
     
 }

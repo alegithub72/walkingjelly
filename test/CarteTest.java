@@ -27,7 +27,7 @@ public class CarteTest {
     Carte c;
 
     public CarteTest() throws IOException {
-        c = new Carte();
+        c = new Carte("src/mapDesert.txt");
         c.loadMap();
     }
 
@@ -294,11 +294,11 @@ public class CarteTest {
     }
     @Test 
     public void testDistance(){
-        double d=c.distance(0, 0, 10, 10, FXCarte.TILE_SIZE);
+        double d=Carte.distance(0, 0, 10, 10, FXCarte.TILE_SIZE);
         Point2D p0=new Point2D(25, 25);
         Point2D p1=new Point2D((10*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2)
                 ,(10*FXCarte.TILE_SIZE)+(FXCarte.TILE_SIZE/2));
-        assertEquals(p1.distance(p0),d,0.0d);
+        assertEquals(p1.distance(p0)*FXCarte.INCHxPIXEL,d,0d);
     
     }
     

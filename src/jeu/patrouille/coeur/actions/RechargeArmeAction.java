@@ -12,16 +12,17 @@ import jeu.patrouille.coeur.pieces.GeneriquePiece;
  *
  * @author appleale
  */
-public class BandageAction extends BaseAction{
+public class RechargeArmeAction extends BaseAction{
   
-    public BandageAction(GeneriquePiece protagoniste,GeneriquePiece antagoniste) {
-        super(ActionType.BANDAGE, -1, -1, -1, -1,protagoniste , antagoniste);
+    public RechargeArmeAction(GeneriquePiece protagoniste,GeneriquePiece antagoniste) {
+        super(ActionType.ARME_RECHARGE, -1, -1, -1, -1,protagoniste , antagoniste);
 
     }
 
     @Override
     public void calculeActionPointDesAction() throws Exception {
-        tempActivite= type.TN();
+       if(protagoniste==antagoniste) tempActivite= type.TN();
+       else tempActivite=2;
     }
 
 }

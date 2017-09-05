@@ -7,17 +7,18 @@ package jeu.patrouille.coeur.actions;
 
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import java.util.List;
-import jeu.patrouille.coeur.actions.AbstractAction.*;
 /**
  *
  * @author Alessio Sardaro
  */
 public abstract class AbstractAction implements Comparable<BaseAction>{
     
-
+    public enum SubjectType {MYSELF,OTHER};
 
 
     ActionType type;
+    SubjectType versus;
+    
     int j0;
     int i0;
     int i1;
@@ -37,6 +38,15 @@ public abstract class AbstractAction implements Comparable<BaseAction>{
         return type;
     }
 
+    public SubjectType getVersus() {
+        return versus;
+    }
+
+    public void setVersus(SubjectType versus) {
+        this.versus = versus;
+    }
+    
+    
     public int getJ0() {
         return j0;
     }

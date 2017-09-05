@@ -36,7 +36,7 @@ public class BenelliM3 extends GeneriqueArme{
         this.TDrecharge=6;
         this.modefeu=FeuMode.SC;
         load=magazine[0];
-        
+        finalCartouch=load.capacity;
         
         
         

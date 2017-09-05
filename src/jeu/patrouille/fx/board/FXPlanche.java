@@ -20,15 +20,18 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.menu.BandageItem;
 import jeu.patrouille.fx.menu.FeuItem;
+import jeu.patrouille.fx.menu.LoadMagazineItem;
+import jeu.patrouille.fx.menu.MenuItemButton;
 import jeu.patrouille.fx.menu.WalkItem;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnButtonEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnEventHandler;
@@ -102,6 +105,7 @@ public class FXPlanche extends Application {
 
 
     public void imprimerFXPLInfo(Soldat s) {
+        infPl.setVisible(true);
         infPl.imprimerInfo(s);
 
         
@@ -161,8 +165,11 @@ public class FXPlanche extends Application {
         rootScene.getChildren().add(message);
     }
     public void endTurn(){
-
+        infPl.resetInfo();
+        rootScene.getChildren().remove(fxequip);   
+        infPl.setVisible(false);
         suprimerActionVisualization();
+        sendMessageToPlayer(" START TURN ");
         fxCarte.playTurn();
     }
     void buildTop() {
@@ -222,11 +229,22 @@ public class FXPlanche extends Application {
     public void addDoritBarGroup(Node n){
         rootScene.getChildren().add(n);
     } 
+    public void sendMessageToPlayer(String text,Paint color) {
+        message.setTextFill(color);
+        if(text.length()>20) {
+            String t2=text.substring(20);
+            String t1=text.substring(0, 20)+"\n";
+            message.setText(t1+t2);
+        }else      message.setText(text);
+       
+   
+
+    }
     void sendMessageToPlayer(String text) {
+        message.setTextFill(Color.WHITE);
         message.setText(text);
 
     }
-
     void visualizeActionBarActual() {
 
         int k = fxCarte.getHelper().getSeletctionee().actionSize() - 1;
@@ -236,12 +254,22 @@ public class FXPlanche extends Application {
 
     void visualizeActionBar(BaseAction act, int k) {
         //TODO compliche trought scroll panel !!!!!!!
-        Sprite spAct=null;
-        if (act.getType() == ActionType.MARCHE) {
-            spAct = new WalkItem(null);
-
-        }if(act.getType()==ActionType.FEU){
-            spAct=new FeuItem();
+        MenuItemButton spAct=null;
+        if (null != act.getType()) switch (act.getType()) {
+            case MARCHE:
+                spAct = new WalkItem(null);
+                break;
+            case FEU:
+                spAct=new FeuItem();
+                break;
+            case BANDAGE:
+                spAct=new BandageItem();
+                break;
+            case ARME_RECHARGE:
+                spAct=new LoadMagazineItem();
+                break;
+            default:
+                break;
         }
         boolean add = rootScene.getChildren().add(spAct);
         spAct.setScaleX(0.5);

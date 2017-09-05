@@ -14,7 +14,7 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  *
  * @author appleale
  */
-public class WalkItem extends SoldatMenuItem{
+public class WalkItem extends MenuItemButton{
     public WalkItem(FXSoldat fxs){
         super(ActionType.MARCHE,fxs);
         
@@ -33,9 +33,11 @@ public class WalkItem extends SoldatMenuItem{
     }
         public static void main(String[] args) {}
 
+
+
     @Override
-    public int changeStates(int n) {
-       return-1;
+    public void changeStates() {
+ 
     }
 
     @Override

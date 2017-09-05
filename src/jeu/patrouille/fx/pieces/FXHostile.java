@@ -6,7 +6,6 @@
 package jeu.patrouille.fx.pieces;
 
 import javafx.scene.image.ImageView;
-import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
@@ -24,7 +23,7 @@ public class FXHostile extends FXSoldat{
         
         feu1=0;
         feu2=1;
-        
+
         
         
         
@@ -49,9 +48,13 @@ public class FXHostile extends FXSoldat{
 
     @Override
     protected void buildFramesMarcheAnim() {
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(4, 7, this, 0, -1, 200, null,Sound.MARCHE);
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(4,7, this, 0, -1,200, null,Sound.MARCHE);
         this.frameAnimTimer[0].buildMedia();        
     }
+    protected void buildFramesCourseAnim() {
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(8,9, this, 0, -1,400, null,Sound.MARCHE);
+        this.frameAnimTimer[0].buildMedia();        
+    }    
     
     @Override
     public void feuFrame(){

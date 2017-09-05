@@ -60,8 +60,9 @@ public class Corp {
         return c;
     }     
     public void reciveBlessure(Lesion l){
-        //TODO aggiungere una lessione ad ogni parte del corpo
-        
+        CorpPart c= corps[l.location.ordinal()];
+        if(l.gravite.ordinal()>c.degree() )c.setDegre(l.gravite);
+
     }
     public boolean isBrasDroiteBlesse(){
         return this.corps[CorpParts.BrasDroite.ordinal()].isBlesse();

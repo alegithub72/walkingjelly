@@ -33,8 +33,8 @@ public class ItemMenuRangeDisplayHandler implements EventHandler<MouseEvent>{
                fxcarte.displayMarcheRangeAction(event.getSceneX(),event.getSceneY());
            else if(actionType==ActionType.FEU)
                fxcarte.displayFeuRangeAction(event.getSceneX(), event.getSceneY());
-           else if(actionType==ActionType.BANDAGE)
-               fxcarte.displayRangeBandageAction(event.getSceneX(), event.getSceneY());
+           else if(actionType==ActionType.BANDAGE || actionType==ActionType.ARME_RECHARGE)
+               fxcarte.displayRangeAction(event.getSceneX(), event.getSceneY(),actionType);
          }
         if(count>2) {
                 count=0;

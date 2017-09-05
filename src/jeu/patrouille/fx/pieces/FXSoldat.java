@@ -6,20 +6,25 @@
 package jeu.patrouille.fx.pieces;
 
 
+import java.net.URL;
 import javafx.animation.PathTransition;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
+import jeu.patrouille.coeur.actions.BandageAction;
+import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.pieces.Piece;
@@ -69,7 +74,6 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         this.pos=pos;
         stImage=Soldat.Statut.NORMAL;
 
-        setDeafultFrame(0);
     }
 
 
@@ -307,10 +311,10 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
               System.out.println("***************STATUS "+ptList[0].getStatus());
               frameAnimTimer[0].stop();
-              fxcarte.setAnimOn(false);
+              defaultFrame();
               path.stop();
-
-             System.out.println("FXSOLDAT ANIM----->STOP");
+              fxcarte.setAnimOn(false);
+              System.out.println("FXSOLDAT ANIM----->STOP");
 //              }
              event.consume();
             }
@@ -321,7 +325,50 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
         System.out.println("------------- FXSOLDAT PLAY ANIM MARCHE ---------FINE------->--------><---------");
     } 
-   
+    public void playBandage(){
+        fxcarte.centerScrollArea(s.getI(), s.getJ());
+        fxcarte.refreshCarte();
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL url=classLoader.getResource("bandage.mp3");        
+        AudioClip media=new AudioClip(url.toString());
+        media.play();
+        PauseTransition p=new PauseTransition(Duration.seconds(2));
+        
+        p.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                updateBandageImage(s.getStatu());
+                fxcarte.refreshCarte();
+                fxcarte.setAnimOn(false);
+                event.consume();
+            }
+        });
+        p.play();
+    }
+    
+    public void playReloadMag(){
+        System.out.println("--------------RELOAD----------------------");
+        fxcarte.centerScrollArea(s.getI(), s.getJ());
+        fxcarte.refreshCarte();
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL url=classLoader.getResource("clipin3.wav");         
+        AudioClip media=new AudioClip(url.toString());
+        media.play();
+       
+        PauseTransition p=new PauseTransition(Duration.seconds(2));
+        
+        p.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+                if(event.getEventType()==ActionEvent.ACTION)
+                fxcarte.setAnimOn(false);
+                event.consume();
+            }
+        });
+        p.play();
+        System.out.println("--------------RELOAD-----------------------");
+    }    
     public void signOff(){
        flagImg.setVisible(false);
        classmentImg.setVisible(false);
@@ -351,13 +398,13 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        }
        getChildren().remove(incoscientAuImmobilizer);
        getChildren().remove(scared);
-       if((s.isImmobilize()||
-               s.isIncoscient())&& !s.isKIA()) {
+       if((s.isIncoscient() || s.isImmobilize())    && !s.isKIA()) {
                incoscientAuImmobilizer.toFront();
                incoscientAuImmobilizer.relocate(FXCarte.TILE_SIZE-16, FXCarte.TILE_SIZE-32);
                incoscientAuImmobilizer.setVisible(true);
             if(!getChildren().contains(incoscientAuImmobilizer)) getChildren().add(incoscientAuImmobilizer);
-       }else if(s.isKIA()){
+       }
+       else if(s.isKIA()){
            if(!getChildren().contains(deathIcon)) {
                getChildren().add(deathIcon);
                deathIcon.relocate(FXCarte.TILE_SIZE-16, 0);
@@ -365,10 +412,15 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
            deathIcon.setVisible(true);
            
        }
-       if(s.isChoc()){
+       if(s.isChoc() && !s.isKIA() && !s.isIncoscient()){
            if(!getChildren().contains(scared))getChildren().add(scared);
            scared.relocate(FXCarte.TILE_SIZE-16, FXCarte.TILE_SIZE-16);
            scared.setVisible(true);
+       }else if(s.isIncoscient() ){
+           scared=new ImageView("incoscient.png");
+           if(!getChildren().contains(scared))getChildren().add(scared);
+           scared.relocate(FXCarte.TILE_SIZE-16, FXCarte.TILE_SIZE-16);
+           scared.setVisible(true);           
        }
       
     }
@@ -520,7 +572,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 buildFrameImages(img);
                 setFrame(3);
             } else {
-                Image img = new Image("frameSoldierUS2Blessed.png");
+                Image img = new Image("frameSoldierUS2PaArmeBlessed.png");
                 buildFrameImages(img);
                 setFrame(0);
             }
@@ -533,7 +585,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 buildFrameImages(img);
                 setFrame(3);
             } else {
-                Image img = new Image("frameSoldierUS2Blessed.png");
+                Image img = new Image("frameSoldierUS2PaArmeBlessed.png");
                 buildFrameImages(img);
                 setFrame(0);
             }
@@ -577,15 +629,135 @@ public void updateBlesseImage(Soldat.Statut statut){
             break;
 
     }
-    // setW(100);
-    // Image img = new Image("feritoUS.png");
-    // buildFrameImages(img);
-    //if (!s.isUS()) 
-    //   setFrame(1);
 
+ }
+
+public void updateBandageImage(Soldat.Statut statut){        
+    switch (statut) {
+        case INCONSCENT:
+            if (s.isUS()) {
+                setW(100);
+                Image img = new Image("feritoUS.png");
+                buildFrameImages(img);
+                setFrame(7);
+            } else {
+                setW(100);
+                Image img = new Image("feritoUS.png");
+                buildFrameImages(img);
+                setFrame(1);
+            }
+
+            playBlessedAnim();
+            break;
+        case MORT:
+       
+            break;
+        case CRITIQUE:
+
+            if (s.isUS()) {
+                setW(100);
+                Image img = new Image("frameProneUSSoldierBlessed.png");
+                buildFrameImages(img);
+                setFrame(0);
+                feu1 = 1;
+                feu2 = 2;
+                initialAngle=0;
+            } else {
+                setW(100);
+                //TODO da cambiare con un prone....
+                Image img = new Image("frameHostileBlessedCrititque.png");
+                buildFrameImages(img);
+                setFrame(3);
+                feu1=4;
+                feu2=5;
+            }
+            System.out.println("%%%%%%% CRITIQUE");
+            playBlessedAnim();
+
+
+            break;
+        case GRAVE:
+
+            if (!s.isUS()) {
+
+                Image img = new Image("frameHostileBandageGraveBraseGauche.png");
+                buildFrameImages(img);
+                setFrame(3);
+            } else {
+                Image img = new Image("frameSoldierUS2Bendage.png");
+                buildFrameImages(img);
+                setFrame(0);
+            }
+
+            break;
+        case GRAVE_BRASE_DROITE:
+            if (!s.isUS()) {
+
+                Image img = new Image("frameHostileBandageGraveBraseGauche.png");
+                buildFrameImages(img);
+                setFrame(3);
+            } else {
+                Image img = new Image("frameSoldierUS2Bendage.png");
+                buildFrameImages(img);
+                setFrame(0);
+            }
+
+            break;
+        case GRAVE_BRASE_GAUCHE:
+            if (!s.isUS()) {
+
+                Image img = new Image("frameHostileBandageGraveBraseGauche.png");
+                buildFrameImages(img);
+                setFrame(3);
+            } else {
+                Image img = new Image("frameSoldierUS2Bendage.png");
+                buildFrameImages(img);
+                setFrame(0);
+            }
+
+            break;
+        case GRAVE_TETE:
+
+            setW(100);
+            Image img = new Image("feritoUS.png");
+            buildFrameImages(img);
+            if (!s.isUS()) {
+                setFrame(1);
+            } else {
+                setFrame(7);
+            }
+            System.out.println("%%%%%%% GRAVE_TETE");
+            playBlessedAnim();
+
+            break;
+        case LEGER_BLESSE:
+            if (!s.isUS()) {
+
+                //img=new Image("frameHostileBlessed.png");
+                //buildFrameImages(img);
+                //setFrame(0);
+            } else {
+                //img=new Image("frameSoldierUS2Blessed.png");
+                //buildFrameImages(img);
+                //setFrame(0);                    
+            }
+            System.out.println("%%%%%%% LEGER_BLESSE");
+            //TODO nothing bandage ,sound grunt leggero
+            stImage=Soldat.Statut.LEGER_BLESSE;
+            break;
+        case MANQUE:
+            System.out.println("%%%%%%% MANQUE");
+            //TODO nothing,  colpi vicono 
+            break;
+        default:
+
+            break;
 
     }
-    
+
+ }    
+
+
   void playBlessedAnim(){
       buildBlessAnim();
       if((s.getStatu()==Soldat.Statut.MORT ||

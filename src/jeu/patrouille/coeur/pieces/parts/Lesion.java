@@ -27,7 +27,7 @@ public class Lesion {
         this.gravite=gravite;
         this.blessure=blessure;
         this.statu=statu;
-        bandage=true;
+        bandage=false;
     }
 
     @Override

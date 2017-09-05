@@ -7,10 +7,11 @@ package jeu.patrouille.coeur.equipments.armes;
 
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ImpossibleRechargeArmeException;
+import jeu.patrouille.coeur.equipments.armes.exceptions.IncompatibleMagazineException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.LoadMagazineFiniException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
-import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.terrains.Terrain;
 
 /**
@@ -62,7 +63,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         super(nom, type, model);
         TDfireWeapon=new int[4];
         porte[Porte.COURT.ordinal()] = court;
-        porte[Porte.LONGE.ordinal()] = medium;
+        porte[Porte.MED.ordinal()] = medium;
         porte[Porte.LONGE.ordinal()] = longe;
         for (FeuMode f : FeuMode.values()) {
             shotNumMF[f.ordinal()]=NOTVALUE;
@@ -73,6 +74,9 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         this.coverPenetration=new int[2];
         this.coverPenetration[Terrain.Consistance.LEGER.ordinal()] =NOTVALUE;
         this.coverPenetration[Terrain.Consistance.DUR.ordinal()] =NOTVALUE;
+        magazineUsed=0;
+        
+        
     }
 
     public FeuMode[] armeFeuModeDisponible(){
@@ -90,7 +94,13 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         return list;
     
     }   
+    public void addMagazine(Magazine m){
+        Magazine[] list=new Magazine[this.magazine.length+1];
+        System.arraycopy(magazine, 0, list, 0, magazine.length);
+        list[magazine.length]=m;
+        magazine=list;
     
+    }
     // public abstract void loadMagazine();
     public int getEDP() {
         return evaluateDamagePotentiel;
@@ -106,15 +116,12 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
     //TODO vedere per avere AP e shot
     public int feuArme(double dist) throws ModeDeFeuException,LoadMagazineFiniException {
-        int ap = TDfireWeapon[modefeu.ordinal()];
-        if (ap == NOTVALUE) {
-            throw new ModeDeFeuException("Mode de feu not avaiable");
-        }        
+     
         int n=hitsNumMF(dist);
-        finalCartouch = load.depot(n);
+        finalCartouch = finalCartouch- load.depot(n);
 
 
-        return ap;
+        return n;
     }
     public int fireTempNecessarie(ActionType type)throws ModeDeFeuException{
         int td= TDfireWeapon[modefeu.ordinal()];
@@ -129,7 +136,22 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         modefeu = f;
     }
 
-
+    public Magazine giveMagazine(){
+        Magazine mGive=null;
+        for (int i = 0; i < magazine.length; i++) {
+            Magazine m= magazine[i];
+            if(m!=load && 
+                    m.capacity==m.quantity ) {
+                mGive=m;
+                magazine[i]=null;
+                break;
+            }
+                
+                
+        }
+        return mGive;
+    
+    }
     
 
 
@@ -141,7 +163,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         if (sn == NOTVALUE) {
             throw new ModeDeFeuException("Mode de feu pa possible");
         }
-        if(finalCartouch>sn) return finalCartouch;
+        if(finalCartouch<sn) return finalCartouch;
         return sn;
 
     }
@@ -175,22 +197,27 @@ public int getCoverPenetration(Terrain.Consistance c){
         }
     }
     
-    public int rechargeArme() throws PaDeMagazineException {
+    public int rechargeArme() throws PaDeMagazineException,IncompatibleMagazineException,ImpossibleRechargeArmeException {
         loadMagazine();
         return TDrecharge;
     }
 
-    public void loadMagazine() throws PaDeMagazineException {
+    public void loadMagazine() throws PaDeMagazineException,IncompatibleMagazineException,ImpossibleRechargeArmeException {
         load = null;
+        if(EquipmentType.FIRE_WEAPON!=equipmentType) throw new ImpossibleRechargeArmeException();
         for (Magazine m : magazine) {
             if (m.getQuantity() == m.getCapacity()) {
                 load = m;
-                magazineUsed++;
+                
+                 
             }
-        }
+        }        
         if (load == null) {
             throw new PaDeMagazineException();
-        }
+        }else if(load.getModel()!=getModel())
+            throw new IncompatibleMagazineException();
+        magazineUsed++; 
+
     }
     public int shotRemain(){
     return load.quantity;
