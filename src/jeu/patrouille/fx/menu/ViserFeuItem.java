@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.fx.menu;
 
+import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.ViserFeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -18,8 +19,8 @@ import jeu.patrouille.fx.pieces.FXSoldat;
 public class ViserFeuItem extends FeuItem{
 
     
-    public ViserFeuItem(FXSoldat sfx) {
-        super(ActionType.FEU_VISER,  sfx);
+    public ViserFeuItem(FXSoldat sfx,Label label) {
+        super(ActionType.FEU_VISER,  sfx,label);
 
         
     }

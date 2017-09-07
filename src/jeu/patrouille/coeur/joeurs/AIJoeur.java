@@ -49,7 +49,7 @@ public class AIJoeur extends GeneriqueJoeurs{
             s.setArmeEquip(a);
             s.setClassement(Classment.SERGENT);
             s.setLeaderComportement(0, 0, 0, 0);
-            s.setArraN(0);
+            s.setEquipeArrayPlace(0);
             s.setArmeUtilise(a[0]);
         equipe[0] = s;
         
@@ -59,7 +59,7 @@ public class AIJoeur extends GeneriqueJoeurs{
             s.setArmeEquip(a1);
             s.setClassement(Classment.SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
-            s.setArraN(1);
+            s.setEquipeArrayPlace(1);
             s.setArmeUtilise(a1[0]);
            
         equipe[1] = s;
@@ -70,7 +70,7 @@ public class AIJoeur extends GeneriqueJoeurs{
             s.setArmeEquip(a2);
             s.setClassement(Classment.SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
-            s.setArraN(2);
+            s.setEquipeArrayPlace(2);
             s.setArmeUtilise(a2[0]);
         equipe[2] = s;
         
@@ -80,7 +80,7 @@ public class AIJoeur extends GeneriqueJoeurs{
             s.setArmeEquip(a3);
             s.setClassement(Classment.SOLDAT);
             s.setAggresiveComportement(0, 0, 0, 0);
-            s.setArraN(3);
+            s.setEquipeArrayPlace(3);
             s.setArmeUtilise(a3[0]);            
         equipe[3] = s;
     }  

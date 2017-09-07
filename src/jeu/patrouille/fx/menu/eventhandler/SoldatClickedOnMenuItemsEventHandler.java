@@ -47,6 +47,7 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
             MenuItemButton sItem=(MenuItemButton)item;
             fxcarte.openCurrentSoldatMenuItems(sItem.getFXSoldat().getTranslateX(),
                     sItem.getTranslateY());
+            
         }
         
       

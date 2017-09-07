@@ -169,7 +169,7 @@ public class FXPlanche extends Application {
         rootScene.getChildren().remove(fxequip);   
         infPl.setVisible(false);
         suprimerActionVisualization();
-        sendMessageToPlayer(" START TURN ");
+        
         fxCarte.playTurn();
     }
     void buildTop() {
@@ -257,7 +257,7 @@ public class FXPlanche extends Application {
         MenuItemButton spAct=null;
         if (null != act.getType()) switch (act.getType()) {
             case MARCHE:
-                spAct = new WalkItem(null);
+                spAct = new WalkItem();
                 break;
             case FEU:
                 spAct=new FeuItem();

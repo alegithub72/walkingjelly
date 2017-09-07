@@ -51,6 +51,7 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
             else 
              if( arme.getArmeFeuModel()==FeuMode.PA)
                this.ciclyc=10;
+             else cyclic=2;
             if(arme.getModel()==GeneriqueEquipment.Model.M16 
                     ) this.sound=Sound.M16.file(arme.getArmeFeuModel());
             if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file(arme.getArmeFeuModel());

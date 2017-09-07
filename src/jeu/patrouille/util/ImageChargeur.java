@@ -37,7 +37,7 @@ public class ImageChargeur {
         array[2]=new Image("forbiddenCursor.png");
         array[3]=new Image("crosshair.png");
         array[4]=new Image("cursorHelperBandage.png");
-         array[5]=new Image("cursorHelperLodaMag.png");
+        array[5]=new Image("cursorHelperLodaMag.png");
         arrowCRRight=new ImageCursor(new Image("cursorScroll.png"));
         arrowCRLeft=new ImageCursor(new Image("cursorScrollLeft.png"));
         arrowCRUp=new ImageCursor(new Image("cursorScrollUP.png"));
@@ -114,20 +114,18 @@ public class ImageChargeur {
         
     }     
    public static void loadDecodeImage() throws IOException{
-       
-       
-   FileInputStream inFile=new FileInputStream("/Users/appleale/NOtrangeArrowHost.png");
-   ByteArrayOutputStream outByte=new ByteArrayOutputStream(1);
-   while(inFile.available()>0){
-    byte b=(byte)inFile.read();
-    outByte.write(~b);
-   }
-   outByte.close();
-   inFile.close();
-   FileOutputStream outFile=new FileOutputStream("/Users/appleale/backrangearrow.png");
+    FileInputStream inFile=new FileInputStream("/Users/appleale/NOtrangeArrowHost.png");
+    ByteArrayOutputStream outByte=new ByteArrayOutputStream(1);
+    while(inFile.available()>0){
+     byte b=(byte)inFile.read();
+     outByte.write(~b);
+    }
+    outByte.close();
+    inFile.close();
+    FileOutputStream outFile=new FileOutputStream("/Users/appleale/backrangearrow.png");
    
-   outFile.write(outByte.toByteArray());
-   outFile.close();
+    outFile.write(outByte.toByteArray());
+    outFile.close();
    
    }
     public static  void main(String ars[])throws IOException{

@@ -5,9 +5,11 @@
  */
 package jeu.patrouille.fx.menu;
 
+import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.pieces.FXUSSoldat;
 
@@ -17,8 +19,8 @@ import jeu.patrouille.fx.pieces.FXUSSoldat;
  */
 public class RunItem extends MenuItemButton{
     
-    public RunItem(FXSoldat fxs){
-        super(ActionType.COURS, fxs);
+    public RunItem(FXSoldat fxs,Label label){
+        super(ActionType.COURS, fxs,label);
     }
 
     @Override

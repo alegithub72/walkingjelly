@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.fx.menu;
 import java.net.URL;
+import javafx.scene.control.Label;
 import javafx.scene.media.AudioClip;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.pieces.FXSoldat;
@@ -14,9 +15,10 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  */
 public abstract class MenuItemButton extends AbstractMenuItemButton{
     FXSoldat fxs;
-
-    public MenuItemButton(ActionType actionType,FXSoldat fxs) {
+    Label message;
+    public MenuItemButton(ActionType actionType,FXSoldat fxs,Label label) {
         super(actionType);
+        this.message=label;
         this.fxs = fxs;
         ClassLoader classLoader = getClass().getClassLoader();
         URL url = classLoader.getResource("plich.aif");
@@ -28,9 +30,12 @@ public abstract class MenuItemButton extends AbstractMenuItemButton{
         media2.setVolume(0.8);     
     }
 
+
+
     public FXSoldat getFXSoldat() {
         return fxs;
     }
+    @Override
      public abstract void changeStates();
        
     

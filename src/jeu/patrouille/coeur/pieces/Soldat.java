@@ -11,9 +11,6 @@ package jeu.patrouille.coeur.pieces;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.pieces.parts.CorpPart;
 import jeu.patrouille.coeur.pieces.parts.Corp;
-import java.util.ArrayList;
-import java.util.List;
-import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.GeneriqueBlindageEquipment;
@@ -34,7 +31,6 @@ import jeu.patrouille.coeur.equipments.armes.exceptions.IncompatibleMagazineExce
 import jeu.patrouille.coeur.equipments.armes.exceptions.PaDeMagazineException;
 import jeu.patrouille.coeur.pieces.exceptions.IncoscientSoldatException;
 import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
-import jeu.patrouille.fx.board.FXCarte;
 
 /**
  *
@@ -46,8 +42,8 @@ public class Soldat extends Piece {
     public enum Classment{SERGENT,TENENT,SERGENT_MAJOR,SOLDAT};
 
     public static final int FULL_SANTE=6;
-    public enum Statut{NORMAL("Saine"),MANQUE("Manque"),LEGER_BLESSE("Legger blesse"),GRAVE("Grave"),GRAVE_TETE("Grave alla tete"),
-        GRAVE_BRASE_DROITE("Grave brase droite"),GRAVE_BRASE_GAUCHE("Grave base gauche"),CRITIQUE("Critique"),INCONSCENT("Incoscient"),MORT("Mort");
+    public enum Statut{NORMAL("Saine"),MANQUE("Manque"),LEGER_BLESSE("Legger blesse"),GRAVE("Grave"),
+        GRAVE_BRASE_DROITE("Grave brase droite"),GRAVE_BRASE_GAUCHE("Grave base gauche"),GRAVE_TETE("Grave alla tete"),CRITIQUE("Critique"),INCONSCENT("Incoscient"),MORT("Mort");
         public String mes;
         Statut(String mes){
         this.mes=mes;
@@ -131,6 +127,7 @@ public class Soldat extends Piece {
         lesionN=0;
         this.corp=corps;
         stepScared=false;
+
         
     
     }
@@ -143,23 +140,12 @@ public class Soldat extends Piece {
         this.spreadDone = spreadDone;
     }
 
-    public void setActionsPool(List<BaseAction> actionsPool) {
+    public void setActionsPool(BaseAction[] actionsPool) {
         this.actionsPool = actionsPool;
     }
     
     
-    public BaseAction lastAction(ActionType atype) {
-     int size=actionsPool.size();
-     BaseAction last=null;
-      for (int h=0;h<size;h++){
-          BaseAction act1=actionsPool.get(h);
-          if(act1.getType()==atype) last=act1;
-      }
-          
-    return last;
-
  
-   }   
 
     public boolean isSpreadDone() {
         return spreadDone;
@@ -458,7 +444,7 @@ public int isLesion(Lesion.Degre type){
         s.setTempDesponible(this.tempDesponible);
         s.setI(this.getI());
         s.setJ(this.getJ());
-        s.arrayN = this.arrayN;
+        s.equipeArrayPlace = this.equipeArrayPlace;
         s.setStatut(st);
         GeneriqueEquipment armeClone[] = null;
         if (equipmentGen != null) {
@@ -566,7 +552,7 @@ public int isLesion(Lesion.Degre type){
         
     }
     public void resetAction(){
-    this.actionsPool=new ArrayList<>();
+    this.actionsPool=new BaseAction[10];
     }
     
    public  GeneriqueEquipment[] getEquipment(){
@@ -609,12 +595,12 @@ public int isLesion(Lesion.Degre type){
         }else if(st==Statut.LEGER_BLESSE){
             super.addAction(act);
         }else if(st==Statut.GRAVE_BRASE_DROITE){
-            if (this.actionsPool.size() > 1) 
+            if (actionArrayN > 1) 
                 throw new UnActionSoldatException();
             super.addAction(act);
             
         }else if(st==Statut.GRAVE_BRASE_GAUCHE){
-            if (this.actionsPool.size() > 1) 
+            if (actionArrayN > 1) 
                 throw new UnActionSoldatException();            
             super.addAction(act);
         }else super.addAction(act);
@@ -667,6 +653,7 @@ public int isLesion(Lesion.Degre type){
        this.objective=false;
        this.active=false;
        this.actionActuel=ActionType.PA_ACTION;
+       
        
 
    }
@@ -763,12 +750,13 @@ public void setObjective(boolean objective) {
     }else tdMax=td-tempDesponible;
     System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     System.out.println("richiesta originale :"+td+",levare tdMax="+tdMax+",temp disponible rimasto "+tempDesponible);
-    while(tdMax<0 && actionsPool.size()>0){
-            BaseAction act=  actionsPool.get(actionsPool.size()-1);
+    while(tdMax<0 && actionArrayN>0){
+            BaseAction act=  actionsPool[actionArrayN-1];
             if(!act.isUsed())
             {
                 tdMax=tdMax-act.getTempActivite();            
-                actionsPool.remove(act);
+                actionsPool[actionArrayN-1]=null;
+                actionArrayN--;
                 System.out.println("removed "+act);
             }else {
                 tdMax=0;
@@ -795,7 +783,15 @@ public boolean isFriend(GeneriquePiece p){
 
 }
   
-  
+
+public BaseAction lastAction(ActionType type){
+    BaseAction last=null;
+    for (int k = 0; k < actionArrayN; k++) {
+        BaseAction act = actionsPool[k];
+        if(act!=null && act.getType()==type) last=act;
+    }
+    return last;
+}
   
   
 }

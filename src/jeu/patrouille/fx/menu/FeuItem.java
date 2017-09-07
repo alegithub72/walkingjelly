@@ -5,6 +5,8 @@
  */
 package jeu.patrouille.fx.menu;
 
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -12,6 +14,7 @@ import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -22,18 +25,18 @@ public class FeuItem extends MenuItemButton{
     GeneriqueArme.FeuMode mode;
 
     int n;
-    public FeuItem(FXSoldat fxs){
-        super(ActionType.FEU,fxs);
+    public FeuItem(FXSoldat fxs,Label label){
+        super(ActionType.FEU,fxs,label);
         initButtonState();
     }
     
     
-    public FeuItem(ActionType type,FXSoldat sfx) {
-        super(type, sfx);
+    public FeuItem(ActionType type,FXSoldat sfx,Label label) {
+        super(type, sfx,label);
         initButtonState();
     }
     public FeuItem(){
-        super(ActionType.FEU, null);
+        super(ActionType.FEU, null,null);
     }   
     
 
@@ -63,6 +66,7 @@ public class FeuItem extends MenuItemButton{
 
                 s.getArmeUtilise().changeModeFeu(mode);
                 buildButtonState();
+                message.setText("Change mode de feu :"+mode.txt);
 
             }catch(ModeDeFeuException m){
                 throw new RuntimeException(m);

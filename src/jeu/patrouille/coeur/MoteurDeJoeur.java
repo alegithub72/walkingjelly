@@ -34,6 +34,7 @@ import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.coeur.terrains.Terrain;
 import jeu.patrouille.fx.board.FXCarte;
+import jeu.patrouille.util.ArrayUtil;
 /**
  *
  * @author Alessio Sardaro
@@ -246,21 +247,26 @@ public void rondStartTest(){
         return list;
     }
       private void transformActionPool(Soldat s) throws Exception {
-        List<BaseAction> newActionPool=new ArrayList<>(10);
+        BaseAction[] newActionPool=new BaseAction[10];
         System.out.println("*******SRPEAD START*******>");
-        
+        int n=0;
         for(int h=0;h<s.actionSize();h++){
             ActionType type1=s.nextAction(h).getType();
-            System.out.println("----TD COST--------->"+s.nextAction(h).getTempActivite());
+            System.out.println("----ACTION TO SPREAD--------->"+s.nextAction(h));
             if(type1==ActionType.MARCHE){
-                List<BaseAction> l=s.nextAction(h).spreadAction(); 
-                System.out.println(" list spread ->"+l.size());
-                newActionPool.addAll(l);
-            }else newActionPool.add(s.nextAction(h));
+                BaseAction[] l=s.nextAction(h).spreadAction(); 
+                //System.out.println(" list spread ->"+l.length);
+                n=ArrayUtil.copyArray(newActionPool, l, n);
+            }else {
+                newActionPool[n]=s.nextAction(h);
+                n++;
+              //  newActionPool.add(s.nextAction(h));
+            }
         }
         
         s.setSpreadDone(true);
-        if(newActionPool.size()>0) s.setActionsPool(newActionPool);
+        s.setActionsPool(newActionPool);
+        s.setActionArrayPlace(n);
         System.out.println("******SRPEAD END*****>");
      
     }
@@ -650,7 +656,7 @@ private    void reMountMenuItemsAndScroll(){
         System.out.println(s1.toStringSimple()+" : drop arme");
         //TODO play anim senza arma nella mano.....da aggingere a blessed
     }
-    //TODO rivedere perche fa un de casino
+    //TODO rivedere in altre direzioni opposte al fuoco...:)))
     private void addFuirLontain(Soldat s,int td){
         try{
         
@@ -692,4 +698,11 @@ private    void reMountMenuItemsAndScroll(){
              
          return true;
      }
+
+    public int getTurn() {
+        return turn;
+    }
+     
+     
+     
 }

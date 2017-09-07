@@ -89,9 +89,9 @@ public int compareTo(BaseAction b) {
     
 
     @Override
-    public List<BaseAction> spreadAction() throws Exception{
-        List<BaseAction> list=new ArrayList<>();
-        list.add(this);
+    public BaseAction[] spreadAction() throws Exception{
+        BaseAction[] list=new BaseAction[1];
+        list[0]=this;
         return list;
     }
 

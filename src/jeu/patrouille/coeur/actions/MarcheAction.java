@@ -48,9 +48,9 @@ public class MarcheAction extends BaseAction{
     }
     
     @Override
-    public List<BaseAction> spreadAction()throws Exception {
+    public BaseAction[] spreadAction()throws Exception {
         MarcheAction derivedAct=new MarcheAction(this);
-        List<BaseAction> list=new ArrayList<>();
+        BaseAction[] list=new BaseAction[10];
         int i1=protagoniste.getI();
         int j1=protagoniste.getJ();
         for(int k=0;k<mapTile.length;k++){
@@ -65,7 +65,7 @@ public class MarcheAction extends BaseAction{
                 b.setDerivedAction(derivedAct);
                 b.setMapTile(new PointCarte[]{mapTile[k]});
                 b.calculeActionPointDesAction();
-                list.add(b); 
+                list[k-1]=b; 
             
             System.out.println("spread action marche k="+k+"--"+protagoniste.toStringSimple()+"--->(i1,j1)----(i2,j2)");
             System.out.println("spread action marche k="+k+"----->"+i1+","+j1+"----"+""+i2+","+j2);                  

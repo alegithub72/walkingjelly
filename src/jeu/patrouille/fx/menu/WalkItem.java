@@ -5,9 +5,11 @@
  */
 package jeu.patrouille.fx.menu;
 
+import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -15,9 +17,13 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  * @author appleale
  */
 public class WalkItem extends MenuItemButton{
-    public WalkItem(FXSoldat fxs){
-        super(ActionType.MARCHE,fxs);
+    public WalkItem(FXSoldat fxs,Label label){
+        super(ActionType.MARCHE,fxs,label);
         
+    }
+
+    public WalkItem() {
+        super(ActionType.MARCHE, null, null);
     }
 
     @Override

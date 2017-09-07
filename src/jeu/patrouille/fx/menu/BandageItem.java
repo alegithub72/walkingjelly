@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.fx.menu;
 
+import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BandageAction;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -15,12 +16,12 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  * @author appleale
  */
 public class BandageItem extends MenuItemButton{
-    public BandageItem(FXSoldat fxs){
-        super(ActionType.BANDAGE,fxs);
+    public BandageItem(FXSoldat fxs,Label label){
+        super(ActionType.BANDAGE,fxs,label);
     }
 
     public BandageItem() {
-        super(ActionType.BANDAGE, null);
+        super(ActionType.BANDAGE, null,null);
     }
 
     @Override

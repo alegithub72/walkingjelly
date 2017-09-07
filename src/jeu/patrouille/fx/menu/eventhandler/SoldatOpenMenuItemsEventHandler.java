@@ -14,7 +14,6 @@ import javafx.scene.media.AudioClip;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
-import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 
 

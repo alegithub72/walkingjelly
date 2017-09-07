@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.fx.menu;
 
+import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.pieces.FXSoldat;
@@ -15,8 +16,8 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  */
 public class OpFeuItem extends MenuItemButton{
     
-    public OpFeuItem(FXSoldat fxs){
-        super(ActionType.OCCASION_DE_FEU,fxs);
+    public OpFeuItem(FXSoldat fxs,Label label){
+        super(ActionType.OCCASION_DE_FEU,fxs,label);
     }
 
     @Override

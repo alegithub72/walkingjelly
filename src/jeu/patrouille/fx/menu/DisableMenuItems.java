@@ -5,19 +5,19 @@
  */
 package jeu.patrouille.fx.menu;
 
+import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
-import jeu.patrouille.fx.pieces.FXUSSoldat;
 
 /**
  *
  * @author appleale
  */
 public class DisableMenuItems extends MenuItemButton{
-    public DisableMenuItems(FXSoldat fxs){
-        super(ActionType.PA_ACTION,fxs);
+    public DisableMenuItems(FXSoldat fxs,Label label){
+        super(ActionType.PA_ACTION,fxs,label);
         setFrame(1);
         
     }

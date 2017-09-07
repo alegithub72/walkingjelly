@@ -32,7 +32,7 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
      media=new AudioClip(url.toString());     
      media.setVolume(0.4);    
      this.fxcarte=fxcarte;
-     b=true;
+     b=false;
     }
 
     @Override
@@ -42,8 +42,7 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
           
            fxcarte.setCursor(Cursor.HAND);
            if (event.getButton() == MouseButton.SECONDARY
-                   && event.getClickCount()<=1 && b) {
-                
+                   && b) {                
                 fxcarte.openCurrentSoldatMenuItems(event.getSceneX(),event.getSceneY());
                 media.play();
                 b=!b;
@@ -51,6 +50,7 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
                    && !b ){
                b=!b;
                 fxcarte.closeFXCarteMenuItems();
+                fxcarte.sendMessageToPlayer("");
            }
        
 

@@ -12,7 +12,6 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Point2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -23,8 +22,6 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
-import jeu.patrouille.coeur.actions.BandageAction;
-import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.pieces.Piece;
@@ -32,6 +29,7 @@ import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 import jeu.patrouille.coeur.pieces.Soldat.Classment;
+import jeu.patrouille.coeur.pieces.Soldat.Statut;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.fx.menu.eventhandler.EndAnimPauseHandler;
 import jeu.patrouille.fx.menu.eventhandler.StartDeamonThreadEventHandler;
@@ -495,7 +493,8 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     }
     
     
-public void updateBlesseImage(Soldat.Statut statut){        
+public void updateBlesseImage(Soldat.Statut statut){   
+    boolean blessed=true;
     switch (statut) {
         case INCONSCENT:
             if (s.isUS()) {
@@ -510,7 +509,8 @@ public void updateBlesseImage(Soldat.Statut statut){
                 setFrame(2);
             }
             this.stImage=Soldat.Statut.INCONSCENT;
-            playBlessedAnim();
+            playBlessedAnim(blessed);
+            
             break;
         case MORT:
             if (s.isUS()) {
@@ -525,7 +525,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 setFrame(5);
             }
             this.stImage=Soldat.Statut.MORT;
-            playBlessedAnim();            
+            playBlessedAnim(blessed);            
             break;
         case CRITIQUE:
 
@@ -547,7 +547,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 feu2=2;
             }
             System.out.println("%%%%%%% CRITIQUE");
-            playBlessedAnim();
+            playBlessedAnim(blessed);
             stImage=Soldat.Statut.CRITIQUE;
 
             break;
@@ -602,7 +602,7 @@ public void updateBlesseImage(Soldat.Statut statut){
                 setFrame(3);
             }
             System.out.println("%%%%%%% GRAVE_TETE");
-            playBlessedAnim();
+            playBlessedAnim(blessed);
             stImage=Soldat.Statut.GRAVE_TETE;
             break;
         case LEGER_BLESSE:
@@ -632,7 +632,8 @@ public void updateBlesseImage(Soldat.Statut statut){
 
  }
 
-public void updateBandageImage(Soldat.Statut statut){        
+public void updateBandageImage(Soldat.Statut statut){  
+    boolean blessed=false;
     switch (statut) {
         case INCONSCENT:
             if (s.isUS()) {
@@ -647,7 +648,7 @@ public void updateBandageImage(Soldat.Statut statut){
                 setFrame(1);
             }
 
-            playBlessedAnim();
+            playBlessedAnim(blessed);
             break;
         case MORT:
        
@@ -672,7 +673,7 @@ public void updateBandageImage(Soldat.Statut statut){
                 feu2=5;
             }
             System.out.println("%%%%%%% CRITIQUE");
-            playBlessedAnim();
+            playBlessedAnim(blessed);
 
 
             break;
@@ -727,7 +728,7 @@ public void updateBandageImage(Soldat.Statut statut){
                 setFrame(7);
             }
             System.out.println("%%%%%%% GRAVE_TETE");
-            playBlessedAnim();
+            playBlessedAnim(blessed);
 
             break;
         case LEGER_BLESSE:
@@ -758,7 +759,7 @@ public void updateBandageImage(Soldat.Statut statut){
  }    
 
 
-  void playBlessedAnim(){
+  void playBlessedAnim(boolean blessed){
       buildBlessAnim();
       if((s.getStatu()==Soldat.Statut.MORT ||
          s.getStatu()==Soldat.Statut.INCONSCENT ||
@@ -768,11 +769,14 @@ public void updateBandageImage(Soldat.Statut statut){
       else     
           imgView.setTranslateX(-25);
       //imgView.setTranslateY(25);
-      setFXSoldatOrientation(Math.random()*360 );
-      frameAnimTimer[0].start();
+      if(s.getStatu().ordinal()>Statut.GRAVE_TETE.ordinal()) 
+          setFXSoldatOrientation(Math.random()*360 );   
       signOff();
       buildShadow();
-  
+     if(blessed) {
+         frameAnimTimer[0].start();
+               
+     }
   
   }
     @Override

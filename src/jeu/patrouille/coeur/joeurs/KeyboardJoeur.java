@@ -53,7 +53,7 @@ public class KeyboardJoeur extends Joeur {
             GeneriqueArme a[] = {ben,m16};
             s.setArmeEquip(a);
             s.setClassement(Classment.SERGENT);
-            s.setArraN(0);
+            s.setEquipeArrayPlace(0);
             s.setArmeUtilise(m16);
             
         equipe[0] = s;
@@ -63,7 +63,7 @@ public class KeyboardJoeur extends Joeur {
             GeneriqueArme a1[] = {new BenelliM3()};
             s.setArmeEquip(a1);
             s.setClassement(Classment.SOLDAT);
-            s.setArraN(1);
+            s.setEquipeArrayPlace(1);
         equipe[1] = s;
          
         s = new Soldat("Rifleman", "Miller", 7, 8, 6, 5, 6,
@@ -71,7 +71,7 @@ public class KeyboardJoeur extends Joeur {
             GeneriqueArme a2[] = {new BenelliM3()};
             s.setArmeEquip(a2);
             s.setClassement(Classment.SOLDAT);
-            s.setArraN(2);
+            s.setEquipeArrayPlace(2);
        equipe[2] = s;
         
         s = new Soldat("Rifleman", "Anderson", 7, 8, 6, 5, 5, 
@@ -79,7 +79,7 @@ public class KeyboardJoeur extends Joeur {
             GeneriqueArme a3[] = {new BenelliM3()};
             s.setArmeEquip(a3);
             s.setClassement(Classment.SOLDAT);
-            s.setArraN(3);
+            s.setEquipeArrayPlace(3);
         equipe[3] = s;
 
    }    

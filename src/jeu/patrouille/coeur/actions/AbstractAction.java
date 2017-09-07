@@ -78,7 +78,7 @@ public abstract class AbstractAction implements Comparable<BaseAction>{
     public void setJ1(int j1) {
         this.j1 = j1;
     }
-    public abstract List<BaseAction> spreadAction()throws Exception;
+    public abstract BaseAction[] spreadAction()throws Exception;
     public abstract void calculeActionPointDesAction()throws Exception;
     public abstract Object clone();    
 }

@@ -22,7 +22,12 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
 
     public enum Porte {COURT,MED,LONGE}
-    public enum FeuMode{SC,SA,RA,PA}
+    public enum FeuMode{SC("Seul Coup"),SA("Semi Automatic"),RA("Rafale"),PA("Plein Automatic");
+        public String txt;
+        private FeuMode(String txt) {
+            this.txt=txt;
+        }
+    }
     public static final int TEMP_SHOTGUN = 0, TEMP_RIFLE = 1, TEMP_PISTOL = 2, TEMP_MACHINE_GUN = 3;
 
     int porte[] = new int[3];
@@ -96,7 +101,8 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     }   
     public void addMagazine(Magazine m){
         Magazine[] list=new Magazine[this.magazine.length+1];
-        System.arraycopy(magazine, 0, list, 0, magazine.length);
+        for (int i = 0; i < list.length; i++) 
+             list[i]=magazine[i];                            
         list[magazine.length]=m;
         magazine=list;
     

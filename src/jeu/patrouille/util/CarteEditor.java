@@ -19,11 +19,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import jeu.patrouille.coeur.Carte;
-import jeu.patrouille.coeur.terrains.PointCarte;
-import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.Terrain;
 import jeu.patrouille.fx.board.FXCarte;
 /**
