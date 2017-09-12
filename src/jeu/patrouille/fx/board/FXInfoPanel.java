@@ -7,7 +7,11 @@ package jeu.patrouille.fx.board;
 
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderStroke;
@@ -32,8 +36,9 @@ public class FXInfoPanel extends Parent{
     double x,y;
     Border bo;
     Background bk;
-    
-    FXInfoPanel(FXPlanche fxpl,double x,double y){
+    Canvas canv;
+    boolean bkreset;
+    FXInfoPanel(Canvas canv,Font font,double x,double y){
 
         nom=new Label();
         tdLabel=new Label();
@@ -41,12 +46,17 @@ public class FXInfoPanel extends Parent{
         sante=new Label();
         this.x=x;
         this.y=y;
-        font=Font.font(fxpl.getFontTitle().getName(), 12);
-       
+        this.font=Font.font(font.getName(), 12);
+        this.canv=canv;
+        bkreset=true;
+
     
     }
     void buildInfoPanel(){
-        
+        if(bkreset) {
+            drawTitle();
+            bkreset=false;
+        }
         Color textColor=Color.LAWNGREEN;
         
         bo=getBorder();
@@ -75,7 +85,7 @@ public class FXInfoPanel extends Parent{
         sante.setBorder(bo);
         sante.setBackground(bk);
         sante.relocate(x, y+130);
-        
+        this.setVisible(false);
         this.getChildren().add(sante);
         this.getChildren().add(nom);
         this.getChildren().add(tdLabel);
@@ -104,6 +114,10 @@ public class FXInfoPanel extends Parent{
         return bk;
     }
     public void imprimerInfo(Soldat  s){
+        if(bkreset) {
+            drawTitle();
+            bkreset=false;
+        }
         nom.setText(s.toStringSimple());
         tdLabel.setText (s.getTempDisponible()+"");
         String clText=s.getClassement().name();
@@ -111,7 +125,44 @@ public class FXInfoPanel extends Parent{
         sante.setText(s.getSante()+" "+s.getStatu().mes+"");
     
     }
+    void drawTitle(){
+         GraphicsContext gc= canv.getGraphicsContext2D();
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(1.0);
+        dropShadow.setOffsetX(1.0);
+        dropShadow.setOffsetY(1.0);
+        dropShadow.setSpread(1);
+        dropShadow.setColor(Color.BLACK);          
+        Image img = new Image("rightBar.png");
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, FXCarte.DROIT_BAR_W,
+                FXCarte.PIXEL_SCROLL_AREA_H);
+        gc.drawImage(img, 0, 0);        
+        //gc.setFill(Color.rgb(128,0,255)); grape
+        gc.setFill(Color.FLORALWHITE); 
+        gc.setFont(font);
+        gc.setEffect(dropShadow);
+       // borderPan.setRight(rootDroitBarGroup);
+        
+        gc.fillText("Nom:", 2, 26);
+        gc.fillText("Classment:", 2, 78+10);
+        gc.fillText("Temp:", 2, 130+85);
+        gc.fillText("Equipment:", 11, 315);
+        gc.fillText("Sante:",2,130+30);    
+    
+    
+    }
+    
+    
+    
     public void resetInfo(){
+        GraphicsContext gc= canv.getGraphicsContext2D();
+        Image img = new Image("rightBar.png");
+        gc.setFill(Color.TRANSPARENT);
+        gc.fillRect(0, 0, FXCarte.DROIT_BAR_W,
+                FXCarte.PIXEL_SCROLL_AREA_H);
+        gc.drawImage(img, 0, 0);
+        bkreset=true;
         nom.setText("");
         tdLabel.setText("");
         classment.setText("");

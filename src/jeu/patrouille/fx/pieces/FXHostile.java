@@ -5,7 +5,9 @@
  */
 package jeu.patrouille.fx.pieces;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
@@ -39,6 +41,11 @@ public class FXHostile extends FXSoldat{
         this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0, 1, 100, s.getArmeUtilise(),null);
         this.frameAnimTimer[0].buildMedia();        
     }
+    @Override
+    public void buildCrawlAnim() {
+        //this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0, 1, 100, s.getArmeUtilise(),null);
+        //this.frameAnimTimer[0].buildMedia();        
+    }    
 
     @Override
     public void createFXSoldat() {
@@ -60,5 +67,19 @@ public class FXHostile extends FXSoldat{
     public void feuFrame(){
             setFrame(1);
     }
+
+    @Override
+    public void droitPosition() {
+        buildFrameImages(new Image("frameHostile.png"));
+        poseImg=Piece.Pose.DROIT;
+        feu1=0;
+        feu2=1;
+        
+    }
+    @Override
+    public void pronePosition(){
+    
+    }
+            
     
 }

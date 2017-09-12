@@ -47,7 +47,7 @@ public class FXAIJoueur extends AIJoeur{
           
 
 
-           fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
+           fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte.getMenu()));
            fxcarte.addSprite(fxequipe[i]);
           
         }
@@ -70,7 +70,7 @@ public class FXAIJoueur extends AIJoeur{
 
     public void mountMenuItemOnFXEquipe() {
         for (FXSoldat sfx : fxequipe) {
-            sfx.setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(sfx, fxcarte));
+            sfx.setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(sfx, fxcarte.getMenu()));
         }
     }    
     

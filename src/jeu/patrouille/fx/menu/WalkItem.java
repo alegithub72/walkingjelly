@@ -5,11 +5,13 @@
  */
 package jeu.patrouille.fx.menu;
 
-import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
-import jeu.patrouille.fx.board.FXPlanche;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -17,9 +19,11 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  * @author appleale
  */
 public class WalkItem extends MenuItemButton{
-    public WalkItem(FXSoldat fxs,Label label){
-        super(ActionType.MARCHE,fxs,label);
-        
+    
+    int n;    
+    public WalkItem(FXSoldat fxs,FXCarte fxcarte){
+        super(ActionType.MARCHE,fxs,fxcarte);
+
     }
 
     public WalkItem() {
@@ -28,8 +32,9 @@ public class WalkItem extends MenuItemButton{
 
     @Override
     public BaseAction buildMenuItemAction() {
-        BaseAction lsact=fxs.getSoldat().lastAction(ActionType.MARCHE);
+        BaseAction lsact=fxs.getSoldat().lastMovement();
         BaseAction action=null;
+        //TODO considerare anche crawl
         if(lsact!=null)
          action=new MarcheAction(lsact.getI1(),lsact.getJ1(),-1,-1,fxs.getSoldat());
         else action = new MarcheAction(fxs.getSoldat().getI(),fxs.getSoldat().getJ(),-1,-1,fxs.getSoldat());
@@ -37,18 +42,44 @@ public class WalkItem extends MenuItemButton{
         return action;
         
     }
-        public static void main(String[] args) {}
+
 
 
 
     @Override
     public void changeStates() {
- 
+
+        return;
     }
 
     @Override
     public void updateState() {
-        return;
+        Soldat s=fxs.getSoldat();
+        if(s.getPose()==Piece.Pose.DROIT)
+            actionType=ActionType.MARCHE;
+        else if(s.getPose()==Piece.Pose.PRONE)
+            actionType=ActionType.COUCHER;
+        
+        buildFrameImages(MenuImageChargeur.getImageMenu(this.actionType));
+     
+        
+        
     }
+
+    @Override
+    public boolean isDisabledItem() {
+          Soldat s=fxs.getSoldat();
+        try {
+            return (s.isImmobilize()||
+                    !s.isTempDisponiblePour(actionType) ||
+                    s.getPose()==Piece.Pose.GENOUCS || 
+                    s.getPose()==Piece.Pose.PRONE);
+        } catch (ModeDeFeuException ex) {
+            throw new  RuntimeException(ex);
+
+        }
+    }
+    
+    
     
 }

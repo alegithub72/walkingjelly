@@ -39,7 +39,7 @@ public class FXMouseJeurs extends KeyboardJoeur{
         
         for(int i=0;i<equipe.length;i++){
            fxequipe[i]=new FXUSSoldat((Soldat) equipe[i],i,fxcarte);
-            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte));
+            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte.getMenu()));
             fxequipe[i].setVisible(false);           
             fxequipe[i].createFXSoldat();
             fxequipe[i].defaultFrame();
@@ -60,7 +60,7 @@ public class FXMouseJeurs extends KeyboardJoeur{
 
     public void mountMenuItemOnFXEquipe() {
         for (FXUSSoldat sfx : fxequipe) {
-            sfx.setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(sfx, fxcarte));
+            sfx.setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(sfx, fxcarte.getMenu()));
         }
     }
 

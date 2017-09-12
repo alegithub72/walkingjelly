@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 
 /**
@@ -23,8 +24,8 @@ public abstract class AbstractMenuItemButton extends FXPatrouilleSprite{
     AbstractMenuItemButton link;    
     AudioClip media;
     AudioClip media2;    
-    public AbstractMenuItemButton(ActionType type){
-        super(MENU_W,MENU_H,null,null);
+    public AbstractMenuItemButton(ActionType type,FXCarte fxcarte){
+        super(MENU_W,MENU_H,null,fxcarte);
         if(type!=null){
             buildFrameImages(MenuImageChargeur.getImageMenu(type));
             actionType=type;
@@ -64,4 +65,5 @@ public abstract class AbstractMenuItemButton extends FXPatrouilleSprite{
     public abstract  BaseAction buildMenuItemAction();
     public abstract void changeStates();
     public abstract void updateState();
+    public abstract void enable();
 }

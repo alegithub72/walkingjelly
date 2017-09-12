@@ -699,9 +699,9 @@ public int isLesion(Lesion.Degre type){
         return immobilize;
     }
    
-   public boolean isDistanceLessMarcheMax(double dist){
+   public boolean isPossibleAchive(ActionType type,double dist){
       try{
-            int apbase=this.tempNecessarieDesActionBase(ActionType.MARCHE);
+            int apbase=this.tempNecessarieDesActionBase(type);
             double value=dist*apbase;
             return value<=tempDesponible ;
       }catch(Exception ex){
@@ -712,7 +712,7 @@ public int isLesion(Lesion.Degre type){
    public boolean isFeuArmePaPorte(double d){
        double dlonge=armeUtilise.getDistancePorte(Porte.LONGE);
        System.out.println("distance "+d+" >="+dlonge+"");
-       return d>=(dlonge*2);
+       return d>(dlonge);
        
    }
    
@@ -784,11 +784,11 @@ public boolean isFriend(GeneriquePiece p){
 }
   
 
-public BaseAction lastAction(ActionType type){
+public BaseAction lastMovement(){
     BaseAction last=null;
     for (int k = 0; k < actionArrayN; k++) {
         BaseAction act = actionsPool[k];
-        if(act!=null && act.getType()==type) last=act;
+        if(act!=null && act.getType().isMovementAction()) last=act;
     }
     return last;
 }

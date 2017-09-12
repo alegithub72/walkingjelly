@@ -5,9 +5,14 @@
  */
 package jeu.patrouille.fx.menu;
 import java.net.URL;
-import javafx.scene.control.Label;
+import javafx.scene.effect.MotionBlur;
 import javafx.scene.media.AudioClip;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.fx.board.FXCarte;
+import jeu.patrouille.fx.menu.eventhandler.MenuItemChangeStatusOnly;
+import jeu.patrouille.fx.menu.eventhandler.SoldatClickedOnMenuItemsEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
+import jeu.patrouille.fx.menu.eventhandler.SoldatRelasedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXSoldat;
 /**
  *
@@ -15,10 +20,8 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  */
 public abstract class MenuItemButton extends AbstractMenuItemButton{
     FXSoldat fxs;
-    Label message;
-    public MenuItemButton(ActionType actionType,FXSoldat fxs,Label label) {
-        super(actionType);
-        this.message=label;
+    public MenuItemButton(ActionType actionType,FXSoldat fxs,FXCarte fxcarte) {
+        super(actionType,fxcarte);
         this.fxs = fxs;
         ClassLoader classLoader = getClass().getClassLoader();
         URL url = classLoader.getResource("plich.aif");
@@ -28,6 +31,7 @@ public abstract class MenuItemButton extends AbstractMenuItemButton{
         media2 = new AudioClip(url.toString());
         media.setVolume(0.8);
         media2.setVolume(0.8);     
+
     }
 
 
@@ -35,8 +39,42 @@ public abstract class MenuItemButton extends AbstractMenuItemButton{
     public FXSoldat getFXSoldat() {
         return fxs;
     }
+
+     
+    public void disableItem(){
+               
+                MotionBlur mt=new MotionBlur(45, 8);
+               // m.setEffect(new GaussianBlur());
+             
+                this.setEffect(mt);
+                this.setOnMouseClicked(new MenuItemChangeStatusOnly(this,fxcarte.getMenu()));    
+    
+    }       
+    public abstract boolean isDisabledItem();
+
     @Override
-     public abstract void changeStates();
-       
+    public void changeStates() {
+      return;
+    }
+
+    @Override
+    public void updateState() {
+        return ;
+    }
+
+   
+    
+    @Override
+    public void enable() {
+        if(isDisabledItem()) disableItem();
+        else  enableMenuItem();
+    }
+    void enableMenuItem(){
+            setOnMouseClicked(new SoldatClickedOnMenuItemsEventHandler(this,  fxcarte));
+            setOnMousePressed(new SoldatPressedOnMenuItemsEventHandler(this));
+            setOnMouseReleased(new SoldatRelasedOnMenuItemsEventHandler(this));  
+            setEffect(null);
+    
+    }   
     
 } 

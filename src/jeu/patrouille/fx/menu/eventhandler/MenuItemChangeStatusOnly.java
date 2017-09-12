@@ -6,9 +6,12 @@
 package jeu.patrouille.fx.menu.eventhandler;
 
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import jeu.patrouille.fx.board.FXCarte;
+import jeu.patrouille.fx.board.FXMenuItemsDossier;
 import jeu.patrouille.fx.board.FXPlanche;
 import jeu.patrouille.fx.menu.AbstractMenuItemButton;
 
@@ -18,9 +21,9 @@ import jeu.patrouille.fx.menu.AbstractMenuItemButton;
  */
 public class MenuItemChangeStatusOnly implements EventHandler<MouseEvent>{
     AbstractMenuItemButton item;
-    FXPlanche fxpl;
-    public MenuItemChangeStatusOnly(AbstractMenuItemButton item,FXPlanche fxpl) {
-        this.fxpl=fxpl;
+    FXMenuItemsDossier menu;
+    public MenuItemChangeStatusOnly(AbstractMenuItemButton item,FXMenuItemsDossier menu) {
+        this.menu=menu;
         this.item=item;
         item.updateState();
 
@@ -33,7 +36,7 @@ public class MenuItemChangeStatusOnly implements EventHandler<MouseEvent>{
             
         }else {
 
-        fxpl.sendMessageToPlayer("Temp insufficient!!Change le statu aved droite button.", Color.YELLOW);
+        menu.sendMessageToPlayer("Temp insufficient!!Change le statu aved droite button.");
 
 
         }

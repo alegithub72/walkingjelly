@@ -28,6 +28,7 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.parts.LesionEstimation;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Piece.Direction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
@@ -54,6 +55,7 @@ public class MoteurDeJoeur implements Runnable{
     int iniativeWinner;
     Thread threadTurn=null;
     LesionEstimation lesionEsti;
+    public int td;
     
     
     public MoteurDeJoeur(GeneriqueJoeurs jUS,GeneriqueJoeurs jHOST,Carte carte) throws IOException{
@@ -190,7 +192,7 @@ public void rondStartTest(){
         List<BaseAction> listAllActionUS=new ArrayList<>();
         List<BaseAction> listAllActionHost=new ArrayList<>();
         System.out.println("----------------------------- RESOLVE TURN START-----------"+turn+"---------------------------------");
-        for(int td=1;td<=10;td++){
+        for( td=1;td<=10;td++){
          System.out.println("--------------------------->TD--CONSIDERED--START-->"+td+"<------------");
             for(int k=0;k<patrouille.length;k++){
                 Soldat s1=(Soldat)patrouille[k];
@@ -604,7 +606,7 @@ private    void reMountMenuItemsAndScroll(){
                         target.setStepScared(true);                       
                         if(!target.isImmobilize() &&
                            !target.isIncoscient() &&
-                           !target.isKIA()     ) addFuirLontain(target, td);
+                           !target.isKIA()     ) addFuirLontain(target,s.getFace(), td);
                         System.out.println(s+"  -->schoked ");
                     }                       
                    }
@@ -657,11 +659,11 @@ private    void reMountMenuItemsAndScroll(){
         //TODO play anim senza arma nella mano.....da aggingere a blessed
     }
     //TODO rivedere in altre direzioni opposte al fuoco...:)))
-    private void addFuirLontain(Soldat s,int td){
+    private void addFuirLontain(Soldat s,Direction d,int td){
         try{
         
         s.resetTempDispoleNotUse();
-        BaseAction act=MarcheAction.marcheLointain(s);
+        BaseAction act=MarcheAction.marcheLointain(s,d);
         if(act!=null){
             BaseAction noact=new BaseAction(ActionType.PA_ACTION, -1, -1, -1, -1, s, null);
             noact.setTempActivite(td);

@@ -5,10 +5,15 @@
  */
 package jeu.patrouille.fx.menu;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BandageAction;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -16,8 +21,8 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  * @author appleale
  */
 public class BandageItem extends MenuItemButton{
-    public BandageItem(FXSoldat fxs,Label label){
-        super(ActionType.BANDAGE,fxs,label);
+    public BandageItem(FXSoldat fxs,FXCarte fxcarte){
+        super(ActionType.BANDAGE,fxs,fxcarte);
     }
 
     public BandageItem() {
@@ -36,8 +41,17 @@ public class BandageItem extends MenuItemButton{
     }    
 
     @Override
-    public void updateState() {
-       return;
+    public boolean isDisabledItem() {
+        Soldat s=fxs.getSoldat();
+        try {
+            return ( s.isBraceGaucheBlesse() &&
+                    s.isBrasDroiteBlesse() )
+                    || !s.isTempDisponiblePour(actionType);
+        } catch (ModeDeFeuException ex) {
+           throw new RuntimeException(ex);
+        }
     }
+
+
     
 }

@@ -5,9 +5,14 @@
  */
 package jeu.patrouille.fx.menu;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -16,8 +21,8 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  */
 public class OpFeuItem extends MenuItemButton{
     
-    public OpFeuItem(FXSoldat fxs,Label label){
-        super(ActionType.OCCASION_DE_FEU,fxs,label);
+    public OpFeuItem(FXSoldat fxs,FXCarte fxcarte){
+        super(ActionType.OCCASION_DE_FEU,fxs,fxcarte);
     }
 
     @Override
@@ -26,14 +31,18 @@ public class OpFeuItem extends MenuItemButton{
        return act;
     }
 
-    @Override
-    public void changeStates() {
 
-    }
 
     @Override
-    public void updateState() {
-        return;
+    public boolean isDisabledItem() {
+        Soldat s=fxs.getSoldat();
+        try {
+            return !s.isTempDisponiblePour(actionType);
+        } catch (ModeDeFeuException ex) {
+            throw new RuntimeException(ex);
+        }
     }
+
+
     
 }

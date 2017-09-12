@@ -18,7 +18,13 @@ import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
  */
 public abstract class Piece extends GeneriquePiece  {
     public enum ActeurType{SOLDAT,JEEP,HELICOPTER,ARMOR }
-    public enum Direction{S,N,E,W,NW,NE,SE,SW}
+    public enum Direction{S(1,0),N(-1,0),E(0,-1),W(0,1),NW(-1,1),NE(-1,-1),SE(1,-1),SW(1,1);
+        public int i,j;
+        Direction(int i,int j){
+          this.i=i;
+          this.j=j;
+       }
+    }
     public enum Pose{PRONE,GENOUCS,DROIT}
     
     

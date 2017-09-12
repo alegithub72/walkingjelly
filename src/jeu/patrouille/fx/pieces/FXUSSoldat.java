@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.fx.pieces;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -47,8 +48,27 @@ public class FXUSSoldat extends FXSoldat {
         this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 1,500, null,Sound.GRUNT5);
         frameAnimTimer[0].buildMedia();        
     }
-    
 
+    @Override
+    public void droitPosition() {
+        this.setW(50);
+        buildFrameImages(new  Image("frameSoldierUS2.png"));
+        poseImg=Piece.Pose.DROIT;
+        feu1=7;
+        feu2=8;      
+        initialAngle=90;
+    }
+    @Override
+    public void pronePosition(){
+        this.setW(100);
+        this.buildFrameImages(new Image("frameProneUSSoldier.png"));
+        this.poseImg=Piece.Pose.PRONE;
+        imgView.setTranslateX(-25);
+        feu1=0;
+        feu2=1;
+        initialAngle=180;
+        
+    }
 
 
     @Override
@@ -63,6 +83,7 @@ public class FXUSSoldat extends FXSoldat {
     @Override 
     public void feuFrame(){
         if(s.getPose()==Piece.Pose.DROIT) setFrame(8);
+        else if(s.getPose()==Piece.Pose.PRONE) setFrame(1);
     
     }
     
@@ -73,6 +94,11 @@ public class FXUSSoldat extends FXSoldat {
         frameAnimTimer[0].buildMedia();        
         
     }
-     
+       @Override
+    protected void buildCrawlAnim(){
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(1, 3, this, 0, -1, 400,null,Sound.MARCHE);
+        frameAnimTimer[0].buildMedia();        
+        
+    }  
 
 }

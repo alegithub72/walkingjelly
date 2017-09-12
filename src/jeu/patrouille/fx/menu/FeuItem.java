@@ -6,7 +6,6 @@
 package jeu.patrouille.fx.menu;
 
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -14,7 +13,7 @@ import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.fx.board.FXPlanche;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -25,14 +24,14 @@ public class FeuItem extends MenuItemButton{
     GeneriqueArme.FeuMode mode;
 
     int n;
-    public FeuItem(FXSoldat fxs,Label label){
-        super(ActionType.FEU,fxs,label);
+    public FeuItem(FXSoldat fxs,FXCarte fxcarte){
+        super(ActionType.FEU,fxs,fxcarte);
         initButtonState();
     }
     
     
-    public FeuItem(ActionType type,FXSoldat sfx,Label label) {
-        super(type, sfx,label);
+    public FeuItem(ActionType type,FXSoldat sfx,FXCarte fxcarte) {
+        super(type, sfx,fxcarte);
         initButtonState();
     }
     public FeuItem(){
@@ -66,7 +65,7 @@ public class FeuItem extends MenuItemButton{
 
                 s.getArmeUtilise().changeModeFeu(mode);
                 buildButtonState();
-                message.setText("Change mode de feu :"+mode.txt);
+                fxcarte.sendMessageToPlayer("Change mode de feu :"+mode.txt);
 
             }catch(ModeDeFeuException m){
                 throw new RuntimeException(m);
@@ -100,7 +99,20 @@ public class FeuItem extends MenuItemButton{
 
     @Override
     public void updateState() {
+        super.updateState();
         initButtonState();
+    }
+
+    @Override
+    public boolean isDisabledItem() {
+    try{
+        Soldat s=fxs.getSoldat();
+        return !s.isTempDisponiblePour(actionType) || s.getArmeUtilise()==null
+                || !s.isFireWeaponUtilize();
+                
+        }catch(ModeDeFeuException ex){
+                throw new RuntimeException(ex);
+        }
     }
     
     

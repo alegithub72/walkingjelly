@@ -3,17 +3,20 @@
  * using javafx layer coding game all right reserved.
  * 
  */
-package jeu.patrouille.fx.pieces.armes;
+package jeu.patrouille.fx.board;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.fx.board.FXPlanche;
+import jeu.patrouille.fx.pieces.armes.FXEquipment;
+import jeu.patrouille.fx.pieces.armes.FXMagazine;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 
 /**
@@ -30,10 +33,7 @@ public class FXSoldatEquipement extends Parent{
       numShot=new Text();
       numShot.setFill(Color.GREENYELLOW);
       numShot.setFont(Font.font(15));
-             
-      
-     
-      
+
   }
   public void buildFXEquipment(Soldat s){
       GeneriqueEquipment[] list = s.getEquipment();
@@ -76,11 +76,7 @@ public class FXSoldatEquipement extends Parent{
                  p= createFXMagazine(fxarmes[i + k ], i + k,y0 );
                   //System.out.println("arme----------------->" + arm);
               }
-  
-      
 
-      
-      
   return k;
   }
    Point2D createFXMagazine(FXPatrouilleSprite sp,int i,double y0){
@@ -105,9 +101,14 @@ public class FXSoldatEquipement extends Parent{
   }
   
   double createFXEquipment(FXPatrouilleSprite sp,double i){
-
+            DropShadow dropShadow=new DropShadow();
+            dropShadow.setRadius(30.0);
+            dropShadow.setOffsetX(12.0);
+            dropShadow.setOffsetY(-12.0);
+            dropShadow.setBlurType(BlurType.ONE_PASS_BOX);
+            dropShadow.setColor(Color.BLACK);  
               sp.create();
-              sp.setEffect(null);
+              sp.setEffect(dropShadow);
               this.getChildren().add(sp);
               double k=Math.nextDown((i/4)-0.1d);
               double y=(k)*25;

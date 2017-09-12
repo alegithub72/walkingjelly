@@ -10,6 +10,7 @@ import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.ViserFeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -19,8 +20,8 @@ import jeu.patrouille.fx.pieces.FXSoldat;
 public class ViserFeuItem extends FeuItem{
 
     
-    public ViserFeuItem(FXSoldat sfx,Label label) {
-        super(ActionType.FEU_VISER,  sfx,label);
+    public ViserFeuItem(FXSoldat sfx,FXCarte fxcarte) {
+        super(ActionType.FEU_VISER,  sfx,fxcarte);
 
         
     }

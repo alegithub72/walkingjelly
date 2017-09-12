@@ -193,8 +193,5 @@ public FXSoldat getFXSoldatSelectionee(){
     
     }
     
-    public boolean isDistanceLessMarcheMax(double dist){
-       return  this.seletctionee.isDistanceLessMarcheMax(dist);
-    
-    }
+
 }

@@ -7,11 +7,10 @@ package jeu.patrouille.fx.menu.eventhandler;
 
 
 import java.net.URL;
-import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
-import jeu.patrouille.fx.board.FXCarte;
+import jeu.patrouille.fx.board.FXMenuItemsDossier;
 
 
 
@@ -23,15 +22,16 @@ import jeu.patrouille.fx.board.FXCarte;
 public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.EventHandler<MouseEvent>{
 
  
-    FXCarte fxcarte;
+
     AudioClip media;
     boolean b;
-    public SoldatOpenMenuItemsFXCarteEventHandler(FXCarte fxcarte) {
+    FXMenuItemsDossier menu;
+    public SoldatOpenMenuItemsFXCarteEventHandler(FXMenuItemsDossier menu) {
     ClassLoader classLoader = getClass().getClassLoader();
      URL url=classLoader.getResource("clickSol.wav");
      media=new AudioClip(url.toString());     
      media.setVolume(0.4);    
-     this.fxcarte=fxcarte;
+     this.menu=menu;
      b=false;
     }
 
@@ -40,17 +40,17 @@ public class SoldatOpenMenuItemsFXCarteEventHandler implements javafx.event.Even
      
 
           
-           fxcarte.setCursor(Cursor.HAND);
+           
            if (event.getButton() == MouseButton.SECONDARY
                    && b) {                
-                fxcarte.openCurrentSoldatMenuItems(event.getSceneX(),event.getSceneY());
+                menu.openCurrentSoldatMenuItems(event.getSceneX(),event.getSceneY());
                 media.play();
                 b=!b;
            }  else if(event.getButton()==MouseButton.SECONDARY
                    && !b ){
                b=!b;
-                fxcarte.closeFXCarteMenuItems();
-                fxcarte.sendMessageToPlayer("");
+                menu.closeFXCarteMenuItems();
+                menu.sendMessageToPlayer("");
            }
        
 

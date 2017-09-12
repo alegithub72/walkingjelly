@@ -31,7 +31,7 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
     
     
     
-    
+   
     
     @Override
     public void handle(MouseEvent event) {
@@ -45,8 +45,10 @@ public class SoldatClickedOnMenuItemsEventHandler  implements EventHandler<Mouse
             item.changeStates();
             if(item.getLink()!=null) item.getLink().updateState();
             MenuItemButton sItem=(MenuItemButton)item;
-            fxcarte.openCurrentSoldatMenuItems(sItem.getFXSoldat().getTranslateX(),
+            fxcarte.getMenu().openCurrentSoldatMenuItems(sItem.getFXSoldat().getTranslateX(),
                     sItem.getTranslateY());
+
+            fxcarte.refreshCarteAllFXSoldatViewPosition();
             
         }
         

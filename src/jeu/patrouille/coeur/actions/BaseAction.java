@@ -7,9 +7,7 @@ package jeu.patrouille.coeur.actions;
 
 import jeu.patrouille.coeur.actions.enums.BaseActionComparatorImpl;
 import jeu.patrouille.coeur.actions.enums.ActionType;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
 import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;

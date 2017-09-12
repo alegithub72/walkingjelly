@@ -14,7 +14,7 @@ import jeu.patrouille.fx.board.FXCarte;
 public  class FXPatrouilleSprite extends Sprite {
     
     protected FXCarte fxcarte;
-
+    
     public FXPatrouilleSprite(int w,int h,String img,FXCarte fxcarte) {
         super(w, h, FXCarte.TILE_SIZE,  FXCarte.TILE_SIZE, img);
         this.fxcarte=fxcarte;

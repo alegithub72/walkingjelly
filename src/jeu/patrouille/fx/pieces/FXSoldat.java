@@ -24,7 +24,9 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
+import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Piece.Pose;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
@@ -51,10 +53,13 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     int feu1;
     int feu2;
     Soldat.Statut stImage;
+    Soldat.Pose poseImg;
     double initialAngle;
+
     int pos;
     public FXSoldat(int w, int h, int pos,Soldat s, String img,FXCarte fxcarte) {
         super(w, h, img, fxcarte);
+
         this.s=s;
         blessureImg=new ImageView[20];                
         flagImg=new ImageView("americanFlag.png");
@@ -70,7 +75,8 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         initialAngle=90;
         orientation=270;
         this.pos=pos;
-        stImage=Soldat.Statut.NORMAL;
+        this.poseImg=s.getPose();
+        stImage=s.getStatu();
 
     }
 
@@ -111,11 +117,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         }
     }
 
-    public void pronePostion(){
-        this.setW(100);
-        this.buildFrameImages(new Image("proneUS.png"));
-        
-    }
+
 
 
 
@@ -197,9 +199,19 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         setTranslateY(y0);
         toFront();
         this.setVisible(true);
+        if(s.getPose()!=poseImg) updatePose();
         if(s.getStatu().ordinal()>stImage.ordinal()) updateBlesseImage(s.getStatu());
+        
         signON();
     }
+    void updatePose(){
+    
+    if(s.getPose()==Pose.PRONE) pronePosition();
+    else if(s.getPose()==Pose.DROIT) droitPosition();
+    
+    }
+    
+    
     //TODO Da rifare con unn angolo 360 gradi....
     void updateSodlatOrientation(double angle){
         if(angle>=360-22.5 && angle<=360 ) 
@@ -215,10 +227,10 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         System.out.println("------>"+angle+"-----orientation updataed--->"+s.getFace());
         }    
 
-    public boolean isDistanceLessMarcheMax(double dist){  
+    public boolean isPossibleAchive(ActionType type,double dist){  
       return ( dist>0 
               && s.getTempDisponible()>0 
-              && s.isDistanceLessMarcheMax(dist));
+              && s.isPossibleAchive(type,dist));
     
     }
     public void createFXSoldat(){
@@ -479,7 +491,10 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     protected abstract void buildFramesMarcheAnim();    
     public abstract void buildFramesFeuAnim();
     public abstract void buildBlessAnim();
+    protected abstract void buildCrawlAnim();
     public abstract void feuFrame();
+    public abstract void droitPosition();
+    public abstract void pronePosition();
      
     public void fxPlayTargetBlesse(Soldat target){
 
@@ -647,11 +662,11 @@ public void updateBandageImage(Soldat.Statut statut){
                 buildFrameImages(img);
                 setFrame(1);
             }
-
+            poseImg=Pose.PRONE;
             playBlessedAnim(blessed);
             break;
         case MORT:
-       
+            poseImg=Pose.PRONE;
             break;
         case CRITIQUE:
 
@@ -672,6 +687,7 @@ public void updateBandageImage(Soldat.Statut statut){
                 feu1=4;
                 feu2=5;
             }
+           
             System.out.println("%%%%%%% CRITIQUE");
             playBlessedAnim(blessed);
 
@@ -728,6 +744,7 @@ public void updateBandageImage(Soldat.Statut statut){
                 setFrame(7);
             }
             System.out.println("%%%%%%% GRAVE_TETE");
+            poseImg=Pose.PRONE;
             playBlessedAnim(blessed);
 
             break;

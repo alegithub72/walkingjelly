@@ -6,11 +6,9 @@
 package jeu.patrouille.coeur.actions;
 
 import jeu.patrouille.coeur.actions.enums.ActionType;
-import java.util.ArrayList;
-import java.util.List;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.pieces.GeneriquePiece;
-import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Piece.Direction;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
 
@@ -85,7 +83,7 @@ public class MarcheAction extends BaseAction{
             if(mapTile==null){
                 mapTile =Carte.getLigne(i0, j0, i1, j1);
             }
-            int letgthp=mapTile.length;
+            int letgthp=mapTile.length-1;
             int calcp=(apbase* letgthp);
             System.out.println("----------------->CALCULATE TILE LINE SIZE:->"+mapTile.length);
        tempActivite=calcp;
@@ -100,18 +98,19 @@ public class MarcheAction extends BaseAction{
        //m.setDerivedAction(this.derivedAction.clone());
        return m;
     }
-    public static MarcheAction marcheLointain(Soldat s) {
+    public static MarcheAction marcheLointain(Soldat s,Direction d) {
         MarcheAction act=null;
         try{
         int tbase=s.tempNecessarieDesActionBase(ActionType.MARCHE);
         if(s.getTempDisponible()>=tbase){
             int delta=(int)s.getTempDisponible()/tbase;
-            if ((s.getI() + delta) >= Carte.CARTE_SIZE_I ) 
+            int I1=s.getI()+(d.i*delta), J1=s.getJ()+(d.j*delta);
+            if (!(I1< Carte.CARTE_SIZE_I  && (I1)>=0)) 
                 delta=0;
-            if((s.getJ()+delta)>=Carte.CARTE_SIZE_J) 
+            if(!(J1<Carte.CARTE_SIZE_J && J1>=0)) 
                 delta=0;
             System.out.println("tbase:"+tbase+" delta:"+delta);
-            act = new MarcheAction(s.getI(), s.getJ(), s.getI()+delta, s.getJ()+delta, s);        
+            act = new MarcheAction(s.getI(), s.getJ(), I1, J1, s);        
         }else System.out.println("TD:"+s.getTempDisponible());
         
         }catch(Exception ex){

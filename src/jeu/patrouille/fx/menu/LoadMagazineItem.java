@@ -5,10 +5,15 @@
  */
 package jeu.patrouille.fx.menu;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.RechargeArmeAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
+import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
 /**
@@ -16,8 +21,8 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  * @author appleale
  */
 public class LoadMagazineItem extends MenuItemButton{
-    public LoadMagazineItem(FXSoldat fxs,Label label){
-        super(ActionType.ARME_RECHARGE,fxs,label);
+    public LoadMagazineItem(FXSoldat fxs,FXCarte fxcarte){
+        super(ActionType.ARME_RECHARGE,fxs,fxcarte);
     }
 
     public LoadMagazineItem() {
@@ -30,14 +35,20 @@ public class LoadMagazineItem extends MenuItemButton{
         return act;//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    @Override
-    public void changeStates() {
-
-    }    
+  
 
     @Override
-    public void updateState() {
-       return;
+    public boolean isDisabledItem() {
+        Soldat s=fxs.getSoldat();
+        try {
+            return ((s.isBraceGaucheBlesse() &&
+                    s.isBrasDroiteBlesse() )
+                    || !s.isTempDisponiblePour(actionType));
+            } catch (ModeDeFeuException ex) {
+           throw new RuntimeException(ex);
+        }
     }
+
+
     
 }
