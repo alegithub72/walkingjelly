@@ -7,11 +7,9 @@ package jeu.patrouille.fx.menu.eventhandler;
 
 
 import java.net.URL;
-import javafx.scene.Cursor;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
-import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.board.FXMenuItemsDossier;
 import jeu.patrouille.fx.pieces.FXSoldat;
 

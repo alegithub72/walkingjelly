@@ -21,7 +21,7 @@ public class RechargeArmeAction extends BaseAction{
 
     @Override
     public void calculeActionPointDesAction() throws Exception {
-       if(protagoniste==antagoniste) tempActivite= type.TN();
+       if(protagoniste==antagoniste) tempActivite= (int)type.TN();
        else tempActivite=2;
     }
 

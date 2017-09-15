@@ -31,7 +31,8 @@ public class ItemMenuConfirmActionEventHandler  implements EventHandler<MouseEve
         if (event.getButton() == MouseButton.PRIMARY) {
             
             try {
-                if(item.getActionType()==ActionType.MARCHE)
+                if(item.getActionType()==ActionType.MARCHE || 
+                        item.getActionType()==ActionType.COURS)
                     fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
                 else if(item.getActionType()==ActionType.FEU){
                     fxcarte.confirmFEUAction(item, event.getSceneX(), event.getSceneY());

@@ -25,9 +25,16 @@ public class MarcheAction extends BaseAction{
     
     }
     MarcheAction(MarcheAction a){
-    super(ActionType.MARCHE,a.i0,a.j0,a.i1,a.j1,a.protagoniste.clonerPiece(),null);
+    super(a.getType(),a.i0,a.j0,a.i1,a.j1,a.protagoniste.clonerPiece(),null);
     
     }
+
+    MarcheAction(ActionType type,int i0,int j0,int i1,int j1,GeneriquePiece protagoniste) {
+        super(type, i0, j0, i1,j1, protagoniste, null);
+    }
+
+
+    
 
     public MarcheAction getDerivedAction() {
         return derivedAction;
@@ -41,7 +48,7 @@ public class MarcheAction extends BaseAction{
     
     PointCarte mapTile[];
 
-    private void setMapTile(PointCarte[] mapTile) {
+    protected void setMapTile(PointCarte[] mapTile) {
         this.mapTile = mapTile;
     }
     
@@ -66,7 +73,8 @@ public class MarcheAction extends BaseAction{
                 list[k-1]=b; 
             
             System.out.println("spread action marche k="+k+"--"+protagoniste.toStringSimple()+"--->(i1,j1)----(i2,j2)");
-            System.out.println("spread action marche k="+k+"----->"+i1+","+j1+"----"+""+i2+","+j2);                  
+            System.out.println("spread action marche k="+k+"----->"+i1+","+j1+"----"+""+i2+","+j2);  
+            System.out.println("spread tem activite "+b.getTempActivite());
         }
          
         }
@@ -79,14 +87,15 @@ public class MarcheAction extends BaseAction{
     public void calculeActionPointDesAction()throws Exception {
             
             Soldat s=(Soldat)protagoniste;
-            int apbase=s.tempNecessarieDesActionBase(ActionType.MARCHE);
+            int apbase=s.tempNecessarieDesActionBase(this.type);
             if(mapTile==null){
                 mapTile =Carte.getLigne(i0, j0, i1, j1);
             }
             int letgthp=mapTile.length-1;
+            if(derivedAction!=null) letgthp=mapTile.length;
             int calcp=(apbase* letgthp);
             System.out.println("----------------->CALCULATE TILE LINE SIZE:->"+mapTile.length);
-       tempActivite=calcp;
+       tempActivite=(int)calcp;
     }
 
     @Override
@@ -101,9 +110,9 @@ public class MarcheAction extends BaseAction{
     public static MarcheAction marcheLointain(Soldat s,Direction d) {
         MarcheAction act=null;
         try{
-        int tbase=s.tempNecessarieDesActionBase(ActionType.MARCHE);
+        double tbase=s.tempNecessarieDesActionBase(ActionType.MARCHE);
         if(s.getTempDisponible()>=tbase){
-            int delta=(int)s.getTempDisponible()/tbase;
+            int delta=(int)s.getTempDisponible()/(int)tbase;
             int I1=s.getI()+(d.i*delta), J1=s.getJ()+(d.j*delta);
             if (!(I1< Carte.CARTE_SIZE_I  && (I1)>=0)) 
                 delta=0;
@@ -119,11 +128,5 @@ public class MarcheAction extends BaseAction{
         System.out.println("fuggire action :"+act);
         return act;
     }
-    
 
-
-    
-
-    
-        public static void main(String[] args) {}
 }

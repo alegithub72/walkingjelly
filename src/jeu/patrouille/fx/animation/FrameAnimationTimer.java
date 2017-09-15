@@ -105,12 +105,15 @@ public class FrameAnimationTimer extends AnimationTimer{
                 }
                 
             }else if(loop>=this.ciclyc && (i>f2) ) {
-                source.removeThis();
-                source.defaultFrame();
-                this.stop();
+                if(ciclyc!=-1) {
+                    source.removeThis();
+                    this.stop();
+                    source.defaultFrame();
+                }
               
-                i=f2;
+                i=f1;
             }
+            System.out.println("i==="+i);
         } 
     }
 

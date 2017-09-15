@@ -101,4 +101,10 @@ public class FXUSSoldat extends FXSoldat {
         
     }  
 
+    @Override
+    protected void buildFramesCoursAnim() {
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(9, 10, this, 0, -1, 400,null,Sound.COURS);
+        frameAnimTimer[0].buildMedia();    
+    }
+
 }

@@ -33,6 +33,7 @@ import jeu.patrouille.fx.menu.BandageItem;
 import jeu.patrouille.fx.menu.FeuItem;
 import jeu.patrouille.fx.menu.LoadMagazineItem;
 import jeu.patrouille.fx.menu.MenuItemButton;
+import jeu.patrouille.fx.menu.RunItem;
 import jeu.patrouille.fx.menu.WalkItem;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnButtonEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.EndTurnEventHandler;
@@ -65,6 +66,9 @@ public class FXPlanche extends Application {
     FXInfoPanel infPl;
     Font fontTitle;
     FXSoldatEquipement fxequip;
+    public ProgressIndicator bar;
+
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -243,6 +247,8 @@ public class FXPlanche extends Application {
             case ARME_RECHARGE:
                 spAct=new LoadMagazineItem();
                 break;
+            case COURS:
+                spAct=new RunItem();
             default:
                 break;
         }

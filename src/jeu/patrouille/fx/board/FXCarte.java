@@ -13,7 +13,7 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -22,6 +22,7 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.actions.AbstractAction;
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.CoursAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -35,22 +36,11 @@ import jeu.patrouille.coeur.terrains.PointCarte;
 import jeu.patrouille.coeur.terrains.Terrain;
 import jeu.patrouille.fx.jeurs.FXAIJoueur;
 import jeu.patrouille.fx.jeurs.FXMouseJeurs;
-import jeu.patrouille.fx.menu.BandageItem;
-import jeu.patrouille.fx.menu.DisableMenuItems;
-import jeu.patrouille.fx.menu.FeuItem;
-import jeu.patrouille.fx.menu.LoadMagazineItem;
 import jeu.patrouille.fx.menu.AbstractMenuItemButton;
-import jeu.patrouille.fx.menu.MenuItemButton;
-import jeu.patrouille.fx.menu.RunItem;
-import jeu.patrouille.fx.menu.ViserFeuItem;
-import jeu.patrouille.fx.menu.WalkItem;
 import jeu.patrouille.fx.menu.eventhandler.ItemMenuConfirmActionEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.ItemMenuRangeDisplayHandler;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
-import jeu.patrouille.fx.menu.eventhandler.SoldatClickedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.menu.eventhandler.SoldatOpenMenuItemsFXCarteEventHandler;
-import jeu.patrouille.fx.menu.eventhandler.SoldatPressedOnMenuItemsEventHandler;
-import jeu.patrouille.fx.menu.eventhandler.SoldatRelasedOnMenuItemsEventHandler;
 import jeu.patrouille.fx.pieces.FXHostile;
 import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.sprite.CursorHelper;
@@ -84,16 +74,8 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     boolean switchsCanvas = true;
     int mapW;
     int mapH;
-
-    
-    
-
-
-
     FXPlanche fxpl;
-
     FXItemsPointerHelper fxIMHelper;
-
     boolean commanNotvalid;
     public Cursor current;
     boolean animOn;
@@ -129,7 +111,7 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         c2 = new Canvas(PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
         rootGroup.getChildren().add(c2);
         setCursor(Cursor.HAND);
-       
+
                     
         //ImageView test = new ImageView(new Image("menuItem.png"));
 
@@ -181,10 +163,13 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         deselectionneAllSoldats();
         removeMenuItemsMenuOnFXUSEquipe();
         removeMenuItemsonFXHostileEquipe();
+        fxpl.bar=new ProgressIndicator();
+        fxpl.bar.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H);
+        fxpl.bar.setTranslateX(10);
+        fxpl.rootScene.getChildren().add(fxpl.bar);
         
         mj.debutRond();
-
-        fxpl.sendMessageToPlayer(" START TURN "+(mj.getTurn()+1));
+        fxpl.sendMessageToPlayer("      START TURN "+(mj.getTurn()+1));
         
     }
     @Override
@@ -276,6 +261,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
             case MARCHE:
                 sfx.playMarche((MarcheAction) act1);
                 break;
+            case COURS:
+                sfx.playMarche((CoursAction)act1);
+                break;
             case FEU:
                 sfx.playFeu((FeuAction)act2);
                 break;
@@ -315,6 +303,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
             case MARCHE:
                 sfx.playMarche((MarcheAction) act1);
                 break;
+            case COURS:
+                sfx.playMarche((CoursAction)act1);
+                break;                
             case FEU:
                 sfx.playFeu((FeuAction)act2);
                 break;
@@ -430,7 +421,6 @@ private boolean isScrollAreaChanged(int i1,int j1){
         }
             setOnMouseMoved(null);
             reMountFXCarteMenuItemsAndScroll();   
-           
             fxIMHelper.setActionSeletione(false);
     }
 
@@ -441,6 +431,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
     
     @Override
     public void reMountFXCarteMenuItemsAndScroll(){
+        setCursor(Cursor.HAND);
+        fxpl.rootScene.getChildren().remove(fxpl.bar);
+        fxpl.bar=null;
         this.setOnScroll(new ScrollEventHandler(this));
         this.setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(getMenu()));
         mountMenuItemsOnFXHostileEquipe();
@@ -464,7 +457,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
  
         BaseAction act = item.buildMenuItemAction();
-        setCursor(Cursor.HAND);
+
         setOnScroll(null);
         if (act.getType() == ActionType.MARCHE) {
             
@@ -488,7 +481,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             setOnMouseClicked(new ItemMenuConfirmActionEventHandler(item,this));
             setOnMouseMoved(new ItemMenuRangeDisplayHandler(this, item.getActionType()));
             setFXCarteCursor(Cursor.HAND);
-           getMenu().closeFXCarteMenuItems();
+            getMenu().closeFXCarteMenuItems();
             fxpl.sendMessageToPlayer("Choisir an Ojective");
             
         }else if(act.getType()==ActionType.BANDAGE || 
@@ -503,6 +496,19 @@ private boolean isScrollAreaChanged(int i1,int j1){
             removeMenuItemsMenuOnFXUSEquipe();
             removeMenuItemsonFXHostileEquipe();
             fxpl.sendMessageToPlayer("Bandage yourself or a close teammate to you");
+        }else if(act.getType()==ActionType.COURS){
+            
+            addHelperInstance(act);
+            fxIMHelper.setActionSeletione(true);
+            setOnMouseClicked(null);
+            setOnMouseClicked(new ItemMenuConfirmActionEventHandler( item, this));
+            setFXCarteCursor(Cursor.HAND);
+            setOnMouseMoved(new ItemMenuRangeDisplayHandler(this,item.getActionType()));
+            getMenu().closeFXCarteMenuItems();
+            fxpl.sendMessageToPlayer("Choisir un emplacement");
+            
+            
+        
         }
 
     }
@@ -1305,7 +1311,8 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
 
     public  void visualizeMiniIconAction(BaseAction act){
         removeMiniIcon();
-        if(act.getType()==ActionType.MARCHE){
+        if(act.getType()==ActionType.MARCHE ||
+                act.getType()==ActionType.COURS){
             actionIcon =new FXPatrouilleSprite(FXCarte.TILE_SIZE,
                 FXCarte.TILE_SIZE, "actionWalk.png", this);
         }if(act.getType()==ActionType.FEU){
@@ -1424,7 +1431,9 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
 
     @Override
     public void refreshGraficCarte() {
-
+        double progress=(double)(mj.td)/10d;
+      //  fxpl.bar.setProgress(progress);
+        System.out.println("progress------>"+progress);
         refreshCarte();
         refreshCarteAllFXSoldatViewPosition();
         

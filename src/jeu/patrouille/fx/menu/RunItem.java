@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.menu;
 
 import jeu.patrouille.coeur.actions.BaseAction;
+import jeu.patrouille.coeur.actions.CoursAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.pieces.Piece;
@@ -23,9 +24,15 @@ public class RunItem extends MenuItemButton{
         super(ActionType.COURS, fxs,fxcarte);
     }
 
+    public RunItem() {
+        super(ActionType.COURS, null, null);
+    }
+    
+
     @Override
     public BaseAction buildMenuItemAction() {
-    return null;
+    Soldat s=fxs.getSoldat();
+    return new CoursAction(s.getI(), s.getJ(), -1, -1, s);
     }
 
     @Override

@@ -255,7 +255,7 @@ public void rondStartTest(){
         for(int h=0;h<s.actionSize();h++){
             ActionType type1=s.nextAction(h).getType();
             System.out.println("----ACTION TO SPREAD--------->"+s.nextAction(h));
-            if(type1==ActionType.MARCHE){
+            if(type1==ActionType.MARCHE || type1==ActionType.COURS){
                 BaseAction[] l=s.nextAction(h).spreadAction(); 
                 //System.out.println(" list spread ->"+l.length);
                 n=ArrayUtil.copyArray(newActionPool, l, n);
@@ -368,7 +368,7 @@ private BaseAction[] sequenqueActionMake(List<BaseAction> listUSAll,List<BaseAct
     }
    private void makeActionAndPlay(int td,Soldat s,BaseAction a) throws MakeActionFailException{
              
-       if(! s.isImmobilize() && a.getType()==ActionType.MARCHE ){
+       if(! s.isImmobilize() && (a.getType()==ActionType.MARCHE || a.getType()==ActionType.COURS) ){
            BaseAction act1=a.clone(); 
            makeMarcheAction(s, a);
            BaseAction act2=a.clone();
@@ -532,7 +532,8 @@ private    void reMountMenuItemsAndScroll(){
         else c.terrain[i1][j1].addExtraPiece(s);
         //TODO if enemy do a close fight...!!!!
         
-        s.setAction(ActionType.MARCHE);
+       if(a.getType()==ActionType.COURS)  s.setAction(ActionType.COURS);
+       else s.setAction(ActionType.MARCHE);
         System.out.println("updated terrain --soldat-"+s.toStringSimple()+"---->"+a.getI1()+"--->"+a.getJ1());
         s.setI(i1);
         s.setJ(j1);

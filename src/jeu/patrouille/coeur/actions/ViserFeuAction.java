@@ -35,7 +35,7 @@ public class ViserFeuAction extends BaseAction{
     @Override
     public void calculeActionPointDesAction() throws Exception{
         Soldat s=(Soldat)protagoniste;
-        tempActivite=s.tempNecessarieDesActionBase(ActionType.FEU_VISER);
+        tempActivite=(int)s.tempNecessarieDesActionBase(ActionType.FEU_VISER);
     }
 
     @Override

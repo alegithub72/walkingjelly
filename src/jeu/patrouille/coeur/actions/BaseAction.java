@@ -107,6 +107,7 @@ public int compareTo(BaseAction b) {
         else if(type==ActionType.MARCHE) c='m';
         else if(type==ActionType.BANDAGE) c='b';
         else if(type==ActionType.ARME_RECHARGE) c='r';
+        else if(type==ActionType.COURS) c='c';
         
         String txt=c+""+i0+","+j0+";"+i1+","+j1;
         return txt;

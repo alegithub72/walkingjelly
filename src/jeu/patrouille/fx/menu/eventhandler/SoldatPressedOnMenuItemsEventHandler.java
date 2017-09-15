@@ -6,13 +6,10 @@
 package jeu.patrouille.fx.menu.eventhandler;
 
 
-import java.net.URL;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.AudioClip;
 import jeu.patrouille.fx.menu.MenuItemButton;
-import jeu.patrouille.fx.sprite.Sprite;
 
 /**
  *

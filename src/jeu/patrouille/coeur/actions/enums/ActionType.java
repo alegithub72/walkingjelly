@@ -9,7 +9,7 @@ package jeu.patrouille.coeur.actions.enums;
  *
  * @author appleale
  */
-public enum ActionType {MARCHE(1),COURS(1),RAMPER(2),COUCHER(0),LEVER(3),
+public enum ActionType {MARCHE(1),COURS(3),RAMPER(2),COUCHER(0),LEVER(3),
 MONTER(2),SAUT(3),PRENDRE_OBJ(1),LACHER_OBJ(0),JETER_GRENATE(3),OCCASION_DE_FEU(10),
 CHANGE_ORIENTATION(0),MANETTE(1),FEU(-1)
 ,ARME_RECHARGE(3),GEOUX(0),PA_ACTION(0),FEU_VISER(2),BANDAGE(5);

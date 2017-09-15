@@ -19,7 +19,7 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
     GeneriqueArme arme;
     FXCarte fxcarte;    
     Sound type;
-    public enum Sound{MARCHE("goodStep.wav"),MP5("mp5.wav"),M16("m16.wav","m16.wav","M16A4Burst.mp3","fire5.wav"),GRUNT5("grunt2.wav"), 
+    public enum Sound{MARCHE("goodStep.wav"),COURS("run.wav"),MP5("mp5.wav"),M16("m16.wav","m16.wav","M16A4Burst.mp3","fire5.wav"),GRUNT5("grunt2.wav"), 
     AK74("AK47.mp3","AK47.mp3","ak47burst.wav","AK47Auto.mp3"),BENELLI_M3("ShotGunFire.wav"); 
         String files[]=new String[4];
         String file;
@@ -77,7 +77,12 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
                mediaPlayer.setVolume(0.1);
                mediaPlayer.setRate(0.8);
                mediaPlayer.setCycleCount(1);
-           }else if(this.type==Sound.GRUNT5){
+           }else if(this.type==Sound.COURS){
+               mediaPlayer.setRate(1);
+               mediaPlayer.setVolume(0.2);
+              // mediaPlayer.setCycleCount(3);
+           }
+           else  if(this.type==Sound.GRUNT5){
                mediaPlayer.setVolume(0.1);
 
            }           

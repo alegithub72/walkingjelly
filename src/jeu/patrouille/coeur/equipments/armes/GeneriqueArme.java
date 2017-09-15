@@ -134,7 +134,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
         if (td == NOTVALUE) {
             throw new ModeDeFeuException("Mode de feu not avaiable");
         }
-        if(type==ActionType.FEU_VISER) td=td+(type.TN()*shotNumMF[modefeu.ordinal()]);
+        if(type==ActionType.FEU_VISER) td=td+((int)type.TN()*shotNumMF[modefeu.ordinal()]);
         return td;
     }
  

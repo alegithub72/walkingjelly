@@ -60,11 +60,11 @@ public class FXItemsPointerHelper {
     }
     
     public void resetCursorHelper(){
-        if(act.getType()==ActionType.MARCHE 
+        if(act.getType().isMovementAction()
                 &&  this.seletctionee.getSoldat().
                         getBoss().getJeur()==GeneriqueJoeurs.JOEUR_HOST) 
         this.rangeCursorHelper=ImageChargeur.CURSOR_HOST_RANGE;
-        else if(act.getType()==ActionType.MARCHE 
+        else if(act.getType().isMovementAction()
                 && this.seletctionee.
                         getSoldat().getBoss().getJeur()== GeneriqueJoeurs.JOEUR_US) 
             this.rangeCursorHelper=ImageChargeur.CURSOR_US_RANGE; 

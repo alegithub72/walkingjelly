@@ -21,7 +21,7 @@ public class BandageAction extends BaseAction{
 
     @Override
     public void calculeActionPointDesAction() throws Exception {
-        tempActivite= type.TN();
+        tempActivite=(int) type.TN();
     }
 
 }

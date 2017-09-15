@@ -547,7 +547,7 @@ public int isLesion(Lesion.Degre type){
                 
     }
     public boolean isTempDisponiblePour(ActionType actiontype)throws ModeDeFeuException{
-        int baseTempDisponible=tempNecessarieDesActionBase(actiontype);
+        double baseTempDisponible=tempNecessarieDesActionBase(actiontype);
         return (tempDesponible>=baseTempDisponible);
         
     }
@@ -642,8 +642,8 @@ public int isLesion(Lesion.Degre type){
         int apbase=-1;
         if(armeUtilise!=null && actionType.isFeuAction() ) 
             apbase=this.armeUtilise.fireTempNecessarie(actionType); 
-        else apbase=actionType.TN();
-        if(isDoubled() && actionType.isMovementAction() )apbase=apbase*2;
+        else  apbase=actionType.TN();
+        if(isDoubled() && actionType.isMovementAction() ) apbase=apbase*2;
         return apbase;
     }
 
@@ -701,9 +701,12 @@ public int isLesion(Lesion.Degre type){
    
    public boolean isPossibleAchive(ActionType type,double dist){
       try{
-            int apbase=this.tempNecessarieDesActionBase(type);
-            double value=dist*apbase;
+            double apbase=this.tempNecessarieDesActionBase(type);
+            if(type==ActionType.COURS) apbase=apbase/5;
+            double value=Math.round(dist*apbase);
+             System.out.println(" temp consumed :"+value);
             return value<=tempDesponible ;
+           
       }catch(Exception ex){
           ex.printStackTrace();
       }

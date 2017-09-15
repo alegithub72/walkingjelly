@@ -251,10 +251,10 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     }    
    public  void playMarche(MarcheAction  act){
         
-        System.out.println("------------- FXSOLDAT PLAY ANIM MARCHE---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
+        System.out.println("------------- FXSOLDAT PLAY ANIM "+act.getType().name().toUpperCase()+"---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
 
         //System.out.println("soldato anim:"+act.getProtagoniste());
-        System.out.println(" IN PLAY MARCHE");
+        System.out.println(" IN PLAY NEW "+act.getType().name().toUpperCase());
         Path p=new Path();
         this.deselectioneFXSoldat();
         Point2D p1=getSceneCoordMove(act.getI0(), act.getJ0());
@@ -286,7 +286,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                 +(FXCarte.TILE_SIZE/2)
                 )
                 ;       
-        
+        double dist=  p1.distance(p2)*(700/150);
         LineTo l=new LineTo(x1,y1);
         
         p.getElements().addAll(mTo,l);
@@ -297,17 +297,19 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         setFXSoldatOrientation(angle);
                 
         System.out.println("rotate "+angle);
-
+        
         PathTransition  path=new PathTransition();
-        path.setDuration(Duration.millis(500));
+        if(act.getType()==ActionType.COURS) path.setDuration(Duration.millis(dist));
+        else path.setDuration(Duration.millis(500));
         path.setPath(p);
         path.setNode(this);
-
         path.setRate(0.5);
         path.setOrientation(PathTransition.OrientationType.NONE);
         path.setCycleCount(1);
         path.setAutoReverse(false);
-        buildFramesMarcheAnim();
+        
+        if(act.getType()==ActionType.COURS) this.buildFramesCoursAnim();
+        else this.buildFramesMarcheAnim();
 
         ptList[0]=path;
 
@@ -333,7 +335,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         System.out.println("FXSOLDAT ANIM------> PLAY");
 
 
-        System.out.println("------------- FXSOLDAT PLAY ANIM MARCHE ---------FINE------->--------><---------");
+        System.out.println("------------- FXSOLDAT PLAY ANIM "+act.getType().name().toUpperCase()+" ---------FINE------->--------><---------");
     } 
     public void playBandage(){
         fxcarte.centerScrollArea(s.getI(), s.getJ());
@@ -492,6 +494,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     public abstract void buildFramesFeuAnim();
     public abstract void buildBlessAnim();
     protected abstract void buildCrawlAnim();
+    protected abstract void buildFramesCoursAnim();    
     public abstract void feuFrame();
     public abstract void droitPosition();
     public abstract void pronePosition();

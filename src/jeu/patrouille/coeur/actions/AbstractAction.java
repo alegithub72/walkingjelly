@@ -6,7 +6,7 @@
 package jeu.patrouille.coeur.actions;
 
 import jeu.patrouille.coeur.actions.enums.ActionType;
-import java.util.List;
+
 /**
  *
  * @author Alessio Sardaro

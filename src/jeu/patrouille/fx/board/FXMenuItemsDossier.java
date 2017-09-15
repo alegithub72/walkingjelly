@@ -306,7 +306,7 @@ protected void buildDisableMenu(FXSoldat s){
     
     synchronized public void openCurrentSoldatMenuItems(double sx,double sy) {
         try{
-            fxcarte.setCursor(Cursor.HAND);
+           
             PointCarte p=fxcarte.convertSceneCoord(sx, sy);
             if(fxcarte.fxIMHelper!=null){
             FXSoldat sfx=fxcarte.fxIMHelper.getFXSoldatSelectionee();

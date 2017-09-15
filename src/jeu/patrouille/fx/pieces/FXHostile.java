@@ -58,11 +58,13 @@ public class FXHostile extends FXSoldat{
         frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(4,7, this, 0, -1,200, null,Sound.MARCHE);
         this.frameAnimTimer[0].buildMedia();        
     }
-    protected void buildFramesCourseAnim() {
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(8,9, this, 0, -1,400, null,Sound.MARCHE);
-        this.frameAnimTimer[0].buildMedia();        
-    }    
     
+    @Override
+    protected void buildFramesCoursAnim() {
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(8,9, this, 0, -1,200, null,Sound.COURS);
+        this.frameAnimTimer[0].buildMedia();        
+    }
+
     @Override
     public void feuFrame(){
             setFrame(1);

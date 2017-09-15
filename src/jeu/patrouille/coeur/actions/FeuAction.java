@@ -35,7 +35,7 @@ public class FeuAction extends BaseAction{
     @Override
     public void calculeActionPointDesAction() throws Exception{
         Soldat s=(Soldat)protagoniste;
-        tempActivite=s.tempNecessarieDesActionBase(ActionType.FEU);
+        tempActivite=(int)s.tempNecessarieDesActionBase(ActionType.FEU);
 
        // super.calculeActionPointDesActions(); //To change body of generated methods, choose Tools | Templates.
     }
