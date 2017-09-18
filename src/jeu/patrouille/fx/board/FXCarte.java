@@ -13,7 +13,6 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -126,6 +125,10 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
 
     public FXPlanche getFxpl() {
         return fxpl;
+    }
+
+    public FXItemsPointerHelper getFxIMHelper() {
+        return fxIMHelper;
     }
 
     public void initFXCarte() throws IOException{
@@ -395,18 +398,21 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
         PointCarte p=getAbsoluteIJCoord(mousex, mousey);
         //System.out.println(fxIMHelper.getSeletctionee()+" walk here i1=" + i1 + " j1=" + j1);
-
+        Soldat s=fxIMHelper.getSeletctionee();
+        double dpixel=displayGraficRangeHelper(mousex, mousey,Color.WHITE);
+        
+        double inch=(dpixel*INCHxPIXEL);
         removeDisplayRange();
 
-       
+        PointCarte obst=fxIMHelper.carteValiderRoute();
         setCursor(Cursor.HAND);
-        if (!fxIMHelper.isCommanNotvalid()) {
+        if (!fxIMHelper.isCommanNotvalid() && s.isPossibleAchive(fxIMHelper.getAct().getType(),inch)
+                && obst==null ) {
             
             BaseAction act=  item.buildMenuItemAction();
             addHelperInstance(act);
             fxIMHelper.setArrivalCarteCoord(p.getI(),p.getJ());
             fxIMHelper.addActionToSoldat();
-            Soldat s=fxIMHelper.getSeletctionee();
             fxpl.imprimerFXPLInfo(s);
             fxpl.visualizeActionBarActual();
             getMenu().closeFXCarteMenuItems();

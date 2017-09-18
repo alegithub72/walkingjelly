@@ -601,15 +601,7 @@ public void updateBlesseImage(Soldat.Statut statut,Corp.CorpParts location){
             stImage=Soldat.Statut.GRAVE_BRASE_GAUCHE;
             break;
         case GRAVE_TETE:
-
-            setW(100);
-            Image img = new Image("feritoUS.png");
-            buildFrameImages(img);
-            if (!s.isUS()) {
-                setFrame(5);
-            } else {
-                setFrame(3);
-            }
+            blessFrame(location);
             System.out.println("%%%%%%% GRAVE_TETE");
             playBlessedAnim(blessed);
             stImage=Soldat.Statut.GRAVE_TETE;
@@ -750,14 +742,8 @@ public void updateBandageImage(Soldat.Statut statut){
 
 
   void playBlessedAnim(boolean blessed){
-      buildBlessAnim();
-      if((s.getStatu()==Soldat.Statut.MORT ||
-         s.getStatu()==Soldat.Statut.INCONSCENT ||
-         s.getStatu()==Soldat.Statut.GRAVE_TETE  ) 
-         && !s.isUS() )
-          imgView.setTranslateX(-FXCarte.TILE_SIZE);
-      else     
-          imgView.setTranslateX(-25);
+      buildBlessAnim();   
+      imgView.setTranslateX(-25);
       //imgView.setTranslateY(25);
       if(s.getStatu().ordinal()>Statut.GRAVE_TETE.ordinal()) 
           setFXSoldatOrientation(Math.random()*360 );   

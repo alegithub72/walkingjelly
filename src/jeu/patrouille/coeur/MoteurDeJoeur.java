@@ -233,7 +233,8 @@ public void rondStartTest(){
                         
         List<BaseAction> list =new ArrayList<>();
         for (int h=0;h<sold.actionSize();h++) {
-             sum=sum+sold.nextAction(h).getTempActivite();
+             BaseAction b=sold.nextAction(h);
+             if(b!=null)sum=sum+b.getTempActivite();
              if(sum<=td) {
                  if(!sold.nextAction(h).isUsed()){
                         list.add(sold.nextAction(h));

@@ -38,7 +38,7 @@ public class ItemMenuRangeDisplayHandler implements EventHandler<MouseEvent>{
                fxcarte.displayRangeAction(event.getSceneX(), event.getSceneY(),actionType);
          }
         if(count>2) {
-                count=0;
+                count=0;                
                 fxcarte.refreshCarte();
             }
          

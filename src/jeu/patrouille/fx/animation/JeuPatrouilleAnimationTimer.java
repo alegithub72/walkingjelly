@@ -84,7 +84,7 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
            }
            else  if(this.type==Sound.GRUNT5){
                mediaPlayer.setVolume(0.1);
-
+               mediaPlayer.setCycleCount(1);
            }           
            if (null != arme) {
                switch (arme.getModel()) {
