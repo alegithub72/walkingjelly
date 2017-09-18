@@ -5,7 +5,6 @@
  */
 package jeu.patrouille.fx.menu;
 
-import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
@@ -65,6 +64,7 @@ public class FeuItem extends MenuItemButton{
 
                 s.getArmeUtilise().changeModeFeu(mode);
                 buildButtonState();
+                  fxcarte.getFxpl().buildFXSoldatEquipement(s);
                 fxcarte.sendMessageToPlayer("Change mode de feu :"+mode.txt);
 
             }catch(ModeDeFeuException m){
@@ -74,7 +74,7 @@ public class FeuItem extends MenuItemButton{
     }
     void initButtonState(){
       if(fxs!=null && fxs.getSoldat().getArmeUtilise()!=null)  
-          this.mode=fxs.getSoldat().getArmeUtilise().getArmeFeuModel();        
+          this.mode=fxs.getSoldat().getArmeUtilise().getArmeFeuMode();        
      buildButtonState();
     
     }

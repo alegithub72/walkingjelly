@@ -18,7 +18,6 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -66,8 +65,8 @@ public class FXPlanche extends Application {
     FXInfoPanel infPl;
     Font fontTitle;
     FXSoldatEquipement fxequip;
-    public ProgressIndicator bar;
-
+    //public ProgressIndicator bar;
+    FXPatrouilleSprite endButton;
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -156,7 +155,7 @@ public class FXPlanche extends Application {
 
         //borderPan.setBottom(rootBarGroup);
 
-        FXPatrouilleSprite endButton = new FXPatrouilleSprite(120, 50, null, null);
+        endButton = new FXPatrouilleSprite(120, 50, null, null);
         endButton.buildFrameImages(new Image( "endturn.png"));
         //endButton.setLayoutX(880);
         //endButton.setLayoutY(0);
@@ -164,7 +163,7 @@ public class FXPlanche extends Application {
         endButton.setOnMousePressed(e);
         endButton.setOnMouseReleased(e);
         endButton.setOnMouseClicked(new EndTurnEventHandler(this));
-        endButton.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W);
+        endButton.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W+FXCarte.DROIT_BAR_W-120);
         endButton.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H);
         endButton.toFront();
         rootScene.getChildren().add(endButton);
@@ -191,7 +190,6 @@ public class FXPlanche extends Application {
         //rootDroitBarGroup = new Group();
                    
         droitCanvasBar = new Canvas(FXCarte.DROIT_BAR_W, FXCarte.PIXEL_SCROLL_AREA_H);
-        GraphicsContext gc = droitCanvasBar.getGraphicsContext2D();
         droitCanvasBar.setTranslateX(FXCarte.PIXEL_SCROLL_AREA_W);
         droitCanvasBar.setTranslateY(0);
 

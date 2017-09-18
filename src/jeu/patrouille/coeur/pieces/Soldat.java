@@ -483,9 +483,9 @@ public int isLesion(Lesion.Degre type){
    public int combatFeuModifier(double dist){
             int cDM=-isLesion(null);
             System.out.println("1)combat distance modifier lesion:"+cDM);
-            if(armeUtilise.getArmeFeuModel()==FeuMode.RA ) 
+            if(armeUtilise.getArmeFeuMode()==FeuMode.RA ) 
                 cDM=cDM-1;
-            else if(armeUtilise.getArmeFeuModel()==FeuMode.PA)
+            else if(armeUtilise.getArmeFeuMode()==FeuMode.PA)
                 cDM=cDM-3;
             System.out.println("2)combat distance modifier arme utlise:"+cDM);
             

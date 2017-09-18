@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
@@ -123,6 +124,10 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         
     }
 
+    public FXPlanche getFxpl() {
+        return fxpl;
+    }
+
     public void initFXCarte() throws IOException{
         
         jHOST = new FXAIJoueur(this);
@@ -163,11 +168,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
         deselectionneAllSoldats();
         removeMenuItemsMenuOnFXUSEquipe();
         removeMenuItemsonFXHostileEquipe();
-        fxpl.bar=new ProgressIndicator();
-        fxpl.bar.setTranslateY(FXCarte.PIXEL_SCROLL_AREA_H);
-        fxpl.bar.setTranslateX(10);
-        fxpl.rootScene.getChildren().add(fxpl.bar);
-        
+        //fxpl.bar=new ProgressIndicator();
+        //fxpl.bar.setTranslateY(PIXEL_SCROLL_AREA_H);
+        //fxpl.bar.setTranslateX(PIXEL_SCROLL_AREA_W+DROIT_BAR_W-50);
+        //fxpl.rootScene.getChildren().add(fxpl.bar);
+        fxpl.endButton.setEffect(new GaussianBlur());
         mj.debutRond();
         fxpl.sendMessageToPlayer("      START TURN "+(mj.getTurn()+1));
         
@@ -432,8 +437,9 @@ private boolean isScrollAreaChanged(int i1,int j1){
     @Override
     public void reMountFXCarteMenuItemsAndScroll(){
         setCursor(Cursor.HAND);
-        fxpl.rootScene.getChildren().remove(fxpl.bar);
-        fxpl.bar=null;
+       // fxpl.rootScene.getChildren().remove(fxpl.bar);
+        fxpl.endButton.setEffect(null);
+        //fxpl.bar=null;
         this.setOnScroll(new ScrollEventHandler(this));
         this.setOnMouseClicked(new SoldatOpenMenuItemsFXCarteEventHandler(getMenu()));
         mountMenuItemsOnFXHostileEquipe();
@@ -725,7 +731,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             return new PointCarte(sceneIJ.getI()+posI,sceneIJ.getJ()+posJ);
 
     }
-    Point2D getXYCarteAbsoluteCoord(int i,int j){
+   static public Point2D getXYCarteAbsoluteCoord(int i,int j){
         double x=j*TILE_SIZE+TILE_SIZE/2;
         double y=i*TILE_SIZE+TILE_SIZE/2;
         return new Point2D(x, y);

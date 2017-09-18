@@ -32,6 +32,7 @@ import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 import jeu.patrouille.coeur.pieces.Soldat.Classment;
 import jeu.patrouille.coeur.pieces.Soldat.Statut;
+import jeu.patrouille.coeur.pieces.parts.Corp;
 import jeu.patrouille.coeur.pieces.parts.Lesion;
 import jeu.patrouille.fx.menu.eventhandler.EndAnimPauseHandler;
 import jeu.patrouille.fx.menu.eventhandler.StartDeamonThreadEventHandler;
@@ -200,7 +201,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         toFront();
         this.setVisible(true);
         if(s.getPose()!=poseImg) updatePose();
-        if(s.getStatu().ordinal()>stImage.ordinal()) updateBlesseImage(s.getStatu());
+        if(s.getStatu().ordinal()>stImage.ordinal()) updateBlesseImage(s.getStatu(),s.getLastLesion().getLocation());
         
         signON();
     }
@@ -252,7 +253,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
    public  void playMarche(MarcheAction  act){
         
         System.out.println("------------- FXSOLDAT PLAY ANIM "+act.getType().name().toUpperCase()+"---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
-
+        signOff();
         //System.out.println("soldato anim:"+act.getProtagoniste());
         System.out.println(" IN PLAY NEW "+act.getType().name().toUpperCase());
         Path p=new Path();
@@ -441,11 +442,17 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        this.fxcarte.centerScrollArea(s.getI(), s.getJ());
        fxcarte.refreshCarte();
        fxcarte.refreshCarteAllFXSoldatViewPosition();
-       setFXSoldatOrientation(act.getAngle());
+       Soldat target=(Soldat)act.getAntagoniste();
+       int i2=act.getI1(),j2=act.getJ1();
+       if(target!=null){
+            i2=target.getI();j2=target.getJ();
+        }       
+       double angle=angleRotation(i2,j2);
+       setFXSoldatOrientation(angle);
        signOff();
        this.frameAnimTimer[0].start();
        
-       Soldat target=(Soldat)act.getAntagoniste();
+  
        
        Thread t=new Thread(new Runnable() {
            @Override
@@ -454,6 +461,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                
                while(!frameAnimTimer[0].isStopped()) 
                System.out.print("");
+    
                Platform.runLater(new Runnable() {
                    @Override
                    public void run() {
@@ -461,7 +469,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                         int i1=act.getI1(),j1=act.getJ1();
                         if(target!=null){
                             i1=target.getI();j1=target.getJ();
-                        }
+                        }           
                         fxcarte.centerScrollArea(i1, j1);
                         fxcarte.refreshCarte();
                         fxcarte.refreshCarteAllFXSoldatViewPosition();
@@ -469,7 +477,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                         FXSoldat fxtarget=null;
                         if( !target.isUS()) fxtarget=  fxcarte.findFXHostile(target);
                         else fxtarget=fxcarte.findFXUSSoldat(target);
-                            fxtarget.fxPlayTargetBlesse((Soldat)act.getAntagoniste());
+                            fxtarget.playTargetBlesse();
                             fxtarget.toBack();
                             fxcarte.refreshCarte();
                             fxcarte.refreshCarteAllFXSoldatViewPosition();                            
@@ -498,50 +506,33 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     public abstract void feuFrame();
     public abstract void droitPosition();
     public abstract void pronePosition();
-     
-    public void fxPlayTargetBlesse(Soldat target){
+    abstract void blessFrame(Corp.CorpParts location);
+        
 
-        Lesion l=target.getLastLesion();
-        System.out.println("load new image blessed of "+target.getStatu()+", last blessed "+l);
+     
+    public void playTargetBlesse(){
+
+        Lesion l=s.getLastLesion();
+        System.out.println("load new image blessed of "+s.getStatu()+", last blessed "+l);
         
         
         if(l==null) return ;
         System.out.println("ordinal s.getStatut"+s.getStatu().ordinal()+" ordinal blessed "+l.getStatu().ordinal());        
-        if(s.getStatu().ordinal()> stImage.ordinal())updateBlesseImage(s.getStatu());
+        if(s.getStatu().ordinal()> stImage.ordinal())updateBlesseImage(s.getStatu(),l.getLocation());
     }
     
     
-public void updateBlesseImage(Soldat.Statut statut){   
+public void updateBlesseImage(Soldat.Statut statut,Corp.CorpParts location){   
     boolean blessed=true;
     switch (statut) {
         case INCONSCENT:
-            if (s.isUS()) {
-                setW(100);
-                Image img = new Image("feritoUS.png");
-                buildFrameImages(img);
-                setFrame(3);
-            } else {
-                setW(100);
-                Image img = new Image("feritoUS.png");
-                buildFrameImages(img);
-                setFrame(2);
-            }
+            blessFrame(location);
             this.stImage=Soldat.Statut.INCONSCENT;
             playBlessedAnim(blessed);
             
             break;
         case MORT:
-            if (s.isUS()) {
-                setW(100);
-                Image img = new Image("feritoUS.png");
-                buildFrameImages(img);
-                setFrame(3);
-            } else {
-                setW(100);
-                Image img = new Image("feritoUS.png");
-                buildFrameImages(img);
-                setFrame(5);
-            }
+            blessFrame(location);
             this.stImage=Soldat.Statut.MORT;
             playBlessedAnim(blessed);            
             break;
@@ -652,23 +643,11 @@ public void updateBlesseImage(Soldat.Statut statut){
 
 public void updateBandageImage(Soldat.Statut statut){  
     boolean blessed=false;
+    Corp.CorpParts location=s.getLastLesion().getLocation();
     switch (statut) {
         case INCONSCENT:
-            if (s.isUS()) {
-                setW(100);
-                Image img = new Image("feritoUS.png");
-                buildFrameImages(img);
-                setFrame(7);
-            } else {
-                setW(100);
-                Image img = new Image("feritoUS.png");
-                buildFrameImages(img);
-                setFrame(1);
-            }
-            poseImg=Pose.PRONE;
-            playBlessedAnim(blessed);
-            break;
         case MORT:
+            blessFrame(location);
             poseImg=Pose.PRONE;
             break;
         case CRITIQUE:
@@ -708,7 +687,7 @@ public void updateBandageImage(Soldat.Statut statut){
                 buildFrameImages(img);
                 setFrame(0);
             }
-
+            System.out.println("%%%%%%% GRAVE");
             break;
         case GRAVE_BRASE_DROITE:
             if (!s.isUS()) {
@@ -721,7 +700,7 @@ public void updateBandageImage(Soldat.Statut statut){
                 buildFrameImages(img);
                 setFrame(0);
             }
-
+            System.out.println("%%%%%%% GRAVE_BRASE_DROITE");
             break;
         case GRAVE_BRASE_GAUCHE:
             if (!s.isUS()) {
@@ -734,20 +713,11 @@ public void updateBandageImage(Soldat.Statut statut){
                 buildFrameImages(img);
                 setFrame(0);
             }
-
+            System.out.println("%%%%%%% GRAVE_BRASE_GAUCHE");
             break;
         case GRAVE_TETE:
 
-            setW(100);
-            Image img = new Image("feritoUS.png");
-            buildFrameImages(img);
-            if (!s.isUS()) {
-                setFrame(1);
-            } else {
-                setFrame(7);
-            }
-            System.out.println("%%%%%%% GRAVE_TETE");
-            poseImg=Pose.PRONE;
+            blessFrame(Corp.CorpParts.Tete);
             playBlessedAnim(blessed);
 
             break;
@@ -803,5 +773,10 @@ public void updateBandageImage(Soldat.Statut statut){
     public String toString() {
         return super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
-    
+    double angleRotation(int i2 ,int j2){
+        Point2D gridXY1=FXCarte.getXYCarteAbsoluteCoord(s.getI(),s.getJ());
+        Point2D gridXY2=FXCarte.getXYCarteAbsoluteCoord(i2,j2);
+        double angle=FXCarte.angleRotation(gridXY1.getX(),gridXY1.getY(), gridXY2.getX(),gridXY2.getY());    
+        return  angle;
+    }
 }

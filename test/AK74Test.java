@@ -53,7 +53,7 @@ public class AK74Test {
     
    @Test
    public void testPorte() throws ModeDeFeuException,LoadMagazineFiniException{
-       assertEquals(GeneriqueArme.FeuMode.SA ,  ak.getArmeFeuModel());
+       assertEquals(GeneriqueArme.FeuMode.SA ,  ak.getArmeFeuMode());
        assertEquals( 1 ,ak.feuArme(50));
        assertEquals(29, ak.shotRemain());
    }
@@ -61,7 +61,7 @@ public class AK74Test {
    @Test 
    public void testPorteBU() throws ModeDeFeuException,LoadMagazineFiniException{
        ak.changeModeFeu(GeneriqueArme.FeuMode.RA);
-       assertEquals(GeneriqueArme.FeuMode.RA,ak.getArmeFeuModel());
+       assertEquals(GeneriqueArme.FeuMode.RA,ak.getArmeFeuMode());
        assertEquals(5,ak.feuArme(50));
        assertEquals(25, ak.shotRemain());
    

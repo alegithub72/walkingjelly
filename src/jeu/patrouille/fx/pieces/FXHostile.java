@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.parts.Corp;
 import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer.Sound;
@@ -33,12 +34,12 @@ public class FXHostile extends FXSoldat{
     
     @Override
     public void buildBlessAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(defaultFrame,defaultFrame, this, 0, 1, 500, null,Sound.GRUNT5);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{defaultFrame,defaultFrame}, this, 0, 1, 500, null,Sound.GRUNT5);
         this.frameAnimTimer[0].buildMedia();
     }    
     @Override
     public void buildFramesFeuAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0, 1, 100, s.getArmeUtilise(),null);
+        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{feu1, feu2}, this, 0, 1, 100, s.getArmeUtilise(),null);
         this.frameAnimTimer[0].buildMedia();        
     }
     @Override
@@ -55,13 +56,13 @@ public class FXHostile extends FXSoldat{
 
     @Override
     protected void buildFramesMarcheAnim() {
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(4,7, this, 0, -1,200, null,Sound.MARCHE);
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{4,5,6,7}, this, 0, -1,200, null,Sound.MARCHE);
         this.frameAnimTimer[0].buildMedia();        
     }
     
     @Override
     protected void buildFramesCoursAnim() {
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(8,9, this, 0, -1,200, null,Sound.COURS);
+        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{8,9}, this, 0, -1,200, null,Sound.COURS);
         this.frameAnimTimer[0].buildMedia();        
     }
 
@@ -81,6 +82,33 @@ public class FXHostile extends FXSoldat{
     @Override
     public void pronePosition(){
     
+    }
+
+    @Override
+    void blessFrame(Corp.CorpParts location) {
+                setW(100);
+                Image img = new Image("feritoHostile.png");
+                buildFrameImages(img);
+                if(!s.isBandage()){
+                    if(location==Corp.CorpParts.Abdomen||
+                        location==Corp.CorpParts.Thorax ||
+                        location==Corp.CorpParts.Ventre)setFrame(1);
+                    else  if(location==Corp.CorpParts.Tete) setFrame(0);
+                    else if(location==Corp.CorpParts.BrasDroite || 
+                        location==Corp.CorpParts.BrasGauche)setFrame(2);
+                    else if(location==Corp.CorpParts.JambeGauche ||
+                        location==Corp.CorpParts.JambeDroite) setFrame(3);      
+                }else{
+                    if(location==Corp.CorpParts.Abdomen||
+                        location==Corp.CorpParts.Thorax ||
+                        location==Corp.CorpParts.Ventre)setFrame(5);
+                    else  if(location==Corp.CorpParts.Tete) setFrame(4);
+                    else if(location==Corp.CorpParts.BrasDroite || 
+                        location==Corp.CorpParts.BrasGauche)setFrame(6);
+                    else if(location==Corp.CorpParts.JambeGauche ||
+                        location==Corp.CorpParts.JambeDroite) setFrame(7);                  
+                
+                }
     }
             
     

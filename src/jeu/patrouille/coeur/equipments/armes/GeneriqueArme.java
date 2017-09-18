@@ -60,7 +60,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
 
 
-    public FeuMode getArmeFeuModel() {
+    public FeuMode getArmeFeuMode() {
         return this.modefeu;
     }
 

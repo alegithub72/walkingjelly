@@ -7,6 +7,7 @@ package jeu.patrouille.fx.board;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
@@ -26,12 +27,12 @@ import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 public class FXSoldatEquipement extends Parent{
     FXPlanche fxpl;
     FXPatrouilleSprite fxarmes[];
-    Text numShot;
+    Label numShot;
   public   FXSoldatEquipement(FXPlanche fxpl){
       super();      
       this.fxpl=fxpl;
-      numShot=new Text();
-      numShot.setFill(Color.GREENYELLOW);
+      numShot=new Label();
+      numShot.setTextFill(Color.WHITE);
       numShot.setFont(Font.font(15));
 
   }
@@ -51,10 +52,18 @@ public class FXSoldatEquipement extends Parent{
               GeneriqueArme a = ((GeneriqueArme) arm);
               if(a==s.getArmeUtilise()) {
                   ((FXEquipment)fxarmes[n]).addUsed(fxarmes[n].getW());
-                  numShot.setX(fxarmes[n].getW()-30);
-                  numShot.setY(y0+fxarmes[n].getH()-12);
+                  //numShot.setLabelFor(fxarmes[n]);
+                  numShot.setTranslateX(fxarmes[n].getW()-30);
+                  numShot.setTranslateY(y0+fxarmes[n].getH()-30);
                   numShot.setText(a.shotRemain()+"");
-                  getChildren().add(numShot);                  
+ 
+                  getChildren().add(numShot);  
+                  Label l=new Label(a.getArmeFeuMode().toString());
+                  l.setTextFill(Color.WHITE);
+                  //l.setLabelFor(fxarmes[n]);
+                  l.setTranslateX(fxarmes[n].getW()/2);
+                  l.setTranslateY(y0+11);
+                  getChildren().add(l);
               }              
               if(n>0){
                   y0=y0-15;

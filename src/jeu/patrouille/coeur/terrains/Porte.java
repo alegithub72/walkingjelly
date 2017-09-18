@@ -5,8 +5,6 @@
  */
 package jeu.patrouille.coeur.terrains;
 
-import javafx.scene.image.Image;
-
 /**
  *
  * @author appleale

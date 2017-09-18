@@ -18,10 +18,10 @@ import jeu.patrouille.fx.sprite.Sprite;
  * @author appleale
  */
 public class FrameAnimationTimer extends AnimationTimer{
-    public int f1,f2;
+    
 
-
-
+    int f1,f2;
+    int f[];
     public String sound;
     public Sprite source;
     public Sprite shot;
@@ -47,9 +47,8 @@ public class FrameAnimationTimer extends AnimationTimer{
     }
 
     
-    public FrameAnimationTimer(int f1, int f2, Sprite p,double frac,int cyclic,long interval,String sound) {
-        this.f1 = f1;
-        this.f2 = f2;
+    public FrameAnimationTimer(int[] f, Sprite p,double frac,int cyclic,long interval,String sound) {
+        this.f=f;
         target=null;
         shot=null;
         this.source = p;
@@ -59,7 +58,7 @@ public class FrameAnimationTimer extends AnimationTimer{
          this.stopped=false;
         this.frac=frac;
         this.ciclyc=cyclic;
-        i=this.f1;
+        i=f[0];
         this.interval=interval;
      
     }
@@ -68,6 +67,7 @@ public class FrameAnimationTimer extends AnimationTimer{
     public FrameAnimationTimer(int f1, int f2, Sprite source,Sprite shot,Sprite target,double frac,int cyclic,long interval,String sound) {
         this.f1 = f1;
         this.f2 = f2;
+        this.f=new int[]{f1,f2};
         //System.out.println("target"+target+",source="+source+",shot="+shot);
         this.target=target;
         this.source = source;
@@ -78,7 +78,7 @@ public class FrameAnimationTimer extends AnimationTimer{
 
         this.frac=frac;
         this.ciclyc=cyclic;
-        i=this.f1;
+        i=0;
         this.interval=interval;
         this.stopped=false;
        
@@ -94,24 +94,24 @@ public class FrameAnimationTimer extends AnimationTimer{
 
         long intervalTemp=System.currentTimeMillis()-before;
         playEffect();
-        if(i<=f2  && intervalTemp>this.interval) {
+        if(i<f.length  && intervalTemp>this.interval) {
             before=System.currentTimeMillis();
-            source.setFrame(i);
+            source.setFrame(f[i]);
             i++;
             if(loop<this.ciclyc){
-                if(i>f2) {
-                    i=f1;
+                if(i>=f.length) {
+                    i=0;
                     loop++;
                 }
                 
-            }else if(loop>=this.ciclyc && (i>f2) ) {
+            }else if(loop>=this.ciclyc && (i>=f.length) ) {
                 if(ciclyc!=-1) {
                     source.removeThis();
                     this.stop();
                     source.defaultFrame();
                 }
               
-                i=f1;
+                i=0;
             }
             System.out.println("i==="+i);
         } 

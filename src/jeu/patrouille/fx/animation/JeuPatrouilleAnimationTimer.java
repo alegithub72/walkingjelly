@@ -42,21 +42,21 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
         return file;
         }
     }    
-    public JeuPatrouilleAnimationTimer(int f1,int f2,Sprite sp,double frac,int cyclic,int interval,GeneriqueArme arme,Sound sound) {
-        super(f1, f2, sp, frac, cyclic, interval, null);
+    public JeuPatrouilleAnimationTimer(int f[],Sprite sp,double frac,int cyclic,int interval,GeneriqueArme arme,Sound sound) {
+        super(f, sp, frac, cyclic, interval, null);
         this.arme=arme;
         this.type=sound;
         if(arme!=null){
-            if(arme.getArmeFeuModel()==FeuMode.RA ) cyclic=5;
+            if(arme.getArmeFeuMode()==FeuMode.RA ) cyclic=5;
             else 
-             if( arme.getArmeFeuModel()==FeuMode.PA)
+             if( arme.getArmeFeuMode()==FeuMode.PA)
                this.ciclyc=10;
              else cyclic=2;
             if(arme.getModel()==GeneriqueEquipment.Model.M16 
-                    ) this.sound=Sound.M16.file(arme.getArmeFeuModel());
-            if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file(arme.getArmeFeuModel());
-            if(arme.getModel()==GeneriqueEquipment.Model.BENELLI_M3) this.sound=Sound.BENELLI_M3.file(arme.getArmeFeuModel());
-            if(arme.getModel()==GeneriqueEquipment.Model.MP5) this.sound=Sound.MP5.file(arme.getArmeFeuModel());        
+                    ) this.sound=Sound.M16.file(arme.getArmeFeuMode());
+            if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file(arme.getArmeFeuMode());
+            if(arme.getModel()==GeneriqueEquipment.Model.BENELLI_M3) this.sound=Sound.BENELLI_M3.file(arme.getArmeFeuMode());
+            if(arme.getModel()==GeneriqueEquipment.Model.MP5) this.sound=Sound.MP5.file(arme.getArmeFeuMode());        
         }else {
             this.sound=type.file;
         
@@ -100,7 +100,7 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
                    default:
                        break;
                }
-               if (arme.getArmeFeuModel() == FeuMode.SA) {
+               if (arme.getArmeFeuMode() == FeuMode.SA) {
                    mediaPlayer.setCycleCount(1);
                } else {
                    mediaPlayer.setCycleCount(1);
