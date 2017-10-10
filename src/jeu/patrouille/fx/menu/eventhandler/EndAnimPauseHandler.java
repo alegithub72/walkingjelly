@@ -9,26 +9,26 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import jeu.patrouille.fx.board.FXCarte;
 
-
 /**
  *
  * @author appleale
  */
-public class EndAnimPauseHandler implements EventHandler<ActionEvent>{
+public class EndAnimPauseHandler implements EventHandler<ActionEvent> {
+
     FXCarte fxcarte;
-    public EndAnimPauseHandler(FXCarte fxcarte){
-    this.fxcarte=fxcarte;
-    
+
+    public EndAnimPauseHandler(FXCarte fxcarte) {
+        this.fxcarte = fxcarte;
+
     }
-    
-    
+
     @Override
     public void handle(ActionEvent event) {
-        if(event.getEventType()==ActionEvent.ACTION) fxcarte.setAnimOn(false); 
+        if (event.getEventType() == ActionEvent.ACTION) {
+            fxcarte.setAnimOn(false);
+
+        }
         event.consume();
     }
-    
-    
-    
-    
+
 }

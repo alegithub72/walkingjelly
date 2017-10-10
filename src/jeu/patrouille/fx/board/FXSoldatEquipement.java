@@ -12,10 +12,10 @@ import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.fx.pieces.armes.FXEquipment;
 import jeu.patrouille.fx.pieces.armes.FXMagazine;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
@@ -37,6 +37,7 @@ public class FXSoldatEquipement extends Parent{
 
   }
   public void buildFXEquipment(Soldat s){
+      try{
       GeneriqueEquipment[] list = s.getEquipment();
 
       fxarmes = new FXPatrouilleSprite[s.getEquipmentChiffre()];
@@ -50,7 +51,7 @@ public class FXSoldatEquipement extends Parent{
               double y0=createFXEquipment(fxarmes[n], n);
               
               GeneriqueArme a = ((GeneriqueArme) arm);
-              if(a==s.getArmeUtilise()) {
+              if(s.getArmeUtilise() !=null && a==s.getArmeUtilise()) {
                   ((FXEquipment)fxarmes[n]).addUsed(fxarmes[n].getW());
                   //numShot.setLabelFor(fxarmes[n]);
                   numShot.setTranslateX(fxarmes[n].getW()-30);
@@ -74,7 +75,9 @@ public class FXSoldatEquipement extends Parent{
               n =n+ visualizeMagazin(a, n,y0);
 
       }
-
+      }catch(TomberArmeException ex){
+          throw new RuntimeException(ex);
+      }
   }
   
   int visualizeMagazin(GeneriqueArme a,int i,double y0){

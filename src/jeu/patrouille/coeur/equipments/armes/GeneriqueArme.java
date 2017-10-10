@@ -121,12 +121,10 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     }
 
     //TODO vedere per avere AP e shot
-    public int feuArme(double dist) throws ModeDeFeuException,LoadMagazineFiniException {
+    public int feuArme() throws ModeDeFeuException,LoadMagazineFiniException {
      
-        int n=hitsNumMF(dist);
-        finalCartouch = finalCartouch- load.depot(n);
-
-
+        int n=shotNumMF[modefeu.ordinal()];
+        finalCartouch = finalCartouch- load.depot(shotNumMF[modefeu.ordinal()]);
         return n;
     }
     public int fireTempNecessarie(ActionType type)throws ModeDeFeuException{
@@ -139,6 +137,7 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
     }
  
     public void changeModeFeu(FeuMode f) throws ModeDeFeuException {
+        if(this.shotNumMF[f.ordinal()]==NOTVALUE) throw new ModeDeFeuException();
         modefeu = f;
     }
 
@@ -162,16 +161,11 @@ public abstract class GeneriqueArme extends GeneriqueEquipment {
 
 
     public int hitsNumMF(double dist) throws ModeDeFeuException {
-        int sn = NOTVALUE;
-        System.out.println(" mode defeu:" +modefeu);
-        sn = shotNumMF[modefeu.ordinal()];
-        
-        if (sn == NOTVALUE) {
-            throw new ModeDeFeuException("Mode de feu pa possible");
-        }
-        if(finalCartouch<sn) return finalCartouch;
-        return sn;
+        return 1;
 
+    }
+    public int getShotNumFeu(){
+        return shotNumMF[modefeu.ordinal()];
     }
 
 public int getCoverPenetration(Terrain.Consistance c){
@@ -214,7 +208,7 @@ public int getCoverPenetration(Terrain.Consistance c){
         for (Magazine m : magazine) {
             if (m.getQuantity() == m.getCapacity()) {
                 load = m;
-                
+                finalCartouch=load.capacity;
                  
             }
         }        

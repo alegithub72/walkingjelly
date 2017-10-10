@@ -118,6 +118,8 @@ public class MarcheAction extends BaseAction{
                 delta=0;
             if(!(J1<Carte.CARTE_SIZE_J && J1>=0)) 
                 delta=0;
+             I1=s.getI()+(d.i*delta);
+             J1=s.getJ()+(d.j*delta);
             System.out.println("tbase:"+tbase+" delta:"+delta);
             act = new MarcheAction(s.getI(), s.getJ(), I1, J1, s);        
         }else System.out.println("TD:"+s.getTempDisponible());

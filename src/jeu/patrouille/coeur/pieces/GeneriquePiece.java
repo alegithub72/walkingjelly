@@ -46,6 +46,11 @@ public abstract class GeneriquePiece {
         return boss;
     }
 
+    @Override
+    public String toString() {
+        return "GeneriquePiece{" + "type=" + type + ", i=" + i + ", j=" + j + ", boss=" + boss + '}';
+    }
+
     public abstract GeneriquePiece clonerPiece();
 
     public abstract String toStringSimple();

@@ -12,6 +12,7 @@ import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
@@ -23,13 +24,13 @@ public class FeuItem extends MenuItemButton{
     GeneriqueArme.FeuMode mode;
 
     int n;
-    public FeuItem(FXSoldat fxs,FXCarte fxcarte){
+    public FeuItem(FXSoldat fxs,FXCarte fxcarte)throws TomberArmeException{
         super(ActionType.FEU,fxs,fxcarte);
         initButtonState();
     }
     
     
-    public FeuItem(ActionType type,FXSoldat sfx,FXCarte fxcarte) {
+    public FeuItem(ActionType type,FXSoldat sfx,FXCarte fxcarte) throws TomberArmeException{
         super(type, sfx,fxcarte);
         initButtonState();
     }
@@ -40,7 +41,7 @@ public class FeuItem extends MenuItemButton{
 
     @Override
     public BaseAction buildMenuItemAction() {
-        BaseAction act=new FeuAction(fxs.getSoldat(), null,mode);
+        BaseAction act=new FeuAction(fxs.getSoldat(),mode);
         return act;//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
         @Override
@@ -67,12 +68,12 @@ public class FeuItem extends MenuItemButton{
                   fxcarte.getFxpl().buildFXSoldatEquipement(s);
                 fxcarte.sendMessageToPlayer("Change mode de feu :"+mode.txt);
 
-            }catch(ModeDeFeuException m){
+            }catch(ModeDeFeuException|TomberArmeException m){
                 throw new RuntimeException(m);
             }
 
     }
-    void initButtonState(){
+    void initButtonState()throws TomberArmeException{
       if(fxs!=null && fxs.getSoldat().getArmeUtilise()!=null)  
           this.mode=fxs.getSoldat().getArmeUtilise().getArmeFeuMode();        
      buildButtonState();
@@ -99,8 +100,12 @@ public class FeuItem extends MenuItemButton{
 
     @Override
     public void updateState() {
+        try{
         super.updateState();
         initButtonState();
+        }catch(TomberArmeException ex){
+        throw  new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -110,7 +115,7 @@ public class FeuItem extends MenuItemButton{
         return !s.isTempDisponiblePour(actionType) || s.getArmeUtilise()==null
                 || !s.isFireWeaponUtilize();
                 
-        }catch(ModeDeFeuException ex){
+        }catch(ModeDeFeuException|TomberArmeException ex){
                 throw new RuntimeException(ex);
         }
     }

@@ -30,6 +30,7 @@ public abstract class GeneriqueJoeurs {
     String ptSt = "(s|m|f)(\\d){1,3},(\\d){1,3};((\\d){1,3},(\\d){1,3})?";
     Piece selectionee;
     protected Carte carte;
+    int turn;
     int jeur;
     public GeneriqueJoeurs(int jeur,Carte c) {
         if(jeur==JOEUR_HOST)
@@ -137,4 +138,14 @@ public abstract class GeneriqueJoeurs {
         }  
         return act;
   }    
+
+    public void setTurn(int turn) {
+        this.turn = turn;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+    
+    
 }

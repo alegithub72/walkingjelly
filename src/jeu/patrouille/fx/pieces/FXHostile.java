@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.pieces.parts.Corp;
 import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
@@ -39,8 +40,12 @@ public class FXHostile extends FXSoldat{
     }    
     @Override
     public void buildFramesFeuAnim() {
+        try{
         this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{feu1, feu2}, this, 0, 1, 100, s.getArmeUtilise(),null);
         this.frameAnimTimer[0].buildMedia();        
+         }catch(TomberArmeException ex){
+           throw new RuntimeException(ex);
+        }        
     }
     @Override
     public void buildCrawlAnim() {
@@ -110,6 +115,7 @@ public class FXHostile extends FXSoldat{
                 
                 }
     }
-            
+
+
     
 }

@@ -14,22 +14,17 @@ import jeu.patrouille.coeur.pieces.Soldat;
  *
  * @author appleale
  */
-public class ViserFeuAction extends BaseAction{
-    double angle;
-    GeneriqueArme.FeuMode mode;
+public class ViserFeuAction extends FeuAction{
+
     public ViserFeuAction(Piece protagoniste,Piece antagonieste,GeneriqueArme.FeuMode mode){
-        super(ActionType.FEU_VISER, -1, -1,-1, -1, protagoniste, antagonieste);
+        super(ActionType.FEU_VISER,protagoniste, mode);
         this.mode=mode;
         
       // dist= Carte.distance(protagoniste.getI(), this.protagoniste.getJ(), i1, j1, FXCarte.TILE_SIZE);
     }
 
      ViserFeuAction(ViserFeuAction act) {
-        super(act.type, act.i0, act.j0, act.i1, act.j1,null , null);
-        if(act.antagoniste!=null ) antagoniste=act.antagoniste.clonerPiece();
-        if(act.protagoniste!=null) protagoniste=act.protagoniste.clonerPiece();
-         this.angle=act.angle;
-     
+        super(act);
     }
 
     @Override
@@ -43,17 +38,6 @@ public class ViserFeuAction extends BaseAction{
         return new ViserFeuAction(this);
     }
 
-    public void setAngle(double angle) {
-        this.angle = angle;
-    }
-
-    public double getAngle() {
-        return angle;
-    }
-
-    public GeneriqueArme.FeuMode getMode() {
-        return mode;
-    }
     
      
     

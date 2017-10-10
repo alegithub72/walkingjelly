@@ -5,6 +5,7 @@
  */
 package jeu.patrouille.fx.animation;
 
+import javafx.scene.media.AudioClip;
 import jeu.patrouille.coeur.equipments.GeneriqueEquipment;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme.FeuMode;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
@@ -51,7 +52,8 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
             else 
              if( arme.getArmeFeuMode()==FeuMode.PA)
                this.ciclyc=10;
-             else cyclic=2;
+             else ciclyc=2;
+            
             if(arme.getModel()==GeneriqueEquipment.Model.M16 
                     ) this.sound=Sound.M16.file(arme.getArmeFeuMode());
             if(arme.getModel()==GeneriqueEquipment.Model.AK74) this.sound=Sound.AK74.file(arme.getArmeFeuMode());
@@ -67,25 +69,24 @@ public class JeuPatrouilleAnimationTimer extends FrameAnimationTimer{
     
     @Override
     void playEffect(){
-        
-
-           
-           
-           
-       if(!mediaPlayer.isPlaying())  {
+    
+       if(!mediaPlayer.isPlaying() && startOne)  {
        if(this.type==Sound.MARCHE) {
                mediaPlayer.setVolume(0.1);
                mediaPlayer.setRate(0.8);
-               mediaPlayer.setCycleCount(1);
+               mediaPlayer.setCycleCount(AudioClip.INDEFINITE);
+               startOne=false;
            }else if(this.type==Sound.COURS){
                mediaPlayer.setRate(1);
                mediaPlayer.setVolume(0.2);
-              // mediaPlayer.setCycleCount(3);
+               mediaPlayer.setCycleCount(AudioClip.INDEFINITE);
+               startOne=false;
            }
            else  if(this.type==Sound.GRUNT5){
                mediaPlayer.setVolume(0.1);
                mediaPlayer.setCycleCount(1);
-           }           
+               startOne=false;
+           } else           
            if (null != arme) {
                switch (arme.getModel()) {
                    case MP5:

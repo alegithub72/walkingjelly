@@ -18,9 +18,10 @@ public class Lesion {
     int blessure;
     Soldat.Statut statu;
     int turn;
+
     boolean bandage;
     public static int  SHELL_SHOCK=1000,NOTVALUE=2000;
-    public enum Degre{CRITIQUE,GRAVE,LEGER,MANQUE,NODEGRE};
+    public enum Degre{NODEGRE,MANQUE,LEGER,GRAVE,CRITIQUE};
 
     public Lesion(Corp.CorpParts location,Degre gravite,int blessure,Soldat.Statut statu,int turn){
         this.location=location;
@@ -28,6 +29,8 @@ public class Lesion {
         this.blessure=blessure;
         this.statu=statu;
         bandage=false;
+        this.turn=turn;
+        
     }
 
     @Override
@@ -71,6 +74,12 @@ public class Lesion {
     public void setBandage(boolean bandage) {
         this.bandage = bandage;
     }
+
+    public int getTurn() {
+        return turn;
+    }
+
+
     
     
 }

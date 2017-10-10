@@ -29,18 +29,7 @@ public   class BaseAction extends AbstractAction {
     public void setOrdreInitiative(int ordreInitiative) {
         this.ordreInitiative = ordreInitiative;
     }
-@Override
-public int compareTo(BaseAction b) {
 
-		//ascending order
-		if(this.tempActivite<b.getTempActivite()) 
-                    return -1;
-                if(this.tempActivite>b.getTempActivite())return 1;
-                if(this.tempActivite==b.getTempActivite()) return 0;
-                return 0;
-		//descending order
-		//return compareQuantity - this.quantity;
-	}
 
 
 
@@ -74,6 +63,7 @@ public int compareTo(BaseAction b) {
         this.protagoniste = protagoniste;
         this.antagoniste = antagoniste;
         used=false;             
+
     }
 
     public void setUsed(boolean used) {

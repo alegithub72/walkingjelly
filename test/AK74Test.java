@@ -54,7 +54,7 @@ public class AK74Test {
    @Test
    public void testPorte() throws ModeDeFeuException,LoadMagazineFiniException{
        assertEquals(GeneriqueArme.FeuMode.SA ,  ak.getArmeFeuMode());
-       assertEquals( 1 ,ak.feuArme(50));
+       assertEquals( 1 ,ak.feuArme());
        assertEquals(29, ak.shotRemain());
    }
    
@@ -62,7 +62,7 @@ public class AK74Test {
    public void testPorteBU() throws ModeDeFeuException,LoadMagazineFiniException{
        ak.changeModeFeu(GeneriqueArme.FeuMode.RA);
        assertEquals(GeneriqueArme.FeuMode.RA,ak.getArmeFeuMode());
-       assertEquals(5,ak.feuArme(50));
+       assertEquals(5,ak.feuArme());
        assertEquals(25, ak.shotRemain());
    
    }
@@ -70,7 +70,7 @@ public class AK74Test {
    public void testPorteSS()throws ModeDeFeuException,LoadMagazineFiniException{
         ex.expect(ModeDeFeuException.class);
         ak.changeModeFeu(GeneriqueArme.FeuMode.SC);
-        ak.feuArme(50);
+        ak.feuArme();
         assertEquals(30, ak.shotRemain());
        
    }
@@ -78,7 +78,7 @@ public class AK74Test {
    public void testPorteFA()throws ModeDeFeuException,LoadMagazineFiniException{
 
         ak.changeModeFeu(GeneriqueArme.FeuMode.PA);
-        ak.feuArme(50);
+        ak.feuArme();
         assertEquals(20, ak.shotRemain());
        
    }   
@@ -86,7 +86,7 @@ public class AK74Test {
    public void testReloadFA()throws ModeDeFeuException,LoadMagazineFiniException,ImpossibleRechargeArmeException,IncompatibleMagazineException,PaDeMagazineException{
 
         ak.changeModeFeu(GeneriqueArme.FeuMode.PA);
-        ak.feuArme(50);
+        ak.feuArme();
         assertEquals(20, ak.shotRemain());
         ak.rechargeArme();
         assertEquals(30, ak.shotRemain());

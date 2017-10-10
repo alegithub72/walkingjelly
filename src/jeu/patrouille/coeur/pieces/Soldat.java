@@ -321,11 +321,13 @@ public class Soldat extends Piece {
         }
         return n;
     }
-    public GeneriqueArme getArmeUtilise() {
+    public GeneriqueArme getArmeUtilise()throws TomberArmeException {
+        if(armeUtilise==null) throw  new TomberArmeException();  
         return armeUtilise;
     }
 
     public void setArmeUtilise(GeneriqueArme armeUtilise) {
+              
         this.armeUtilise = armeUtilise;
     }
 
@@ -381,11 +383,12 @@ public class Soldat extends Piece {
     public int getSante() {
         return sante;
     }
-public int isLesion(Lesion.Degre type){
-    int n=6-sante;
-    if(n>6) n=6;
-    
-    
+public int isLesion(){
+    int n=0;
+    for (int k = 0; k < lesion.length; k++) {
+        Lesion l = lesion[k];
+        if(l!=null && l.getGravite().ordinal()>1) n++;
+    }   
     return n;
 }
    public int getBlindage(Corp.CorpParts part){
@@ -393,7 +396,7 @@ public int isLesion(Lesion.Degre type){
         CorpPart p=  corp.getCorpPart(part);
         System.out.println("part "+p);
         GeneriqueBlindageEquipment bli=p.getBlindage();
-        System.out.println("part bli"+p.getBlindage());
+        System.out.println("part blinde "+p.getBlindage());
         if(bli!=null)return bli.getAr();
        } 
        return 0;
@@ -471,9 +474,9 @@ public int isLesion(Lesion.Degre type){
     
    
     
-    public int feu(double dist) throws ModeDeFeuException,LoadMagazineFiniException,TomberArmeException{
+    public int feu() throws ModeDeFeuException,LoadMagazineFiniException,TomberArmeException{
         if(armeUtilise==null) throw  new TomberArmeException();
-        int shotN = armeUtilise.feuArme(dist);
+        int shotN = armeUtilise.feuArme();
         this.tempDesponible=tempDesponible-armeUtilise.fireTempNecessarie(actionActuel);
         return shotN;
     
@@ -481,25 +484,25 @@ public int isLesion(Lesion.Degre type){
     
 
    public int combatFeuModifier(double dist){
-            int cDM=-isLesion(null);
-            System.out.println("1)combat distance modifier lesion:"+cDM);
+            int cDM=-(6-sante);
+            System.out.println("1)combat  modifier lesion:"+cDM);
             if(armeUtilise.getArmeFeuMode()==FeuMode.RA ) 
                 cDM=cDM-1;
             else if(armeUtilise.getArmeFeuMode()==FeuMode.PA)
                 cDM=cDM-3;
-            System.out.println("2)combat distance modifier arme utlise:"+cDM);
+            System.out.println("2)combat  modifier arme utlise:"+cDM);
             
             if(actionActuel==ActionType.MARCHE)cDM=cDM-2;//TODO questo non so se si puo fare  se marcia non fa fuoco ...pensare ad una soluzione...
             else if(actionActuel==ActionType.COURS)cDM=cDM-4;
-            System.out.println("3)combat distance modifier soldat action:"+cDM);
+            System.out.println("3)combat  modifier soldat move action:"+cDM);
             if(actionActuel==ActionType.FEU_VISER)cDM=cDM+1;
-            System.out.println("4)combat distance modifier soldat action op fire:"+cDM);
+            System.out.println("4)combat  modifier soldat action viser fire:"+cDM);
 
 
             if(pose==Piece.Pose.PRONE) cDM=cDM+1;
-             System.out.println("5)combat distance modifier soldat prone:"+cDM);
+             System.out.println("5)combat  modifier soldat prone:"+cDM);
             cDM=cDM+armeUtilise.porteModifier(dist);
-            System.out.println(" 5bis)porte modifie="+cDM);
+            System.out.println("5bis)combat porte modifie:"+cDM);
             
          
             return cDM;
@@ -512,10 +515,10 @@ public int isLesion(Lesion.Degre type){
             
             if(actionActuel==ActionType.COURS) cDM=cDM-2;
             else if(actionActuel==ActionType.MARCHE)cDM=cDM-1;
-            System.out.println("6)combat taraget movement modifier action:"+cDM);
+            System.out.println("6)target combat  modifier move action:"+cDM);
             
             if(pose==Piece.Pose.PRONE) cDM=cDM-1;   
-            System.out.println("7)finisce con combat distance modifier targer prone:"+cDM);
+            System.out.println("7)target combat modifier prone:"+cDM);
             
     return cDM;
     
@@ -738,7 +741,7 @@ public void setObjective(boolean objective) {
     }
    
    public Lesion getLastLesion(){
-       return lesion[lesionN];
+        return lesion[lesionN];
    }
    public Lesion[] getAllLesion(){
        return lesion;

@@ -41,7 +41,7 @@ public class FXAIJoueur extends AIJoeur{
     private  void buildFXEquipe(){
         for(int i=0;i<equipe.length;i++) {
            fxequipe[i] = new FXHostile((AISoldat)equipe[i],i,fxcarte);
-           fxequipe[i].setDeafultFrame(2);
+           fxequipe[i].setDeafultFrame(3);
            fxequipe[i].createFXSoldat();  
            fxequipe[i].defaultFrame();
           

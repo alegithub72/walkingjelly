@@ -31,56 +31,69 @@ public  class PointCarte implements TerrainTextRapresentation{
     protected int j;
     protected int type;
     protected double v;
-    GeneriquePiece piece=null;
-    List<GeneriquePiece> extraPiece;
-    public GeneriquePiece getPiece() {
-        return piece;
-    }
-    public Soldat getFirstSoldat(){
-        Soldat s=null;
-        if(piece!=null && piece.getPieceType()==Piece.ActeurType.SOLDAT)
-            s=(Soldat) piece;
-        else {
-            for (GeneriquePiece p : extraPiece) {
-                if(p.getPieceType()==Piece.ActeurType.SOLDAT){
-                    s=(Soldat)p;
-                    break;
-                }     
+    int k=0;
+    GeneriquePiece[] pieces;
+    
+    public void putPiece(GeneriquePiece piece) {
+        if(k>=10) {
+             GeneriquePiece[]  piecesTmp=new GeneriquePiece[20];
+            for (int l = 0; l < piecesTmp.length; l++) {
+                GeneriquePiece piece1 = pieces[l];
+                piecesTmp[l]=piece1;
             }
+            pieces=piecesTmp;
+        }
+       
+        pieces[k]=piece;
+        k++;
+        
+    }
+    public GeneriquePiece[] getPieces(){
+        return pieces;
+    }
+    public void removePiece(GeneriquePiece p){
+        k--;
+        for (int l = 0; l < pieces.length; l++) {
+            GeneriquePiece piece = pieces[l];
+            if(piece==p)pieces[l]=null;
             
         }
-        return s;
+        GeneriquePiece[] piecesTmp=new GeneriquePiece[pieces.length];
+        for (int l = 0; l < pieces.length; l++) {
+            GeneriquePiece piece = pieces[l];
+            if(piece!=null)piecesTmp[l]=piece;
+        }
+        this.pieces=piecesTmp;
     }
-    public void setPiece(GeneriquePiece p){
-        piece=p;
+    public GeneriquePiece getPiece(){
+        for (int l = 0; l < pieces.length; l++) {
+            GeneriquePiece piece = pieces[l];
+            if(piece!=null) return piece;
+        }
+        return null;
+    }
+    public boolean isEmpty(){
+        boolean b=true;
+        for (int l = 0; l < pieces.length; l++) {
+            GeneriquePiece piece = pieces[l];
+            b=b && (pieces==null); 
+            if(b==false) break;
+        }
+        return b;
     }
     public PointCarte(int i,int j){
      this.i=i;
      this.j=j;
      this.v=1;
-     this.extraPiece=new ArrayList<>();
-    }
-    public void addExtraPiece(GeneriquePiece p){
-    extraPiece.add(p);
-    
-    }
-    public void remvoeExtraPiece(GeneriquePiece p){
-    extraPiece.remove(p);
-    }
-    public boolean isInExtra(GeneriquePiece p){
-        return extraPiece.contains(p);
-        
-    }
-    public int extraPiecePostion(Piece p){
-    return extraPiece.indexOf(p);
-        
-    }
-    public List<GeneriquePiece> getExtraPiece(){
-        return extraPiece;
-    }
-    public PointCarte() {
+     this.pieces=new GeneriquePiece[10];
     }
 
+    public PointCarte() {
+        this.pieces=new GeneriquePiece[10];
+    }
+    int size(){
+        return k;
+    }
     public int getI() {
         return i;
     }
@@ -104,7 +117,7 @@ public  class PointCarte implements TerrainTextRapresentation{
 
     @Override
     public String toString() {
-        return "PointCarte{" + "i=" + i + ", j=" + j + ", type=" + type + ", v=" + v + ", piece=" + piece + '}';
+        return "PointCarte{" + "i=" + i + ", j=" + j + ", type=" + type + ", v=" + v + ", pieces=" + k + '}';
     }
 
     

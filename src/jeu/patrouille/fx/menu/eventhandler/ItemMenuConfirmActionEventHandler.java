@@ -34,7 +34,7 @@ public class ItemMenuConfirmActionEventHandler  implements EventHandler<MouseEve
                 if(item.getActionType()==ActionType.MARCHE || 
                         item.getActionType()==ActionType.COURS)
                     fxcarte.confirmMarcheActionCommand(item, event.getSceneX(), event.getSceneY());
-                else if(item.getActionType()==ActionType.FEU){
+                else if(item.getActionType()==ActionType.FEU|| item.getActionType()==ActionType.FEU_VISER){
                     fxcarte.confirmFEUAction(item, event.getSceneX(), event.getSceneY());
                 }else if(item.getActionType()==ActionType.ARME_RECHARGE ||
                         item.getActionType()==ActionType.BANDAGE){

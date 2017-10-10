@@ -24,6 +24,7 @@ public abstract class Piece extends GeneriquePiece  {
           this.i=i;
           this.j=j;
        }
+       
     }
     public enum Pose{PRONE,GENOUCS,DROIT}
     

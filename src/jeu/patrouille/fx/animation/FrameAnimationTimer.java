@@ -40,7 +40,7 @@ public class FrameAnimationTimer extends AnimationTimer{
 
     int ciclyc;
     double frac;
-    boolean startMusic=true;
+    boolean startOne;
 
     public AudioClip getMediaPlayer() {
         return mediaPlayer;
@@ -53,7 +53,7 @@ public class FrameAnimationTimer extends AnimationTimer{
         shot=null;
         this.source = p;
         this.sound=sound;
-
+        startOne=true;
         //
          this.stopped=false;
         this.frac=frac;
@@ -73,6 +73,7 @@ public class FrameAnimationTimer extends AnimationTimer{
         this.source = source;
         this.sound=sound;
         this.shot=shot;
+        startOne=true;
 
         //
 
@@ -113,7 +114,7 @@ public class FrameAnimationTimer extends AnimationTimer{
               
                 i=0;
             }
-            System.out.println("i==="+i);
+
         } 
     }
 
@@ -140,14 +141,15 @@ public class FrameAnimationTimer extends AnimationTimer{
 
     
     void playEffect(){
+        
 
-       if(startMusic) {
+       if(startOne) {
 
                mediaPlayer.setVolume(0.1);
                mediaPlayer.setRate(0.8);
                mediaPlayer.setCycleCount(1);
                if(!mediaPlayer.isPlaying()) mediaPlayer.play();
-               startMusic=false;
+               startOne=false;
            }
      
         

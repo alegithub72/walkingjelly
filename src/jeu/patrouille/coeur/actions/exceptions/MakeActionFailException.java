@@ -27,4 +27,9 @@ public class MakeActionFailException extends Exception {
     public MakeActionFailException(String msg) {
         super(msg);
     }
+
+    public MakeActionFailException(Throwable cause) {
+        super(cause);
+    }
+    
 }

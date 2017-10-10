@@ -10,6 +10,7 @@ import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.pieces.Soldat;
+import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.terrains.PointCarte;
 import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_I_H;
 import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_J_W;
@@ -70,7 +71,7 @@ public class FXMenuItemsDossier {
 
     }    
     
-    protected  void buildMenuItems(double sx,double sy,int i,int j) throws ModeDeFeuException{
+    protected  void buildMenuItems(double sx,double sy,int i,int j) throws ModeDeFeuException,TomberArmeException{
             
             FXSoldat sfx=fxcarte.fxIMHelper.getFXSoldatSelectionee();
 
@@ -181,7 +182,7 @@ public class FXMenuItemsDossier {
     }      
    
      
-    private void buildFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws ModeDeFeuException {
+    private void buildFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws ModeDeFeuException,TomberArmeException {
         
             MenuItemButton m = new FeuItem(sfx,fxcarte);
             
@@ -201,7 +202,7 @@ public class FXMenuItemsDossier {
     }
 
 
-    private void buildViserFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad){
+    private void buildViserFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws TomberArmeException{
  
             MenuItemButton m = new ViserFeuItem(sfx,fxcarte);
             double x = (100 * Math.cos(3 * grad));

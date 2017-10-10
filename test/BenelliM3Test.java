@@ -99,13 +99,13 @@ public class BenelliM3Test {
     }
     @Test 
     public void testFireAShot() throws ModeDeFeuException,LoadMagazineFiniException{
-    b.feuArme(50);
+    b.feuArme();
     assertEquals(6,b.shotRemain());
     }
 
     @Test 
     public void testChargeArme() throws ModeDeFeuException,LoadMagazineFiniException,IncompatibleMagazineException,ImpossibleRechargeArmeException,PaDeMagazineException{
-       b.feuArme(50);
+       b.feuArme();
       
     assertEquals(6,b.shotRemain());   
     assertEquals (6,b.rechargeArme());

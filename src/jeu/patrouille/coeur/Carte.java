@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.Scanner;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.grafic.GraficCarteInterface;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
+import jeu.patrouille.coeur.pieces.Piece.Direction;
 import jeu.patrouille.coeur.terrains.Terrain;
 import jeu.patrouille.coeur.terrains.AngleGrosMur;
 import jeu.patrouille.coeur.terrains.Arbre;
@@ -142,6 +144,9 @@ private void decoderTaille(String line){
 
     public Terrain getPointCarte(int i, int j) {
         return terrain[i][j];
+    }
+    public Terrain getPointCarte(PointCarte p) {
+        return terrain[p.getI()][p.getJ()];
     }
 
      public static PointCarte[] getLigne(int i1, int j1, int i2, int j2) {
@@ -272,14 +277,6 @@ private void decoderTaille(String line){
                  }
              
              }
-            System.out.println("------------------REULT LIGNE----------------------------------");         
-         int k=0;
-             for(PointCarte p:listp){
-                 
-                 System.out.println(k+"="+p);
-                 k++;                 
-                         
-             }
              System.out.println("-------------------LIGNE FINI----------------------------------");
              PointCarte[] customs = new PointCarte[listp.size()];
             
@@ -348,14 +345,17 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
                 if (c1 == 'o' && c2 == 'o') {
                     int n=((int)(Math.random()*5))+1;
                    // System.out.println("--->"+n);
-                   terrain[i][j] =  new Haie(i, j,n); 
+                   terrain[i][j] =  new Haie(i, j,n);
+                   
                 }
                 else
                 if (c1 == 'm' && c2 == '7') {
                     terrain[i][j] = new GrosMur(i, j,-90);
+                    terrain[i][j].setOrientation(Piece.Direction.E);
                 }else
                 if (c1 == 'm' && c2 == '5') {
                     terrain[i][j] = new GrosMur(i, j,-180);
+                    terrain[i][j].setOrientation(Piece.Direction.S);
                 } 
                 else
                 if (c1 == 'm' && c2 == '1') {
@@ -364,6 +364,7 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
                 else                    
                 if (c1 == 'm' && c2 == '3') {
                     terrain[i][j] = new GrosMur(i, j,90);
+                    terrain[i][j].setOrientation(Piece.Direction.W);
                 } 
                 else                    
                 if (c1== ' ' && c2 == ' ') {
@@ -380,22 +381,27 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
                 else
                 if (c1 == 's' && c2 == '3') {
                     terrain[i][j] = new StreetBorder(i, j,90);
+                    terrain[i][j].setOrientation(Piece.Direction.W);
                 }                 
                 else 
                 if (c1 == 's' && c2 == '7') {
                     terrain[i][j] = new StreetBorder(i, j,-90);
+                    terrain[i][j].setOrientation(Piece.Direction.E);
                 }                 
                 else    
                 if (c1 == 's' && c2 == '5') {
                     terrain[i][j] = new StreetBorder(i, j,-180);
+                    terrain[i][j].setOrientation(Piece.Direction.S);
                 }
                 else                    
                 if (c1 == 'F' && c2 == '7') {
                     terrain[i][j] = new Fenetre(i, j,-90);
+                    terrain[i][j].setOrientation(Piece.Direction.E);
                 } 
                 else
                 if (c1 == 'F' && c2 == '3') {
                     terrain[i][j] = new Fenetre(i, j,90);
+                    terrain[i][j].setOrientation(Piece.Direction.W);
                 } 
                 else
                 if (c1 == 'F' && c2 == '1') {
@@ -404,6 +410,7 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
                 else    
                 if (c1 == 'F' && c2 == '5') {
                     terrain[i][j] = new Fenetre(i, j,-180);
+                    terrain[i][j].setOrientation(Piece.Direction.S);
                 } 
                 else    
                 if (c1 == 'P' && c2 == '1') {
@@ -412,14 +419,17 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
                 else
                 if (c1 == 'P' && c2 == '7') {
                     terrain[i][j] = new Porte(i, j,-90);
+                    terrain[i][j].setOrientation(Piece.Direction.E);
                 } 
                 else    
                 if (c1 == 'P' && c2 == '5') {
                     terrain[i][j] = new Porte(i, j,-180);
+                    terrain[i][j].setOrientation(Piece.Direction.S);
                 } 
                 else    
                 if (c1 == 'P' && c2 == '3') {
                     terrain[i][j] = new Porte(i, j,90);
+                    terrain[i][j].setOrientation(Piece.Direction.W);
                 } 
                 else    
                 if (c1 == 'T' && c2 == '1') {
@@ -443,12 +453,15 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
                 }else
                 if (c1 == 'a' && c2 == '2') {
                     terrain[i][j] = new AngleGrosMur (i, j,90);
+                    terrain[i][j].setOrientation(Piece.Direction.W);
                 }else                
                 if (c1 == 'a' && c2 == '3') {
                     terrain[i][j] = new AngleGrosMur (i, j,-90);
+                    terrain[i][j].setOrientation(Piece.Direction.E);
                 }else   
                 if (c1 == 'a' && c2 == '4') {
                    terrain[i][j] = new AngleGrosMur (i, j,180);
+                   terrain[i][j].setOrientation(Piece.Direction.S);
                 }                
                 else terrain[i][j] = new Terrain(i, j);
                 
@@ -476,7 +489,7 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
     public void desplacementSoldat(Piece s,int i,int j){
         s.setI(i);
         s.setJ(j);
-        terrain[i][j].setPiece(s);
+        terrain[i][j].putPiece(s);
     }
     
     public   PointCarte  validerLeRoute(BaseAction act){
@@ -486,13 +499,14 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
         for (int i = 0; i < ligne.length; i++) {
             PointCarte c = ligne[i];
              t=terrain[c.getI()][c.getJ()];
-            if(t.getType()==Terrain.FENETRE ||
-                    t.getType()==Terrain.GROSMUR ||
+            if((t.getType()==Terrain.FENETRE && i>0 && !t.accesibleFrom(ligne[i-1] )  ) ||
+                  (t.getType()==Terrain.FENETRE && i==0 && !t.accesibleFrom(ligne[1])) ||  t.getType()==Terrain.GROSMUR ||
                     t.getType()==Terrain.MURBAS)  {
                 product=ligne[i];
                 break;
               
             }
+            
 
         }  
         System.out.println("Obstacle "+t);
@@ -512,5 +526,5 @@ public static double distance(int i0,int j0,int i1,int j1,int tilesize){
     }
 
     
-    
+
 }

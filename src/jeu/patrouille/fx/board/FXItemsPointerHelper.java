@@ -10,8 +10,10 @@ import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.AbstractAction;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
+import jeu.patrouille.coeur.actions.ViserFeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.joeurs.GeneriqueJoeurs;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.terrains.PointCarte;
@@ -164,19 +166,21 @@ public FXSoldat getFXSoldatSelectionee(){
                
         return  lastVisualizationRond!=slast.getBoss().getJeur();
     }
-    public void buildFeuAction(FeuAction act,int i1,int j1,double angle){
+    public void buildFeuAction(BaseAction act,int i1,int j1,double angle){
         Terrain t= carte.getPointCarte(i1, j1);
-        Soldat p=t.getFirstSoldat();
+        GeneriquePiece p=t.getPiece();
         Soldat s=null;
-        if(p!=null  &&
-                p.getPieceType()==Piece.ActeurType.SOLDAT)
+        if(t.getPiece()!=null && 
+                t.getPiece().getPieceType()==Piece.ActeurType.SOLDAT)
             s=(Soldat)p;
+
 
         act.setI1(i1);
         act.setJ1(j1);
         act.setAntagoniste(s);
         Soldat s0=(Soldat)act.getProtagoniste();
-        act.setAngle(angle);
+        if(act.getType()==ActionType.FEU)  ((FeuAction)act).setAngle(angle);
+        else if(act.getType()==ActionType.FEU_VISER) ((ViserFeuAction)act).setAngle(angle);
                 
         act.setI0(s0.getI());
         act.setJ0(s0.getJ());
@@ -185,7 +189,11 @@ public FXSoldat getFXSoldatSelectionee(){
     public void builtAction(ActionType type){
     
         Terrain t=carte.getPointCarte(act.getI1(), act.getJ1());
-        Soldat s=t.getFirstSoldat();
+        GeneriquePiece p=t.getPiece();
+        Soldat s=null;
+        if(t.getPiece()!=null && 
+                t.getPiece().getPieceType()==Piece.ActeurType.SOLDAT)
+            s=(Soldat)p;
         act.setAntagoniste(s);
         if(s==act.getProtagoniste())
             act.setVersus(AbstractAction.SubjectType.MYSELF);

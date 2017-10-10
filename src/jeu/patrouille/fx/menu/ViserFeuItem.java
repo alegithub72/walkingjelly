@@ -5,11 +5,11 @@
  */
 package jeu.patrouille.fx.menu;
 
-import javafx.scene.control.Label;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.ViserFeuAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.armes.GeneriqueArme;
+import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.fx.board.FXCarte;
 import jeu.patrouille.fx.pieces.FXSoldat;
 
@@ -20,7 +20,7 @@ import jeu.patrouille.fx.pieces.FXSoldat;
 public class ViserFeuItem extends FeuItem{
 
     
-    public ViserFeuItem(FXSoldat sfx,FXCarte fxcarte) {
+    public ViserFeuItem(FXSoldat sfx,FXCarte fxcarte) throws TomberArmeException{
         super(ActionType.FEU_VISER,  sfx,fxcarte);
 
         
@@ -45,7 +45,8 @@ public class ViserFeuItem extends FeuItem{
     }
     @Override
     public BaseAction buildMenuItemAction() {
-        ViserFeuAction act=new ViserFeuAction(null, null, mode);
+        
+        ViserFeuAction act=new ViserFeuAction(this.fxs.getSoldat(), null, mode);
         return act;
     }
     

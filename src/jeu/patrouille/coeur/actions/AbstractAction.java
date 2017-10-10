@@ -25,6 +25,7 @@ public abstract class AbstractAction implements Comparable<BaseAction>{
     int j1;
     int tempActivite;
 
+    
     public int getTempActivite() {
         return tempActivite;
     }
@@ -78,6 +79,22 @@ public abstract class AbstractAction implements Comparable<BaseAction>{
     public void setJ1(int j1) {
         this.j1 = j1;
     }
+    @Override
+    public int compareTo(BaseAction b) {
+
+                    //ascending order
+                    if(this.tempActivite<b.getTempActivite()) 
+                        return -1;
+                    if(this.tempActivite>b.getTempActivite())return 1;
+                    if(this.tempActivite==b.getTempActivite()) return 0;
+                    return 0;
+                    //descending order
+                    //return compareQuantity - this.quantity;
+            }    
+
+
+    
+    
     public abstract BaseAction[] spreadAction()throws Exception;
     public abstract void calculeActionPointDesAction()throws Exception;
     public abstract Object clone();    

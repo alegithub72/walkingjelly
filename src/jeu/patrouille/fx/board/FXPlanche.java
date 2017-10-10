@@ -219,6 +219,7 @@ public class FXPlanche extends Application {
     }
     void sendMessageToPlayer(String text) {
         message.setTextFill(Color.WHITE);
+        message.setEffect(new DropShadow(30, Color.WHITE));
         message.setText(text);
 
     }
@@ -236,6 +237,7 @@ public class FXPlanche extends Application {
             case MARCHE:
                 spAct = new WalkItem();
                 break;
+            case FEU_VISER:
             case FEU:
                 spAct=new FeuItem();
                 break;

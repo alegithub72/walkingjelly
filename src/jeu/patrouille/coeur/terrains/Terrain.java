@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import jeu.patrouille.coeur.pieces.Piece.Direction;
 
 /**
  *
@@ -17,7 +18,7 @@ import javafx.scene.paint.Color;
  */
 public class Terrain extends PointCarte {
     public enum Consistance {LEGER,DUR,NO}
-    int orientation;
+    Direction orientation;
     int rot;
     String imgFile;
     Consistance c;
@@ -27,6 +28,7 @@ public class Terrain extends PointCarte {
         this.imgFile=f;
         this.rot=rot;
         this.c=Consistance.NO;
+        this.orientation=Direction.N;
        
     }
     public Terrain(int i,int j){
@@ -35,6 +37,7 @@ public class Terrain extends PointCarte {
         imgFile="vert2.png";
         rot=0;
          this.c=Consistance.NO;
+         this.orientation=Direction.N;
 
 
     }
@@ -81,4 +84,27 @@ public class Terrain extends PointCarte {
     
     }
 
+    @Override
+    public String toString() {
+        return "Terrain{" + "orientation=" + orientation + ", rot=" + rot + ", imgFile=" + imgFile + ", consitency=" + c +", type=" + type+", pointCarte="+super.toString() +"}";
+    }
+
+    public void setOrientation(Direction orientation) {
+        this.orientation = orientation;
+    }
+    public boolean accesibleFrom(PointCarte p){
+        boolean access=true;
+
+        int i1=p.getI();int j1=p.getJ();
+       for(Direction d :Direction.values()){
+           if(d!=null && d.name().contains(orientation.name()))  {
+               System.out.println(" d="+d.name()+" ");
+               int iTest=d.i+this.i;int jTest=d.j+this.j;
+               if(iTest==i1 && jTest==j1) return false; 
+           }
+       }
+             
+                
+        return access;
+    }
 }

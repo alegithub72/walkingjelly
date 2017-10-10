@@ -22,9 +22,11 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
+import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
+import jeu.patrouille.coeur.pieces.GeneriquePiece;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Piece.Pose;
 import jeu.patrouille.coeur.pieces.Soldat;
@@ -127,7 +129,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         if(angleStart>=360) angleStart=angleStart-360;
         imgView.setRotate(0);
         updateSodlatOrientation(angleStart);
-        orientation =angleStart+ angle;
+        orientation =angle;
         imgView.setRotate(angleStart);
     }
 
@@ -182,15 +184,18 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         return estFXSoldatView(s.getI(), s.getJ());
     }
 
-    public void enableSoldatoInView(int k) {
+    public void enableSoldatoInView(int n) {
         //System.out.println("reset position " + s.toStringSimple());
         int i0 = s.getI();
         int j0 = s.getJ();
         Point2D p = fxcarte.getSceneCoordForRefreshCarte(i0, j0);
-        double x0 = p.getX();
-        double y0 = p.getY();
-        x0 = x0 + (20 * k);
-        y0 = y0 + (20 * k);
+      
+        double x0 = p.getX()+(n* Math.sin(n*(Math.PI/4)));
+        double y0 = p.getY()+(n* Math.cos(n*(Math.PI/4)));
+          if(n>0) {
+                x0 = p.getX()+(40* Math.sin(n*(Math.PI/4)));
+                y0 = p.getY()+(40* Math.cos(n*(Math.PI/4)));              
+          }
         //int scrollJ = j0 - fxcarte.getPosJ();
         //int scrollI = i0 - fxcarte.getPosI();
         //System.out.println(" enable node--->" + s.getNom() + "x0,y0=" + x0 + "," + y0);
@@ -251,14 +256,17 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
     
     }    
    public  void playMarche(MarcheAction  act){
-        
+       Soldat s=(Soldat)act.getProtagoniste();
+        if(!this.fxcarte.getCarte().getPointCarte(s.getI(), s.getJ()).isEmpty()){
         System.out.println("------------- FXSOLDAT PLAY ANIM "+act.getType().name().toUpperCase()+"---------------->"+act+"-------->"+act.getProtagoniste().toStringSimple()+"<---------");
         signOff();
         //System.out.println("soldato anim:"+act.getProtagoniste());
         System.out.println(" IN PLAY NEW "+act.getType().name().toUpperCase());
         Path p=new Path();
         this.deselectioneFXSoldat();
+        
         Point2D p1=getSceneCoordMove(act.getI0(), act.getJ0());
+        
         float x0=((float)(p1.getX()
                 //-this.getLayoutX()
                 )
@@ -335,7 +343,12 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
 
         System.out.println("FXSOLDAT ANIM------> PLAY");
 
-
+        }else {
+            System.out.println("NOT PLAY");
+            fxcarte.setAnimOn(false);
+            
+        }
+            
         System.out.println("------------- FXSOLDAT PLAY ANIM "+act.getType().name().toUpperCase()+" ---------FINE------->--------><---------");
     } 
     public void playBandage(){
@@ -396,8 +409,8 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        flagImg.toFront();
        classmentImg.toFront();
        getChildren().removeAll(blessureImg);
-       if(!s.isKIA() && s.getSante()>0 )   {
-           int blN=s.isLesion(Lesion.Degre.LEGER);
+       if(!s.isKIA()  )   {
+           int blN=s.isLesion();
         for(int n=0;n<blN;n++){
             blessureImg[n] = new ImageView("wound.png");
             if(n>=3)blessureImg[n].setTranslateX((n-3)*10);
@@ -437,15 +450,18 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        }
       
     }
-    public void playFeu(FeuAction act){
+    public void playFeu(BaseAction act){
        buildFramesFeuAnim();
        this.fxcarte.centerScrollArea(s.getI(), s.getJ());
        fxcarte.refreshCarte();
        fxcarte.refreshCarteAllFXSoldatViewPosition();
-       Soldat target=(Soldat)act.getAntagoniste();
+       FeuAction feuaction=(FeuAction)act;
+       GeneriquePiece[] targets=feuaction.getTargets();
+       GeneriquePiece target0=act.getAntagoniste();
+       
        int i2=act.getI1(),j2=act.getJ1();
-       if(target!=null){
-            i2=target.getI();j2=target.getJ();
+       if(target0!=null){
+            i2=target0.getI();j2=target0.getJ();
         }       
        double angle=angleRotation(i2,j2);
        setFXSoldatOrientation(angle);
@@ -453,7 +469,8 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
        this.frameAnimTimer[0].start();
        
   
-       
+       for (int i = 0; i < targets.length; i++) {
+       Soldat target =(Soldat) targets[i];
        Thread t=new Thread(new Runnable() {
            @Override
            public void run() {
@@ -467,6 +484,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                    public void run() {
                         System.out.println("$$$$$$$$$$$$$$$$$$$$ RUN TARGETPLAY BLESSED $$$$$$$$$$$$$$$$$$$");
                         int i1=act.getI1(),j1=act.getJ1();
+                        
                         if(target!=null){
                             i1=target.getI();j1=target.getJ();
                         }           
@@ -482,17 +500,20 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
                             fxcarte.refreshCarte();
                             fxcarte.refreshCarteAllFXSoldatViewPosition();                            
                         }
+
+                        System.out.println("$$$$$$$$$$$$$$$$$$$$ RUN TARGETPLAY BLESSED $$$$$$------FINE--------$$$$$$$$$$$$$");
+                   }    
+                   
+               });
+           }      
+        });
+        PauseTransition pause=new PauseTransition(Duration.seconds(1));
+        pause.setOnFinished(new StartDeamonThreadEventHandler(t));
+        pause.play();       
+       }   
                         PauseTransition pause=new PauseTransition(Duration.seconds(1));
                         pause.setOnFinished(new EndAnimPauseHandler(fxcarte));
                         pause.play();
-                        System.out.println("$$$$$$$$$$$$$$$$$$$$ RUN TARGETPLAY BLESSED $$$$$$------FINE--------$$$$$$$$$$$$$");
-                   }
-               });
-           }
-       });
-        PauseTransition pause=new PauseTransition(Duration.seconds(1));
-        pause.setOnFinished(new StartDeamonThreadEventHandler(t));
-        pause.play();
         
        
    
@@ -518,7 +539,7 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         
         if(l==null) return ;
         System.out.println("ordinal s.getStatut"+s.getStatu().ordinal()+" ordinal blessed "+l.getStatu().ordinal());        
-        if(s.getStatu().ordinal()> stImage.ordinal())updateBlesseImage(s.getStatu(),l.getLocation());
+        if(s.getStatu().ordinal()> stImage.ordinal())updateBlesseImage(l.getStatu(),l.getLocation());
     }
     
     
@@ -529,12 +550,13 @@ public void updateBlesseImage(Soldat.Statut statut,Corp.CorpParts location){
             blessFrame(location);
             this.stImage=Soldat.Statut.INCONSCENT;
             playBlessedAnim(blessed);
-            
+            System.out.println("%%%%%%% INCONSCENT");
             break;
         case MORT:
             blessFrame(location);
             this.stImage=Soldat.Statut.MORT;
-            playBlessedAnim(blessed);            
+            playBlessedAnim(blessed);       
+            System.out.println("%%%%%%% MORT");
             break;
         case CRITIQUE:
 
@@ -573,6 +595,7 @@ public void updateBlesseImage(Soldat.Statut statut,Corp.CorpParts location){
                 setFrame(0);
             }
             stImage=Soldat.Statut.GRAVE;
+            System.out.println("%%%%%%% GRAVE");
             break;
         case GRAVE_BRASE_DROITE:
             if (!s.isUS()) {
@@ -586,6 +609,7 @@ public void updateBlesseImage(Soldat.Statut statut,Corp.CorpParts location){
                 setFrame(0);
             }
             stImage=Soldat.Statut.GRAVE_BRASE_DROITE;
+            System.out.println("%%%%%%% GRAVE_BRASE_DROITE");
             break;
         case GRAVE_BRASE_GAUCHE:
             if (!s.isUS()) {
@@ -640,6 +664,7 @@ public void updateBandageImage(Soldat.Statut statut){
         case INCONSCENT:
         case MORT:
             blessFrame(location);
+            playBlessedAnim(blessed);
             poseImg=Pose.PRONE;
             break;
         case CRITIQUE:
@@ -737,7 +762,7 @@ public void updateBandageImage(Soldat.Statut statut){
             break;
 
     }
-
+   
  }    
 
 
@@ -745,8 +770,9 @@ public void updateBandageImage(Soldat.Statut statut){
       buildBlessAnim();   
       imgView.setTranslateX(-25);
       //imgView.setTranslateY(25);
-      if(s.getStatu().ordinal()>Statut.GRAVE_TETE.ordinal()) 
+      if(s.getStatu().ordinal()>Statut.GRAVE_TETE.ordinal() && blessed) 
           setFXSoldatOrientation(Math.random()*360 );   
+      else setFXSoldatOrientation(this.orientation);
       signOff();
       buildShadow();
      if(blessed) {
