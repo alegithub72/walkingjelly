@@ -24,7 +24,7 @@ public class MenuImageChargeur {
         menuImages=new Image[ActionType.values().length];
         menuImageSubType=new Image[4];
         menuImages[ActionType.MARCHE.ordinal()]=new Image("walkButton.png");
-        menuImages[ActionType.OCCASION_DE_FEU.ordinal()]=new Image("opFireButton.png");
+        menuImages[ActionType.FEU_OCCASION.ordinal()]=new Image("opFireButton.png");
         menuImages[ActionType.COURS.ordinal()]=new Image("runButton.png");
         menuImages[ActionType.FEU.ordinal()]=new Image("fireButton.png");
         menuImages[ActionType.PA_ACTION.ordinal()]=new Image("arrowPng.png");
@@ -32,6 +32,7 @@ public class MenuImageChargeur {
         menuImages[ActionType.FEU_VISER.ordinal()]=new Image("aimedShot.png");
         menuImages[ActionType.ARME_RECHARGE.ordinal()]=new Image("loadMagazineButton.png");
         menuImages[ActionType.COUCHER.ordinal()]=new Image("crawlButton.png");
+        menuImages[ActionType.FEU_REPRESSIF.ordinal()]=new Image("supressiveButton.png");
         menuImageSubType[0]=new Image("BurstButton.png");
         menuImageSubType[1]=new Image("FullAutomaticButton.png");
         menuImageSubType[2]=new Image("aimedShotBURST.png");

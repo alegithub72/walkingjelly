@@ -21,7 +21,9 @@ import jeu.patrouille.fx.menu.DisableMenuItems;
 import jeu.patrouille.fx.menu.FeuItem;
 import jeu.patrouille.fx.menu.LoadMagazineItem;
 import jeu.patrouille.fx.menu.MenuItemButton;
+import jeu.patrouille.fx.menu.OpFeuItem;
 import jeu.patrouille.fx.menu.RunItem;
+import jeu.patrouille.fx.menu.SuppressifFeuItem;
 import jeu.patrouille.fx.menu.ViserFeuItem;
 import jeu.patrouille.fx.menu.WalkItem;
 import jeu.patrouille.fx.menu.eventhandler.ScrollEventHandler;
@@ -78,7 +80,7 @@ public class FXMenuItemsDossier {
             Point2D spritecoord2D=fxcarte.getMenuCoord(sx,sy,i,
                     j);
 
-            double r= (2 * Math.PI) / 8;
+            double r= (2 * Math.PI) /10;
             sfx.selectioneFXSoldat();
             Soldat s=sfx.getSoldat();
             
@@ -87,13 +89,15 @@ public class FXMenuItemsDossier {
             buildMarcheMenuItem(sfx,spritecoord2D.getX(),spritecoord2D.getY());
             buildCoreurMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
+            buildOpFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildViserFeuMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
+            if(s.isUtilizeAutomaticArme()) buildSuppressifMenuItem(sfx, spritecoord2D.getX(),spritecoord2D.getY(), r);
             buildBandageMenuItem(sfx, spritecoord2D.getX(), spritecoord2D.getY(), r);
             buildLoadMagazineMenuItem(sfx, spritecoord2D.getX(), spritecoord2D.getY(), r);           
           //  buildBurstFeuMenuItem(sfx, spritecoord2D.getX(), spritecoord2D.getY(), r);            
             //rootGroup.getChildren().add(l);
-            items[2].addLink(items[3]);
-            items[3].addLink(items[2]);
+            items[2].addLink(items[4]);
+            items[4].addLink(items[2]);
             fxcarte.visualizeBarSoldatAction();
             if(s.isBleeding()) fxpl.sendMessageToPlayer("Il moruire  est a bison doctoeur ou un bandée d'urgence!!",Color.YELLOW);
             else fxpl.sendMessageToPlayer("Choisir une action from ("+i+","+j+")"); 
@@ -152,14 +156,14 @@ public class FXMenuItemsDossier {
    private void buildBandageMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad){
 
                 MenuItemButton  m = new BandageItem(sfx,fxcarte);
-                double x = (100 * Math.cos(5 * grad));
-                double y = (100 * Math.sin(5 * grad));
+                double x = (100 * Math.cos(6 * grad));
+                double y = (100 * Math.sin(6 * grad));
                 double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
                 double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
                 m.setTranslateX(menuItemx);
                 m.setTranslateY(menuItemy);   
                 fxpl.rootScene.getChildren().add(m);           
-                items[5] = m;     
+                items[6] = m;     
                 m.enable();
 
     
@@ -167,14 +171,14 @@ public class FXMenuItemsDossier {
    private void buildLoadMagazineMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad){
      
                 MenuItemButton  m = new LoadMagazineItem(sfx,fxcarte);
-                double x = (100 * Math.cos(4 * grad));
-                double y = (100 * Math.sin(4 * grad));
+                double x = (100 * Math.cos(5 * grad));
+                double y = (100 * Math.sin(5 * grad));
                 double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
                 double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
                 m.setTranslateX(menuItemx);
                 m.setTranslateY(menuItemy);   
                 fxpl.rootScene.getChildren().add(m);          
-                items[4] = m;     
+                items[5] = m;     
                 m.enable();
 
                
@@ -201,12 +205,47 @@ public class FXMenuItemsDossier {
             
     }
 
-
+    private void buildOpFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws ModeDeFeuException,TomberArmeException {
+        
+            MenuItemButton m = new OpFeuItem(sfx,fxcarte);
+            
+            double x = (100 * Math.cos(3 * grad));
+            double y = (100 * Math.sin(3 * grad));
+            double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
+            double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
+            m.setTranslateX(menuItemx);
+            m.setTranslateY(menuItemy);
+            //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
+            fxpl.rootScene.getChildren().add(m);
+            //rootGroup.getChildren().add(l);
+            items[3] = m;    
+            Soldat s=sfx.getSoldat();
+            m.enable();
+            
+    }
+    private void buildSuppressifMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws ModeDeFeuException,TomberArmeException {
+        
+            MenuItemButton m = new SuppressifFeuItem(sfx,fxcarte);
+            
+            double x = (100 * Math.cos(8 * grad));
+            double y = (100 * Math.sin(8 * grad));
+            double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
+            double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
+            m.setTranslateX(menuItemx);
+            m.setTranslateY(menuItemy);
+            //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
+            fxpl.rootScene.getChildren().add(m);
+            //rootGroup.getChildren().add(l);
+            items[8] = m;    
+            Soldat s=sfx.getSoldat();
+            m.enable();
+            
+    }    
     private void buildViserFeuMenuItem(FXSoldat sfx,double spritecenterx,double spritecentery,double grad)throws TomberArmeException{
  
             MenuItemButton m = new ViserFeuItem(sfx,fxcarte);
-            double x = (100 * Math.cos(3 * grad));
-            double y = (100 * Math.sin(3 * grad));
+            double x = (100 * Math.cos(4 * grad));
+            double y = (100 * Math.sin(4 * grad));
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);
             double menuItemy = ((spritecentery) + y) - (m.getH() / 2);
             m.setTranslateX(menuItemx);
@@ -215,7 +254,7 @@ public class FXMenuItemsDossier {
             //l = new Line(spritecenterx, spritecentery, menuItemx, menuItemy);
             fxpl.rootScene.getChildren().add(m);
             //rootGroup.getChildren().add(l);
-            items[3] = m;
+            items[4] = m;
             m.enable();
 }
  

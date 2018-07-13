@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.board;
 
 import java.io.IOException;
+import java.net.URL;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -15,6 +16,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
@@ -23,7 +25,6 @@ import jeu.patrouille.coeur.MoteurDeJoeur;
 import jeu.patrouille.coeur.actions.AbstractAction;
 import jeu.patrouille.coeur.actions.BaseAction;
 import jeu.patrouille.coeur.actions.CoursAction;
-import jeu.patrouille.coeur.actions.FeuAction;
 import jeu.patrouille.coeur.actions.MarcheAction;
 import jeu.patrouille.coeur.actions.enums.ActionType;
 import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
@@ -386,7 +387,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
     
     synchronized public void annulleCommand() {
-        removeDisplayRange();
+        fxIMHelper.removeDisplayRange();
         fxIMHelper.setCommanNotvalid(true);
         setOnMouseMoved(null);
         reMountFXCarteMenuItemsAndScroll();
@@ -405,7 +406,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         double dpixel=displayGraficRangeHelper(mousex, mousey,Color.WHITE);
         
         double inch=(dpixel*INCHxPIXEL);
-        removeDisplayRange();
+        fxIMHelper.removeDisplayRange();
 
         PointCarte obst=fxIMHelper.carteValiderRoute();
         setCursor(Cursor.HAND);
@@ -427,7 +428,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
         } else {
        
-            removeDisplayRange();
+            fxIMHelper.removeDisplayRange();
             BaseAction act=  item.buildMenuItemAction();
             addHelperInstance(act);
             fxpl.sendMessageToPlayer("Action non valide");
@@ -567,7 +568,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
            }
            mj.getActiveJeur().setPieceSelectionee(s);
        }
-       fxIMHelper= new FXItemsPointerHelper(sfx, carte);
+       fxIMHelper= new FXItemsPointerHelper(sfx, this);
        
     }   
    
@@ -586,16 +587,12 @@ private boolean isScrollAreaChanged(int i1,int j1){
         return rootGroup;
     }
 
-    private void removeDisplayRange(){
-    
-        if(rootGroup.getChildren().contains(fxIMHelper.getDisplayRange()))
-            rootGroup.getChildren().remove(fxIMHelper.getDisplayRange());
-            
-    }
+
     private void visualizeRangePointers(double mousex,double mousey){
         CursorHelper c=fxIMHelper.getDisplayRange();
-        if(!rootGroup.getChildren().contains(c))
-            rootGroup.getChildren().add(c);          
+        if(!rootGroup.getChildren().contains(c))    
+          rootGroup.getChildren().add(c);          
+        
         int i=(int)(mousey/FXCarte.TILE_SIZE);
         int j=(int)(mousex/FXCarte.TILE_SIZE);
         double xgrid=(j*FXCarte.TILE_SIZE);
@@ -686,7 +683,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
                 && obst==null ) {
             fxIMHelper.setCommanNotvalid(false);
             setFXCarteCursor(Cursor.HAND);
-            removeDisplayRange();
+            fxIMHelper.removeDisplayRange();
             resetCursorHelper();
              if(!s.isUS()) sfx.setFrame(2);
             fxpl.sendMessageToPlayer("");
@@ -694,7 +691,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
            
         } else {
-            removeDisplayRange();
+            fxIMHelper.removeDisplayRange();
             fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
             fxIMHelper.setCommanNotvalid(true);
             if(obst!=null) fxpl.sendMessageToPlayer("Obstacole sur sentier: "+obst.getI()+","+obst.getJ());
@@ -813,7 +810,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
 
             if(s.getArmeUtilise()==null || s.isFeuArmePaPorte(inch) || 
                    ! s.isTempDisponiblePour(ActionType.FEU)){            
-                removeDisplayRange();
+                fxIMHelper.removeDisplayRange();
                 fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
                 fxIMHelper.setCommanNotvalid(true);
 
@@ -841,12 +838,12 @@ private boolean isScrollAreaChanged(int i1,int j1){
           
         double range=displayGraficRangeHelper(mousex, mousey, Color.WHITE);
         if(range>=(2*TILE_SIZE) ) {
-            removeDisplayRange();
+            fxIMHelper.removeDisplayRange();
             fxIMHelper.setCommanNotvalid(true);
             fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSOR_FORBIDDEN);
         }
         else {
-            removeDisplayRange();
+            fxIMHelper.removeDisplayRange();
             if(type==ActionType.BANDAGE) 
                 fxIMHelper.setRangeCursorHelper(ImageChargeur.CURSO_HELPER_BANDGAE);
             else if(type==ActionType.ARME_RECHARGE) 
@@ -868,7 +865,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
             Soldat s2=fxIMHelper.getSeletctionee();
             if(fxIMHelper.isCommanNotvalid() || 
                     s2==null ){
-              removeDisplayRange(); 
+              fxIMHelper.removeDisplayRange(); 
               fxIMHelper.setCommanNotvalid(true);
               fxpl.sendMessageToPlayer("Action pa possible,", Color.TOMATO);
      
@@ -881,7 +878,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
                     fxIMHelper.addActionToSoldat();
                     visualizeBarSoldatAction();
                     fxpl.imprimerFXPLInfo(s2);
-                    removeDisplayRange();
+                    fxIMHelper.removeDisplayRange();
                     System.out.println("action valid:"+act);
                     fxpl.sendMessageToPlayer(s2.toStringSimple()+" :"+ act.toString());
                 
@@ -1448,7 +1445,10 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
     public void confirmFEUAction(AbstractMenuItemButton item,double x,double y)throws Exception{
 
         PointCarte p=getAbsoluteIJCoord(x, y);
-        
+        Terrain t=this.carte.getPointCarte(p);
+       if (t.getPiece()==null || (t.getPiece()!=null  && !t.getPiece().isTargetable()))
+             fxIMHelper.setCommanNotvalid(true);
+           
         if(!fxIMHelper.isCommanNotvalid()){
 
             BaseAction act=item.buildMenuItemAction();
@@ -1465,16 +1465,25 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             visualizeBarSoldatAction();
             
         }else{
-          
+           
+            visualizeRangePointers(x,y); 
             BaseAction act=  item.buildMenuItemAction();
             addHelperInstance(act);            
             fxpl.sendMessageToPlayer("Objective pa valide");
+            ClassLoader classLoader = getClass().getClassLoader();
+            URL url=classLoader.getResource("plich.aif");
+            AudioClip audio=new AudioClip(url.toString());
+            System.out.println(url.toString());
+            audio.play();
             
             
         }
+        System.out.println("cursor-->"+fxIMHelper.getRangeCursorHelper());
+        fxIMHelper.removeDisplayRange();
+        
         fxIMHelper.setActionSeletione(false);
         setOnMouseMoved(null);
-        removeDisplayRange();
+        
         reMountFXCarteMenuItemsAndScroll();
         
     }

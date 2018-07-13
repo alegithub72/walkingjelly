@@ -16,10 +16,10 @@ import jeu.patrouille.fx.pieces.FXSoldat;
  *
  * @author appleale
  */
-public class OpFeuItem extends MenuItemButton{
+public class SuppressifFeuItem extends MenuItemButton{
     
-    public OpFeuItem(FXSoldat fxs,FXCarte fxcarte){
-        super(ActionType.FEU_OCCASION,fxs,fxcarte);
+    public SuppressifFeuItem(FXSoldat fxs,FXCarte fxcarte){
+        super(ActionType.FEU_REPRESSIF,fxs,fxcarte);
     }
 
     @Override

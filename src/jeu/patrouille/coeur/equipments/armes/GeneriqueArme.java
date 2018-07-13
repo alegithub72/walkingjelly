@@ -225,7 +225,12 @@ public int getCoverPenetration(Terrain.Consistance c){
     }
 
 
+    public boolean isAutomaticArme(){
+        return this.TDfireWeapon[FeuMode.RA.ordinal()]!=NOTVALUE ||
+                TDfireWeapon[FeuMode.PA.ordinal()]!=NOTVALUE ||
+                TDfireWeapon[FeuMode.SA.ordinal()]>1;
 
+    }
 
 
    

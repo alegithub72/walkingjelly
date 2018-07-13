@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.board;
 
 
+import javafx.event.EventType;
 import jeu.patrouille.coeur.Carte;
 import jeu.patrouille.coeur.actions.AbstractAction;
 import jeu.patrouille.coeur.actions.BaseAction;
@@ -30,15 +31,17 @@ public class FXItemsPointerHelper {
     private BaseAction act;
     private FXSoldat seletctionee;
     private Carte carte;
+    private FXCarte fxcarte;
     private boolean commanNotvalid;
     private boolean actionSeletione;
     private int rangeCursorHelper;
     private int lastVisualizationRond;
             
    
-    public FXItemsPointerHelper(FXSoldat sfx,Carte carte){
+    public FXItemsPointerHelper(FXSoldat sfx,FXCarte fxcarte){
         this.seletctionee=sfx;
-        this.carte=carte;
+        this.carte=fxcarte.getCarte();
+        this.fxcarte=fxcarte;
         this.commanNotvalid=false;
         this.act=null;
         this.lastVisualizationRond=-1;
@@ -74,6 +77,7 @@ public class FXItemsPointerHelper {
     
     }
     public CursorHelper getDisplayRange(){
+      
         return ImageChargeur.getInstance().getDisplayRange(rangeCursorHelper);
     
     }
@@ -156,6 +160,7 @@ public FXSoldat getFXSoldatSelectionee(){
     }
  
     public void setCommanNotvalid(boolean commanNotvalid) {
+        removeDisplayRange();
         if(commanNotvalid==true) 
             this.rangeCursorHelper=ImageChargeur.CURSOR_FORBIDDEN;
         this.commanNotvalid = commanNotvalid;
@@ -201,5 +206,10 @@ public FXSoldat getFXSoldatSelectionee(){
     
     }
     
-
+    public void removeDisplayRange(){
+       
+        if(fxcarte.rootGroup.getChildren().contains(getDisplayRange()))
+            fxcarte.rootGroup.getChildren().remove(getDisplayRange());
+            
+    }
 }

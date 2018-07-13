@@ -50,7 +50,10 @@ public abstract class GeneriquePiece {
     public String toString() {
         return "GeneriquePiece{" + "type=" + type + ", i=" + i + ", j=" + j + ", boss=" + boss + '}';
     }
-
+    public boolean isTargetable(){
+            return type==Piece.ActeurType.SOLDAT || type==Piece.ActeurType.JEEP;
+                    
+    }
     public abstract GeneriquePiece clonerPiece();
 
     public abstract String toStringSimple();

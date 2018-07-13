@@ -339,6 +339,10 @@ public class Soldat extends Piece {
         this.pose = pose;
     }
 
+    public boolean isUtilizeAutomaticArme() {
+        return armeUtilise.isAutomaticArme();
+    }
+
  
 
     
