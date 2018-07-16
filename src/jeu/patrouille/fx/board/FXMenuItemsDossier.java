@@ -12,8 +12,7 @@ import jeu.patrouille.coeur.equipments.armes.exceptions.ModeDeFeuException;
 import jeu.patrouille.coeur.pieces.Soldat;
 import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.terrains.PointCarte;
-import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_I_H;
-import static jeu.patrouille.fx.board.FXCarte.AREA_SCROLL_J_W;
+
 import static jeu.patrouille.fx.board.FXCarte.TILE_SIZE;
 import jeu.patrouille.fx.menu.AbstractMenuItemButton;
 import jeu.patrouille.fx.menu.BandageItem;
@@ -279,10 +278,10 @@ protected void buildDisableMenu(FXSoldat s){
             if (relativeJ <= 3) {
                 spritecenterx = spritecenterx + (m.getW() * 2);
             }
-            if (relativeI >= (AREA_SCROLL_I_H - 3)) {
+            if (relativeI >= (FXCarte.AREA_SCROLL - 3)) {
                 spritecentery = spritecentery - (m.getH() * 2);
             }
-            if (relativeJ >= (AREA_SCROLL_J_W - 3)) {
+            if (relativeJ >= (FXCarte.AREA_SCROLL- 3)) {
                 spritecenterx = spritecenterx - (m.getW() * 2);
             }
             double menuItemx = ((spritecenterx) + x) - (m.getW() / 2);

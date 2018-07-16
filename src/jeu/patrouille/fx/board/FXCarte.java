@@ -6,6 +6,7 @@
 package jeu.patrouille.fx.board;
 
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.net.URL;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -15,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -48,6 +50,7 @@ import jeu.patrouille.fx.pieces.FXSoldat;
 import jeu.patrouille.fx.sprite.CursorHelper;
 import jeu.patrouille.fx.sprite.FXPatrouilleSprite;
 import jeu.patrouille.fx.sprite.Sprite;
+import jeu.patrouille.util.ISOCoverter;
 import jeu.patrouille.util.ImageChargeur;
 
 /**
@@ -60,11 +63,11 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     public static final int BAR_H = 50;
     public static final int DROIT_BAR_W = 200;
     public static final int TILE_SIZE = 50;
-    public static double PIXEL_SCROLL_AREA_H=600;
-    public static double PIXEL_SCROLL_AREA_W=800;
-    public static int AREA_SCROLL_J_W;
-    public static int AREA_SCROLL_I_H;
+    public static double PIXEL_SCROLL_AREA_H;
+    public static double PIXEL_SCROLL_AREA_W;
 
+    public static int AREA_SCROLL;
+    
     Group rootGroup;
 
     Canvas c1;
@@ -87,22 +90,25 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
     FXSoldat[] fxequipeHost ;
     FXPatrouilleSprite actionIcon;
     boolean debug=true;
+    final static Point2D center=new Point2D(600, 100);
     
-    public FXCarte(FXPlanche fxpl) throws IOException{
+    public FXCarte(FXPlanche fxpl,double w,double h) throws IOException{
         
         // arrow = new Sprite(100, 100, 100, 100, "arrowPng.png", null);
         this.fxpl=fxpl;
         rootGroup = new Group();    
         
-
+        PIXEL_SCROLL_AREA_H=h;
+        PIXEL_SCROLL_AREA_W=w;
         carte = new Carte("src/mapDesert.txt");
         carte.loadMap();
         
 
         // mj.setActiveJeur(MoteurDeJoeur.JEUR_US);
  
-        AREA_SCROLL_J_W = (int) (PIXEL_SCROLL_AREA_W / TILE_SIZE);
-        AREA_SCROLL_I_H = (int) (PIXEL_SCROLL_AREA_H / TILE_SIZE);
+        //AREA_SCROLL_J_W = 13;//(int) (PIXEL_SCROLL_AREA_H / (TILE_SIZE*2));
+   
+        AREA_SCROLL=((int)(PIXEL_SCROLL_AREA_W/ (TILE_SIZE*2)))+1;
         System.out.println(PIXEL_SCROLL_AREA_W + "," + PIXEL_SCROLL_AREA_H);
 
         
@@ -225,23 +231,23 @@ public  class FXCarte extends Parent implements GraficCarteInterface{
 private boolean isNeedeCenterScrollAreaUpdate(int centerI,int centerJ){
     boolean b = false;
     return (((centerI - posI) < 3)
-            || ((FXCarte.AREA_SCROLL_I_H - (centerI - posI)) < 3)
+            || ((FXCarte.AREA_SCROLL - (centerI - posI)) < 3)
             || ((centerJ - posJ) < 3)
-            || ((FXCarte.AREA_SCROLL_J_W - (centerJ - posJ)) < 3));
+            || ((FXCarte.AREA_SCROLL - (centerJ - posJ)) < 3));
 
 
 }
 public void centerScrollArea(int i,int j){
-        int h2=(FXCarte.AREA_SCROLL_I_H/2);
-        int w2=(FXCarte.AREA_SCROLL_J_W/2);
+        int h2=(FXCarte.AREA_SCROLL/2);
+        int w2=(FXCarte.AREA_SCROLL/2);
         if((i+h2)>(Carte.CARTE_SIZE_I) )
-            posI=i-FXCarte.AREA_SCROLL_I_H+1;
+            posI=i-FXCarte.AREA_SCROLL+1;
         else if(i-h2<=0)
             posI=0;        
         else  posI=i-h2;
         
         if( ( (j+w2)>(Carte.CARTE_SIZE_J))  )
-            posJ=j-FXCarte.AREA_SCROLL_J_W+1;
+            posJ=j-FXCarte.AREA_SCROLL+1;
         else if(j-w2<=0)
             posJ=0;
         else posJ=j-w2;
@@ -250,8 +256,8 @@ public void centerScrollArea(int i,int j){
 
 
 private boolean isScrollAreaChanged(int i1,int j1){
-        int centerI=i1-(FXCarte.AREA_SCROLL_I_H/2),
-            centerJ=j1-(FXCarte.AREA_SCROLL_J_W/2);
+        int centerI=i1-(FXCarte.AREA_SCROLL/2),
+            centerJ=j1-(FXCarte.AREA_SCROLL/2);
         return !(centerI==posI && centerJ==posJ);
        
 
@@ -914,19 +920,24 @@ private boolean isScrollAreaChanged(int i1,int j1){
         canv.getGraphicsContext2D().fillRect(0, 0, PIXEL_SCROLL_AREA_W, PIXEL_SCROLL_AREA_H);
 
         int k = 0;
-        for (int i0 = 0; i0 < AREA_SCROLL_I_H; i0++) {
-            for (int j0 = 0; j0 < AREA_SCROLL_J_W; j0++) {
+        for (int i0 = 0; i0 < AREA_SCROLL; i0++) {
+            for (int j0 = 0; j0 < AREA_SCROLL; j0++) {
                 int j = j0 + posJ;
                 int i = i0 + posI;
                 Terrain tile = carte.getPointCarte(i, j);
                 double x0 = j0 * TILE_SIZE;
                 double y0 = i0 * TILE_SIZE;
-                if (tile != null) {
-                    canv.getGraphicsContext2D().drawImage(tile.getImg(), x0, y0);
-                }
+                if (tile != null && (tile.getType()==PointCarte.GROSMUR ||
+                        tile.getType()==PointCarte.FENETRE ||  tile.getType()==PointCarte.INTERIOR ||
+                        tile.getType()==PointCarte.PORTE  
+                        
+                        ) )canv.getGraphicsContext2D().drawImage(new Image("floorTest.png"), ISOCoverter.covertToISOX(x0, y0)+center.getX(), ISOCoverter.covertToISOY(x0, y0)+center.getY()-86);
+                    
+                else if(tile!=null) canv.getGraphicsContext2D().drawImage(new Image("isoTest2.png"), ISOCoverter.covertToISOX(x0, y0)+center.getX(), ISOCoverter.covertToISOY(x0, y0)+center.getY());
+                
                 canv.getGraphicsContext2D().setFill(Color.BLACK);
                 //canv.getGraphicsContext2D()
-                if(debug)canv.getGraphicsContext2D().fillText(i + "," + j, x0 + 10, y0 + 25);
+                if(debug)canv.getGraphicsContext2D().fillText(i + "," + j, ISOCoverter.covertToISOX(x0 + 50, y0+10 )+center.getX(),ISOCoverter.covertToISOY(x0 + 50, y0 +10)+center.getY());
                 // canv.getGraphicsContext2D().strokeRect(x0, y0, PointCarte.TILE_SIZE, PointCarte.TILE_SIZE);
                 //if(ob!=null)System.out.println(" i,j"+(m+posX)+","+(n+posY));
                 //if(ob!=null)
@@ -940,23 +951,27 @@ private boolean isScrollAreaChanged(int i1,int j1){
         //System.out.println("scroolw,scrollh=" + AREA_SCROLL_J_W + "," + AREA_SCROLL_I_H);
 
        // System.out.println("------------------SCROLL PRINT----------------------------------");
-        for (int i0 = 0; i0 < AREA_SCROLL_I_H; i0++) {
-            for (int j0 = 0; j0 < AREA_SCROLL_J_W; j0++) {
+        for (int i0 = 0; i0 < AREA_SCROLL; i0++) {
+            for (int j0 = 0; j0 < AREA_SCROLL; j0++) {
                 int j = j0 + posJ;
                 int i = i0 + posI;
                 Terrain tile = carte.getPointCarte(i, j);
                 double x0 = j0 * TILE_SIZE;
                 double y0 = i0 * TILE_SIZE;
-                if (tile != null) {
-                    canv.getGraphicsContext2D().drawImage(tile.getImg(), x0, y0);
-                }
+                if (tile != null && (tile.getType()==PointCarte.GROSMUR ||
+                        tile.getType()==PointCarte.FENETRE ||  tile.getType()==PointCarte.INTERIOR ||
+                        tile.getType()==PointCarte.PORTE  
+                        
+                        ) )canv.getGraphicsContext2D().drawImage(new Image("floorTest.png"), ISOCoverter.covertToISOX(x0, y0)+center.getX(), ISOCoverter.covertToISOY(x0, y0)+center.getY()-86);
+                else if(tile!=null && tile.getType()==PointCarte.STREET )    canv.getGraphicsContext2D().drawImage(new Image("streetISO.png"), ISOCoverter.covertToISOX(x0, y0)+center.getX(), ISOCoverter.covertToISOY(x0, y0)+center.getY()-86);
+                else if(tile!=null) canv.getGraphicsContext2D().drawImage(new Image("isoTest2.png"), ISOCoverter.covertToISOX(x0, y0)+center.getX(), ISOCoverter.covertToISOY(x0, y0)+center.getY());
                 canv.getGraphicsContext2D().setFill(Color.BLACK);
                 //canv.getGraphicsContext2D()
-                if(debug)canv.getGraphicsContext2D().fillText(i + "," + j, x0 + 10, y0 + 25);
+                if(debug)canv.getGraphicsContext2D().fillText(i + "," + j, ISOCoverter.covertToISOX(x0 + 50, y0 +10)+center.getX(),ISOCoverter.covertToISOY(x0 + 50, y0 +10)+center.getY());
                 // canv.getGraphicsContext2D().strokeRect(x0, y0, PointCarte.TILE_SIZE, PointCarte.TILE_SIZE);
                 //System.out.println("scrollI,scrollJ"+i+","+j);
 
-                 enableAllFXSoldat(tile, x0, y0);
+                 enableAllFXSoldat(tile, ISOCoverter.covertToISOX(x0, y0)+center.getX(),ISOCoverter.covertToISOY(x0, y0)+center.getY());
                 //if(ob!=null)System.out.println(" i,j"+(m+posX)+","+(n+posY));
                 //if(ob!=null)
             }
@@ -1156,7 +1171,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
 
      private boolean scrollDown() {
          boolean updateScroll=false;
-        if ((posI + 1 + AREA_SCROLL_I_H) <= mapH) {
+        if ((posI + 1 + AREA_SCROLL) <= mapH) {
     
             //arrow.setFrame(0);
             posI++;
@@ -1207,7 +1222,7 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
 
     private boolean scrollRight() {
           boolean updateScroll=false;
-        if ((posJ + 1 + AREA_SCROLL_J_W) <= mapW) {
+        if ((posJ + 1 + AREA_SCROLL) <= mapW) {
                
             //arrow.setFrame(0);
             updateScroll=true;
@@ -1296,10 +1311,10 @@ private void refreshCarteFXSoldatPosition(FXSoldat sfx){
             if (relativeJ <= 3) {
                 spritecenterx = spritecenterx + (AbstractMenuItemButton.MENU_W * 2);
             }
-            if (relativeI >= (AREA_SCROLL_I_H - 3)) {
+            if (relativeI >= (AREA_SCROLL - 3)) {
                 spritecentery = spritecentery - (AbstractMenuItemButton.MENU_H * 2);
             }
-            if (relativeJ >= (AREA_SCROLL_J_W - 3)) {
+            if (relativeJ >= (AREA_SCROLL - 3)) {
                 spritecenterx = spritecenterx - (AbstractMenuItemButton.MENU_W  * 2);
             }      
             Point2D spritecenter2D=new Point2D(spritecenterx, spritecentery);

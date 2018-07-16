@@ -54,7 +54,7 @@ public class FXInfoPanel extends Parent{
     }
     void buildInfoPanel(){
         if(bkreset) {
-            drawTitle();
+           // drawTitle();
             bkreset=false;
         }
         Color textColor=Color.LAWNGREEN;
@@ -70,13 +70,13 @@ public class FXInfoPanel extends Parent{
         
         classment.setTextFill(textColor);
         classment.setFont(font);
-        classment.relocate(x, y+62);
+        classment.relocate(x, y);
         classment.setBorder(bo);
         classment.setBackground(bk);
         
         tdLabel.setTextFill(textColor);
         tdLabel.setFont(font);
-        tdLabel.relocate(x+80, y+155);
+        tdLabel.relocate(x, y);
         tdLabel.setBorder(bo);
         tdLabel.setBackground(bk);
         
@@ -84,7 +84,7 @@ public class FXInfoPanel extends Parent{
         sante.setFont(font);
         sante.setBorder(bo);
         sante.setBackground(bk);
-        sante.relocate(x, y+130);
+        sante.relocate(x, y);
         this.setVisible(false);
         this.getChildren().add(sante);
         this.getChildren().add(nom);
@@ -119,12 +119,25 @@ public class FXInfoPanel extends Parent{
             bkreset=false;
         }
         nom.setText(s.toStringSimple());
+        nom.getWidth();
+        nom.getHeight();
+        nom.setLayoutY(y+nom.getHeight());
+        double ytmp=y+nom.getHeight();
         tdLabel.setText (s.getTempDisponible()+"");
+        tdLabel.setLayoutY(ytmp+tdLabel.getHeight());
+        ytmp=ytmp+tdLabel.getHeight();
         String clText=s.getClassement().name();
         classment.setText(clText);
+        classment.setLayoutY(ytmp+classment.getHeight());
+        ytmp=ytmp+classment.getHeight();
         sante.setText(s.getSante()+" "+s.getStatu().mes+"");
+        sante.setLayoutY(ytmp+classment.getHeight());
     
     }
+    /**
+     * @deprecated 
+     */
+    
     void drawTitle(){
          GraphicsContext gc= canv.getGraphicsContext2D();
         DropShadow dropShadow = new DropShadow();
@@ -156,13 +169,13 @@ public class FXInfoPanel extends Parent{
     
     
     public void resetInfo(){
-        GraphicsContext gc= canv.getGraphicsContext2D();
-        Image img = new Image("rightBar.png");
-        gc.setFill(Color.TRANSPARENT);
-        gc.fillRect(0, 0, FXCarte.DROIT_BAR_W,
-                FXCarte.PIXEL_SCROLL_AREA_H);
-        gc.drawImage(img, 0, 0);
-        bkreset=true;
+//        GraphicsContext gc= canv.getGraphicsContext2D();
+//        Image img = new Image("rightBar.png");
+//        gc.setFill(Color.TRANSPARENT);
+ //       gc.fillRect(0, 0, FXCarte.DROIT_BAR_W,
+ //               FXCarte.PIXEL_SCROLL_AREA_H);
+ //       gc.drawImage(img, 0, 0);
+ //       bkreset=true;
         nom.setText("");
         tdLabel.setText("");
         classment.setText("");

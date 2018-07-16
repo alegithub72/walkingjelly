@@ -163,8 +163,8 @@ public abstract class FXSoldat extends FXPatrouilleSprite {
         boolean b = true;
         int posJ = fxcarte.getPosJ();
         int posI = fxcarte.getPosI();
-        int H = (FXCarte.AREA_SCROLL_I_H) - 1;
-        int W = (FXCarte.AREA_SCROLL_J_W) - 1;
+        int H = (FXCarte.AREA_SCROLL) - 1;
+        int W = (FXCarte.AREA_SCROLL) - 1;
         if (j1 > (posJ + W)) {
             b = false;
         }

@@ -5,7 +5,7 @@
  */
 package jeu.patrouille.coeur.actions.helper;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+
 import java.util.Arrays;
 import jeu.patrouille.coeur.pieces.GeneriquePiece;
 

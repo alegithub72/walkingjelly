@@ -16,14 +16,14 @@ public class Street extends Terrain {
     
         public Street(int i,int j,int rot){
         super(i,j,rot,"street.png");
-        this.type=PointCarte.PORTE;
+        this.type=PointCarte.STREET;
 
 
 
     }
         public Street(int i,int j){
         super(i,j,"street.png");
-        this.type=PointCarte.PORTE;
+        this.type=PointCarte.STREET;
      
 
 
