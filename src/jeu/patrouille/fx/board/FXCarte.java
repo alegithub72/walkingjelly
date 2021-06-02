@@ -766,7 +766,7 @@ private boolean isScrollAreaChanged(int i1,int j1){
         GraphicsContext gc =activeCanvas().getGraphicsContext2D();
         gc.setStroke(c);
         gc.setLineJoin(StrokeLineJoin.BEVEL);
-        gc.setLineDashes(4,4);
+    //    gc.setLineDashes(4,4);
         gc.setLineCap(StrokeLineCap.ROUND);        
         gc.strokeLine(outXY.getX(), outXY.getY(), gridXY.getX(), gridXY.getY());
     }
