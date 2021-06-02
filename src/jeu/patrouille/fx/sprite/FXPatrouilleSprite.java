@@ -14,15 +14,27 @@ import jeu.patrouille.fx.board.FXCarte;
 public  class FXPatrouilleSprite extends Sprite {
     
     protected FXCarte fxcarte;
-    
+    protected int offsx, offsy;
     public FXPatrouilleSprite(int w,int h,String img,FXCarte fxcarte) {
-        super(w, h, FXCarte.TILE_SIZE,  FXCarte.TILE_SIZE, img);
+        super(w, h,img);
         this.fxcarte=fxcarte;
-  
+        offsx = w/2;
+        offsy = h/2;
     }
     public  void create(){
             buildFrameImages();
     }
+
+    public int getOffsx() {
+        return offsx;
+    }
+
+    public int getOffsy() {
+        return offsy;
+    }
+    
+    
+    
 //    protected double esteticCorrectionY0(int scrollI, double y) {
 //        double y0 = y;
 //        if (scrollI == 0) {

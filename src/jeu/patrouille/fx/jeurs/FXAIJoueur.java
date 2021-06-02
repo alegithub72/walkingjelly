@@ -44,11 +44,11 @@ public class FXAIJoueur extends AIJoeur{
            fxequipe[i].setDeafultFrame(3);
            fxequipe[i].createFXSoldat();  
            fxequipe[i].defaultFrame();
-          
-
+           fxequipe[i].setScaleX(0.8);
+           fxequipe[i].setScaleY(0.8);
 
            fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte.getMenu()));
-           fxcarte.addSprite(fxequipe[i]);
+           //fxcarte.addFXSoldat(fxequipe[i]);
           
         }
       

@@ -9,11 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.pieces.parts.Corp;
-import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer.Sound;
 
 /**
  *
@@ -22,31 +19,39 @@ import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer.Sound;
 public class FXHostile extends FXSoldat{
     
     public FXHostile(Soldat s,int pos,FXCarte fxcarte){
-        super( FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s ,"frameHostile.png", fxcarte);
+        super( 320,320,pos,s ,"alienCheckBig.png", fxcarte);
         this.flagImg=new ImageView("hosFlag.png");
-        
+       // flagImg.setScaleX(4);
+       // flagImg.setScaleY(4);
         feu1=0;
         feu2=1;
-
+       offsx=113;
+       offsy=200;
         
         
         
     }
-    
+
     @Override
-    public void buildBlessAnim() {
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{defaultFrame,defaultFrame}, this, 0, 1, 500, null,Sound.GRUNT5);
-        this.frameAnimTimer[0].buildMedia();
-    }    
+    protected void buildFramesMarcheAnim() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     @Override
     public void buildFramesFeuAnim() {
-        try{
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{feu1, feu2}, this, 0, 1, 100, s.getArmeUtilise(),null);
-        this.frameAnimTimer[0].buildMedia();        
-         }catch(TomberArmeException ex){
-           throw new RuntimeException(ex);
-        }        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void buildBlessAnim() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void buildFramesCoursAnim() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     @Override
     public void buildCrawlAnim() {
         //this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(feu1, feu2, this, 0, 1, 100, s.getArmeUtilise(),null);
@@ -59,17 +64,8 @@ public class FXHostile extends FXSoldat{
         getChildren().remove(classmentImg);
     }
 
-    @Override
-    protected void buildFramesMarcheAnim() {
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{4,5,6,7}, this, 0, -1,200, null,Sound.MARCHE);
-        this.frameAnimTimer[0].buildMedia();        
-    }
-    
-    @Override
-    protected void buildFramesCoursAnim() {
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{8,9}, this, 0, -1,200, null,Sound.COURS);
-        this.frameAnimTimer[0].buildMedia();        
-    }
+
+
 
     @Override
     public void feuFrame(){

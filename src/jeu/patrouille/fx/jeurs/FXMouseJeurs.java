@@ -40,10 +40,12 @@ public class FXMouseJeurs extends KeyboardJoeur{
         for(int i=0;i<equipe.length;i++){
            fxequipe[i]=new FXUSSoldat((Soldat) equipe[i],i,fxcarte);
             fxequipe[i].setOnMouseClicked(new SoldatOpenMenuItemsEventHandler(fxequipe[i],fxcarte.getMenu()));
-            fxequipe[i].setVisible(false);           
+            fxequipe[i].setVisible(true);           
             fxequipe[i].createFXSoldat();
             fxequipe[i].defaultFrame();
-            fxcarte.addSprite(fxequipe[i]);
+            //fxcarte.addFXSoldat(fxequipe[i]);
+            fxequipe[i].getImgMainView().setScaleX(0.4);
+            fxequipe[i].getImgMainView().setScaleY(0.4);
            // fxequipeUS[i].setOnMouseClicked(new ActionMenuCloseEventHandler(rootGroup, actionMenu));
         }    
     }    

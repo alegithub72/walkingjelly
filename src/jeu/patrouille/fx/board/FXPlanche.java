@@ -16,7 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -108,8 +107,8 @@ public class FXPlanche extends Application {
         rootScene.getChildren().add(subScene);                
         ///SnapshotParameters params = new SnapshotParameters();
         //params.setFill(Color.TRANSPARENT);
-              buildAngleTopLeftBar();
-                buildMessaggeBar();              
+        buildAngleTopLeftBar();
+        buildMessaggeBar();              
 
     }
 

@@ -5,7 +5,7 @@
  */
 package jeu.patrouille.fx.sprite;
 
-import javafx.animation.Animation;
+import javafx.beans.value.WritableIntegerValue;
 import javafx.geometry.Rectangle2D;
 
 import javafx.scene.Node;
@@ -14,95 +14,82 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import jeu.patrouille.fx.animation.FrameAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
-
-
 
 /**
  *
  * @author appleale
  */
-public class Sprite extends Parent
-{
-  
-    
+public class Sprite extends Parent implements WritableIntegerValue {
 
-    protected ImageView imgView;
-
+    protected ImageView imgMainView;
 
     public static int MOVE_TRANSITION = 0;
-    Image frameImages;
-    Sprite[] extraSprite=new Sprite[2];
+    Image imgMain;
+    Sprite[] extraSprite = new Sprite[2];
     Rectangle2D[] frames;
     int w;
     int h;
-    int wSquare;
-    int hSquare;
-    protected int defaultFrame;
-    protected FrameAnimationTimer frameAnimTimer[];
-    int k;
-    protected Animation[] ptList;
-    double x,y;
 
-    
-    public Sprite(int w, int h,int wboardBox,int hBoardBox,String img){
+    protected int defaultFrame;
+    int k;
+    double x, y;
+
+
+    public Sprite(int w, int h, String img) {
         super();
         this.w = w;
         this.h = h;
-        this.wSquare=wboardBox;
-        this.hSquare=hBoardBox;
 
-        
-        if(img!=null) this.frameImages=new Image(img);
 
-        ptList=new Animation[5];
-        
-        frameAnimTimer=new FrameAnimationTimer[2];
-        
+        if (img != null) {
+            this.imgMain = new Image(img);
+        }
+
+
     }
 
     public void buildFrameImages(Image frameImages) {
-        if(imgView!=null) getChildren().remove(imgView);
-        this.frameImages = frameImages;
-        createShapeFrame();        
-        imgView = new ImageView(frameImages);
-        imgView.setViewport(frames[0]);          
-        if(!getChildren().contains(imgView))
-            getChildren().add(imgView);
-        
-    }
-      protected void buildFrameImages() {
+        if (imgMainView != null) {
+            getChildren().remove(imgMainView);
+        }
+        this.imgMain = frameImages;
+        createShapeFrame();
+        imgMainView = new ImageView(frameImages);
+        imgMainView.setViewport(frames[0]);
 
+        if (!getChildren().contains(imgMainView)) {
+            getChildren().add(imgMainView);
+        }
+
+    }
+
+    protected void buildFrameImages() {
 
         createShapeFrame();
-        imgView = new ImageView(frameImages);
-        imgView.setViewport(frames[0]);  
-        getChildren().add(imgView);   
+        imgMainView = new ImageView(imgMain);
+        imgMainView.setViewport(frames[0]);
+        getChildren().add(imgMainView);
 
-
-       
-        
     }
 
-    
-    
-     void createShapeFrame(){
-        int n = (frameImages.widthProperty().intValue() / w);
+    void createShapeFrame() {
+        int n = (imgMain.widthProperty().intValue() / w);
         frames = new Rectangle2D[n];
         for (int i = 0; i < n; i++) {
             frames[i] = new Rectangle2D(i * w, 0, w, h);
         }
-    }    
-    public Node getImgView(){
-        return imgView;
     }
-    public Image getImg(){
-        return frameImages;
+
+    public Node getImgMainView() {
+        return imgMainView;
     }
-    protected Sprite() {
-                super();
+
+    public Image getImgMain() {
+        return imgMain;
     }
+
+
 
     public int getK() {
         return k;
@@ -113,19 +100,15 @@ public class Sprite extends Parent
     }
 
     public void setFrame(int i) {
-        if(i>=frames.length)  i=0;
+        if (i >= frames.length) {
+            i = 0;
+        }
         this.defaultFrame = i;
-        imgView.setViewport(frames[i]);
+        imgMainView.setViewport(frames[i]);
     }
 
-    
 
 
-
-
-
-    
-    
     public int getW() {
         return w;
     }
@@ -142,84 +125,74 @@ public class Sprite extends Parent
         this.h = h;
     }
 
-    public boolean isMoveFini() {
-        if(ptList==null || ptList[0]==null) return true;
-        else{
-           // System.out.println("STATUS"+ptList[0].getStatus()+" time");
-            return ptList[0].getStatus() == Animation.Status.STOPPED;
-        }
-    }
-    
-    public boolean isAnimEnd(){
-        return frameAnimTimer[0].isStopped();
-    }
-    public boolean isAnimSetted(){
-        return frameAnimTimer[0]!=null;
-    }
-    public void removeAnimationSetting() {
-        for (int i = 0; i < ptList.length; i++) {
-            ptList[i] = null;
-        }
-        for (int i = 0; i < frameAnimTimer.length; i++) {
-             if(frameAnimTimer[i]!=null) frameAnimTimer[i].stop();
-            frameAnimTimer[i] = null;
-        }
+    public static double convertBoardIposition(int i, int w) {
 
+        double x = ((i * w) + (w / 2))
+                - (FXCarte.TILE_SIZE / 2);
+        return x;
     }
-    
-    public void stopAnimation(int n){
-       if(frameAnimTimer[n]!=null) frameAnimTimer[n].stop();
-    }
-    public void removeExtraSprite(int n){
-        //if(extraSprite[n]!=null) fbx.remove(extraSprite[n]);
-    }
-    public static double convertBoardIposition(int i,int w){
-    
-                double x = ((i * w) + (w / 2)) 
-                    - (FXCarte.TILE_SIZE/2);
-                return x;
-    }
-     public static double convertBoardJposition(int j,int h){
-        double y = ((j * h) + (h / 2)) 
-                    - (FXCarte.TILE_SIZE/2)
-                    ;
+
+    public static double convertBoardJposition(int j, int h) {
+        double y = ((j * h) + (h / 2))
+                - (FXCarte.TILE_SIZE / 2);
         return y;
-    }   
-    public static double convertBoardIpositionCenter(int i,int w){
-    
-                double x = ((i * w) 
-                        + (w / 2)
-                        );
-                return x;
     }
-    public static double convertBoardJpositionCenter(int j,int h){
-    
-                double y = ((j * h)
-                        + (h / 2)
-                       )  ;
-                        
-                return y;
-    }    
-    public void  removeThis(){
+
+    public static double convertBoardIpositionCenter(int i, int w) {
+
+        double x = ((i * w)
+                + (w / 2));
+        return x;
+    }
+
+    public static double convertBoardJpositionCenter(int j, int h) {
+
+        double y = ((j * h)
+                + (h / 2));
+
+        return y;
+    }
+
+    public void removeThis() {
         //fbx.remove(this);
     }
-    
-//TODO permette la costruzioni di varie immagini....    
-public Image composedImage(String f) {
-    ImageView test = new ImageView(new Image("menuItem.png"));
-    SnapshotParameters params = new SnapshotParameters();
-    params.setFill(Color.TRANSPARENT);
-    Image rotatedImage = test.snapshot(params, null);
-    return rotatedImage;
 
-}    
-public void defaultFrame(){
+//TODO permette la costruzioni di varie immagini....    
+    public Image composedImage(String f) {
+        ImageView test = new ImageView(new Image("menuItem.png"));
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        Image rotatedImage = test.snapshot(params, null);
+        return rotatedImage;
+
+    }
+
+    public void defaultFrame() {
         setFrame(defaultFrame);
     }
 
-public void setDeafultFrame(int n){
-    this.defaultFrame=n;
+    public void setDeafultFrame(int n) {
+        this.defaultFrame = n;
     }
-    
+
+    @Override
+    public int get() {
+        return defaultFrame;
+    }
+
+    @Override
+    public void set(int value) {
+        setDeafultFrame(value);
+    }
+
+    @Override
+    public void setValue(Number value) {
+        setDeafultFrame(value.intValue());
+    }
+
+    @Override
+    public Number getValue() {
+        return defaultFrame;
+    }
 
 }

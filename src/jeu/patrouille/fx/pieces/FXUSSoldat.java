@@ -9,11 +9,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import jeu.patrouille.coeur.pieces.Piece;
 import jeu.patrouille.coeur.pieces.Soldat;
-import jeu.patrouille.coeur.pieces.exceptions.TomberArmeException;
 import jeu.patrouille.coeur.pieces.parts.Corp;
-import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer;
 import jeu.patrouille.fx.board.FXCarte;
-import jeu.patrouille.fx.animation.JeuPatrouilleAnimationTimer.Sound;
 
 /**
  *
@@ -24,7 +21,7 @@ public class FXUSSoldat extends FXSoldat {
 
     
     public FXUSSoldat(Soldat s,int pos,FXCarte fxcarte){
-        super(FXCarte.TILE_SIZE,FXCarte.TILE_SIZE,pos,s,"frameSoldierUS2.png",fxcarte);
+        super(205,214,pos,s,"soldierModel.png",fxcarte);
         feu1=7;
         feu2=8;
 
@@ -41,21 +38,15 @@ public class FXUSSoldat extends FXSoldat {
 
     @Override
     public void buildFramesFeuAnim() {
-        try{
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{feu1, feu2}, this, 0,1 , 100,s.getArmeUtilise(),null);
-        frameAnimTimer[0].buildMedia();        
-         }catch(TomberArmeException ex){
-           throw new RuntimeException(ex);
-        }
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void buildBlessAnim() {
-       
-        this.frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{defaultFrame,defaultFrame}, this, 0, 1,500, null,Sound.GRUNT5);
-        frameAnimTimer[0].buildMedia();        
-
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
 
     @Override
     public void droitPosition() {
@@ -71,7 +62,7 @@ public class FXUSSoldat extends FXSoldat {
         this.setW(100);
         this.buildFrameImages(new Image("frameProneUSSoldier.png"));
         this.poseImg=Piece.Pose.PRONE;
-        imgView.setTranslateX(-25);
+        imgMainView.setTranslateX(-25);
         feu1=0;
         feu2=1;
         initialAngle=180;
@@ -94,26 +85,24 @@ public class FXUSSoldat extends FXSoldat {
         else if(s.getPose()==Piece.Pose.PRONE) setFrame(1);
     
     }
-    
 
     @Override
-    protected void buildFramesMarcheAnim(){
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{1,2,3}, this, 0, -1, 200,null,Sound.MARCHE);
-        frameAnimTimer[0].buildMedia();        
-        
+    protected void buildFramesMarcheAnim() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-       @Override
-    protected void buildCrawlAnim(){
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{1,2,3}, this, 0, -1, 400,null,Sound.MARCHE);
-        frameAnimTimer[0].buildMedia();        
-        
-    }  
+
+    @Override
+    protected void buildCrawlAnim() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     protected void buildFramesCoursAnim() {
-        frameAnimTimer[0]=new JeuPatrouilleAnimationTimer(new int[]{9,10}, this, 0, -1, 400,null,Sound.COURS);
-        frameAnimTimer[0].buildMedia();    
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+
+
 
     @Override
     void blessFrame(Corp.CorpParts location) {
